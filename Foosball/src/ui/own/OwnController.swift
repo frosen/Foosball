@@ -51,6 +51,9 @@ class OwnController: BaseTableController {
 
         //设置tableview的基本属性，分割线等
         tableView.separatorInset = UIEdgeInsetsZero
+
+        //隐藏滑动条
+        tableView.showsVerticalScrollIndicator = false
     }
 
     //table view
