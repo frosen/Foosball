@@ -1,0 +1,18 @@
+PODS:
+  - AVOSCloud (3.3.5)
+  - MJRefresh (3.1.10)
+  - SnapKit (0.21.1)
+
+DEPENDENCIES:
+  - AVOSCloud
+  - MJRefresh
+  - SnapKit
+
+SPEC CHECKSUMS:
+  AVOSCloud: 1fe170768bee7e05bc3ea86e38d5bddb105cb957
+  MJRefresh: bb72948c985914b0b5cecac573a2c69a8915fb02
+  SnapKit: bbad04cb016c7cead63965f16b00c09318d271ee
+
+PODFILE CHECKSUM: 7cc68e1705e80bf2f2e918b5ba063f4fb61a7dc5
+
+COCOAPODS: 1.0.1
