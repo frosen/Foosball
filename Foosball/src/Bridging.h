@@ -1,4 +1,4 @@
-
+//
 //  Bridging.h
 //  TheOneFoosball
 //
@@ -9,7 +9,6 @@
 #ifndef Bridging_h
 #define Bridging_h
 
-#import <AVOSCloud/AVOSCloud.h> //
-//#import "MJRefresh.h" //
+#import <AVOSCloud/AVOSCloud.h>
 
 #endif /* Bridging_h */
