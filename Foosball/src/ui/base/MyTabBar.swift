@@ -27,7 +27,7 @@ class MyTabBar: UIView {
         midButton = btn
         super.init(frame: oldTabBar.frame)
 
-        midButton.addTarget(self, action: "onClickMidBtn:", forControlEvents: .TouchUpInside)
+        midButton.addTarget(self, action: #selector(MyTabBar.onClickMidBtn(_:)), forControlEvents: .TouchUpInside)
         self.addSubview(midButton)
     }
 
@@ -45,7 +45,7 @@ class MyTabBar: UIView {
             let btn = UIButton(type: .Custom)
 
             btn.tag = buttons.count
-            btn.addTarget(self, action: "onClickBtn:", forControlEvents: .TouchDown)
+            btn.addTarget(self, action: #selector(MyTabBar.onClickBtn(_:)), forControlEvents: .TouchDown)
 
             addSubview(btn)
             buttons.append(btn)
