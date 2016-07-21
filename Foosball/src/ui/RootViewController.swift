@@ -11,14 +11,15 @@ import SnapKit
 import MJRefresh
 
 class RootViewController: UITabBarController {
+    var items: [UITabBarItem] = []
+
     override func viewDidLoad() {
         initUI()
         initSubVc()
+        initTabBar()
     }
 
     func initUI() {
-        tabBar.tintColor = UIColor.redColor()
-
         let navBar = UINavigationBar.appearance()
         navBar.barTintColor = UIColor.redColor()
     }
@@ -50,5 +51,23 @@ class RootViewController: UITabBarController {
 
         // 添加为子控制器
         addChildViewController(nav)
+
+        //收集bar item 用于自定义的Tabbar
+        items.append(vc.tabBarItem)
+    }
+
+    func initTabBar() {
+        let midBtn = UIButton(type: .Custom)
+        midBtn.setImage(UIImage(named: "mid_btn"), forState: .Normal)
+        midBtn.setImage(UIImage(named: "mid_btn_press"), forState: .Highlighted)
+        midBtn.sizeToFit()
+        let myTabBar = MyTabBar.replaceOldTabBar(self, midButton: midBtn, btnItems: items)
+        myTabBar.backgroundColor = UIColor(red: 1.0, green: 0.8, blue: 0.8, alpha: 1.0)
     }
 }
+
+
+
+
+
+

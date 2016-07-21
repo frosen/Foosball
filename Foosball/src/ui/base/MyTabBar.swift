@@ -14,7 +14,7 @@ protocol MyTabBarDelegate {
 
 class MyTabBar: UIView {
 
-    private var buttons: [UIView] = []
+    private var buttons: [MyTabBarItem] = []
     private var midButton: UIButton
 
     var myTabBarDelegate: MyTabBarDelegate? = nil
@@ -31,33 +31,42 @@ class MyTabBar: UIView {
         self.addSubview(midButton)
     }
 
-    class func replaceOldTabBar(tabVc: UITabBarController, midButton btn: UIButton) -> MyTabBar {
+    class func replaceOldTabBar(tabVc: UITabBarController, midButton btn: UIButton, btnItems items: [UITabBarItem]) -> MyTabBar {
         let tab = MyTabBar(oldTabBar: tabVc.tabBar, midButton: btn)
 
         tabVc.view.insertSubview(tab, aboveSubview: tabVc.tabBar)
         tabVc.tabBar.removeFromSuperview()
 
+        tab.setBarItems(items)
+
         return tab
     }
 
     func setBarItems(items: [UITabBarItem]) {
+        //因为有中间按钮，所以items只能是两个或者4个
+        assert(items.count == 2 || items.count == 4)
+
         for item in items {
-            let btn = UIButton(type: .Custom)
+            let btn = MyTabBarItem(type: .Custom)
+
+            btn.setItem(item)
 
             btn.tag = buttons.count
-            btn.addTarget(self, action: #selector(MyTabBar.onClickBtn(_:)), forControlEvents: .TouchDown)
+
+            btn.addTarget(self, action: #selector(MyTabBar.onClickItem(_:)), forControlEvents: .TouchDown)
 
             addSubview(btn)
             buttons.append(btn)
 
             if btn.tag == 0 {
-                onClickBtn(btn)
+                onClickItem(btn)
             }
         }
+        layoutBarItems()
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    func layoutBarItems() {
+        let midIndex = buttons.count == 2 ? 1 : 2
 
         let vw = bounds.size.width
         let vh = bounds.size.height
@@ -68,17 +77,22 @@ class MyTabBar: UIView {
         let h = vh
 
         var i = 0
-        for view in buttons {
-            if (i == 2) {
-                i = 3
+        for btn in buttons {
+            if (i == midIndex) {
+                i += 1 //跳过中间位置
             }
             x = CGFloat(i) * w
-            view.frame = CGRect(x: x, y: y, width: w, height: h)
+            btn.frame = CGRect(x: x, y: y, width: w, height: h)
+            btn.layout()
             i += 1
         }
+
+        // 设置中央按钮的位置
+        midButton.center = CGPoint(x: vw * 0.5, y: 1.5 * vh - midButton.frame.size.height)
+        print(midButton.frame)
     }
 
-    func onClickBtn(btn: UIButton) {
+    func onClickItem(btn: UIButton) {
 
     }
 
