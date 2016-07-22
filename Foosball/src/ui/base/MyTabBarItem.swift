@@ -17,7 +17,7 @@ class MyTabBarItem: UIButton {
 
         // 设置字体颜色
         setTitleColor(UIColor.blackColor(), forState: .Normal)
-        setTitleColor(UIColor.blackColor(), forState: .Highlighted)
+        setTitleColor(UIColor.redColor(), forState: .Highlighted)
         setTitleColor(UIColor.redColor(), forState: .Selected)
 
         imageView!.contentMode = .Center //图片居中
@@ -43,24 +43,11 @@ class MyTabBarItem: UIButton {
 
         setTitle(_item!.title, forState: .Normal)
         setImage(_item!.image, forState: .Normal)
+        setImage(_item!.selectedImage, forState: .Highlighted)
         setImage(_item!.selectedImage, forState: .Selected)
     }
 
-    func layout() {
-//        let imageH = bounds.size.width * 0.7
-//        imageView?.frame = CGRect(
-//            x: 0,
-//            y: 0,
-//            width: bounds.size.width,
-//            height: imageH)
-//
-//        let titleY = imageH - 3
-//        titleLabel?.frame = CGRect(
-//            x: 0,
-//            y: titleY,
-//            width: bounds.size.width,
-//            height: bounds.size.height - titleY)
-    }
+
 
     override func layoutSubviews() {
         super.layoutSubviews()

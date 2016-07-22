@@ -9,13 +9,18 @@
 import UIKit
 
 protocol MyTabBarDelegate {
+    func tabBar(tabBar: MyTabBar, didClickItem item: UIButton)
 
+    func tabBar(tabBar: MyTabBar, didClickMidButton btn: UIButton)
 }
 
 class MyTabBar: UIView {
 
-    private var buttons: [MyTabBarItem] = []
-    private var midButton: UIButton
+    weak var ctrller: UITabBarController?
+    var midButton: UIButton
+
+    var buttons: [MyTabBarItem] = []
+    weak var selectedButton: UIButton?
 
     var myTabBarDelegate: MyTabBarDelegate? = nil
 
@@ -23,16 +28,17 @@ class MyTabBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(oldTabBar: UITabBar, midButton btn: UIButton) {
+    init(vc: UITabBarController, midButton btn: UIButton) {
+        ctrller = vc
         midButton = btn
-        super.init(frame: oldTabBar.frame)
+        super.init(frame: vc.tabBar.frame)
 
         midButton.addTarget(self, action: #selector(MyTabBar.onClickMidBtn(_:)), forControlEvents: .TouchUpInside)
         self.addSubview(midButton)
     }
 
     class func replaceOldTabBar(tabVc: UITabBarController, midButton btn: UIButton, btnItems items: [UITabBarItem]) -> MyTabBar {
-        let tab = MyTabBar(oldTabBar: tabVc.tabBar, midButton: btn)
+        let tab = MyTabBar(vc: tabVc, midButton: btn)
 
         tabVc.view.insertSubview(tab, aboveSubview: tabVc.tabBar)
         tabVc.tabBar.removeFromSuperview()
@@ -83,7 +89,7 @@ class MyTabBar: UIView {
             }
             x = CGFloat(i) * w
             btn.frame = CGRect(x: x, y: y, width: w, height: h)
-            btn.layout()
+
             i += 1
         }
 
@@ -93,11 +99,17 @@ class MyTabBar: UIView {
     }
 
     func onClickItem(btn: UIButton) {
+        selectedButton?.selected = false
+        selectedButton = btn
+        selectedButton!.selected = true
 
+        ctrller!.selectedIndex = btn.tag
+
+        myTabBarDelegate?.tabBar(self, didClickItem: btn)
     }
 
     func onClickMidBtn(btn: UIButton) {
-
+        myTabBarDelegate?.tabBar(self, didClickMidButton: btn)
     }
 }
 

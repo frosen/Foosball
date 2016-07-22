@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import MJRefresh
 
-class RootViewController: UITabBarController {
+class RootViewController: UITabBarController, MyTabBarDelegate {
     var items: [UITabBarItem] = []
 
     override func viewDidLoad() {
@@ -61,9 +61,22 @@ class RootViewController: UITabBarController {
         midBtn.setImage(UIImage(named: "mid_btn"), forState: .Normal)
         midBtn.setImage(UIImage(named: "mid_btn_press"), forState: .Highlighted)
         midBtn.sizeToFit()
+
         let myTabBar = MyTabBar.replaceOldTabBar(self, midButton: midBtn, btnItems: items)
+        myTabBar.myTabBarDelegate = self
+        
         myTabBar.backgroundColor = UIColor(red: 1.0, green: 0.8, blue: 0.8, alpha: 1.0)
     }
+
+    // MyTabBarDelegate
+    func tabBar(tabBar: MyTabBar, didClickItem item: UIButton) {
+        print("item", item.tag)
+    }
+
+    func tabBar(tabBar: MyTabBar, didClickMidButton btn: UIButton) {
+        print("mid button")
+    }
+
 }
 
 
