@@ -26,7 +26,7 @@ class OwnTitleCell: UITableViewCell {
         avatar.snp_makeConstraints { make in
             make.size.equalTo(CGSize(width: avatarW, height: avatarW))
             make.centerX.equalTo(contentView)
-            make.centerY.equalTo(contentView).offset(15)
+            make.centerY.equalTo(contentView)
         }
 
         avatar.layer.cornerRadius = avatarW / 2 //圆形
@@ -61,8 +61,8 @@ class OwnQRCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        let bg = UIImageView(image: UIImage(named: ""))
-        self.contentView.addSubview(bg)
+//        let bg = UIImageView(image: UIImage(named: ""))
+//        self.contentView.addSubview(bg)
     }
 
     required init?(coder aDecoder: NSCoder) {

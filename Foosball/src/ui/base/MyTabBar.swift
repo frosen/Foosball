@@ -95,7 +95,6 @@ class MyTabBar: UIView {
 
         // 设置中央按钮的位置
         midButton.center = CGPoint(x: vw * 0.5, y: 1.5 * vh - midButton.frame.size.height)
-        print(midButton.frame)
     }
 
     func onClickItem(btn: UIButton) {
