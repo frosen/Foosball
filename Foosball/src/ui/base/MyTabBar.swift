@@ -99,6 +99,10 @@ class MyTabBar: UIView {
     }
 
     func onClickItem(btn: UIButton) {
+        if btn.selected == true {
+            return
+        }
+
         selectedButton?.selected = false
         selectedButton = btn
         selectedButton!.selected = true

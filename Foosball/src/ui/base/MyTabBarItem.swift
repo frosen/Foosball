@@ -15,10 +15,7 @@ class MyTabBarItem: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        // 设置字体颜色
         setTitleColor(UIColor.blackColor(), forState: .Normal)
-        setTitleColor(UIColor.redColor(), forState: .Highlighted)
-        setTitleColor(UIColor.redColor(), forState: .Selected)
 
         imageView!.contentMode = .Center //图片居中
         titleLabel!.textAlignment = .Center //文字居中
@@ -29,25 +26,21 @@ class MyTabBarItem: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 
+    //屏蔽hightlight事件
+    override var highlighted: Bool {
+        set {}
+        get {
+            return super.highlighted
+        }
+    }
+
     func setItem(item: UITabBarItem) {
         _item = item
 
-        observeValueForKeyPath(nil, ofObject: nil, change: nil, context: nil)
-
-        _item!.addObserver(self, forKeyPath: "title", options: .New, context: nil)
-        _item!.addObserver(self, forKeyPath: "image", options: .New, context: nil)
-        _item!.addObserver(self, forKeyPath: "selectedImage", options: .New, context: nil)
-    }
-
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-
         setTitle(_item!.title, forState: .Normal)
         setImage(_item!.image, forState: .Normal)
-        setImage(_item!.selectedImage, forState: .Highlighted)
-        setImage(_item!.selectedImage, forState: .Selected)
+        setImage(_item!.image?.imageWithRenderingMode(.AlwaysTemplate), forState: .Selected)
     }
-
-
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -66,6 +59,10 @@ class MyTabBarItem: UIButton {
             width: bounds.size.width,
             height: bounds.size.height - titleY)
 
+    }
+
+    override func tintColorDidChange() {
+        setTitleColor(tintColor, forState: .Selected)
     }
 
 }
