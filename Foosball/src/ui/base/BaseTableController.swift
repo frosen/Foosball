@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BaseTableController: UITableViewController {
+class BaseTableController: UIViewController {
 
     //设置导航栏控件，如果检测未登陆则使用登陆注册，如果未调用此接口则不设置
     func initNavBar() {

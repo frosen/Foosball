@@ -116,6 +116,7 @@ class InfoHeadView: UIView {
     let destY: CGFloat = -64 //44 + 20
     func updateSubViewsWithScrollOffsetY(newOffsetY: CGFloat){
         let startY = -(scrollView.contentInset.top)
+        let dis = destY - startY
 
         var realOffsetY: CGFloat
         //计算位置
@@ -126,6 +127,18 @@ class InfoHeadView: UIView {
         } else {
             realOffsetY = destY
         }
+
+        let curY = realOffsetY - startY
+
+        let curAlpha = 1 - curY / dis
+        let imgReduce = 1 - 0.5 * curY / dis
+
+        title?.alpha = curAlpha
+        subTitle?.alpha = curAlpha
+        frame.origin.y = -curY
+        print(dis, curY)
+
+
 
         
 

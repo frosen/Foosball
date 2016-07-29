@@ -19,7 +19,7 @@ struct NorCellData {
     }
 }
 
-class OwnController: BaseTableController {
+class OwnController: BaseTableController, UITableViewDelegate, UITableViewDataSource {
     //信息头，比赛成绩，QR，其他项目等group
     let group = [
         //section
@@ -44,16 +44,9 @@ class OwnController: BaseTableController {
             NorCellData(i: "share", t: "退出", st: ""),
         ],
     ]
+
     var infoHead: InfoHeadView! = nil
-
-    //初始化
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    init() {
-        super.init(style: .Grouped)
-    }
+    var tableView: UITableView! = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,26 +55,32 @@ class OwnController: BaseTableController {
         //隐藏导航栏，并让tableview位置忽略导航栏
         navigationController!.navigationBarHidden = true
         automaticallyAdjustsScrollViewInsets = false
+
+        //创建tableView
+        tableView = UITableView(frame: view.bounds, style: .Grouped)
+        view.addSubview(tableView)
+        tableView.delegate = self
+        tableView.dataSource = self
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 48, right: 0)
 
         //设置tableview的基本属性，分割线等
         tableView.separatorInset = UIEdgeInsetsZero
-
-        //隐藏滑动条
-        tableView.showsVerticalScrollIndicator = false
+        tableView.showsVerticalScrollIndicator = false //隐藏滑动条
 
         //添加信息头
         infoHead = InfoHeadView(scrollView: tableView, extraHeight: 0)
-        view.addSubview(infoHead)
+        view.insertSubview(infoHead, aboveSubview: tableView)
         infoHead!.initUIData(bgImaName: "selfbg", headImgName: "default_avatar", titleStr: "聂小倩", subTitleStr: "个性签名，啦啦啦")
+
+
     }
 
     //table view
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 2 + group.count
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (section == 0 || section == 1) {
             return 1
         } else {
@@ -90,7 +89,7 @@ class OwnController: BaseTableController {
 
     }
 
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if (section == 0) {
             return 0.1
         } else {
@@ -98,11 +97,11 @@ class OwnController: BaseTableController {
         }
     }
 
-    override func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 1
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if (indexPath.section == 0) {
             return OwnNormalCell.getCellHeight()
         } else if (indexPath.section == 1) {
@@ -115,7 +114,7 @@ class OwnController: BaseTableController {
     let ownScoCellId = "OScoCellId"
     let ownQRCellId = "OQRCId"
     let ownNorCellId = "ONorCId"
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if (indexPath.section == 0) {
             //比赛成绩
             var cell = tableView.dequeueReusableCellWithIdentifier(ownScoCellId)
@@ -148,7 +147,7 @@ class OwnController: BaseTableController {
         }
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     }
 
     //scroll view
