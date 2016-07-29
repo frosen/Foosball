@@ -20,24 +20,39 @@ struct NorCellData {
 }
 
 class OwnController: BaseTableController {
-    //
+    //信息头，比赛成绩，QR，其他项目等group
     let group = [
         //section
+        [
+            NorCellData(i: "share", t: "福利", st: ""),
+        ],
         [
             NorCellData(i: "share", t: "分享", st: "分享"),
             NorCellData(i: "feedback", t: "反馈", st: ""),
         ],
         [
-            NorCellData(i: "setting", t: "设置", st: ""),
+            NorCellData(i: "setting", t: "账号", st: ""),
+            NorCellData(i: "setting", t: "隐私", st: ""),
+            NorCellData(i: "setting", t: "消息提醒", st: ""),
+            NorCellData(i: "setting", t: "其他设置", st: ""),
+        ],
+        [
+            NorCellData(i: "setting", t: "关于", st: ""),
+            NorCellData(i: "setting", t: "版本信息", st: ""),
+        ],
+        [
+            NorCellData(i: "share", t: "退出", st: ""),
         ],
     ]
+    var infoHead: InfoHeadView! = nil
+
+    //初始化
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     init() {
         super.init(style: .Grouped)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
@@ -54,6 +69,11 @@ class OwnController: BaseTableController {
 
         //隐藏滑动条
         tableView.showsVerticalScrollIndicator = false
+
+        //添加信息头
+        infoHead = InfoHeadView(scrollView: tableView, extraHeight: 0)
+        view.addSubview(infoHead)
+        infoHead!.initUIData(bgImaName: "selfbg", headImgName: "default_avatar", titleStr: "聂小倩", subTitleStr: "个性签名，啦啦啦")
     }
 
     //table view
@@ -84,7 +104,7 @@ class OwnController: BaseTableController {
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if (indexPath.section == 0) {
-            return OwnTitleCell.getCellHeight()
+            return OwnNormalCell.getCellHeight()
         } else if (indexPath.section == 1) {
             return OwnQRCell.getCellHeight()
         } else {
@@ -92,27 +112,33 @@ class OwnController: BaseTableController {
         }
     }
 
-    let ownTitleCellId = "OTCId"
-    let ownNorCellId = "ONCId"
+    let ownScoCellId = "OScoCellId"
+    let ownQRCellId = "OQRCId"
+    let ownNorCellId = "ONorCId"
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if (indexPath.section == 0) {
-            var cell = tableView.dequeueReusableCellWithIdentifier(ownTitleCellId)
+            //比赛成绩
+            var cell = tableView.dequeueReusableCellWithIdentifier(ownScoCellId)
             if (cell == nil) {
-                cell = OwnTitleCell(style: .Default, reuseIdentifier: ownTitleCellId)
+                cell = OwnScoreCell(style: .Default, reuseIdentifier: ownScoCellId)
             }
             return cell!
         } else if (indexPath.section == 1) {
-            var cell = tableView.dequeueReusableCellWithIdentifier(ownTitleCellId)
+            //二维码
+            var cell = tableView.dequeueReusableCellWithIdentifier(ownQRCellId)
             if (cell == nil) {
-                cell = OwnQRCell(style: .Default, reuseIdentifier: ownTitleCellId)
+                cell = OwnQRCell(style: .Default, reuseIdentifier: ownQRCellId)
             }
             return cell!
         } else {
+            //其他项目
             var cell = tableView.dequeueReusableCellWithIdentifier(ownNorCellId)
             if (cell == nil) {
                 cell = OwnNormalCell(style: .Value1, reuseIdentifier: ownNorCellId)
 
                 let data: NorCellData = group[indexPath.section - 2][indexPath.row]
+                let norCell = cell as! OwnNormalCell
+                norCell.setUIData(image: data.img, title: data.title, subTitle: data.subTitle)
                 cell!.imageView!.image = UIImage(named: data.img)
                 cell!.textLabel!.text = data.title
                 cell!.detailTextLabel!.text = data.subTitle

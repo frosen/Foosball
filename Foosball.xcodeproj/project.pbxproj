@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3250913C82FFF635417020BD /* Pods_Foosball.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81C567789B96B0906D4D436 /* Pods_Foosball.framework */; };
+		6594BC2C1D464B8700775929 /* InfoHeadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6594BC2B1D464B8700775929 /* InfoHeadView.swift */; };
 		65AB52451D3291E6005E7D4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52371D3291E6005E7D4C /* AppDelegate.swift */; };
 		65AB52461D3291E6005E7D4C /* Director.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52391D3291E6005E7D4C /* Director.swift */; };
 		65AB52471D3291E6005E7D4C /* BaseTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB523C1D3291E6005E7D4C /* BaseTableController.swift */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6594BC2B1D464B8700775929 /* InfoHeadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoHeadView.swift; sourceTree = "<group>"; };
 		65AB52371D3291E6005E7D4C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65AB52381D3291E6005E7D4C /* Bridging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bridging.h; sourceTree = "<group>"; };
 		65AB52391D3291E6005E7D4C /* Director.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Director.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 				65AB523C1D3291E6005E7D4C /* BaseTableController.swift */,
 				65AB523D1D3291E6005E7D4C /* MyTabBar.swift */,
 				65AB523E1D3291E6005E7D4C /* MyTabBarItem.swift */,
+				6594BC2B1D464B8700775929 /* InfoHeadView.swift */,
 			);
 			path = base;
 			sourceTree = "<group>";
@@ -279,6 +282,7 @@
 			files = (
 				65AB52451D3291E6005E7D4C /* AppDelegate.swift in Sources */,
 				65AB524A1D3291E6005E7D4C /* ChallengeController.swift in Sources */,
+				6594BC2C1D464B8700775929 /* InfoHeadView.swift in Sources */,
 				65AB524D1D3291E6005E7D4C /* RootViewController.swift in Sources */,
 				65AB524B1D3291E6005E7D4C /* OwnCells.swift in Sources */,
 				65AB52471D3291E6005E7D4C /* BaseTableController.swift in Sources */,
