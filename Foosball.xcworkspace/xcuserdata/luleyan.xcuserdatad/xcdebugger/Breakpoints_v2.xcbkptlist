@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Foosball/src/ui/base/InfoHeadView.swift"
-            timestampString = "491491991.980295"
+            timestampString = "491624600.320922"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
+            startingLineNumber = "48"
+            endingLineNumber = "48"
             landmarkName = "initUIData(bgImaName:headImgName:titleStr:subTitleStr:)"
             landmarkType = "5">
          </BreakpointContent>

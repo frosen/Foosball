@@ -42,25 +42,31 @@ class InfoHeadView: UIView {
         self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset
     }
 
+    let bgYScale: CGFloat = 1.5
+    let avatarW: CGFloat = 70
     func initUIData(bgImaName bgName: String, headImgName: String, titleStr: String, subTitleStr: String) {
         let w: CGFloat = frame.size.width
         let h: CGFloat = frame.size.height
 
+        //裁剪背景图
+        let maskView = UIView(frame: CGRect(x: 0, y: 0, width: w, height: h))
+        addSubview(maskView)
+        maskView.layer.masksToBounds = true
+
         //背景
         bg = UIImageView(image: UIImage(named: bgName))
-        addSubview(bg)
-        bg.frame = CGRect(x: 0, y: 0, width: w, height: h)
+        maskView.addSubview(bg)
+        bg.frame = CGRect(x: 0, y: 0, width: w, height: bgYScale * h)
         bg.contentMode = .ScaleAspectFill
 
         //头像
         avatar = UIImageView(image: UIImage(named: headImgName))
-        addSubview(avatar!)
-        let avatarW: CGFloat = 70
-        avatar!.snp_makeConstraints{ make in
-            make.size.equalTo(CGSize(width: avatarW, height: avatarW))
-            make.centerX.equalTo(self)
-            make.centerY.equalTo(self).offset(-13.0)
-        }
+        maskView.addSubview(avatar!)
+        avatar.frame = CGRect(
+            x: 0.5 * w - 0.5 * avatarW,
+            y: 0.42 * h - 0.5 * avatarW,
+            width: avatarW,
+            height: avatarW)
 
         avatar.layer.cornerRadius = avatarW / 2 //圆形
         avatar.layer.masksToBounds = true //剪切掉边缘以外
@@ -70,12 +76,12 @@ class InfoHeadView: UIView {
 
         //名字
         title = UILabel()
-        addSubview(title!)
-        title.snp_makeConstraints{ make in
-            make.size.equalTo(CGSize(width: w, height: CGFloat(h) * 0.2))
-            make.centerX.equalTo(self)
-            make.centerY.equalTo(self.snp_bottom).offset(-43.0)
-        }
+        maskView.addSubview(title!)
+
+        title.bounds = CGRect(x: 0, y: 0, width: w, height: 0.2 * h)
+        title.center.x = avatar.center.x
+        title.center.y = avatar.center.y + 50
+
         title.textAlignment = NSTextAlignment.Center
         title.font = UIFont.systemFontOfSize(14.0)
         title.text = titleStr
@@ -86,12 +92,12 @@ class InfoHeadView: UIView {
 
         //签名
         subTitle = UILabel()
-        addSubview(subTitle!)
-        subTitle.snp_makeConstraints{ make in
-            make.size.equalTo(CGSize(width: w, height: CGFloat(h) * 0.1))
-            make.centerX.equalTo(self)
-            make.centerY.equalTo(self.snp_bottom).offset(-24.0)
-        }
+        maskView.addSubview(subTitle!)
+
+        subTitle.bounds = CGRect(x: 0, y: 0, width: w, height: 0.1 * h)
+        subTitle.center.x = avatar.center.x
+        subTitle.center.y = avatar.center.y + 70
+
         subTitle.textAlignment = NSTextAlignment.Center
         subTitle.font = UIFont.systemFontOfSize(11.0)
         subTitle.text = subTitleStr
@@ -138,9 +144,14 @@ class InfoHeadView: UIView {
         frame.origin.y = -curY
         print(dis, curY)
 
+        bg?.frame.origin.y = (1 - bgYScale) * frame.size.height + (bgYScale * frame.size.height + destY) * (1 - curAlpha)
 
+        let destAvatarY = 0.58 * frame.size.height - 22
+        let t = CGAffineTransformMakeTranslation(0, destAvatarY * (1 - curAlpha))
+        avatar?.transform = CGAffineTransformScale(t, imgReduce, imgReduce)
 
-        
+        title?.transform = t
+        subTitle?.transform = t
 
     }
 }
