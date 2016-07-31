@@ -56,7 +56,7 @@ class InfoHeadView: UIView {
         //背景
         bg = UIImageView(image: UIImage(named: bgName))
         maskView.addSubview(bg)
-        bg.frame = CGRect(x: 0, y: 0, width: w, height: bgYScale * h)
+        bg.frame = CGRect(x: 0, y: (1 - bgYScale) * h, width: w, height: bgYScale * h)
         bg.contentMode = .ScaleAspectFill
 
         //头像
