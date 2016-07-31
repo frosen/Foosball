@@ -27,7 +27,7 @@ class InfoHeadView: UIView {
     init(scrollView: UIScrollView, includeNavBar: Bool = false) {
         self.scrollView = scrollView
         if includeNavBar {
-            self.extraHeight = 64
+            self.extraHeight = 64 // 44 + 20
         }
 
         let w: CGFloat = UIScreen.mainScreen().bounds.width
@@ -51,14 +51,14 @@ class InfoHeadView: UIView {
         let h: CGFloat = frame.size.height
 
         //裁剪背景图
-        let maskView = UIView(frame: CGRect(x: 0, y: 0, width: w, height: h))
+        let maskView = UIView(frame: CGRect(x: 0, y: 0, width: w, height: h + extraHeight))
         addSubview(maskView)
         maskView.layer.masksToBounds = true
 
         //背景
         bg = UIImageView(image: UIImage(named: bgName))
         maskView.addSubview(bg)
-        bg.frame = CGRect(x: 0, y: (1 - bgYScale) * h, width: w, height: bgYScale * h)
+        bg.frame = CGRect(x: 0, y: (1 - bgYScale) * h + extraHeight, width: w, height: bgYScale * h)
         bg.contentMode = .ScaleAspectFill
 
         //头像
@@ -66,7 +66,7 @@ class InfoHeadView: UIView {
         maskView.addSubview(avatar!)
         avatar.frame = CGRect(
             x: 0.5 * w - 0.5 * avatarW,
-            y: 0.42 * h - 0.5 * avatarW,
+            y: 0.42 * h - 0.5 * avatarW + extraHeight,
             width: avatarW,
             height: avatarW)
 
@@ -138,18 +138,19 @@ class InfoHeadView: UIView {
 
         let curY = realOffsetY - startY
 
-        let curAlpha = 1 - curY / dis
+        let rate = 1 - curY / dis
+        let curAlpha = 1 - curY / (dis - extraHeight * 1.5) //为了在有nav时更早的隐藏，以便不遮挡其他UI
         let imgReduce = 1 - 0.5 * curY / dis
 
         title?.alpha = curAlpha
         subTitle?.alpha = curAlpha
         frame.origin.y = -curY
-        print(dis, curY)
+        print(rate, curAlpha, curY, dis)
 
-        bg?.frame.origin.y = (1 - bgYScale) * frame.size.height + (bgYScale * frame.size.height + destY) * (1 - curAlpha)
+        bg?.frame.origin.y = (1 - bgYScale) * frame.size.height + (bgYScale * frame.size.height + destY) * (1 - rate) + extraHeight
 
         let destAvatarY = 0.58 * frame.size.height - 22
-        let t = CGAffineTransformMakeTranslation(0, destAvatarY * (1 - curAlpha))
+        let t = CGAffineTransformMakeTranslation(0, destAvatarY * (1 - rate))
         avatar?.transform = CGAffineTransformScale(t, imgReduce, imgReduce)
 
         title?.transform = t

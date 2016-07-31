@@ -55,6 +55,7 @@ class OwnController: BaseTableController, UITableViewDelegate, UITableViewDataSo
         //隐藏导航栏，并让tableview位置忽略导航栏
         navigationController!.navigationBarHidden = true
         automaticallyAdjustsScrollViewInsets = false
+//        navigationController?.navigationBar.subviews[0].alpha = 0.0
 
         //创建tableView
         tableView = UITableView(frame: view.bounds, style: .Grouped)
@@ -68,11 +69,9 @@ class OwnController: BaseTableController, UITableViewDelegate, UITableViewDataSo
         tableView.showsVerticalScrollIndicator = false //隐藏滑动条
 
         //添加信息头
-        infoHead = InfoHeadView(scrollView: tableView, includeNavBar: true)
+        infoHead = InfoHeadView(scrollView: tableView)
         view.insertSubview(infoHead, aboveSubview: tableView)
         infoHead!.initUIData(bgImaName: "selfbg", headImgName: "default_avatar", titleStr: "聂小倩", subTitleStr: "个性签名，啦啦啦")
-
-
     }
 
     //table view
