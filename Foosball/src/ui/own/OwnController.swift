@@ -68,7 +68,7 @@ class OwnController: BaseTableController, UITableViewDelegate, UITableViewDataSo
         tableView.showsVerticalScrollIndicator = false //隐藏滑动条
 
         //添加信息头
-        infoHead = InfoHeadView(scrollView: tableView, extraHeight: 0)
+        infoHead = InfoHeadView(scrollView: tableView, includeNavBar: true)
         view.insertSubview(infoHead, aboveSubview: tableView)
         infoHead!.initUIData(bgImaName: "selfbg", headImgName: "default_avatar", titleStr: "聂小倩", subTitleStr: "个性签名，啦啦啦")
 

@@ -10,7 +10,7 @@ import UIKit
 
 class InfoHeadView: UIView {
     var scrollView: UIScrollView
-    var extraHeight: CGFloat
+    var extraHeight: CGFloat = 0
 
     var bg: UIImageView! = nil
     var avatar: UIImageView! = nil
@@ -24,9 +24,11 @@ class InfoHeadView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(scrollView: UIScrollView, extraHeight: CGFloat) {
+    init(scrollView: UIScrollView, includeNavBar: Bool = false) {
         self.scrollView = scrollView
-        self.extraHeight = extraHeight
+        if includeNavBar {
+            self.extraHeight = 64
+        }
 
         let w: CGFloat = UIScreen.mainScreen().bounds.width
         let h: CGFloat = 160
@@ -34,7 +36,7 @@ class InfoHeadView: UIView {
         super.init(frame: CGRect(x: 0, y: 0, width: w, height: h))
 
         //设置scroll
-        self.scrollView.addObserver(self, forKeyPath: "contentOffset", options: NSKeyValueObservingOptions.New, context: nil)
+        self.scrollView.addObserver(self, forKeyPath: "contentOffset", options: .New, context: nil)
 
         var inset = self.scrollView.contentInset
         inset.top = inset.top + h
