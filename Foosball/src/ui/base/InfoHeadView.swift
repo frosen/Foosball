@@ -12,13 +12,14 @@ class InfoHeadView: UIView {
     var scrollView: UIScrollView
     var extraHeight: CGFloat = 0
 
-    var bg: UIImageView! = nil
-    var avatar: UIImageView! = nil
-    var title: UILabel! = nil
-    var subTitle: UILabel! = nil
+    var bg: UIImageView? = nil
+    var avatarBG: UIView? = nil
+    var avatar: UIImageView? = nil
+    var title: UILabel? = nil
+    var subTitle: UILabel? = nil
 
-    var leftDataView: UIView! = nil
-    var rightDataView: UIView! = nil
+    var leftDataView: UIView? = nil
+    var rightDataView: UIView? = nil
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -57,61 +58,73 @@ class InfoHeadView: UIView {
 
         //背景
         bg = UIImageView(image: UIImage(named: bgName))
-        maskView.addSubview(bg)
-        bg.frame = CGRect(x: 0, y: (1 - bgYScale) * h + extraHeight, width: w, height: bgYScale * h)
-        bg.contentMode = .ScaleAspectFill
+        maskView.addSubview(bg!)
+        bg!.frame = CGRect(x: 0, y: (1 - bgYScale) * h + extraHeight, width: w, height: bgYScale * h)
+        bg!.contentMode = .ScaleAspectFill
 
         //头像
-        avatar = UIImageView(image: UIImage(named: headImgName))
-        maskView.addSubview(avatar!)
-        avatar.frame = CGRect(
+        avatarBG = UIView(frame: CGRect(
             x: 0.5 * w - 0.5 * avatarW,
             y: 0.42 * h - 0.5 * avatarW + extraHeight,
             width: avatarW,
-            height: avatarW)
+            height: avatarW))
+        maskView.addSubview(avatarBG!)
 
-        avatar.layer.cornerRadius = avatarW / 2 //圆形
-        avatar.layer.masksToBounds = true //剪切掉边缘以外
+        avatarBG!.backgroundColor = UIColor.grayColor() //随便给一种颜色，不给不能形成形状
 
-        avatar.layer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0).CGColor
-        avatar.layer.borderWidth = 1.5
+        avatarBG!.layer.cornerRadius = avatarW / 2 //圆形
+        avatarBG!.layer.shadowColor = UIColor.blackColor().CGColor
+        avatarBG!.layer.shadowOffset = CGSize(width: 2, height: 2)
+        avatarBG!.layer.shadowOpacity = 0.9
+        avatarBG!.layer.shadowRadius = 5
+
+        avatar = UIImageView(image: UIImage(named: headImgName))
+        avatarBG!.addSubview(avatar!)
+        avatar!.frame = CGRect(x: 0, y: 0, width: avatarW, height: avatarW)
+
+        avatar!.layer.cornerRadius = avatarW / 2 //圆形
+        avatar!.layer.masksToBounds = true //剪切掉边缘以外
+
+//        avatar!.layer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0).CGColor
+//        avatar!.layer.borderWidth = 1.5
 
         //名字
         title = UILabel()
         maskView.addSubview(title!)
 
-        title.bounds = CGRect(x: 0, y: 0, width: w, height: 0.2 * h)
-        title.center.x = avatar.center.x
-        title.center.y = avatar.center.y + 50
+        title!.bounds = CGRect(x: 0, y: 0, width: w, height: 0.2 * h)
+        title!.center.x = avatarBG!.center.x
+        title!.center.y = avatarBG!.center.y + 50
 
-        title.textAlignment = NSTextAlignment.Center
-        title.font = UIFont.systemFontOfSize(14.0)
-        title.text = titleStr
-        title.textColor = UIColor.whiteColor()
+        title!.textAlignment = NSTextAlignment.Center
+        title!.font = UIFont.systemFontOfSize(14.0)
+        title!.text = titleStr
+        title!.textColor = UIColor.whiteColor()
 
-        title.shadowColor = UIColor.blackColor()
-        title.shadowOffset = CGSize(width: 1, height: 1)
+        title!.shadowColor = UIColor.blackColor()
+        title!.shadowOffset = CGSize(width: 1, height: 1)
 
         //签名
         subTitle = UILabel()
         maskView.addSubview(subTitle!)
 
-        subTitle.bounds = CGRect(x: 0, y: 0, width: w, height: 0.1 * h)
-        subTitle.center.x = avatar.center.x
-        subTitle.center.y = avatar.center.y + 70
+        subTitle!.bounds = CGRect(x: 0, y: 0, width: w, height: 0.1 * h)
+        subTitle!.center.x = avatarBG!.center.x
+        subTitle!.center.y = avatarBG!.center.y + 70
 
-        subTitle.textAlignment = NSTextAlignment.Center
-        subTitle.font = UIFont.systemFontOfSize(11.0)
-        subTitle.text = subTitleStr
-        subTitle.textColor = UIColor.whiteColor()
+        subTitle!.textAlignment = NSTextAlignment.Center
+        subTitle!.font = UIFont.systemFontOfSize(11.0)
+        subTitle!.text = subTitleStr
+        subTitle!.textColor = UIColor.whiteColor()
 
-        subTitle.shadowColor = UIColor.blackColor()
-        subTitle.shadowOffset = CGSize(width: 1, height: 1)
+        subTitle!.shadowColor = UIColor.blackColor()
+        subTitle!.shadowOffset = CGSize(width: 1, height: 1)
     }
 
     //设置比赛数据，同时显示左右数据视图
     func initMatchData(fight fight: Int, honor: Int) {
         //左侧视图
+
 
         //右侧视图
     }
@@ -145,13 +158,12 @@ class InfoHeadView: UIView {
         title?.alpha = curAlpha
         subTitle?.alpha = curAlpha
         frame.origin.y = -curY
-        print(rate, curAlpha, curY, dis)
 
         bg?.frame.origin.y = (1 - bgYScale) * frame.size.height + (bgYScale * frame.size.height + destY) * (1 - rate) + extraHeight
 
         let destAvatarY = 0.58 * frame.size.height - 22
         let t = CGAffineTransformMakeTranslation(0, destAvatarY * (1 - rate))
-        avatar?.transform = CGAffineTransformScale(t, imgReduce, imgReduce)
+        avatarBG?.transform = CGAffineTransformScale(t, imgReduce, imgReduce)
 
         title?.transform = t
         subTitle?.transform = t
