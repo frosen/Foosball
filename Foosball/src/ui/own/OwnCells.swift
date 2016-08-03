@@ -9,9 +9,22 @@
 import UIKit
 
 class OwnScoreCell: UITableViewCell {
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    init(reuseIdentifier: String) {
+        super.init(style: .Default, reuseIdentifier: reuseIdentifier)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
+    class func getCellHeight() -> CGFloat {
+        return 44
+    }
+}
+
+class OwnRankCell: UITableViewCell {
+    init(reuseIdentifier: String) {
+        super.init(style: .Default, reuseIdentifier: reuseIdentifier)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -23,11 +36,9 @@ class OwnScoreCell: UITableViewCell {
     }
 }
 
-
 class OwnQRCell: UITableViewCell {
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-
+    init(reuseIdentifier: String) {
+        super.init(style: .Default, reuseIdentifier: reuseIdentifier)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -40,8 +51,8 @@ class OwnQRCell: UITableViewCell {
 }
 
 class OwnNormalCell: UITableViewCell {
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    init(reuseIdentifier: String) {
+        super.init(style: .Value1, reuseIdentifier: reuseIdentifier)
 
         textLabel?.font = UIFont.systemFontOfSize(13)
         detailTextLabel?.font = UIFont.systemFontOfSize(13)

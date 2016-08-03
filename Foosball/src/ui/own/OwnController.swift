@@ -80,7 +80,9 @@ class OwnController: BaseTableController, UITableViewDelegate, UITableViewDataSo
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (section == 0 || section == 1) {
+        if section == 0 {
+            return 2
+        } else if section == 1 {
             return 1
         } else {
             return group[section - 2].count
@@ -89,7 +91,7 @@ class OwnController: BaseTableController, UITableViewDelegate, UITableViewDataSo
     }
 
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if (section == 0) {
+        if section == 0 {
             return 0.1
         } else {
             return 10
@@ -101,8 +103,12 @@ class OwnController: BaseTableController, UITableViewDelegate, UITableViewDataSo
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if (indexPath.section == 0) {
-            return OwnNormalCell.getCellHeight()
+        if indexPath.section == 0 {
+            if indexPath.row == 0 {
+                return OwnScoreCell.getCellHeight()
+            } else {
+                return OwnRankCell.getCellHeight()
+            }
         } else if (indexPath.section == 1) {
             return OwnQRCell.getCellHeight()
         } else {
@@ -114,36 +120,39 @@ class OwnController: BaseTableController, UITableViewDelegate, UITableViewDataSo
     let ownQRCellId = "OQRCId"
     let ownNorCellId = "ONorCId"
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if (indexPath.section == 0) {
-            //比赛成绩
-            var cell = tableView.dequeueReusableCellWithIdentifier(ownScoCellId)
-            if (cell == nil) {
-                cell = OwnScoreCell(style: .Default, reuseIdentifier: ownScoCellId)
+        var cell: UITableViewCell?
+        if indexPath.section == 0 {
+            if indexPath.row == 0 {
+                //比赛成绩
+                cell = tableView.dequeueReusableCellWithIdentifier(ownScoCellId)
+                if (cell == nil) {
+                    cell = OwnScoreCell(reuseIdentifier: ownScoCellId)
+                }
+            } else {
+                //排名
+                cell = tableView.dequeueReusableCellWithIdentifier(ownScoCellId)
+                if (cell == nil) {
+                    cell = OwnRankCell(reuseIdentifier: ownScoCellId)
+                }
             }
-            return cell!
         } else if (indexPath.section == 1) {
             //二维码
-            var cell = tableView.dequeueReusableCellWithIdentifier(ownQRCellId)
-            if (cell == nil) {
-                cell = OwnQRCell(style: .Default, reuseIdentifier: ownQRCellId)
+            cell = tableView.dequeueReusableCellWithIdentifier(ownQRCellId)
+            if cell == nil {
+                cell = OwnQRCell(reuseIdentifier: ownQRCellId)
             }
-            return cell!
         } else {
             //其他项目
-            var cell = tableView.dequeueReusableCellWithIdentifier(ownNorCellId)
-            if (cell == nil) {
-                cell = OwnNormalCell(style: .Value1, reuseIdentifier: ownNorCellId)
+            cell = tableView.dequeueReusableCellWithIdentifier(ownNorCellId)
+            if cell == nil {
+                cell = OwnNormalCell(reuseIdentifier: ownNorCellId)
 
                 let data: NorCellData = group[indexPath.section - 2][indexPath.row]
                 let norCell = cell as! OwnNormalCell
                 norCell.setUIData(image: data.img, title: data.title, subTitle: data.subTitle)
-                cell!.imageView!.image = UIImage(named: data.img)
-                cell!.textLabel!.text = data.title
-                cell!.detailTextLabel!.text = data.subTitle
-                cell!.accessoryType = .DisclosureIndicator
             }
-            return cell!
         }
+        return cell!
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
