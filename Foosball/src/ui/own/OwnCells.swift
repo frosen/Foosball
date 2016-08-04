@@ -11,6 +11,7 @@ import UIKit
 class OwnScoreCell: UITableViewCell {
     init(reuseIdentifier: String) {
         super.init(style: .Default, reuseIdentifier: reuseIdentifier)
+        self.accessoryType = .DisclosureIndicator
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -25,6 +26,7 @@ class OwnScoreCell: UITableViewCell {
 class OwnRankCell: UITableViewCell {
     init(reuseIdentifier: String) {
         super.init(style: .Default, reuseIdentifier: reuseIdentifier)
+        self.accessoryType = .DisclosureIndicator
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -39,6 +41,7 @@ class OwnRankCell: UITableViewCell {
 class OwnQRCell: UITableViewCell {
     init(reuseIdentifier: String) {
         super.init(style: .Default, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .None //使选中后没有反应
     }
 
     required init?(coder aDecoder: NSCoder) {

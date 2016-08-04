@@ -62,7 +62,7 @@ class OwnController: BaseTableController, UITableViewDelegate, UITableViewDataSo
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 48, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 96, right: 0) //48 ＋ 48 tabbar向上48个像素结束
 
         //设置tableview的基本属性，分割线等
         tableView.separatorInset = UIEdgeInsetsZero
