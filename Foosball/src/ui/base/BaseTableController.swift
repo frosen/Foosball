@@ -8,14 +8,14 @@
 
 import UIKit
 
-class BaseTableController: UIViewController {
+class BaseController: UIViewController {
 
     //设置导航栏控件，如果检测未登陆则使用登陆注册，如果未调用此接口则不设置
     func initNavBar() {
         //左
 
         //右
-        navigationItem.rightBarButtonItem = createBarBtnItem(#selector(BaseTableController.onClickSearch(_:)), image: "search")
+        navigationItem.rightBarButtonItem = createBarBtnItem(#selector(BaseController.onClickSearch(_:)), image: "search")
     }
 
     func createBarBtnItem(action: Selector, image img: String) -> UIBarButtonItem {

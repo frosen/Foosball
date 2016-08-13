@@ -19,7 +19,7 @@ struct NorCellData {
     }
 }
 
-class OwnController: BaseTableController, UITableViewDelegate, UITableViewDataSource {
+class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource {
     //信息头，比赛成绩，QR，其他项目等group
     let group = [
         //section
@@ -125,13 +125,13 @@ class OwnController: BaseTableController, UITableViewDelegate, UITableViewDataSo
             if indexPath.row == 0 {
                 //比赛成绩
                 cell = tableView.dequeueReusableCellWithIdentifier(ownScoCellId)
-                if (cell == nil) {
+                if cell == nil {
                     cell = OwnScoreCell(reuseIdentifier: ownScoCellId)
                 }
             } else {
                 //排名
                 cell = tableView.dequeueReusableCellWithIdentifier(ownScoCellId)
-                if (cell == nil) {
+                if cell == nil {
                     cell = OwnRankCell(reuseIdentifier: ownScoCellId)
                 }
             }
