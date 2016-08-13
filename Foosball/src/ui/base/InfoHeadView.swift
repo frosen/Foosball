@@ -85,7 +85,7 @@ class InfoHeadView: UIView {
         avatar!.layer.cornerRadius = avatarW / 2 //圆形
         avatar!.layer.masksToBounds = true //剪切掉边缘以外
 
-//        avatar!.layer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0).CGColor
+//        avatar!.layer.borderColor = UIColor(white: 0.5, alpha: 1.0).CGColor
 //        avatar!.layer.borderWidth = 1.5
 
         //名字

@@ -25,7 +25,10 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
         tableView.delegate = self
         tableView.dataSource = self
 
-        tableView.separatorStyle = .None
+        tableView.separatorStyle = .None //不用他的分割线，自己画
+
+        tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -3) //否则滚动条和屏幕边会有一段间隔
+
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -34,11 +37,11 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
 
     //table view
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return 5
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return 1
 
     }
 
@@ -47,7 +50,7 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
     }
 
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 1
+        return 5
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -62,7 +65,7 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
         if cell == nil {
             cell = ChallengeCell(reuseIdentifier: chalCellId)
         }
-        cell.setData()
+//        cell.setData()
 
         return cell!
     }
