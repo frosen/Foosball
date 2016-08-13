@@ -71,5 +71,9 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let vc = DetailViewController()
+        navigationController!.pushViewController(vc, animated: true)
     }
+
+
 }

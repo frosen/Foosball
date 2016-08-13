@@ -10,6 +10,10 @@ import UIKit
 
 class ChallengeCell: UITableViewCell {
 
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     init(reuseIdentifier: String) {
         super.init(style: .Default, reuseIdentifier: reuseIdentifier)
 
@@ -17,6 +21,7 @@ class ChallengeCell: UITableViewCell {
         let h: CGFloat = ChallengeCell.getCellHeight()
         bounds = CGRect(x: 0, y: 0, width: w, height: h)
 
+        // 因为原来自动的selectionStyle会让subview的backgroundcolor变成透明，所以把自动的关闭，自己写一个
         selectionStyle = .None
 
         //事件板
@@ -24,27 +29,13 @@ class ChallengeCell: UITableViewCell {
         contentView.addSubview(eventBoard)
     }
 
-    // 因为原来自动的selectionStyle会让subview的backgroundcolor变成透明，所以把自动的关闭，自己写一个
-    func changeBackGroundColor(selected: Bool) {
-        if selected == true {
-            backgroundColor = UIColor(white: 0.92, alpha: 1.0)
+    override func setHighlighted(highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        if highlighted == true {
+            backgroundColor = UIColor(white: 0.97, alpha: 1.0)
         } else {
             backgroundColor = UIColor.whiteColor()
         }
-    }
-
-    override func setHighlighted(highlighted: Bool, animated: Bool) {
-        super.setHighlighted(highlighted, animated: animated)
-        changeBackGroundColor(highlighted)
-    }
-
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        changeBackGroundColor(selected)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 
     class func getCellHeight() -> CGFloat {
