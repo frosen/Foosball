@@ -8,53 +8,52 @@
 
 import UIKit
 
-class ItemTypeType {
-    var count: Int = 0
+enum EventState {
+    case invite //生成时给人发送邀请
+    case ongoing //邀请接受后
+    case refuse
+    case confirm
+    case cash
+    case finish
 }
 
-let Sport = ItemTypeType()
-let E_sport = ItemTypeType()
-
-class ItemType {
-    static var count: Int = 0
-    let itemTypeType: ItemTypeType
-    init(itemTypeType: ItemTypeType) {
-        ItemType.count += 1
-
-        self.itemTypeType = itemTypeType
-        itemTypeType.count += 1
+class UserState {
+    var user: User
+    var state: EventState
+    init(user: User, state: EventState) {
+        self.user = user
+        self.state = state
     }
 }
 
-let Foosball = ItemType(itemTypeType: Sport)
-let LOL = ItemType(itemTypeType: E_sport)
+class Event: DataCore {
+    //类型 对决 乱斗 挑战 求教 会友
+    //    var type: EventType
 
-
-
-class Event: NSObject {
     //项目
     var item: ItemType
 
-    //类型
-//    var type: EventType
+    //其他人是否可以增加新人 对决为false，其他为true，如果为true还能设置人数上限，默认不限
 
-    //组队还是个人
+    //发送方以及状态
+    var senderStateList: [UserState] = []
 
-    //发送方
-
-    //接收方
-
-    //兑现物
-
-    //状态
-
-    //对话list
+    //接收方以及状态
+    var receiverStateList: [UserState] = []
 
     //位置信息
 
-    init(item: ItemType) {
+    //操作时间
+
+    //兑现物
+
+    //对话list
+
+
+
+    init(id: DataID, item: ItemType) {
         self.item = item
-        super.init()
+        super.init(ID: id)
 
     }
 }
