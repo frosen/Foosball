@@ -37,7 +37,7 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
 
     //table view
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 5
+        return 1
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

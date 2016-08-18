@@ -11,11 +11,12 @@
 		6507AC0A1D55B7C900791FB1 /* ChallengeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6507AC091D55B7C900791FB1 /* ChallengeCell.swift */; };
 		6572191E1D5ECB58007DCE6A /* EventBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6572191D1D5ECB58007DCE6A /* EventBoard.swift */; };
 		657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657219201D5EFA2A007DCE6A /* DetailViewController.swift */; };
+		657CEE131D65871C007C0C27 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657CEE121D65871C007C0C27 /* ScanViewController.swift */; };
 		658E06741D56C7C8008D94FC /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E06731D56C7C8008D94FC /* Event.swift */; };
 		6594BC2C1D464B8700775929 /* InfoHeadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6594BC2B1D464B8700775929 /* InfoHeadView.swift */; };
 		65AB52451D3291E6005E7D4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52371D3291E6005E7D4C /* AppDelegate.swift */; };
 		65AB52461D3291E6005E7D4C /* Director.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52391D3291E6005E7D4C /* Director.swift */; };
-		65AB52471D3291E6005E7D4C /* BaseTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB523C1D3291E6005E7D4C /* BaseTableController.swift */; };
+		65AB52471D3291E6005E7D4C /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB523C1D3291E6005E7D4C /* BaseController.swift */; };
 		65AB52481D3291E6005E7D4C /* MyTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB523D1D3291E6005E7D4C /* MyTabBar.swift */; };
 		65AB52491D3291E6005E7D4C /* MyTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB523E1D3291E6005E7D4C /* MyTabBarItem.swift */; };
 		65AB524A1D3291E6005E7D4C /* ChallengeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52401D3291E6005E7D4C /* ChallengeController.swift */; };
@@ -33,12 +34,13 @@
 		6507AC091D55B7C900791FB1 /* ChallengeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeCell.swift; sourceTree = "<group>"; };
 		6572191D1D5ECB58007DCE6A /* EventBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventBoard.swift; sourceTree = "<group>"; };
 		657219201D5EFA2A007DCE6A /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailViewController.swift; path = detail/DetailViewController.swift; sourceTree = "<group>"; };
+		657CEE121D65871C007C0C27 /* ScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
 		658E06731D56C7C8008D94FC /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = model/Event.swift; sourceTree = "<group>"; };
 		6594BC2B1D464B8700775929 /* InfoHeadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoHeadView.swift; sourceTree = "<group>"; };
 		65AB52371D3291E6005E7D4C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65AB52381D3291E6005E7D4C /* Bridging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bridging.h; sourceTree = "<group>"; };
 		65AB52391D3291E6005E7D4C /* Director.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Director.swift; sourceTree = "<group>"; };
-		65AB523C1D3291E6005E7D4C /* BaseTableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableController.swift; sourceTree = "<group>"; };
+		65AB523C1D3291E6005E7D4C /* BaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
 		65AB523D1D3291E6005E7D4C /* MyTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTabBar.swift; sourceTree = "<group>"; };
 		65AB523E1D3291E6005E7D4C /* MyTabBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTabBarItem.swift; sourceTree = "<group>"; };
 		65AB52401D3291E6005E7D4C /* ChallengeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeController.swift; sourceTree = "<group>"; };
@@ -139,11 +141,12 @@
 		65AB523B1D3291E6005E7D4C /* base */ = {
 			isa = PBXGroup;
 			children = (
-				65AB523C1D3291E6005E7D4C /* BaseTableController.swift */,
+				65AB523C1D3291E6005E7D4C /* BaseController.swift */,
 				65AB523D1D3291E6005E7D4C /* MyTabBar.swift */,
 				65AB523E1D3291E6005E7D4C /* MyTabBarItem.swift */,
 				6594BC2B1D464B8700775929 /* InfoHeadView.swift */,
 				6572191D1D5ECB58007DCE6A /* EventBoard.swift */,
+				657CEE121D65871C007C0C27 /* ScanViewController.swift */,
 			);
 			path = base;
 			sourceTree = "<group>";
@@ -231,6 +234,12 @@
 				TargetAttributes = {
 					65B775391D3228710040716C = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = EXTR923J93;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -326,7 +335,7 @@
 				65AB524D1D3291E6005E7D4C /* RootViewController.swift in Sources */,
 				658E06741D56C7C8008D94FC /* Event.swift in Sources */,
 				65AB524B1D3291E6005E7D4C /* OwnCells.swift in Sources */,
-				65AB52471D3291E6005E7D4C /* BaseTableController.swift in Sources */,
+				65AB52471D3291E6005E7D4C /* BaseController.swift in Sources */,
 				65AB52461D3291E6005E7D4C /* Director.swift in Sources */,
 				65AB52491D3291E6005E7D4C /* MyTabBarItem.swift in Sources */,
 				65D427F91D5FEB5900994EA8 /* Item.swift in Sources */,
@@ -334,6 +343,7 @@
 				65AB524C1D3291E6005E7D4C /* OwnController.swift in Sources */,
 				65AB52481D3291E6005E7D4C /* MyTabBar.swift in Sources */,
 				657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */,
+				657CEE131D65871C007C0C27 /* ScanViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
