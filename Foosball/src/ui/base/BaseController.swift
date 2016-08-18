@@ -36,13 +36,16 @@ class BaseController: UIViewController {
         print("scan")
         let vc = ScanViewController()
         navigationController!.pushViewController(vc, animated: true)
-
-        //隐藏tabbar
         rootViewController!.hideTabBar()
     }
 
     //跳转到搜索页面
     func onClickSearch(sender: AnyObject) {
         print("search")
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        rootViewController!.showTabBar() //显示tabbar
     }
 }

@@ -31,10 +31,6 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
 
     }
 
-    override func viewWillAppear(animated: Bool) {
-        
-    }
-
     //table view
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
