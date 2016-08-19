@@ -53,7 +53,7 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
         print("个人页面")
 
         //隐藏导航栏，并让tableview位置忽略导航栏
-        navigationController!.navigationBarHidden = true
+        navTabType = .HideNav
         automaticallyAdjustsScrollViewInsets = false
 //        navigationController?.navigationBar.subviews[0].alpha = 0.0
 

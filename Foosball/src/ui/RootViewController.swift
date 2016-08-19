@@ -14,8 +14,6 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
     var items: [UITabBarItem] = []
 
     var myTabBar: MyTabBar! = nil
-    var tabBarYHide: CGFloat = 0 // tabbar隐藏时候的Y轴位置
-    var tabBarYShow: CGFloat = 0
 
     override func viewDidLoad() {
         initUI()
@@ -60,7 +58,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
         items.append(vc.tabBarItem)
 
         // 让子控制器知道根控制器
-        vc.rootViewController = self
+        vc.rootVC = self
     }
 
     func initTabBar() {
@@ -73,9 +71,6 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
         myTabBar.myTabBarDelegate = self
         myTabBar.backgroundColor = UIColor(red: 1.0, green: 0.8, blue: 0.8, alpha: 1.0)
         myTabBar.tintColor = UIColor.orangeColor()
-
-        tabBarYShow = self.myTabBar.center.y
-        tabBarYHide = tabBarYShow + 60
     }
 
     // MyTabBarDelegate
@@ -86,20 +81,6 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
     func tabBar(tabBar: MyTabBar, didClickMidButton btn: UIButton) {
         print("mid button")
     }
-
-    //隐藏和显示tabbar
-    func hideTabBar() {
-        UIView.animateWithDuration(0.2, delay: 0.3, options: .CurveEaseIn, animations: {
-            self.myTabBar.center.y = self.tabBarYHide
-        }, completion: nil)
-    }
-
-    func showTabBar() {
-        UIView.animateWithDuration(0.2, delay: 0.3, options: .CurveEaseOut, animations: {
-            self.myTabBar.center.y = self.tabBarYShow
-            }, completion: nil)
-    }
-
 }
 
 

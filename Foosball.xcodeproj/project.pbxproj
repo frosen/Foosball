@@ -23,6 +23,7 @@
 		65AB524B1D3291E6005E7D4C /* OwnCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52421D3291E6005E7D4C /* OwnCells.swift */; };
 		65AB524C1D3291E6005E7D4C /* OwnController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52431D3291E6005E7D4C /* OwnController.swift */; };
 		65AB524D1D3291E6005E7D4C /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52441D3291E6005E7D4C /* RootViewController.swift */; };
+		65B4F2F31D67011A00F8E961 /* NavTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B4F2F21D67011A00F8E961 /* NavTabController.swift */; };
 		65B775471D3228710040716C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65B775461D3228710040716C /* Assets.xcassets */; };
 		65B7754A1D3228710040716C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65B775481D3228710040716C /* LaunchScreen.storyboard */; };
 		65D427F91D5FEB5900994EA8 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D427F81D5FEB5900994EA8 /* Item.swift */; };
@@ -47,6 +48,7 @@
 		65AB52421D3291E6005E7D4C /* OwnCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnCells.swift; sourceTree = "<group>"; };
 		65AB52431D3291E6005E7D4C /* OwnController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnController.swift; sourceTree = "<group>"; };
 		65AB52441D3291E6005E7D4C /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RootViewController.swift; path = ui/RootViewController.swift; sourceTree = "<group>"; };
+		65B4F2F21D67011A00F8E961 /* NavTabController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavTabController.swift; sourceTree = "<group>"; };
 		65B7753A1D3228710040716C /* Foosball.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Foosball.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65B775461D3228710040716C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		65B775491D3228710040716C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 		65AB523B1D3291E6005E7D4C /* base */ = {
 			isa = PBXGroup;
 			children = (
+				65B4F2F21D67011A00F8E961 /* NavTabController.swift */,
 				65AB523C1D3291E6005E7D4C /* BaseController.swift */,
 				65AB523D1D3291E6005E7D4C /* MyTabBar.swift */,
 				65AB523E1D3291E6005E7D4C /* MyTabBarItem.swift */,
@@ -327,6 +330,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				65AB52451D3291E6005E7D4C /* AppDelegate.swift in Sources */,
+				65B4F2F31D67011A00F8E961 /* NavTabController.swift in Sources */,
 				6572191E1D5ECB58007DCE6A /* EventBoard.swift in Sources */,
 				65AB524A1D3291E6005E7D4C /* ChallengeController.swift in Sources */,
 				65D427FE1D60748400994EA8 /* BaseData.swift in Sources */,

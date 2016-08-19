@@ -8,10 +8,7 @@
 
 import UIKit
 
-class BaseController: UIViewController {
-
-    //根控制器
-    var rootViewController: RootViewController? = nil
+class BaseController: NavTabController {
 
     //设置导航栏控件，如果检测未登陆则使用登陆注册，如果未调用此接口则不设置
     func initNavBar() {
@@ -35,17 +32,12 @@ class BaseController: UIViewController {
     func onClickScan(sender: AnyObject) {
         print("scan")
         let vc = ScanViewController()
+        vc.rootVC = rootVC
         navigationController!.pushViewController(vc, animated: true)
-        rootViewController!.hideTabBar()
     }
 
     //跳转到搜索页面
     func onClickSearch(sender: AnyObject) {
         print("search")
-    }
-
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        rootViewController!.showTabBar() //显示tabbar
     }
 }

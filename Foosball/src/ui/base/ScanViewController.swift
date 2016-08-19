@@ -8,13 +8,13 @@
 
 import UIKit
 
-class ScanViewController: UIViewController {
+class ScanViewController: NavTabController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // 隐藏导航栏和tabbar
-//        navigationController!.navigationBarHidden = true
+        navTabType = [.HideTab, .HideNav]
         automaticallyAdjustsScrollViewInsets = false
 
         view.clipsToBounds = true //这个属性必须打开否则返回的时候会出现黑边
@@ -58,12 +58,5 @@ class ScanViewController: UIViewController {
     func onBack(sender: AnyObject) {
         navigationController?.popViewControllerAnimated(true)
     }
-
-    override func viewWillAppear(animated: Bool) {
-        navigationController?.navigationBar.hidden = true
-    }
-
-    override func viewWillDisappear(animated: Bool) {
-        navigationController?.navigationBar.hidden = false
-    }
+    
 }
