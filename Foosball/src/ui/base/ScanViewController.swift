@@ -43,7 +43,6 @@ class ScanViewController: NavTabController {
 
     func initNavView() {
         // 返回
-        setBtn(#selector(ScanViewController.onBack(_:)), imgName: "scan_btn_back", centerPos: CGPoint(x: 54, y: 42))
     }
 
     func setBtn(action: Selector, imgName: String, centerPos: CGPoint) {
