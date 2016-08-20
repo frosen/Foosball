@@ -9,16 +9,12 @@
 /* Begin PBXBuildFile section */
 		3250913C82FFF635417020BD /* Pods_Foosball.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81C567789B96B0906D4D436 /* Pods_Foosball.framework */; };
 		6507AC0A1D55B7C900791FB1 /* ChallengeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6507AC091D55B7C900791FB1 /* ChallengeCell.swift */; };
-		6572191E1D5ECB58007DCE6A /* EventBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6572191D1D5ECB58007DCE6A /* EventBoard.swift */; };
 		657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657219201D5EFA2A007DCE6A /* DetailViewController.swift */; };
 		657CEE131D65871C007C0C27 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657CEE121D65871C007C0C27 /* ScanViewController.swift */; };
 		658E06741D56C7C8008D94FC /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E06731D56C7C8008D94FC /* Event.swift */; };
-		6594BC2C1D464B8700775929 /* InfoHeadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6594BC2B1D464B8700775929 /* InfoHeadView.swift */; };
 		65AB52451D3291E6005E7D4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52371D3291E6005E7D4C /* AppDelegate.swift */; };
 		65AB52461D3291E6005E7D4C /* Director.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52391D3291E6005E7D4C /* Director.swift */; };
 		65AB52471D3291E6005E7D4C /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB523C1D3291E6005E7D4C /* BaseController.swift */; };
-		65AB52481D3291E6005E7D4C /* MyTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB523D1D3291E6005E7D4C /* MyTabBar.swift */; };
-		65AB52491D3291E6005E7D4C /* MyTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB523E1D3291E6005E7D4C /* MyTabBarItem.swift */; };
 		65AB524A1D3291E6005E7D4C /* ChallengeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52401D3291E6005E7D4C /* ChallengeController.swift */; };
 		65AB524B1D3291E6005E7D4C /* OwnCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52421D3291E6005E7D4C /* OwnCells.swift */; };
 		65AB524C1D3291E6005E7D4C /* OwnController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52431D3291E6005E7D4C /* OwnController.swift */; };
@@ -29,21 +25,21 @@
 		65D427F91D5FEB5900994EA8 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D427F81D5FEB5900994EA8 /* Item.swift */; };
 		65D427FC1D6073D700994EA8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D427FB1D6073D700994EA8 /* User.swift */; };
 		65D427FE1D60748400994EA8 /* BaseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D427FD1D60748400994EA8 /* BaseData.swift */; };
+		65F14B861D68439D0073D547 /* EventBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F14B821D68439D0073D547 /* EventBoard.swift */; };
+		65F14B871D68439D0073D547 /* InfoHeadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F14B831D68439D0073D547 /* InfoHeadView.swift */; };
+		65F14B881D68439D0073D547 /* MyTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F14B841D68439D0073D547 /* MyTabBar.swift */; };
+		65F14B891D68439D0073D547 /* MyTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F14B851D68439D0073D547 /* MyTabBarItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		6507AC091D55B7C900791FB1 /* ChallengeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeCell.swift; sourceTree = "<group>"; };
-		6572191D1D5ECB58007DCE6A /* EventBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventBoard.swift; sourceTree = "<group>"; };
 		657219201D5EFA2A007DCE6A /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailViewController.swift; path = detail/DetailViewController.swift; sourceTree = "<group>"; };
 		657CEE121D65871C007C0C27 /* ScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
 		658E06731D56C7C8008D94FC /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = model/Event.swift; sourceTree = "<group>"; };
-		6594BC2B1D464B8700775929 /* InfoHeadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoHeadView.swift; sourceTree = "<group>"; };
 		65AB52371D3291E6005E7D4C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65AB52381D3291E6005E7D4C /* Bridging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bridging.h; sourceTree = "<group>"; };
 		65AB52391D3291E6005E7D4C /* Director.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Director.swift; sourceTree = "<group>"; };
 		65AB523C1D3291E6005E7D4C /* BaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
-		65AB523D1D3291E6005E7D4C /* MyTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTabBar.swift; sourceTree = "<group>"; };
-		65AB523E1D3291E6005E7D4C /* MyTabBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTabBarItem.swift; sourceTree = "<group>"; };
 		65AB52401D3291E6005E7D4C /* ChallengeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeController.swift; sourceTree = "<group>"; };
 		65AB52421D3291E6005E7D4C /* OwnCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnCells.swift; sourceTree = "<group>"; };
 		65AB52431D3291E6005E7D4C /* OwnController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnController.swift; sourceTree = "<group>"; };
@@ -56,6 +52,10 @@
 		65D427F81D5FEB5900994EA8 /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Item.swift; path = model/Item.swift; sourceTree = "<group>"; };
 		65D427FB1D6073D700994EA8 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = model/User.swift; sourceTree = "<group>"; };
 		65D427FD1D60748400994EA8 /* BaseData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseData.swift; path = model/BaseData.swift; sourceTree = "<group>"; };
+		65F14B821D68439D0073D547 /* EventBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventBoard.swift; path = widget/EventBoard.swift; sourceTree = "<group>"; };
+		65F14B831D68439D0073D547 /* InfoHeadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InfoHeadView.swift; path = widget/InfoHeadView.swift; sourceTree = "<group>"; };
+		65F14B841D68439D0073D547 /* MyTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyTabBar.swift; path = widget/MyTabBar.swift; sourceTree = "<group>"; };
+		65F14B851D68439D0073D547 /* MyTabBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MyTabBarItem.swift; path = widget/MyTabBarItem.swift; sourceTree = "<group>"; };
 		CB81153F97C8259E0408EA86 /* Pods-Foosball.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Foosball.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Foosball/Pods-Foosball.debug.xcconfig"; sourceTree = "<group>"; };
 		D81C567789B96B0906D4D436 /* Pods_Foosball.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Foosball.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E78D8581CCBC44E615441E59 /* Pods-Foosball.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Foosball.release.xcconfig"; path = "Pods/Target Support Files/Pods-Foosball/Pods-Foosball.release.xcconfig"; sourceTree = "<group>"; };
@@ -136,6 +136,7 @@
 				65AB523F1D3291E6005E7D4C /* challenge */,
 				65AB52411D3291E6005E7D4C /* own */,
 				6572191F1D5EF9BC007DCE6A /* detail */,
+				65F14B811D68435D0073D547 /* widget */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -145,10 +146,6 @@
 			children = (
 				65B4F2F21D67011A00F8E961 /* NavTabController.swift */,
 				65AB523C1D3291E6005E7D4C /* BaseController.swift */,
-				65AB523D1D3291E6005E7D4C /* MyTabBar.swift */,
-				65AB523E1D3291E6005E7D4C /* MyTabBarItem.swift */,
-				6594BC2B1D464B8700775929 /* InfoHeadView.swift */,
-				6572191D1D5ECB58007DCE6A /* EventBoard.swift */,
 				657CEE121D65871C007C0C27 /* ScanViewController.swift */,
 			);
 			path = base;
@@ -200,6 +197,17 @@
 				65AB52361D3291E6005E7D4C /* src */,
 			);
 			path = Foosball;
+			sourceTree = "<group>";
+		};
+		65F14B811D68435D0073D547 /* widget */ = {
+			isa = PBXGroup;
+			children = (
+				65F14B821D68439D0073D547 /* EventBoard.swift */,
+				65F14B831D68439D0073D547 /* InfoHeadView.swift */,
+				65F14B841D68439D0073D547 /* MyTabBar.swift */,
+				65F14B851D68439D0073D547 /* MyTabBarItem.swift */,
+			);
+			name = widget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -331,21 +339,21 @@
 			files = (
 				65AB52451D3291E6005E7D4C /* AppDelegate.swift in Sources */,
 				65B4F2F31D67011A00F8E961 /* NavTabController.swift in Sources */,
-				6572191E1D5ECB58007DCE6A /* EventBoard.swift in Sources */,
 				65AB524A1D3291E6005E7D4C /* ChallengeController.swift in Sources */,
 				65D427FE1D60748400994EA8 /* BaseData.swift in Sources */,
-				6594BC2C1D464B8700775929 /* InfoHeadView.swift in Sources */,
 				65D427FC1D6073D700994EA8 /* User.swift in Sources */,
+				65F14B881D68439D0073D547 /* MyTabBar.swift in Sources */,
+				65F14B891D68439D0073D547 /* MyTabBarItem.swift in Sources */,
+				65F14B871D68439D0073D547 /* InfoHeadView.swift in Sources */,
+				65F14B861D68439D0073D547 /* EventBoard.swift in Sources */,
 				65AB524D1D3291E6005E7D4C /* RootViewController.swift in Sources */,
 				658E06741D56C7C8008D94FC /* Event.swift in Sources */,
 				65AB524B1D3291E6005E7D4C /* OwnCells.swift in Sources */,
 				65AB52471D3291E6005E7D4C /* BaseController.swift in Sources */,
 				65AB52461D3291E6005E7D4C /* Director.swift in Sources */,
-				65AB52491D3291E6005E7D4C /* MyTabBarItem.swift in Sources */,
 				65D427F91D5FEB5900994EA8 /* Item.swift in Sources */,
 				6507AC0A1D55B7C900791FB1 /* ChallengeCell.swift in Sources */,
 				65AB524C1D3291E6005E7D4C /* OwnController.swift in Sources */,
-				65AB52481D3291E6005E7D4C /* MyTabBar.swift in Sources */,
 				657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */,
 				657CEE131D65871C007C0C27 /* ScanViewController.swift in Sources */,
 			);
