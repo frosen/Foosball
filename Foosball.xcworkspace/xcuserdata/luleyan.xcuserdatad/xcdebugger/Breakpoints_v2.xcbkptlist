@@ -42,13 +42,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Foosball/src/ui/base/BaseController.swift"
-            timestampString = "493373855.43249"
+            timestampString = "493380093.531899"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
-            landmarkName = "onClickScan(_:)"
-            landmarkType = "5">
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "BaseController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -46,7 +46,7 @@ class NavTabController: UIViewController {
         navigationItem.hidesBackButton = hideNav
 
         //透明导航栏
-        UIView.animateWithDuration(0.2, delay: 0.1, options: hideNavOpt, animations: {
+        UIView.animateWithDuration(0.3, delay: transparentNav ? 0.2 : 0.0, options: .CurveLinear, animations: {
             bar.subviews[0].alpha = transparentNav ? 0.0 : 1.0
             }, completion: nil)
 
