@@ -14,16 +14,24 @@ class ScanViewController: NavTabController {
         super.viewDidLoad()
 
         // 隐藏导航栏和tabbar
-        navTabType = [.HideTab, .HideNav]
+        navTabType = [.HideTab, .TransparentNav]
         automaticallyAdjustsScrollViewInsets = false
+        navigationItem.leftBarButtonItem = createBarBtnItem(#selector(ScanViewController.onBack(_:)), image: "go_back")
 
         view.clipsToBounds = true //这个属性必须打开否则返回的时候会出现黑边
 
         view.backgroundColor = UIColor.whiteColor()
 
         initMaskView()
-        initNavView()
+    }
 
+    func createBarBtnItem(action: Selector, image img: String) -> UIBarButtonItem {
+        let btn = UIButton(type: .Custom)
+        btn.addTarget(self, action: action, forControlEvents: .TouchUpInside)
+        btn.setBackgroundImage(UIImage(named: img), forState: .Normal)
+        let bSize = btn.currentBackgroundImage!.size
+        btn.bounds = CGRect(x: 0, y: 0, width: bSize.width, height: bSize.height)
+        return UIBarButtonItem(customView: btn)
     }
 
     let maskMargin: CGFloat = 35.0
@@ -39,10 +47,6 @@ class ScanViewController: NavTabController {
         let maskWidth = view.frame.width + borderWidth * 2 - maskMargin * 2
         mask.bounds = CGRect(x: 0, y: 0, width: maskWidth, height: maskWidth)
         mask.center = CGPoint(x: view.frame.width * 0.5, y: view.frame.height * 0.5)
-    }
-
-    func initNavView() {
-        // 返回
     }
 
     func setBtn(action: Selector, imgName: String, centerPos: CGPoint) {
