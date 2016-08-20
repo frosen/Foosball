@@ -55,7 +55,6 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
         //隐藏导航栏，并让tableview位置忽略导航栏
         navTabType = .HideNav
         automaticallyAdjustsScrollViewInsets = false
-//        navigationController?.navigationBar.subviews[0].alpha = 0.0
 
         //创建tableView
         tableView = UITableView(frame: view.bounds, style: .Grouped)
