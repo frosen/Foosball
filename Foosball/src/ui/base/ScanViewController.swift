@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import AVFoundation
 
-class ScanViewController: NavTabController {
+class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelegate {
 
     var mask: UIView! = nil
     var scanWindow: UIView! = nil
@@ -28,6 +29,7 @@ class ScanViewController: NavTabController {
 
         initMaskView()
         initScanWindowView()
+//        initScanning()
     }
 
     let maskMargin: CGFloat = 35.0
@@ -80,18 +82,17 @@ class ScanViewController: NavTabController {
         corner4.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 1.5))
 
         // 扫描网
-        scanNet = UIImageView(image: UIImage(named: "scan_net"))
+        resumeAnim()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ScanViewController.resumeAnim), name: "EnterForeground", object: nil)
     }
 
-    override func viewWillAppear(animated: Bool) {
-        resumeAnim()
-    }
-
     func resumeAnim() {
-        let layer = scanNet.layer
-        let anim = layer.animationForKey("translationAnimation")
+        let anim = scanNet?.layer.animationForKey("translationAnimation")
         if anim == nil {
+            if scanNet == nil {
+                scanNet = UIImageView(image: UIImage(named: "scan_net"))
+                scanWindow.addSubview(scanNet)
+            }
             let scanNetH: CGFloat = 241
             let scanWindowH = scanWindow.frame.height
             let scanNetW = scanWindowH
@@ -103,16 +104,27 @@ class ScanViewController: NavTabController {
             scanAnim.duration = 2.2
             scanAnim.repeatCount = MAXFLOAT
             scanNet.layer.addAnimation(scanAnim, forKey: "translationAnimation")
-
-            scanWindow.addSubview(scanNet)
         } else {
-            let pauseTime = layer.timeOffset // 1. 将动画的时间偏移量作为暂停时的时间点
+            let pauseTime = scanNet.layer.timeOffset // 1. 将动画的时间偏移量作为暂停时的时间点
             let beginTime = CACurrentMediaTime() - pauseTime // 2. 根据媒体时间计算出准确的启动动画时间，对之前暂停动画的时间进行修正
 
-            layer.timeOffset = 0.0 // 3. 要把偏移时间清零
-            layer.beginTime = beginTime // 4. 设置图层的开始动画时间
-            layer.speed = 1.0
+            scanNet.layer.timeOffset = 0.0 // 3. 要把偏移时间清零
+            scanNet.layer.beginTime = beginTime // 4. 设置图层的开始动画时间
+            scanNet.layer.speed = 1.0
         }
+    }
+
+    func initScanning() {
+        let device = AVCaptureDevice()
+        let input: AVCaptureDeviceInput
+        do {
+            try input = AVCaptureDeviceInput(device: device)
+        } catch {
+            return
+        }
+        let output = AVCaptureMetadataOutput()
+
+        output.setMetadataObjectsDelegate(self, queue: dispatch_get_main_queue())
     }
 
     func setBtn(action: Selector, imgName: String, centerPos: CGPoint) {
