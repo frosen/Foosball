@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UITools: NSObject {
+class UITools {
     class func createBarBtnItem(target: AnyObject, action: Selector, image img: String) -> UIBarButtonItem {
         let btn = UIButton(type: .Custom)
         btn.addTarget(target, action: action, forControlEvents: .TouchUpInside)
@@ -24,14 +24,14 @@ class BaseController: NavTabController {
     //设置导航栏控件，如果检测未登陆则使用登陆注册，如果未调用此接口则不设置
     func initNavBar() {
         //左
-        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(BaseController.onClickScan(_:)), image: "scan")
+        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(BaseController.onClickScan), image: "scan")
 
         //右
-        navigationItem.rightBarButtonItem = UITools.createBarBtnItem(self, action: #selector(BaseController.onClickSearch(_:)), image: "search")
+        navigationItem.rightBarButtonItem = UITools.createBarBtnItem(self, action: #selector(BaseController.onClickSearch), image: "search")
     }
 
     //跳转到二维码扫描页面
-    func onClickScan(sender: AnyObject) {
+    func onClickScan() {
         print("scan")
         let vc = ScanViewController()
         vc.rootVC = rootVC
@@ -39,7 +39,7 @@ class BaseController: NavTabController {
     }
 
     //跳转到搜索页面
-    func onClickSearch(sender: AnyObject) {
+    func onClickSearch() {
         print("search")
     }
 }

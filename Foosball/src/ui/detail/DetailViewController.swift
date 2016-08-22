@@ -18,7 +18,7 @@ class DetailViewController: NavTabController, UITableViewDelegate, UITableViewDa
 
         title = "详情"
 
-        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ScanViewController.onBack(_:)), image: "go_back")
+        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ScanViewController.onBack), image: "go_back")
 
         //创建tableView
         tableView = UITableView(frame: view.bounds, style: .Grouped)
@@ -58,7 +58,7 @@ class DetailViewController: NavTabController, UITableViewDelegate, UITableViewDa
     }
 
     // 回调
-    func onBack(sender: AnyObject) {
+    func onBack() {
         navigationController?.popViewControllerAnimated(true)
     }
     
