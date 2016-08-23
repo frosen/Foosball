@@ -15,6 +15,8 @@ class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelega
     var scanWindow: UIView! = nil
     var scanNet: UIImageView! = nil
 
+    var session: AVCaptureSession! = nil
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -25,11 +27,12 @@ class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelega
 
         view.clipsToBounds = true //这个属性必须打开否则返回的时候会出现黑边
 
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.clearColor()
 
         initMaskView()
         initScanWindowView()
-//        initScanning()
+        initScanAnim()
+        initScanning()
     }
 
     let maskMargin: CGFloat = 35.0
@@ -80,51 +83,90 @@ class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelega
         corner4.sizeToFit()
         corner4.frame.origin = CGPoint(x: 0, y: scanWidth - corner2.frame.height)
         corner4.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 1.5))
-
-        // 扫描网
-        resumeAnim()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ScanViewController.resumeAnim), name: "EnterForeground", object: nil)
     }
 
-    func resumeAnim() {
-        let anim = scanNet?.layer.animationForKey("translationAnimation")
-        if anim == nil {
-            if scanNet == nil {
-                scanNet = UIImageView(image: UIImage(named: "scan_net"))
-                scanWindow.addSubview(scanNet)
-            }
-            let scanNetH: CGFloat = 241
-            let scanWindowH = scanWindow.frame.height
-            let scanNetW = scanWindowH
+    func initScanAnim() {
+        scanNet = UIImageView(image: UIImage(named: "scan_net"))
+        scanWindow.addSubview(scanNet)
 
-            scanNet.frame = CGRect(x: 0, y: -scanNetH, width: scanNetW, height: scanNetH)
-            let scanAnim = CABasicAnimation()
-            scanAnim.keyPath = "transform.translation.y"
-            scanAnim.byValue = scanWindowH + scanNetH + 200
-            scanAnim.duration = 2.2
-            scanAnim.repeatCount = MAXFLOAT
-            scanNet.layer.addAnimation(scanAnim, forKey: "translationAnimation")
-        } else {
-            let pauseTime = scanNet.layer.timeOffset // 1. 将动画的时间偏移量作为暂停时的时间点
-            let beginTime = CACurrentMediaTime() - pauseTime // 2. 根据媒体时间计算出准确的启动动画时间，对之前暂停动画的时间进行修正
+        resetScanAnim()
 
-            scanNet.layer.timeOffset = 0.0 // 3. 要把偏移时间清零
-            scanNet.layer.beginTime = beginTime // 4. 设置图层的开始动画时间
-            scanNet.layer.speed = 1.0
-        }
+        //不加这个的话，回到前台动画就没了
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ScanViewController.resetScanAnim), name: "EnterForeground", object: nil)
+    }
+
+    func resetScanAnim() {
+        scanNet.layer.removeAllAnimations()
+
+        let scanNetH: CGFloat = 241
+        let scanWindowH = scanWindow.frame.height
+        let scanNetW = scanWindowH
+
+        scanNet.frame = CGRect(x: 0, y: -scanNetH, width: scanNetW, height: scanNetH)
+        let scanAnim = CABasicAnimation()
+        scanAnim.keyPath = "transform.translation.y"
+        scanAnim.byValue = scanWindowH + scanNetH + 200
+        scanAnim.duration = 2.2
+        scanAnim.repeatCount = MAXFLOAT
+        scanNet.layer.addAnimation(scanAnim, forKey: "translationAnimation")
     }
 
     func initScanning() {
-        let device = AVCaptureDevice()
+        let device = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo) //获取摄像设备
         let input: AVCaptureDeviceInput
         do {
-            try input = AVCaptureDeviceInput(device: device)
+            try input = AVCaptureDeviceInput(device: device) //创建输入流
         } catch {
             return
         }
-        let output = AVCaptureMetadataOutput()
+        let output = AVCaptureMetadataOutput() //创建输出流
+        output.setMetadataObjectsDelegate(self, queue: dispatch_get_main_queue()) //设置代理 在主线程里刷新
 
-        output.setMetadataObjectsDelegate(self, queue: dispatch_get_main_queue())
+        //设置有效扫描区域
+        let scanCrop = getScanCrop(scanWindow.bounds, readerViewBounds: view.bounds)
+        output.rectOfInterest = scanCrop
+
+        //链接对象
+        session = AVCaptureSession()
+        session.sessionPreset = AVCaptureSessionPresetHigh //高质量采集率
+
+        session.addInput(input)
+        session.addOutput(output)
+
+        output.metadataObjectTypes = [AVMetadataObjectTypeQRCode] //只支持二维码，不支持条形码
+
+        let layer = AVCaptureVideoPreviewLayer(session: session)
+        layer.videoGravity = AVLayerVideoGravityResizeAspectFill
+        layer.frame = view.layer.bounds
+        view.layer.insertSublayer(layer, atIndex: 0)
+
+        session.startRunning()
+    }
+
+    // 获取扫描区域的比例关系
+    func getScanCrop(rect: CGRect, readerViewBounds: CGRect) -> CGRect {
+        let readerH = CGRectGetHeight(readerViewBounds)
+        let H = CGRectGetHeight(rect)
+        let readerW = CGRectGetWidth(readerViewBounds)
+        let W = CGRectGetWidth(rect)
+
+        // AVCapture输出的图片大小都是横着的，而iPhone的屏幕是竖着的，那么我把它旋转90° 所以x用H，y用W
+        let x = (readerH - H) / 2 / readerH
+        let y = (readerW - W) / 2 / readerW
+
+        let width = H / readerH
+        let height = W / readerW
+
+        return CGRect(x: x, y: y, width: width, height: height)
+    }
+
+    // AVCaptureMetadataOutput的回调
+    func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
+        if metadataObjects.count > 0 {
+            session.stopRunning()
+            let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+            print(metadataObj.stringValue)
+        }
     }
 
     func setBtn(action: Selector, imgName: String, centerPos: CGPoint) {

@@ -58,28 +58,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Foosball/src/ui/base/ScanViewController.swift"
-            timestampString = "493553111.935134"
+            timestampString = "493634790.872913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
-            landmarkName = "resumeAnim()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Foosball/src/ui/base/ScanViewController.swift"
-            timestampString = "493553111.935134"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "92"
-            endingLineNumber = "92"
-            landmarkName = "resumeAnim()"
+            startingLineNumber = "114"
+            endingLineNumber = "114"
+            landmarkName = "initScanning()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
