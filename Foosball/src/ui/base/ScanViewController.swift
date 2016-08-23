@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelegate {
+class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     var mask: UIView! = nil
     var scanWindow: UIView! = nil
@@ -31,8 +31,12 @@ class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelega
 
         initMaskView()
         initScanWindowView()
-        initScanAnim()
+        initBottomButton()
+
         initScanning()
+
+        //不加这个的话，回到前台动画就没了
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ScanViewController.resetScanAnim), name: "EnterForeground", object: nil)
     }
 
     let maskMargin: CGFloat = 35.0
@@ -85,30 +89,30 @@ class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelega
         corner4.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 1.5))
     }
 
-    func initScanAnim() {
-        scanNet = UIImageView(image: UIImage(named: "scan_net"))
-        scanWindow.addSubview(scanNet)
+    func initBottomButton() {
+        var btns: [UIButton] = []
 
-        resetScanAnim()
+        btns.append(setBtn(#selector(ScanViewController.onOpenAlbum), imgName: "scan_btn_photo", selectImgName: nil))
+        btns.append(setBtn(#selector(ScanViewController.onPressFlash), imgName: "scan_btn_flash", selectImgName: nil))
 
-        //不加这个的话，回到前台动画就没了
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ScanViewController.resetScanAnim), name: "EnterForeground", object: nil)
+        let btnDis = view.bounds.width / CGFloat(btns.count + 1)
+        for i in 0..<btns.count {
+            let x = btnDis * CGFloat(i + 1)
+            let y = view.bounds.height - 50
+            btns[i].center = CGPoint(x: x, y: y)
+        }
     }
 
-    func resetScanAnim() {
-        scanNet.layer.removeAllAnimations()
-
-        let scanNetH: CGFloat = 241
-        let scanWindowH = scanWindow.frame.height
-        let scanNetW = scanWindowH
-
-        scanNet.frame = CGRect(x: 0, y: -scanNetH, width: scanNetW, height: scanNetH)
-        let scanAnim = CABasicAnimation()
-        scanAnim.keyPath = "transform.translation.y"
-        scanAnim.byValue = scanWindowH + scanNetH + 200
-        scanAnim.duration = 2.2
-        scanAnim.repeatCount = MAXFLOAT
-        scanNet.layer.addAnimation(scanAnim, forKey: "translationAnimation")
+    func setBtn(action: Selector, imgName: String, selectImgName: String?) -> UIButton {
+        let btn = UIButton(type: .Custom)
+        view.addSubview(btn)
+        btn.setBackgroundImage(UIImage(named: imgName), forState: .Normal)
+        btn.sizeToFit()
+        if selectImgName != nil {
+            btn.setBackgroundImage(UIImage(named: selectImgName!), forState: .Selected)
+        }
+        btn.addTarget(self, action: action, forControlEvents: .TouchUpInside)
+        return btn
     }
 
     func initScanning() {
@@ -169,17 +173,58 @@ class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelega
         }
     }
 
-    func setBtn(action: Selector, imgName: String, centerPos: CGPoint) {
-        let btn = UIButton(type: .Custom)
-        view.addSubview(btn)
-        btn.setBackgroundImage(UIImage(named: imgName), forState: .Normal)
-        btn.sizeToFit()
-        btn.center = centerPos
-        btn.addTarget(self, action: action, forControlEvents: .TouchUpInside)
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        resetScanAnim()
     }
 
+    func resetScanAnim() {
+        if scanNet == nil {
+            scanNet = UIImageView(image: UIImage(named: "scan_net"))
+            scanWindow.addSubview(scanNet)
+        } else {
+            scanNet.layer.removeAllAnimations()
+        }
+
+        let scanNetH: CGFloat = 241
+        let scanWindowH = scanWindow.frame.height
+        let scanNetW = scanWindowH
+
+        scanNet.frame = CGRect(x: 0, y: -scanNetH, width: scanNetW, height: scanNetH)
+        let scanAnim = CABasicAnimation()
+        scanAnim.keyPath = "transform.translation.y"
+        scanAnim.byValue = scanWindowH + scanNetH + 200
+        scanAnim.duration = 2.2
+        scanAnim.repeatCount = MAXFLOAT
+        scanNet.layer.addAnimation(scanAnim, forKey: "translationAnimation")
+    }
+
+    // 各种回调---------------------------------------------------------
     func onBack() {
         navigationController?.popViewControllerAnimated(true)
+    }
+
+    func onOpenAlbum() {
+        print("打开相册")
+        if UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary) {
+            let ctrller = UIImagePickerController()
+            ctrller.delegate = self
+
+            ctrller.sourceType = .SavedPhotosAlbum
+
+            ctrller.modalTransitionStyle = .FlipHorizontal
+            presentViewController(ctrller, animated: true, completion: nil)
+        } else {
+
+        }
+    }
+
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+
+    }
+
+    func onPressFlash() {
+
     }
     
 }

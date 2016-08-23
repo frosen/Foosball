@@ -245,7 +245,7 @@
 				TargetAttributes = {
 					65B775391D3228710040716C = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = EXTR923J93;
+						DevelopmentTeam = 59J6745268;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 0;
@@ -461,6 +461,7 @@
 			baseConfigurationReference = CB81153F97C8259E0408EA86 /* Pods-Foosball.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Foosball/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -475,6 +476,7 @@
 			baseConfigurationReference = E78D8581CCBC44E615441E59 /* Pods-Foosball.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Foosball/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
