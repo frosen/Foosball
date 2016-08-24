@@ -18,11 +18,20 @@ enum EventState {
 }
 
 class UserState {
-    var user: User
+    var user: DataID
     var state: EventState
-    init(user: User, state: EventState) {
+    init(user: DataID, state: EventState) {
         self.user = user
         self.state = state
+    }
+}
+
+class MsgStruct {
+    var user: DataID
+    var msg: String = ""
+
+    init(user: DataID) {
+        self.user = user
     }
 }
 
@@ -47,7 +56,13 @@ class Event: DataCore {
 
     //兑现物
 
+    //详情
+
+    //比分列表
+    var scoreList: [(Int, Int)] = []
+
     //对话list
+    var msgList: [MsgStruct] = []
 
 
 

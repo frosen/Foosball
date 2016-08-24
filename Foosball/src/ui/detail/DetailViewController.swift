@@ -11,6 +11,11 @@ import UIKit
 class DetailViewController: NavTabController, UITableViewDelegate, UITableViewDataSource {
 
     var tableView: UITableView! = nil
+    weak var event: Event! = nil
+
+    func setData(event: Event) {
+        self.event = event
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,20 +34,32 @@ class DetailViewController: NavTabController, UITableViewDelegate, UITableViewDa
 
     //table view
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return 4
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        if section == 0 { //title + detail + cash
+            return 1
+        } else if section == 1 { //person
+            return 1 + max(event.senderStateList.count, event.receiverStateList.count)
+        } else if section == 2 { //比分
+            return 1 + event.scoreList.count
+        } else { //对话
+            return 1 + event.msgList.count
+        }
 
     }
 
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0.1
+        if section == 0 {
+            return 0.1
+        } else {
+            return 10
+        }
     }
 
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 5
+        return 1
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {

@@ -69,6 +69,9 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let vc = DetailViewController()
         vc.rootVC = rootVC
+
+        let e = Event(id: DataID(ID: 1111), item: Foosball)
+        vc.setData(e)
         navigationController!.pushViewController(vc, animated: true)
     }
 
