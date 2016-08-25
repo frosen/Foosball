@@ -17,6 +17,15 @@ class UITools {
         btn.bounds = CGRect(x: 0, y: 0, width: bSize.width, height: bSize.height)
         return UIBarButtonItem(customView: btn)
     }
+
+    class func showAlert(target: UIViewController, title: String, msg: String, type: Int, callback: ((UIAlertAction) -> Void)?) {
+        let alert = UIAlertController(title: title, message: msg, preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "确定", style: .Cancel, handler: callback))
+        if type == 2 {
+            alert.addAction(UIAlertAction(title: "取消", style: .Cancel, handler: nil))
+        }
+        target.presentViewController(alert, animated: true, completion: nil)
+    }
 }
 
 class BaseController: NavTabController {
