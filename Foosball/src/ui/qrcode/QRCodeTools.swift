@@ -43,14 +43,13 @@ class QRCodeTools: NSObject {
         let orignW = CGRectGetWidth(extentRect)
         let scale = CGFloat(width) / orignW
 
-        //color
-        let components = CGColorGetComponents(color.CGColor)
-        let r: CGFloat = components[0] * 255
-        let g: CGFloat = components[1] * 255
-        let b: CGFloat = components[2] * 255
+        let bytesPerRow = width * 4
+        let bytesSize = bytesPerRow * width
+        let rgbImageBuf = malloc(bytesSize)
 
         let cs  = CGColorSpaceCreateDeviceRGB()
-        let bitmapRef = CGBitmapContextCreate(nil, width, width, 8, 0, cs, CGImageAlphaInfo.None.rawValue)
+        let bitmapInfo = CGImageAlphaInfo.NoneSkipLast.rawValue | CGBitmapInfo.ByteOrder32Little.rawValue
+        let bitmapRef = CGBitmapContextCreate(rgbImageBuf, width, width, 8, bytesPerRow, cs, bitmapInfo)
 
         let context = CIContext(options: nil)
         let bitmapImage = context.createCGImage(outImg, fromRect: extentRect)
@@ -58,12 +57,36 @@ class QRCodeTools: NSObject {
         CGContextScaleCTM(bitmapRef, scale, scale)
         CGContextDrawImage(bitmapRef, extentRect, bitmapImage)
 
-        let scaledImage: CGImage! = CGBitmapContextCreateImage(bitmapRef) // 创建具有内容的位图图像
-        return UIImage(CGImage: scaledImage)
+        // color
+        let components = CGColorGetComponents(color.CGColor)
+        let r: UInt8 = UInt8(components[0] * 255)
+        let g: UInt8 = UInt8(components[1] * 255)
+        let b: UInt8 = UInt8(components[2] * 255)
+        let pixelNum = width * width //宽 * 高
+        var pCurPtr = UnsafeMutablePointer<UInt32>(rgbImageBuf)
 
-        //设置颜色
+        var line: Int = 1 // 行数
+        for i in 0 ..< pixelNum {
+            if width * line <= i {
+                line += 1
+            }
 
+            let ptr = UnsafeMutablePointer<UInt8>(pCurPtr)
+            if (pCurPtr.memory & 0xFFFFFF00) < 0x99999900 {
+                let rate: Float = 1 - Float(line) / Float(width) //根据行数，设置一个比例，从指定颜色一直降到黑色，实现渐变
+                ptr[3] = UInt8(rate * Float(r))
+                ptr[2] = UInt8(rate * Float(g))
+                ptr[1] = UInt8(rate * Float(b))
+            } else {
+                ptr[0] = 0
+            }
+            pCurPtr = pCurPtr.successor()
+        }
 
+        let dataProvider = CGDataProviderCreateWithData(nil, rgbImageBuf, bytesSize, nil)
+        let imageInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.Last.rawValue | CGBitmapInfo.ByteOrder32Little.rawValue)
+        let imageRef = CGImageCreate(width, width, 8, 32, bytesPerRow, cs, imageInfo, dataProvider, nil, true, CGColorRenderingIntent.RenderingIntentDefault)
 
+        return UIImage(CGImage: imageRef!)
     }
 }

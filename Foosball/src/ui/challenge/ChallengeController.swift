@@ -28,15 +28,11 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
         tableView.separatorStyle = .None //不用他的分割线，自己画
 
         tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -3) //否则滚动条和屏幕边会有一段间隔
-
-        let qrimg = QRCodeTools.createQRCode("www.baidu.com", width: 150)
-        view.addSubview(qrimg)
-        qrimg.center = CGPoint(x: view.bounds.width / 2, y: 64 + 100)
     }
 
     //table view
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 0
+        return 1
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

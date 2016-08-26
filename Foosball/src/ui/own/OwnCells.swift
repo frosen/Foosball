@@ -41,7 +41,25 @@ class OwnRankCell: UITableViewCell {
 class OwnQRCell: UITableViewCell {
     init(reuseIdentifier: String) {
         super.init(style: .Default, reuseIdentifier: reuseIdentifier)
+
+        let w: CGFloat = UIScreen.mainScreen().bounds.width
+        let h: CGFloat = OwnQRCell.getCellHeight()
+        bounds = CGRect(x: 0, y: 0, width: w, height: h)
+
         self.selectionStyle = .None //使选中后没有反应
+
+        //标题
+        let lbl = UILabel()
+        contentView.addSubview(lbl)
+        lbl.text = "扫描二维码"
+        lbl.font = UIFont.boldSystemFontOfSize(15)
+        lbl.sizeToFit()
+        lbl.center = CGPoint(x: UIScreen.mainScreen().bounds.width / 2, y: 20)
+
+        // 设置二维码
+        let qrimg = QRCodeTools.createQRCode("www.baidu.com/www.baidu.com/www.baidu.com/www.baidu.com")
+        contentView.addSubview(qrimg)
+        qrimg.center = CGPoint(x: UIScreen.mainScreen().bounds.width / 2, y: 110)
     }
 
     required init?(coder aDecoder: NSCoder) {
