@@ -48,10 +48,22 @@ class OwnQRCell: UITableViewCell {
 
         self.selectionStyle = .None //使选中后没有反应
 
+        //bg
+        let bgView = UIView()
+        contentView.addSubview(bgView)
+        bgView.bounds = CGRect(x: 0, y: 0, width: 170, height: 185)
+        bgView.center = CGPoint(x: UIScreen.mainScreen().bounds.width / 2, y: 100)
+        bgView.backgroundColor = UIColor(white: 0.99, alpha: 1.0)
+
+        bgView.layer.shadowColor = UIColor.blackColor().CGColor
+        bgView.layer.shadowOffset = CGSize(width: 2, height: 1)
+        bgView.layer.shadowOpacity = 0.5
+        bgView.layer.shadowRadius = 2
+
         //标题
         let lbl = UILabel()
         contentView.addSubview(lbl)
-        lbl.text = "扫描二维码"
+        lbl.text = "扫描二维码加我吧"
         lbl.font = UIFont.boldSystemFontOfSize(15)
         lbl.sizeToFit()
         lbl.center = CGPoint(x: UIScreen.mainScreen().bounds.width / 2, y: 20)
