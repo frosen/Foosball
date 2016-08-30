@@ -8,9 +8,12 @@
 
 import Foundation
 
-class Director: NSObject {
+class AppManager: NSObject {
+
+    var user: User? = nil
+
     //单例
-    static let shareInstance = Director()
+    static let shareInstance = AppManager()
     private override init() {
         print("初始化导演类")
     }

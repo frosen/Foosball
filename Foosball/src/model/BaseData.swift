@@ -8,10 +8,6 @@
 
 import UIKit
 
-class BaseData: NSObject {
-
-}
-
 //辨识所有结构体的标志，由服务器产生，可轻松从服务器中查找
 class DataID: Hashable {
     let ID: Int //这个值用于在服务器快速查找该数据的位置

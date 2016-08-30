@@ -47,6 +47,7 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
 
     var infoHead: InfoHeadView! = nil
     var tableView: UITableView! = nil
+    var sectionNum: Int = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,12 +71,41 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
         //添加信息头
         infoHead = InfoHeadView(scrollView: tableView)
         view.insertSubview(infoHead, aboveSubview: tableView)
-        infoHead!.initUIData(bgImaName: "selfbg", headImgName: "default_avatar", titleStr: "聂小倩", subTitleStr: "个性签名，啦啦啦")
+
     }
 
-    //table view
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        initData()
+    }
+
+    var hasInitData = false
+    func initData() {
+        if hasInitData == true {
+            return
+        }
+        hasInitData = true
+
+        infoHead.initUIData(bgImaName: "selfbg", headImgName: "default_avatar", titleStr: "聂小倩", subTitleStr: "个性签名，啦啦啦")
+
+        sectionNum = 2 + group.count
+        tableView.reloadData()
+
+        reshowView()
+    }
+
+    func reshowView() {
+        view.alpha = 0
+        UIView.animateWithDuration(0.2) {
+            self.view.alpha = 1
+        }
+    }
+
+    //
+    // table view ---------------------------------------------------------------------------------------------------
+    //
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2 + group.count
+        return sectionNum
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

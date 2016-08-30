@@ -39,12 +39,12 @@ class DetailViewController: NavTabController, UITableViewDelegate, UITableViewDa
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 { //title + detail + cash
-            return 1
-        } else if section == 1 { //person
+            return 3
+        } else if section == 1 { //person(s) + head
             return 1 + max(event.senderStateList.count, event.receiverStateList.count)
-        } else if section == 2 { //比分
+        } else if section == 2 { //比分(s) + head
             return 1 + event.scoreList.count
-        } else { //对话
+        } else { //对话(s) + head
             return 1 + event.msgList.count
         }
 

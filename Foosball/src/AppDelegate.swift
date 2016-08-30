@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
         //初始化导演类
-        Director.shareInstance.onStart()
+        AppManager.shareInstance.onStart()
 
         let winFrame = UIScreen.mainScreen().bounds
         window = UIWindow(frame: winFrame)

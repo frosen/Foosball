@@ -16,7 +16,7 @@ class QRCodeTools: NSObject {
         let outImg = createQRImg(content)
 
         //设置大小和颜色
-        let qrimg = createQRImageView(outImg, width: width, color: color)
+        let qrimg = setupQRImg(outImg, width: width, color: color)
 
         //生成imageView
         let qrview = UIImageView()
@@ -37,7 +37,7 @@ class QRCodeTools: NSObject {
         return filter!.outputImage!
     }
 
-    class func createQRImageView(outImg: CIImage, width: Int, color: UIColor) -> UIImage {
+    class func setupQRImg(outImg: CIImage, width: Int, color: UIColor) -> UIImage {
         //size
         let extentRect = CGRectIntegral(outImg.extent)
         let orignW = CGRectGetWidth(extentRect)
