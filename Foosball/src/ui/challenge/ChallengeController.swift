@@ -18,6 +18,7 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
         print("挑战页面")
 
         initNavBar()
+        navigationItem.rightBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ChallengeController.resetCell), image: "search")
 
         //创建tableView
         tableView = UITableView(frame: view.bounds, style: .Grouped)
@@ -32,7 +33,7 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
 
     //table view
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return 10
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -52,6 +53,7 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
         return ChallengeCell.getCellHeight()
     }
 
+    var k = 1
     let chalCellId = "chalCellId"
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell: UITableViewCell?
@@ -61,6 +63,8 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
             cell = ChallengeCell(reuseIdentifier: chalCellId)
         }
 //        cell.setData()
+        k += 1
+        cell?.textLabel?.text = String(k)
 
         return cell!
     }
@@ -74,5 +78,22 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
         navigationController!.pushViewController(vc, animated: true)
     }
 
+    //更新cell 不使用reload，而是用动画，
+    //在此之前必须更新好数据源，否则发现numberOfSectionsInTableView什么的不对了会报错
+    func resetCell() {
 
+        tableView.beginUpdates()
+
+        //更新cell数据
+        tableView.reloadSections(NSIndexSet(index: 3), withRowAnimation: .None)
+
+        //插入删除
+        let set = NSIndexSet(index: 0)
+        tableView.insertSections(set, withRowAnimation: .Fade)
+
+        let set2 = NSIndexSet(index: 2)
+        tableView.deleteSections(set2, withRowAnimation: .Fade)
+
+        tableView.endUpdates()
+    }
 }

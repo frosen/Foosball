@@ -16,6 +16,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
     var myTabBar: MyTabBar! = nil
 
     override func viewDidLoad() {
+        view.backgroundColor = UIColor.whiteColor()
         initUI()
         initSubVc()
         initTabBar()
