@@ -18,8 +18,7 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
         print("挑战页面")
 
         initNavBar()
-        navigationItem.rightBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ChallengeController.resetCell), image: "search")
-
+        
         //创建tableView
         tableView = UITableView(frame: view.bounds, style: .Grouped)
         view.addSubview(tableView)
@@ -53,7 +52,6 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
         return ChallengeCell.getCellHeight()
     }
 
-    var k = 1
     let chalCellId = "chalCellId"
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell: UITableViewCell?
@@ -63,8 +61,6 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
             cell = ChallengeCell(reuseIdentifier: chalCellId)
         }
 //        cell.setData()
-        k += 1
-        cell?.textLabel?.text = String(k)
 
         return cell!
     }
