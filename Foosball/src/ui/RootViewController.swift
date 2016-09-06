@@ -43,7 +43,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
         addVc(ownVc, title: "个人", image: "my2")
     }
 
-    func addVc(vc: BaseController, title t: String, image img: String) {
+    func addVc(vc: BaseTabController, title t: String, image img: String) {
         vc.tabBarItem.title = t
 
         // 设置子控制器的图片

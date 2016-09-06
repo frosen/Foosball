@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataSource {
+class ChallengeController: BaseTabController, UITableViewDelegate, UITableViewDataSource {
     var dataPage: Int = 1
 
     var tableView: UITableView! = nil
@@ -22,8 +22,8 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
         initNavBar()
         
         //创建tableView
-        tableView = UITableView(frame: view.bounds, style: .Grouped)
-        view.addSubview(tableView)
+        tableView = UITableView(frame: baseView.bounds, style: .Grouped)
+        baseView.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
 

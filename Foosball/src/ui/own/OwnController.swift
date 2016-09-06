@@ -19,7 +19,7 @@ struct NorCellData {
     }
 }
 
-class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource {
+class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSource {
     //信息头，比赛成绩，QR，其他项目等group
     let group = [
         //section
@@ -60,9 +60,7 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
 
     var infoHead: InfoHeadView! = nil
     var tableView: UITableView! = nil
-    var sectionNum: Int = 0
-
-
+    var sectionNum: Int = 0 
 
     override func viewDidLoad() {
         initDataOnViewAppear = true
@@ -74,8 +72,8 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
         automaticallyAdjustsScrollViewInsets = false
 
         //创建tableView
-        tableView = UITableView(frame: view.bounds, style: .Grouped)
-        view.addSubview(tableView)
+        tableView = UITableView(frame: baseView.bounds, style: .Grouped)
+        baseView.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 96, right: 0) //48 ＋ 48 tabbar向上48个像素结束
@@ -86,7 +84,7 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
 
         //添加信息头
         infoHead = InfoHeadView(scrollView: tableView)
-        view.insertSubview(infoHead, aboveSubview: tableView)
+        baseView.insertSubview(infoHead, aboveSubview: tableView)
     }
 
     override func initData() {
@@ -104,22 +102,18 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
+        switch section {
+        case 0:
             return 2
-        } else if section == 1 {
+        case 1:
             return 1
-        } else {
+        default:
             return group[section - 2].count
         }
-
     }
 
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 0.1
-        } else {
-            return 10
-        }
+        return (section == 0) ? 0.1 : 10
     }
 
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -127,15 +121,16 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if indexPath.section == 0 {
+        switch indexPath.section {
+        case 0:
             if indexPath.row == 0 {
                 return OwnScoreCell.getCellHeight()
             } else {
                 return OwnRankCell.getCellHeight()
             }
-        } else if (indexPath.section == 1) {
+        case 1:
             return OwnQRCell.getCellHeight()
-        } else {
+        default:
             return OwnNormalCell.getCellHeight()
         }
     }
@@ -145,33 +140,30 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
     let ownNorCellId = "ONorCId"
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell: UITableViewCell?
-        if indexPath.section == 0 {
-            if indexPath.row == 0 {
-                //比赛成绩
+
+        switch indexPath.section {
+        case 0:
+            if indexPath.row == 0 { //比赛成绩
                 cell = tableView.dequeueReusableCellWithIdentifier(ownScoCellId)
                 if cell == nil {
                     cell = OwnScoreCell(reuseIdentifier: ownScoCellId)
                 }
-            } else {
-                //排名
+            } else { //排名
                 cell = tableView.dequeueReusableCellWithIdentifier(ownScoCellId)
                 if cell == nil {
                     cell = OwnRankCell(reuseIdentifier: ownScoCellId)
                 }
             }
-        } else if (indexPath.section == 1) {
-            //二维码
+        case 1: //二维码
             cell = tableView.dequeueReusableCellWithIdentifier(ownQRCellId)
             if cell == nil {
                 cell = OwnQRCell(reuseIdentifier: ownQRCellId)
             }
-        } else {
-            //其他项目
+        default: //其他项目
             cell = tableView.dequeueReusableCellWithIdentifier(ownNorCellId)
             if cell == nil {
                 cell = OwnNormalCell(reuseIdentifier: ownNorCellId)
             }
-
             let data: NorCellData = group[indexPath.section - 2][indexPath.row]
             let norCell = cell as! OwnNormalCell
             norCell.setUIData(image: data.img, title: data.title, subTitle: data.subTitle)

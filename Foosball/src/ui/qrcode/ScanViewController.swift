@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     var mask: UIView! = nil
     var scanWindow: UIView! = nil
@@ -25,9 +25,7 @@ class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelega
         automaticallyAdjustsScrollViewInsets = false
         navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ScanViewController.onBack), image: "go_back")
 
-        view.clipsToBounds = true //这个属性必须打开否则返回的时候会出现黑边
-
-        view.backgroundColor = UIColor.clearColor()
+        baseView.clipsToBounds = true //这个属性必须打开否则返回的时候会出现黑边
 
         initMaskView()
         initScanWindowView()
@@ -42,24 +40,24 @@ class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelega
     let maskMargin: CGFloat = 35.0
     func initMaskView() {
         mask = UIView()
-        view.addSubview(mask)
+        baseView.addSubview(mask)
 
         let borderWidth: CGFloat = 500.0
 
         mask.layer.borderColor = UIColor(white: 0.0, alpha: 0.7).CGColor
         mask.layer.borderWidth = borderWidth
 
-        let maskWidth = view.frame.width + borderWidth * 2 - maskMargin * 2
+        let maskWidth = baseView.frame.width + borderWidth * 2 - maskMargin * 2
         mask.bounds = CGRect(x: 0, y: 0, width: maskWidth, height: maskWidth)
-        mask.center = CGPoint(x: view.frame.width * 0.5, y: view.frame.height * 0.5)
+        mask.center = CGPoint(x: baseView.frame.width * 0.5, y: baseView.frame.height * 0.5)
     }
 
     func initScanWindowView() {
-        let scanWidth = view.frame.width - maskMargin * 2
+        let scanWidth = baseView.frame.width - maskMargin * 2
         let scanRect = CGRect(x: mask.center.x - scanWidth / 2, y: mask.center.y - scanWidth / 2, width: scanWidth, height: scanWidth)
 
         scanWindow = UIView(frame: scanRect)
-        view.addSubview(scanWindow)
+        baseView.addSubview(scanWindow)
         scanWindow.clipsToBounds = true
 
         //角上的图
@@ -95,17 +93,17 @@ class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelega
         btns.append(setBtn(#selector(ScanViewController.onOpenAlbum), imgName: "scan_btn_photo", selectImgName: nil))
         btns.append(setBtn(#selector(ScanViewController.onPressFlash(_:)), imgName: "scan_btn_flash", selectImgName: nil))
 
-        let btnDis = view.bounds.width / CGFloat(btns.count + 1)
+        let btnDis = baseView.bounds.width / CGFloat(btns.count + 1)
         for i in 0..<btns.count {
             let x = btnDis * CGFloat(i + 1)
-            let y = view.bounds.height - 50
+            let y = baseView.bounds.height - 50
             btns[i].center = CGPoint(x: x, y: y)
         }
     }
 
     func setBtn(action: Selector, imgName: String, selectImgName: String?) -> UIButton {
         let btn = UIButton(type: .Custom)
-        view.addSubview(btn)
+        baseView.addSubview(btn)
         btn.setBackgroundImage(UIImage(named: imgName), forState: .Normal)
         btn.sizeToFit()
         if selectImgName != nil {
@@ -127,7 +125,7 @@ class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelega
         output.setMetadataObjectsDelegate(self, queue: dispatch_get_main_queue()) //设置代理 在主线程里刷新
 
         //设置有效扫描区域
-        let scanCrop = getScanCrop(scanWindow.bounds, readerViewBounds: view.bounds)
+        let scanCrop = getScanCrop(scanWindow.bounds, readerViewBounds: baseView.bounds)
         output.rectOfInterest = scanCrop
 
         //链接对象
@@ -141,8 +139,8 @@ class ScanViewController: NavTabController, AVCaptureMetadataOutputObjectsDelega
 
         let layer = AVCaptureVideoPreviewLayer(session: session)
         layer.videoGravity = AVLayerVideoGravityResizeAspectFill
-        layer.frame = view.layer.bounds
-        view.layer.insertSublayer(layer, atIndex: 0)
+        layer.frame = baseView.layer.bounds
+        baseView.layer.insertSublayer(layer, atIndex: 0)
 
         session.startRunning()
     }

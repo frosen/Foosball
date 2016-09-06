@@ -15,12 +15,13 @@
 		658E06741D56C7C8008D94FC /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E06731D56C7C8008D94FC /* Event.swift */; };
 		65AB52451D3291E6005E7D4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52371D3291E6005E7D4C /* AppDelegate.swift */; };
 		65AB52461D3291E6005E7D4C /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52391D3291E6005E7D4C /* AppManager.swift */; };
-		65AB52471D3291E6005E7D4C /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB523C1D3291E6005E7D4C /* BaseController.swift */; };
+		65AB52471D3291E6005E7D4C /* BaseTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB523C1D3291E6005E7D4C /* BaseTabController.swift */; };
 		65AB524A1D3291E6005E7D4C /* ChallengeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52401D3291E6005E7D4C /* ChallengeController.swift */; };
 		65AB524B1D3291E6005E7D4C /* OwnCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52421D3291E6005E7D4C /* OwnCells.swift */; };
 		65AB524C1D3291E6005E7D4C /* OwnController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52431D3291E6005E7D4C /* OwnController.swift */; };
 		65AB524D1D3291E6005E7D4C /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52441D3291E6005E7D4C /* RootViewController.swift */; };
-		65B4F2F31D67011A00F8E961 /* NavTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B4F2F21D67011A00F8E961 /* NavTabController.swift */; };
+		65AD17421D7EB126008AEE3C /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AD17411D7EB126008AEE3C /* DetailCell.swift */; };
+		65B4F2F31D67011A00F8E961 /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B4F2F21D67011A00F8E961 /* BaseController.swift */; };
 		65B775471D3228710040716C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65B775461D3228710040716C /* Assets.xcassets */; };
 		65B7754A1D3228710040716C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65B775481D3228710040716C /* LaunchScreen.storyboard */; };
 		65D427F91D5FEB5900994EA8 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D427F81D5FEB5900994EA8 /* Item.swift */; };
@@ -41,12 +42,13 @@
 		65AB52371D3291E6005E7D4C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65AB52381D3291E6005E7D4C /* Bridging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bridging.h; sourceTree = "<group>"; };
 		65AB52391D3291E6005E7D4C /* AppManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppManager.swift; sourceTree = "<group>"; };
-		65AB523C1D3291E6005E7D4C /* BaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
+		65AB523C1D3291E6005E7D4C /* BaseTabController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTabController.swift; sourceTree = "<group>"; };
 		65AB52401D3291E6005E7D4C /* ChallengeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeController.swift; sourceTree = "<group>"; };
 		65AB52421D3291E6005E7D4C /* OwnCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnCells.swift; sourceTree = "<group>"; };
 		65AB52431D3291E6005E7D4C /* OwnController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnController.swift; sourceTree = "<group>"; };
 		65AB52441D3291E6005E7D4C /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RootViewController.swift; path = ui/RootViewController.swift; sourceTree = "<group>"; };
-		65B4F2F21D67011A00F8E961 /* NavTabController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavTabController.swift; sourceTree = "<group>"; };
+		65AD17411D7EB126008AEE3C /* DetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailCell.swift; path = detail/DetailCell.swift; sourceTree = "<group>"; };
+		65B4F2F21D67011A00F8E961 /* BaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
 		65B7753A1D3228710040716C /* Foosball.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Foosball.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65B775461D3228710040716C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		65B775491D3228710040716C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				657219201D5EFA2A007DCE6A /* DetailViewController.swift */,
+				65AD17411D7EB126008AEE3C /* DetailCell.swift */,
 			);
 			name = detail;
 			sourceTree = "<group>";
@@ -156,8 +159,8 @@
 		65AB523B1D3291E6005E7D4C /* base */ = {
 			isa = PBXGroup;
 			children = (
-				65B4F2F21D67011A00F8E961 /* NavTabController.swift */,
-				65AB523C1D3291E6005E7D4C /* BaseController.swift */,
+				65B4F2F21D67011A00F8E961 /* BaseController.swift */,
+				65AB523C1D3291E6005E7D4C /* BaseTabController.swift */,
 			);
 			path = base;
 			sourceTree = "<group>";
@@ -350,9 +353,10 @@
 			files = (
 				6554A3C31D6FE956001AB4D6 /* ScanViewController.swift in Sources */,
 				65AB52451D3291E6005E7D4C /* AppDelegate.swift in Sources */,
-				65B4F2F31D67011A00F8E961 /* NavTabController.swift in Sources */,
+				65B4F2F31D67011A00F8E961 /* BaseController.swift in Sources */,
 				65AB524A1D3291E6005E7D4C /* ChallengeController.swift in Sources */,
 				65D427FE1D60748400994EA8 /* BaseData.swift in Sources */,
+				65AD17421D7EB126008AEE3C /* DetailCell.swift in Sources */,
 				65D427FC1D6073D700994EA8 /* User.swift in Sources */,
 				65F14B881D68439D0073D547 /* MyTabBar.swift in Sources */,
 				6554A3C51D6FE97B001AB4D6 /* QRCodeTools.swift in Sources */,
@@ -362,7 +366,7 @@
 				65AB524D1D3291E6005E7D4C /* RootViewController.swift in Sources */,
 				658E06741D56C7C8008D94FC /* Event.swift in Sources */,
 				65AB524B1D3291E6005E7D4C /* OwnCells.swift in Sources */,
-				65AB52471D3291E6005E7D4C /* BaseController.swift in Sources */,
+				65AB52471D3291E6005E7D4C /* BaseTabController.swift in Sources */,
 				65AB52461D3291E6005E7D4C /* AppManager.swift in Sources */,
 				65D427F91D5FEB5900994EA8 /* Item.swift in Sources */,
 				6507AC0A1D55B7C900791FB1 /* ChallengeCell.swift in Sources */,
