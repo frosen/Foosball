@@ -21,6 +21,7 @@
 		65AB524C1D3291E6005E7D4C /* OwnController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52431D3291E6005E7D4C /* OwnController.swift */; };
 		65AB524D1D3291E6005E7D4C /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52441D3291E6005E7D4C /* RootViewController.swift */; };
 		65AD17421D7EB126008AEE3C /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AD17411D7EB126008AEE3C /* DetailCell.swift */; };
+		65AD17441D7EC89A008AEE3C /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AD17431D7EC89A008AEE3C /* BaseCell.swift */; };
 		65B4F2F31D67011A00F8E961 /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B4F2F21D67011A00F8E961 /* BaseController.swift */; };
 		65B775471D3228710040716C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65B775461D3228710040716C /* Assets.xcassets */; };
 		65B7754A1D3228710040716C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65B775481D3228710040716C /* LaunchScreen.storyboard */; };
@@ -48,6 +49,7 @@
 		65AB52431D3291E6005E7D4C /* OwnController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnController.swift; sourceTree = "<group>"; };
 		65AB52441D3291E6005E7D4C /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RootViewController.swift; path = ui/RootViewController.swift; sourceTree = "<group>"; };
 		65AD17411D7EB126008AEE3C /* DetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailCell.swift; path = detail/DetailCell.swift; sourceTree = "<group>"; };
+		65AD17431D7EC89A008AEE3C /* BaseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
 		65B4F2F21D67011A00F8E961 /* BaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
 		65B7753A1D3228710040716C /* Foosball.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Foosball.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65B775461D3228710040716C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 			children = (
 				65B4F2F21D67011A00F8E961 /* BaseController.swift */,
 				65AB523C1D3291E6005E7D4C /* BaseTabController.swift */,
+				65AD17431D7EC89A008AEE3C /* BaseCell.swift */,
 			);
 			path = base;
 			sourceTree = "<group>";
@@ -369,6 +372,7 @@
 				65AB52471D3291E6005E7D4C /* BaseTabController.swift in Sources */,
 				65AB52461D3291E6005E7D4C /* AppManager.swift in Sources */,
 				65D427F91D5FEB5900994EA8 /* Item.swift in Sources */,
+				65AD17441D7EC89A008AEE3C /* BaseCell.swift in Sources */,
 				6507AC0A1D55B7C900791FB1 /* ChallengeCell.swift in Sources */,
 				65AB524C1D3291E6005E7D4C /* OwnController.swift in Sources */,
 				657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */,

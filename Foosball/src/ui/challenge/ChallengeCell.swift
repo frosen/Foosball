@@ -8,16 +8,14 @@
 
 import UIKit
 
-class ChallengeCell: UITableViewCell {
+class ChallengeCell: BaseCell {
     var eventBoard: EventBoard! = nil
 
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override class func getCellHeight() -> CGFloat {
+        return 108
     }
 
-    init(reuseIdentifier: String) {
-        super.init(style: .Default, reuseIdentifier: reuseIdentifier)
-
+    override func initData() {
         let w: CGFloat = UIScreen.mainScreen().bounds.width
         let h: CGFloat = ChallengeCell.getCellHeight()
         bounds = CGRect(x: 0, y: 0, width: w, height: h)
@@ -30,6 +28,10 @@ class ChallengeCell: UITableViewCell {
         contentView.addSubview(eventBoard)
     }
 
+    func setData(e: Event) {
+        eventBoard.setData(e)
+    }
+
     override func setHighlighted(highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         if highlighted == true {
@@ -38,13 +40,4 @@ class ChallengeCell: UITableViewCell {
             backgroundColor = UIColor.whiteColor()
         }
     }
-
-    class func getCellHeight() -> CGFloat {
-        return 108
-    }
-
-    func setData(e: Event) {
-        eventBoard.setData(e)
-    }
-
 }

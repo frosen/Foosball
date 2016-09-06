@@ -8,40 +8,32 @@
 
 import UIKit
 
-class OwnScoreCell: UITableViewCell {
-    init(reuseIdentifier: String) {
-        super.init(style: .Default, reuseIdentifier: reuseIdentifier)
-        self.accessoryType = .DisclosureIndicator
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+class OwnScoreCell: BaseCell {
+    override class func getCellHeight() -> CGFloat {
+        return 44
     }
 
-    class func getCellHeight() -> CGFloat {
-        return 44
+    override func initData() {
+        self.accessoryType = .DisclosureIndicator
     }
 }
 
-class OwnRankCell: UITableViewCell {
-    init(reuseIdentifier: String) {
-        super.init(style: .Default, reuseIdentifier: reuseIdentifier)
-        self.accessoryType = .DisclosureIndicator
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    class func getCellHeight() -> CGFloat {
+class OwnRankCell: BaseCell {
+    override class func getCellHeight() -> CGFloat {
         return 44
+    }
+
+    override func initData() {
+        self.accessoryType = .DisclosureIndicator
     }
 }
 
-class OwnQRCell: UITableViewCell {
-    init(reuseIdentifier: String) {
-        super.init(style: .Default, reuseIdentifier: reuseIdentifier)
+class OwnQRCell: BaseCell {
+    override class func getCellHeight() -> CGFloat {
+        return 200
+    }
 
+    override func initData() {
         let w: CGFloat = UIScreen.mainScreen().bounds.width
         let h: CGFloat = OwnQRCell.getCellHeight()
         bounds = CGRect(x: 0, y: 0, width: w, height: h)
@@ -72,14 +64,6 @@ class OwnQRCell: UITableViewCell {
         let qrimg = QRCodeTools.createQRCode("www.baidu.com/www.baidu.com/www.baidu.com/www.baidu.com")
         contentView.addSubview(qrimg)
         qrimg.center = CGPoint(x: UIScreen.mainScreen().bounds.width / 2, y: 110)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    class func getCellHeight() -> CGFloat {
-        return 200
     }
 }
 
