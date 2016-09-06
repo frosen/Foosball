@@ -35,6 +35,19 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
             NorCellData(i: "setting", t: "隐私", st: ""),
             NorCellData(i: "setting", t: "消息提醒", st: ""),
             NorCellData(i: "setting", t: "其他设置", st: ""),
+
+            NorCellData(i: "setting", t: "账号", st: ""),
+            NorCellData(i: "setting", t: "隐私", st: ""),
+            NorCellData(i: "setting", t: "消息提醒", st: ""),
+            NorCellData(i: "setting", t: "其他设置", st: ""),
+            NorCellData(i: "setting", t: "账号", st: ""),
+            NorCellData(i: "setting", t: "隐私", st: ""),
+            NorCellData(i: "setting", t: "消息提醒", st: ""),
+            NorCellData(i: "setting", t: "其他设置", st: ""),
+            NorCellData(i: "setting", t: "账号", st: ""),
+            NorCellData(i: "setting", t: "隐私", st: ""),
+            NorCellData(i: "setting", t: "消息提醒", st: ""),
+            NorCellData(i: "setting", t: "其他设置", st: ""),
         ],
         [
             NorCellData(i: "setting", t: "关于", st: ""),
@@ -49,7 +62,10 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
     var tableView: UITableView! = nil
     var sectionNum: Int = 0
 
+
+
     override func viewDidLoad() {
+        initDataOnViewAppear = true
         super.viewDidLoad()
         print("个人页面")
 
@@ -71,34 +87,13 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
         //添加信息头
         infoHead = InfoHeadView(scrollView: tableView)
         view.insertSubview(infoHead, aboveSubview: tableView)
-
     }
 
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        initData()
-    }
-
-    var hasInitData = false
-    func initData() {
-        if hasInitData == true {
-            return
-        }
-        hasInitData = true
-
+    override func initData() {
         infoHead.initUIData(bgImaName: "selfbg", headImgName: "default_avatar", titleStr: "聂小倩", subTitleStr: "个性签名，啦啦啦")
 
         sectionNum = 2 + group.count
         tableView.reloadData()
-
-        reshowView()
-    }
-
-    func reshowView() {
-        view.alpha = 0
-        UIView.animateWithDuration(0.2) {
-            self.view.alpha = 1
-        }
     }
 
     //
@@ -175,11 +170,11 @@ class OwnController: BaseController, UITableViewDelegate, UITableViewDataSource 
             cell = tableView.dequeueReusableCellWithIdentifier(ownNorCellId)
             if cell == nil {
                 cell = OwnNormalCell(reuseIdentifier: ownNorCellId)
-
-                let data: NorCellData = group[indexPath.section - 2][indexPath.row]
-                let norCell = cell as! OwnNormalCell
-                norCell.setUIData(image: data.img, title: data.title, subTitle: data.subTitle)
             }
+
+            let data: NorCellData = group[indexPath.section - 2][indexPath.row]
+            let norCell = cell as! OwnNormalCell
+            norCell.setUIData(image: data.img, title: data.title, subTitle: data.subTitle)
         }
         return cell!
     }

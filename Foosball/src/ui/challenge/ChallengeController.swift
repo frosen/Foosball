@@ -13,6 +13,8 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
 
     var tableView: UITableView! = nil
 
+    var activeEvents: [Event] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
         print("挑战页面")
@@ -25,19 +27,22 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
         tableView.delegate = self
         tableView.dataSource = self
 
+        tableView.bounces = false
         tableView.separatorStyle = .None //不用他的分割线，自己画
 
         tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -3) //否则滚动条和屏幕边会有一段间隔
+
+        //引用数据-------------
+        activeEvents = AppManager.shareInstance.user!.activeEvents
     }
 
     //table view
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 10
+        return activeEvents.count //因为要利用section的head作为留白，所以每个section就是一行数据
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-
+        return 1 //section用于记录数据了，所以其中的row数量就是1
     }
 
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -45,7 +50,7 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
     }
 
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 5
+        return 5 //数据行之间的留白
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -60,7 +65,10 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
         if cell == nil {
             cell = ChallengeCell(reuseIdentifier: chalCellId)
         }
-//        cell.setData()
+
+        let e: Event = activeEvents[indexPath.section]
+        let cCell = cell as! ChallengeCell
+        cCell.setData(e)
 
         return cell!
     }
@@ -69,7 +77,7 @@ class ChallengeController: BaseController, UITableViewDelegate, UITableViewDataS
         let vc = DetailViewController()
         vc.rootVC = rootVC
 
-        let e = Event(id: DataID(ID: 1111), item: Foosball)
+        let e: Event = activeEvents[indexPath.section]
         vc.setData(e)
         navigationController!.pushViewController(vc, animated: true)
     }

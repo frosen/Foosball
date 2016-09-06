@@ -35,6 +35,11 @@ class MyTabBar: UIView {
 
         midButton.addTarget(self, action: #selector(MyTabBar.onClickMidBtn(_:)), forControlEvents: .TouchUpInside)
         self.addSubview(midButton)
+
+        backgroundColor = UIColor.whiteColor()
+        layer.shadowColor = UIColor.grayColor().CGColor
+        layer.shadowOpacity = 0.3
+        layer.shadowRadius = 3
     }
 
     class func replaceOldTabBar(tabVc: UITabBarController, midButton btn: UIButton, btnItems items: [UITabBarItem]) -> MyTabBar {

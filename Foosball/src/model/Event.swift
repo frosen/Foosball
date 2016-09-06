@@ -66,9 +66,9 @@ class Event: DataCore {
 
 
 
-    init(id: DataID, item: ItemType) {
+    init(ID: DataID, item: ItemType) {
         self.item = item
-        super.init(ID: id)
+        super.init(ID: ID)
 
     }
 }

@@ -47,7 +47,6 @@ class DetailViewController: NavTabController, UITableViewDelegate, UITableViewDa
         } else { //对话(s) + head
             return 1 + event.msgList.count
         }
-
     }
 
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

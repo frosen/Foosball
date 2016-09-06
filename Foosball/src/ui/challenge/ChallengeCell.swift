@@ -9,6 +9,7 @@
 import UIKit
 
 class ChallengeCell: UITableViewCell {
+    var eventBoard: EventBoard! = nil
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -25,7 +26,7 @@ class ChallengeCell: UITableViewCell {
         selectionStyle = .None
 
         //事件板
-        let eventBoard = EventBoard()
+        eventBoard = EventBoard()
         contentView.addSubview(eventBoard)
     }
 
@@ -40,6 +41,10 @@ class ChallengeCell: UITableViewCell {
 
     class func getCellHeight() -> CGFloat {
         return 108
+    }
+
+    func setData(e: Event) {
+        eventBoard.setData(e)
     }
 
 }

@@ -32,50 +32,46 @@ class EventBoard: UIView {
         addSubview(iconView)
         
         //图标
-        let iconWidth: CGFloat = 54
-        icon = UIImageView(frame: CGRect(x: 8, y: 8, width: iconWidth, height: iconWidth))
+        let iconMargin: CGFloat = 6
+        let iconWidth: CGFloat = h - iconMargin - iconMargin
+        icon = UIImageView(frame: CGRect(x: iconMargin, y: iconMargin, width: iconWidth, height: iconWidth))
         iconView.addSubview(icon)
 
-        icon.layer.cornerRadius = iconWidth / 4 //圆形
-        icon.layer.masksToBounds = true //剪切掉边缘以外
+        icon.layer.borderWidth = 3
+        icon.layer.borderColor = UIColor.whiteColor().CGColor
+        icon.layer.shadowColor = UIColor.grayColor().CGColor
+        icon.layer.shadowOpacity = 0.9
+        icon.layer.shadowRadius = 3
 
         icon.backgroundColor = UIColor.redColor()
-
-        //临时的文字---------------------------
-        let nameTmp = UILabel()
-        icon.addSubview(nameTmp)
-        nameTmp.text = "红牛杯"
-        nameTmp.textColor = UIColor.whiteColor()
-        nameTmp.font = UIFont.boldSystemFontOfSize(15)
-        nameTmp.sizeToFit()
-        nameTmp.center = CGPoint(x: iconWidth / 2, y: iconWidth / 2)
 
         //标题
         title = UILabel()
         addSubview(title)
         title.snp_makeConstraints{ make in
             make.left.equalTo(iconView.snp_right)
+            make.right.equalTo(self.snp_right).inset(iconMargin)
             make.centerY.equalTo(self.snp_bottom).multipliedBy(0.3) //0.3 0.7
         }
 
         title.font = UIFont.boldSystemFontOfSize(15)
         title.textColor = UIColor.blackColor()
-
-        title.text = "这是一个很有意思的测试"
+//        title.textAlignment = .Center
+//        title.backgroundColor = UIColor(white: 0.95, alpha: 1)
 
         //VS显示处用于布局的view
         let VSView = UIView()
         addSubview(VSView)
         VSView.snp_makeConstraints{ make in
             make.left.equalTo(iconView.snp_right)
-            make.right.equalTo(self.snp_right).inset(5)
+            make.right.equalTo(self.snp_right).inset(iconMargin)
             make.centerY.equalTo(self.snp_bottom).multipliedBy(0.7)
             make.height.equalTo(25)
         }
 
         VSView.backgroundColor = UIColor(white: 0.95, alpha: 1)
-        VSView.layer.cornerRadius = 3 //圆角
-        VSView.layer.masksToBounds = true //剪切掉边缘以外
+//        VSView.layer.cornerRadius = 3 //圆角
+//        VSView.layer.masksToBounds = true //剪切掉边缘以外
 
         let VS = UILabel()
         VSView.addSubview(VS)
@@ -85,11 +81,48 @@ class EventBoard: UIView {
 
         VS.font = UIFont.boldSystemFontOfSize(15)
         VS.textColor = UIColor.blackColor()
+        VS.textAlignment = .Center
         VS.text = "VS"
 
+        // 左右
+        let left = UILabel()
+        VSView.addSubview(left)
+        left.snp_makeConstraints{ make in
+            make.left.equalTo(VSView.snp_left)
+            make.right.equalTo(VSView.snp_centerX)
+            make.centerY.equalTo(VSView.snp_centerY)
+        }
+
+        left.font = UIFont.boldSystemFontOfSize(12)
+        left.textColor = UIColor.blackColor()
+        left.textAlignment = .Center
+        left.text = "left"
+
+        let right = UILabel()
+        VSView.addSubview(right)
+        right.snp_makeConstraints{ make in
+            make.left.equalTo(VSView.snp_centerX)
+            make.right.equalTo(VSView.snp_right)
+            make.centerY.equalTo(VSView.snp_centerY)
+        }
+
+        right.font = UIFont.boldSystemFontOfSize(12)
+        right.textColor = UIColor.blackColor()
+        right.textAlignment = .Center
+        right.text = "right"
     }
 
     func setData(event: Event) {
-        
+        //临时的文字---------------------------
+        for v in icon.subviews { v.removeFromSuperview() }
+        let nameTmp = UILabel()
+        icon.addSubview(nameTmp)
+        nameTmp.text = "XXX杯"
+        nameTmp.textColor = UIColor.whiteColor()
+        nameTmp.font = UIFont.boldSystemFontOfSize(15)
+        nameTmp.sizeToFit()
+        nameTmp.center = CGPoint(x: icon.frame.width / 2, y: icon.frame.height / 2)
+
+        title.text = "这是一个很有意思的测试"
     }
 }

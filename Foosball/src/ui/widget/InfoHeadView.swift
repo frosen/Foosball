@@ -52,8 +52,17 @@ class InfoHeadView: UIView {
         let h: CGFloat = frame.size.height
 
         //裁剪背景图
-        let maskView = UIView(frame: CGRect(x: 0, y: 0, width: w, height: h + extraHeight))
-        addSubview(maskView)
+        let maskViewShadow = UIView(frame: CGRect(x: 0, y: 0, width: w, height: h + extraHeight))
+        addSubview(maskViewShadow)
+
+        maskViewShadow.backgroundColor = UIColor.whiteColor()
+        maskViewShadow.layer.shadowColor = UIColor.grayColor().CGColor
+        maskViewShadow.layer.shadowOpacity = 0.45
+        maskViewShadow.layer.shadowRadius = 3
+        maskViewShadow.layer.shadowOffset = CGSize(width: 0, height: 5)
+
+        let maskView = UIView(frame: CGRect(x: 0, y: 0, width: maskViewShadow.frame.width, height: maskViewShadow.frame.height))
+        maskViewShadow.addSubview(maskView)
         maskView.layer.masksToBounds = true
 
         //背景

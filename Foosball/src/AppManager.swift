@@ -16,6 +16,14 @@ class AppManager: NSObject {
     static let shareInstance = AppManager()
     private override init() {
         print("初始化导演类")
+
+        user = User(ID: DataID(ID: 123))
+
+        var e: Event! = nil
+        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        user!.activeEvents.append(e)
+        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        user!.activeEvents.append(e)
     }
 
     //在所有之前调用

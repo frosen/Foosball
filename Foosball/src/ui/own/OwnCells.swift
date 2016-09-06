@@ -53,7 +53,7 @@ class OwnQRCell: UITableViewCell {
         contentView.addSubview(bgView)
         bgView.bounds = CGRect(x: 0, y: 0, width: 170, height: 185)
         bgView.center = CGPoint(x: UIScreen.mainScreen().bounds.width / 2, y: 100)
-        bgView.backgroundColor = UIColor(white: 0.99, alpha: 1.0)
+        bgView.backgroundColor = UIColor(white: 1.0, alpha: 1.0)
 
         bgView.layer.shadowColor = UIColor.blackColor().CGColor
         bgView.layer.shadowOffset = CGSize(width: 2, height: 1)

@@ -70,7 +70,6 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
 
         myTabBar = MyTabBar.replaceOldTabBar(self, midButton: midBtn, btnItems: items)
         myTabBar.myTabBarDelegate = self
-        myTabBar.backgroundColor = UIColor(red: 1.0, green: 0.8, blue: 0.8, alpha: 1.0)
         myTabBar.tintColor = UIColor.orangeColor()
     }
 
