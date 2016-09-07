@@ -25,6 +25,7 @@
 		65B4F2F31D67011A00F8E961 /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B4F2F21D67011A00F8E961 /* BaseController.swift */; };
 		65B775471D3228710040716C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65B775461D3228710040716C /* Assets.xcassets */; };
 		65B7754A1D3228710040716C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65B775481D3228710040716C /* LaunchScreen.storyboard */; };
+		65CBEF6E1D7FEC19008EAC60 /* UIBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CBEF6D1D7FEC19008EAC60 /* UIBase.swift */; };
 		65D427F91D5FEB5900994EA8 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D427F81D5FEB5900994EA8 /* Item.swift */; };
 		65D427FC1D6073D700994EA8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D427FB1D6073D700994EA8 /* User.swift */; };
 		65D427FE1D60748400994EA8 /* BaseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D427FD1D60748400994EA8 /* BaseData.swift */; };
@@ -55,6 +56,7 @@
 		65B775461D3228710040716C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		65B775491D3228710040716C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		65B7754B1D3228710040716C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		65CBEF6D1D7FEC19008EAC60 /* UIBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIBase.swift; sourceTree = "<group>"; };
 		65D427F81D5FEB5900994EA8 /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Item.swift; path = model/Item.swift; sourceTree = "<group>"; };
 		65D427FB1D6073D700994EA8 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = model/User.swift; sourceTree = "<group>"; };
 		65D427FD1D60748400994EA8 /* BaseData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseData.swift; path = model/BaseData.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 		65AB523B1D3291E6005E7D4C /* base */ = {
 			isa = PBXGroup;
 			children = (
+				65CBEF6D1D7FEC19008EAC60 /* UIBase.swift */,
 				65B4F2F21D67011A00F8E961 /* BaseController.swift */,
 				65AB523C1D3291E6005E7D4C /* BaseTabController.swift */,
 				65AD17431D7EC89A008AEE3C /* BaseCell.swift */,
@@ -373,6 +376,7 @@
 				65AB52461D3291E6005E7D4C /* AppManager.swift in Sources */,
 				65D427F91D5FEB5900994EA8 /* Item.swift in Sources */,
 				65AD17441D7EC89A008AEE3C /* BaseCell.swift in Sources */,
+				65CBEF6E1D7FEC19008EAC60 /* UIBase.swift in Sources */,
 				6507AC0A1D55B7C900791FB1 /* ChallengeCell.swift in Sources */,
 				65AB524C1D3291E6005E7D4C /* OwnController.swift in Sources */,
 				657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */,

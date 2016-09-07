@@ -83,7 +83,7 @@ class InfoHeadView: UIView {
 
         avatarBG!.layer.cornerRadius = avatarW / 2 //圆形
         avatarBG!.layer.shadowColor = UIColor.blackColor().CGColor
-        avatarBG!.layer.shadowOffset = CGSize(width: 2, height: 2)
+        avatarBG!.layer.shadowOffset = CGSize(width: 1, height: 1)
         avatarBG!.layer.shadowOpacity = 0.9
         avatarBG!.layer.shadowRadius = 5
 

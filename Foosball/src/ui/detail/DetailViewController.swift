@@ -33,6 +33,8 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         baseView.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
+
+        tableView.separatorStyle = .None //不用他的分割线，自己画
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -67,11 +69,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     }
 
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 0.1
-        } else {
-            return 10
-        }
+        return section == 0 ? 0.1 : 10
     }
 
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -134,6 +132,8 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
                 if cell == nil {
                     cell = DetailTitleCell(reuseIdentifier: titleCId)
                 }
+                let detaiCell = cell as! DetailTitleCell
+                detaiCell.setData(event)
             case 1:
                 cell = tableView.dequeueReusableCellWithIdentifier(contentCId)
                 if cell == nil {

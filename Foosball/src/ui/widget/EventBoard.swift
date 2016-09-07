@@ -8,6 +8,30 @@
 
 import UIKit
 
+class EventIcon {
+    class func create(h: CGFloat, iconMargin: CGFloat) -> (UIView, UIImageView) {
+        //图标所在view，为布局而用
+        let iconView = UIView(frame: CGRect(x: 0, y: 0, width: h, height: h))
+
+        //图标
+        let iconMargin: CGFloat = 6
+        let iconWidth: CGFloat = h - iconMargin - iconMargin
+        let icon = UIImageView(frame: CGRect(x: iconMargin, y: iconMargin, width: iconWidth, height: iconWidth))
+        iconView.addSubview(icon)
+
+        icon.layer.borderWidth = 3
+        icon.layer.borderColor = UIColor.whiteColor().CGColor
+        icon.layer.shadowColor = UIColor.grayColor().CGColor
+        icon.layer.shadowOffset = CGSize(width: 1, height: 1)
+        icon.layer.shadowOpacity = 0.9
+        icon.layer.shadowRadius = 3
+
+        icon.backgroundColor = UIColor.redColor()
+
+        return (iconView, icon)
+    }
+}
+
 class EventBoard: UIView {
 
     var icon: UIImageView! = nil
@@ -25,37 +49,24 @@ class EventBoard: UIView {
         //底部分割线
         let downLine = UIView(frame: CGRect(x: 0, y: h - 0.5, width: w, height: 0.5))
         addSubview(downLine)
-        downLine.backgroundColor = UIColor(white: 0.92, alpha: 1)
+        downLine.backgroundColor = LineColor
 
-        //图标所在view，为布局而用
-        let iconView = UIView(frame: CGRect(x: 0, y: 0, width: h, height: h))
-        addSubview(iconView)
-        
-        //图标
         let iconMargin: CGFloat = 6
-        let iconWidth: CGFloat = h - iconMargin - iconMargin
-        icon = UIImageView(frame: CGRect(x: iconMargin, y: iconMargin, width: iconWidth, height: iconWidth))
-        iconView.addSubview(icon)
-
-        icon.layer.borderWidth = 3
-        icon.layer.borderColor = UIColor.whiteColor().CGColor
-        icon.layer.shadowColor = UIColor.grayColor().CGColor
-        icon.layer.shadowOpacity = 0.9
-        icon.layer.shadowRadius = 3
-
-        icon.backgroundColor = UIColor.redColor()
+        let (iconView, iconTmp) = EventIcon.create(h, iconMargin: iconMargin)
+        addSubview(iconView)
+        icon = iconTmp
 
         //标题
         title = UILabel()
         addSubview(title)
         title.snp_makeConstraints{ make in
-            make.left.equalTo(iconView.snp_right)
+            make.left.equalTo(iconView.snp_right).offset(5)
             make.right.equalTo(self.snp_right).inset(iconMargin)
             make.centerY.equalTo(self.snp_bottom).multipliedBy(0.3) //0.3 0.7
         }
 
-        title.font = UIFont.boldSystemFontOfSize(15)
-        title.textColor = UIColor.blackColor()
+        title.font = TitleFont
+        title.textColor = TitleColor
 //        title.textAlignment = .Center
 //        title.backgroundColor = UIColor(white: 0.95, alpha: 1)
 
