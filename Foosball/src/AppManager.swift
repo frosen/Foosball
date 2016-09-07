@@ -16,7 +16,13 @@ class AppManager: NSObject {
     static let shareInstance = AppManager()
     private override init() {
         print("初始化导演类")
+    }
 
+    //在所有之前调用
+    func onStart() {
+        //读取配置文件
+
+        //假数据
         user = User(ID: DataID(ID: 123))
 
         var e: Event! = nil
@@ -24,11 +30,8 @@ class AppManager: NSObject {
         user!.activeEvents.append(e)
         e = Event(ID: DataID(ID: 50001), item: Foosball)
         user!.activeEvents.append(e)
-    }
 
-    //在所有之前调用
-    func onStart() {
-        //读取配置文件
+        user!.avatarURL = "http://img4.duitang.com/uploads/item/201501/16/20150116231413_KQdLM.jpeg"
     }
 
     

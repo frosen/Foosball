@@ -87,8 +87,13 @@ class InfoHeadView: UIView {
         avatarBG!.layer.shadowOpacity = 0.9
         avatarBG!.layer.shadowRadius = 5
 
-        avatar = UIImageView(image: UIImage(named: headImgName))
+        avatar = UIImageView()
         avatarBG!.addSubview(avatar!)
+
+        let url = NSURL(string: (AppManager.shareInstance.user?.avatarURL)!)
+        let placeholderImg =  UIImage(named: headImgName)
+        avatar?.sd_setImageWithURL(url, placeholderImage: placeholderImg)
+
         avatar!.frame = CGRect(x: 0, y: 0, width: avatarW, height: avatarW)
 
         avatar!.layer.cornerRadius = avatarW / 2 //圆形
