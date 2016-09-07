@@ -17,14 +17,8 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
 
     override func viewDidLoad() {
         view.backgroundColor = UIColor.whiteColor()
-        initUI()
         initSubVc()
         initTabBar()
-    }
-
-    func initUI() {
-        let navBar = UINavigationBar.appearance()
-        navBar.barTintColor = UIColor.redColor()
     }
 
     func initSubVc() {

@@ -36,6 +36,16 @@ class BaseController: UIViewController {
         baseView = UIView(frame: view.frame)
         view.addSubview(baseView)
 
+        let navBar = navigationController?.navigationBar
+        if navBar != nil {
+            navBar!.barTintColor = UIColor.redColor()
+
+            navBar!.layer.shadowColor = UIColor.grayColor().CGColor
+            navBar!.layer.shadowOpacity = 0.45
+            navBar!.layer.shadowRadius = 3
+            navBar!.layer.shadowOffset = CGSize(width: 0, height: 5)
+        }
+
         // 初始化数据，根据设置的不同，在不同的时期进行
         if initDataOnViewAppear {
             baseView.alpha = 0
