@@ -8,7 +8,7 @@
 
 import UIKit
 import SnapKit
-import MJRefresh
+import SDWebImage
 
 class RootViewController: UITabBarController, MyTabBarDelegate {
     var items: [UITabBarItem] = []

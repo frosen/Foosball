@@ -4,12 +4,12 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>MJRefresh.xcscheme</key>
+		<key>Pods-Foosball.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-Foosball.xcscheme</key>
+		<key>SDWebImage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -22,17 +22,17 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>29DD99664D189A7CA206368F493B1E0B</key>
+		<key>0936780C37418275ED8AC9D42263C7B6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>978C9B143A8128EEE9B5F1A32F7D3CB3</key>
+		<key>0B4D0234E3CA8C2B93B14B2DBCC60790</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>DDE4BA6D70F518C3AE6DAAB58141B58F</key>
+		<key>9103B8F622973C4C3D162A7F48991308</key>
 		<dict>
 			<key>primary</key>
 			<true/>

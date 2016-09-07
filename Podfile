@@ -4,7 +4,7 @@ use_frameworks!
 target 'Foosball' do
 
 pod 'AVOSCloud'
-pod 'MJRefresh'
+pod 'SDWebImage'
 pod 'SnapKit'
 
 end
