@@ -68,8 +68,8 @@ class OwnQRCell: BaseCell {
 }
 
 class OwnNormalCell: UITableViewCell {
-    init(reuseIdentifier: String) {
-        super.init(style: .Value1, reuseIdentifier: reuseIdentifier)
+    init(id: String) {
+        super.init(style: .Value1, reuseIdentifier: id)
 
         textLabel?.font = UIFont.systemFontOfSize(13)
         detailTextLabel?.font = UIFont.systemFontOfSize(13)

@@ -133,23 +133,23 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
             if indexPath.row == 0 { //比赛成绩
                 cell = tableView.dequeueReusableCellWithIdentifier(ownScoCellId)
                 if cell == nil {
-                    cell = OwnScoreCell(reuseIdentifier: ownScoCellId)
+                    cell = OwnScoreCell(id: ownScoCellId)
                 }
             } else { //排名
                 cell = tableView.dequeueReusableCellWithIdentifier(ownScoCellId)
                 if cell == nil {
-                    cell = OwnRankCell(reuseIdentifier: ownScoCellId)
+                    cell = OwnRankCell(id: ownScoCellId)
                 }
             }
         case 1: //二维码
             cell = tableView.dequeueReusableCellWithIdentifier(ownQRCellId)
             if cell == nil {
-                cell = OwnQRCell(reuseIdentifier: ownQRCellId)
+                cell = OwnQRCell(id: ownQRCellId)
             }
         default: //其他项目
             cell = tableView.dequeueReusableCellWithIdentifier(ownNorCellId)
             if cell == nil {
-                cell = OwnNormalCell(reuseIdentifier: ownNorCellId)
+                cell = OwnNormalCell(id: ownNorCellId)
             }
             let data: NorCellData = group[indexPath.section - 2][indexPath.row]
             let norCell = cell as! OwnNormalCell

@@ -58,11 +58,11 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         case 0:
             return 3 //title + detail + cash
         case 1:
-            return 1 + max(event.senderStateList.count, event.receiverStateList.count) //person(s) + head with title
+            return 2 + max(event.senderStateList.count, event.receiverStateList.count) //person(s) + head with title 一定会有数据
         case 2:
-            return 1 + event.scoreList.count //比分(s) + head + title
+            return 1 + (event.scoreList.count != 0 ? 1 : 0) + event.scoreList.count//比分(s) + head + title 如果没有数据则无title
         case 3:
-            return 1 + event.msgList.count //对话(s) + head + title
+            return 1 + (event.msgList.count != 0 ? 1 : 0) + event.msgList.count //对话(s) + head + title 如果没有数据则无title
         default:
             return 0
         }
@@ -90,21 +90,30 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
                 return 0
             }
         case 1: //person(s) + head
-            if indexPath.row == 0 {
+            switch indexPath.row {
+            case 0:
                 return DetailTeamHeadCell.getCellHeight()
-            } else {
+            case 1:
+                return DetailTeamTitleCell.getCellHeight()
+            default:
                 return DetailTeamCell.getCellHeight()
             }
         case 2: //比分(s) + head
-            if indexPath.row == 0 {
+            switch indexPath.row {
+            case 0:
                 return DetailScoreHeadCell.getCellHeight()
-            } else {
+            case 1:
+                return DetailScoreTitleCell.getCellHeight() //反正 event.scoreList.count == 0 也不会读取这里了
+            default:
                 return DetailScoreCell.getCellHeight()
             }
         case 3: //对话(s) + head
-            if indexPath.row == 0 {
+            switch indexPath.row {
+            case 0:
                 return DetailMsgHeadCell.getCellHeight()
-            } else {
+            case 1:
+                return DetailMsgTitleCell.getCellHeight()
+            default:
                 return DetailMsgCell.getCellHeight()
             }
         default:
@@ -112,82 +121,47 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         }
     }
 
-    let titleCId = "TitCId"
-    let contentCId = "ConCId"
-    let cashCId = "CasCId"
-    let TeamHeadCId = "THCId"
-    let TeamCId = "TCId"
-    let ScoreHeadCId = "SHCId"
-    let ScoreCId = "SCId"
-    let MsgHeadCId = "MHCId"
-    let MsgCId = "MCId"
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell: UITableViewCell?
-
-        switch indexPath.section {
-        case 0: //title + detail + cash
-            switch indexPath.row {
+        return BaseCell.create(indexPath, tableView: tableView, e: event) { indexPath in
+            switch indexPath.section {
             case 0:
-                cell = tableView.dequeueReusableCellWithIdentifier(titleCId)
-                if cell == nil {
-                    cell = DetailTitleCell(reuseIdentifier: titleCId)
+                switch indexPath.row {
+                case 0:
+                    return BaseCell.CInfo(id: "TitCId", c: DetailTitleCell.self)
+                case 1:
+                    return BaseCell.CInfo(id: "ConCId", c: DetailContentCell.self)
+                default:
+                    return BaseCell.CInfo(id: "CasCId", c: DetailCashCell.self)
                 }
-                let detaiCell = cell as! DetailTitleCell
-                detaiCell.setData(event)
             case 1:
-                cell = tableView.dequeueReusableCellWithIdentifier(contentCId)
-                if cell == nil {
-                    cell = DetailContentCell(reuseIdentifier: contentCId)
+                switch indexPath.row {
+                case 0:
+                    return BaseCell.CInfo(id: "THCId", c: DetailTeamHeadCell.self)
+                case 1:
+                    return BaseCell.CInfo(id: "TTCId", c: DetailTeamTitleCell.self)
+                default:
+                    return BaseCell.CInfo(id: "TCId", c: DetailTeamCell.self)
                 }
             case 2:
-                cell = tableView.dequeueReusableCellWithIdentifier(cashCId)
-                if cell == nil {
-                    cell = DetailCashCell(reuseIdentifier: cashCId)
+                switch indexPath.row {
+                case 0:
+                    return BaseCell.CInfo(id: "SHCId", c: DetailScoreHeadCell.self)
+                case 1:
+                    return BaseCell.CInfo(id: "STCId", c: DetailScoreTitleCell.self)
+                default:
+                    return BaseCell.CInfo(id: "SCId", c: DetailScoreCell.self)
                 }
             default:
-                break
-            }
-        case 1: //person(s) + head
-            if indexPath.row == 0 {
-                cell = tableView.dequeueReusableCellWithIdentifier(TeamHeadCId)
-                if cell == nil {
-                    cell = DetailTeamHeadCell(reuseIdentifier: TeamHeadCId)
-                }
-            } else {
-                cell = tableView.dequeueReusableCellWithIdentifier(TeamCId)
-                if cell == nil {
-                    cell = DetailTeamCell(reuseIdentifier: TeamCId)
+                switch indexPath.row {
+                case 0:
+                    return BaseCell.CInfo(id: "MHCId", c: DetailMsgHeadCell.self)
+                case 1:
+                    return BaseCell.CInfo(id: "MTCId", c: DetailMsgHeadCell.self)
+                default:
+                    return BaseCell.CInfo(id: "MCId", c: DetailMsgCell.self)
                 }
             }
-        case 2: //比分(s) + head
-            if indexPath.row == 0 {
-                cell = tableView.dequeueReusableCellWithIdentifier(ScoreHeadCId)
-                if cell == nil {
-                    cell = DetailScoreHeadCell(reuseIdentifier: ScoreHeadCId)
-                }
-            } else {
-                cell = tableView.dequeueReusableCellWithIdentifier(ScoreCId)
-                if cell == nil {
-                    cell = DetailScoreCell(reuseIdentifier: ScoreCId)
-                }
-            }
-        case 3: //对话(s) + head
-            if indexPath.row == 0 {
-                cell = tableView.dequeueReusableCellWithIdentifier(MsgHeadCId)
-                if cell == nil {
-                    cell = DetailMsgHeadCell(reuseIdentifier: MsgHeadCId)
-                }
-            } else {
-                cell = tableView.dequeueReusableCellWithIdentifier(MsgCId)
-                if cell == nil {
-                    cell = DetailMsgCell(reuseIdentifier: MsgCId)
-                }
-            }
-        default:
-            break
         }
-
-        return cell!
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

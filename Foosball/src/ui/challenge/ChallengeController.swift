@@ -57,20 +57,11 @@ class ChallengeController: BaseTabController, UITableViewDelegate, UITableViewDa
         return ChallengeCell.getCellHeight()
     }
 
-    let chalCellId = "chalCellId"
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell: UITableViewCell?
-
-        cell = tableView.dequeueReusableCellWithIdentifier(chalCellId)
-        if cell == nil {
-            cell = ChallengeCell(reuseIdentifier: chalCellId)
-        }
-
         let e: Event = activeEvents[indexPath.section]
-        let cCell = cell as! ChallengeCell
-        cCell.setData(e)
-
-        return cell!
+        return BaseCell.create(indexPath, tableView: tableView, e: e) { indexPath in
+            return BaseCell.CInfo(id: "chalCellId", c: ChallengeCell.self)
+        }
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

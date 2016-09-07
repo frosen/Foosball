@@ -28,10 +28,10 @@ class ChallengeCell: BaseCell {
         contentView.addSubview(eventBoard)
     }
 
-    func setData(e: Event) {
+    override func setEvent(e: Event) {
         eventBoard.setData(e)
     }
-
+    
     override func setHighlighted(highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         if highlighted == true {

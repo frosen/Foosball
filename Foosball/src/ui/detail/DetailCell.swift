@@ -21,8 +21,6 @@ class DetailTitleCell: BaseCell {
     }
 
     override func initData() {
-        self.accessoryType = .None
-
         let w: CGFloat = UIScreen.mainScreen().bounds.width
         let h: CGFloat = DetailTitleCell.getCellHeight()
 
@@ -72,7 +70,7 @@ class DetailTitleCell: BaseCell {
         createTime.textColor = TextColor
     }
 
-    func setData(e: Event) {
+    override func setEvent(e: Event) {
         title.text = "这也是一个很有趣的测试"
         title.sizeToFit()
         position.text = "朝阳/6km"
@@ -88,7 +86,6 @@ class DetailContentCell: BaseCell {
     }
 
     override func initData() {
-        self.accessoryType = .DisclosureIndicator
     }
 }
 
@@ -98,7 +95,6 @@ class DetailCashCell: BaseCell {
     }
 
     override func initData() {
-        self.accessoryType = .DisclosureIndicator
     }
 }
 
@@ -108,7 +104,15 @@ class DetailTeamHeadCell: BaseCell {
     }
 
     override func initData() {
-        self.accessoryType = .DisclosureIndicator
+    }
+}
+
+class DetailTeamTitleCell: BaseCell {
+    override class func getCellHeight() -> CGFloat {
+        return 44
+    }
+
+    override func initData() {
     }
 }
 
@@ -118,7 +122,6 @@ class DetailTeamCell: BaseCell {
     }
 
     override func initData() {
-        self.accessoryType = .DisclosureIndicator
     }
 }
 
@@ -128,7 +131,15 @@ class DetailScoreHeadCell: BaseCell {
     }
 
     override func initData() {
-        self.accessoryType = .DisclosureIndicator
+    }
+}
+
+class DetailScoreTitleCell: BaseCell {
+    override class func getCellHeight() -> CGFloat {
+        return 44
+    }
+
+    override func initData() {
     }
 }
 
@@ -138,7 +149,6 @@ class DetailScoreCell: BaseCell {
     }
 
     override func initData() {
-        self.accessoryType = .DisclosureIndicator
     }
 }
 
@@ -148,7 +158,15 @@ class DetailMsgHeadCell: BaseCell {
     }
 
     override func initData() {
-        self.accessoryType = .DisclosureIndicator
+    }
+}
+
+class DetailMsgTitleCell: BaseCell {
+    override class func getCellHeight() -> CGFloat {
+        return 44
+    }
+
+    override func initData() {
     }
 }
 
@@ -158,7 +176,6 @@ class DetailMsgCell: BaseCell {
     }
 
     override func initData() {
-        self.accessoryType = .DisclosureIndicator
     }
 }
 
