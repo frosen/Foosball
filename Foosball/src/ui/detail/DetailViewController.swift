@@ -37,12 +37,6 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         tableView.separatorStyle = .None //不用他的分割线，自己画
     }
 
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-
-        print("h")
-    }
-
     override func initData() {
         sectionNum = 4
         tableView.reloadData()

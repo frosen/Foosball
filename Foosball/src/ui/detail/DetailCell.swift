@@ -110,6 +110,14 @@ class DetailContentCell: BaseCell {
     }
 
     override func initData() {
+        //底部分割线
+        let downLine = UIView()
+        contentView.addSubview(downLine)
+        downLine.bounds = CGRect(x: 0, y: 0, width: w, height: 0.5)
+        downLine.snp_makeConstraints{ make in
+            make.bottom.equalTo(contentView.snp_bottom)
+        }
+        downLine.backgroundColor = LineColor
     }
 }
 
@@ -155,7 +163,6 @@ class DetailTeamTitleCell: BaseCell {
 
         //中线
         let midLine = UIView(frame: CGRect(x: w / 2, y: 0, width: 1, height: h))
-        print(midLine.frame, h)
         contentView.addSubview(midLine)
         midLine.backgroundColor = UIColor.blackColor()
 
@@ -182,6 +189,7 @@ class DetailTeamCell: BaseCell {
     }
 
     override func initData() {
+        
     }
 }
 
