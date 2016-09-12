@@ -16,8 +16,6 @@ class ChallengeCell: BaseCell {
     }
 
     override func initData() {
-        let w: CGFloat = UIScreen.mainScreen().bounds.width
-        let h: CGFloat = ChallengeCell.getCellHeight()
         bounds = CGRect(x: 0, y: 0, width: w, height: h)
 
         // 因为原来自动的selectionStyle会让subview的backgroundcolor变成透明，所以把自动的关闭，自己写一个

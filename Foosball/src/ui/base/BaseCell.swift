@@ -9,9 +9,14 @@
 import UIKit
 
 class BaseCell: UITableViewCell {
+    var w: CGFloat = 0
+    var h: CGFloat = 0
     required init(id: String?) {
         super.init(style: .Default, reuseIdentifier: id)
         self.accessoryType = .None // 默认
+        w = UIScreen.mainScreen().bounds.width
+        h = self.dynamicType.getCellHeight() //dynamicType可以获取对象的类，然后就能使用类函数了
+
         initData()
     }
     
