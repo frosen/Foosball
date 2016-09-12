@@ -192,6 +192,7 @@ class DetailTeamCell: BaseCell {
     }
 
     override func initData() {
+
         
     }
 }
