@@ -106,6 +106,9 @@ class DetailTitleCell: BaseCell {
 
 class DetailContentCell: BaseCell {
     override class func getCellHeight() -> CGFloat {
+//        let rect = stringList[0].boundingRectWithSize(
+//            CGSize(width: UIScreen.mainScreen().bounds.width, height: CGFloat(MAXFLOAT)),
+//            options: [.UsesLineFragmentOrigin, .UsesFontLeading], attributes: [NSFontAttributeName : UIFont.systemFontOfSize(17)], context: nil)
         return 88
     }
 
