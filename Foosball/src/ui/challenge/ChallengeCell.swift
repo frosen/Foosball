@@ -26,7 +26,7 @@ class ChallengeCell: BaseCell {
         contentView.addSubview(eventBoard)
     }
 
-    override func setEvent(e: Event) {
+    override func setEvent(e: Event, index: NSIndexPath) {
         eventBoard.setData(e)
     }
     

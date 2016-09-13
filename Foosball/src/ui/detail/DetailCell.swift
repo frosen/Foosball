@@ -69,7 +69,7 @@ class DetailTitleCell: BaseCell {
         createTime.textColor = TextColor
     }
 
-    override func setEvent(e: Event) {
+    override func setEvent(e: Event, index: NSIndexPath) {
         title.text = "这也是一个很有趣的测试"
         title.sizeToFit()
         position.text = "朝阳/6km"
@@ -109,6 +109,7 @@ class DetailCashCell: BaseCell {
 }
 
 // ============================================================================================================================
+
 class DetailHeadCell: BaseCell {
     func createHead(v: UIView, s: String) {
         let w: CGFloat = 10
@@ -139,33 +140,30 @@ class DetailListTitleCell: BaseCell {
         backgroundColor = UIColor.orangeColor()
 
         //中线
-        let midLine = UIView(frame: CGRect(x: w / 2, y: 0, width: 1, height: h))
+        let midLine = UIView(frame: CGRect(x: w / 2, y: 0, width: 0.5, height: h))
         contentView.addSubview(midLine)
         midLine.backgroundColor = UIColor.blackColor()
 
-        //左边
-        let left = createTitleLabel(leftStr, posRate: 0.25)
-
-        //右边
-        let right = createTitleLabel(rightStr, posRate: 0.75)
+        let left = createTitleLabel(leftStr, posRate: 0.25) //左边
+        let right = createTitleLabel(rightStr, posRate: 0.75) //右边
 
         return (left, right)
     }
 
-    func createTitleLabel(s: String, posRate: Float) -> UILabel {
+    func createTitleLabel(s: String, posRate: CGFloat) -> UILabel {
         let l = UILabel()
         contentView.addSubview(l)
-
-        l.snp_makeConstraints{ make in
-            make.centerX.equalTo(contentView.snp_right).multipliedBy(posRate)
-            make.centerY.equalTo(contentView.snp_centerY)
-        }
 
         l.font = TitleFont
         l.textColor = TitleColor
 
         l.text = s
         l.sizeToFit()
+
+        l.snp_makeConstraints{ make in
+            make.centerX.equalTo(contentView.snp_right).multipliedBy(posRate)
+            make.centerY.equalTo(contentView.snp_centerY)
+        }
 
         return l
     }
@@ -213,7 +211,7 @@ class DetailTeamTitleCell: DetailListTitleCell {
         return countLbl
     }
 
-    override func setEvent(e: Event) {
+    override func setEvent(e: Event, index: NSIndexPath) {
         //计算人数
         setCount(leftCount, count: e.ourSideStateList.count)
         setCount(rightCount, count: e.opponentStateList.count)
@@ -231,7 +229,18 @@ class DetailTeamCell: BaseCell {
     }
 
     override func initData() {
+        //中线
+        let midLine = UIView(frame: CGRect(x: w / 2, y: 0, width: 0.5, height: h))
+        contentView.addSubview(midLine)
+        midLine.backgroundColor = UIColor.blackColor()
+    }
 
+    override func setEvent(e: Event, index: NSIndexPath) {
+        if index.row % 2 == 1 {//隔行把颜色稍稍加深
+            backgroundColor = UIColor(red: 1.0, green: 0.9, blue: 0.8, alpha: 1.0)
+        } else {
+            backgroundColor = UIColor(white: 1.0, alpha: 1.0)
+        }
     }
 }
 

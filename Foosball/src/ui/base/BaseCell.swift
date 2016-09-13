@@ -29,7 +29,7 @@ class BaseCell: UITableViewCell {
     }
 
     func initData() {}
-    func setEvent(e: Event) {} //需要继承的，把事件设置进去
+    func setEvent(e: Event, index: NSIndexPath) {} //需要继承的，把事件设置进去
 
     //非常方便的创建cell
     struct CInfo {
@@ -53,7 +53,7 @@ class BaseCell: UITableViewCell {
 
         let baseCell = cell as! BaseCell
         if e != nil {
-            baseCell.setEvent(e!)
+            baseCell.setEvent(e!, index: index)
         }
 
         return cell!
