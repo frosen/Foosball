@@ -10,8 +10,10 @@ import UIKit
 
 class UserBrief: DataCore {
     //名字
+    var name: String = ""
 
     //头像url
+    var avatarURL: String = ""
     
 }
 

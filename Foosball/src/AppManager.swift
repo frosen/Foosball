@@ -27,6 +27,39 @@ class AppManager: NSObject {
 
         var e: Event! = nil
         e = Event(ID: DataID(ID: 50001), item: Foosball)
+
+        //自己方
+        let bb1 = UserBrief(ID: DataID(ID: 1232))
+        bb1.name = "小明"
+        let p1 = UserState(user: bb1, state: .invite)
+
+        let bb2 = UserBrief(ID: DataID(ID: 1232))
+        bb2.name = "小明2"
+        let p2 = UserState(user: bb2, state: .invite)
+
+        let bb3 = UserBrief(ID: DataID(ID: 1232))
+        bb3.name = "小明3"
+        let p3 = UserState(user: bb3, state: .invite)
+
+        e.ourSideStateList = [p1, p2, p3]
+
+        // 对方
+        let bk1 = UserBrief(ID: DataID(ID: 1232))
+        bk1.name = "小明"
+        let pk1 = UserState(user: bk1, state: .invite)
+
+        let bk2 = UserBrief(ID: DataID(ID: 1232))
+        bk2.name = "小明2"
+        let pk2 = UserState(user: bk2, state: .invite)
+
+        let bk3 = UserBrief(ID: DataID(ID: 1232))
+        bk3.name = "小明3"
+        let pk3 = UserState(user: bk3, state: .invite)
+
+        e.opponentStateList = [pk1, pk2, pk3]
+
+
+
         user!.activeEvents.append(e)
         e = Event(ID: DataID(ID: 50001), item: Foosball)
         user!.activeEvents.append(e)

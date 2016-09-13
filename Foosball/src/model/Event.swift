@@ -18,9 +18,9 @@ enum EventState {
 }
 
 class UserState {
-    var user: DataID
+    var user: UserBrief
     var state: EventState
-    init(user: DataID, state: EventState) {
+    init(user: UserBrief, state: EventState) {
         self.user = user
         self.state = state
     }
@@ -44,11 +44,11 @@ class Event: DataCore {
 
     //其他人是否可以增加新人 对决为false，其他为true，如果为true还能设置人数上限，默认不限
 
-    //发送方以及状态
-    var senderStateList: [UserState] = []
+    //自己方以及状态，第一个肯定是自己
+    var ourSideStateList: [UserState] = []
 
-    //接收方以及状态
-    var receiverStateList: [UserState] = []
+    //对方以及状态
+    var opponentStateList: [UserState] = []
 
     //位置信息
 

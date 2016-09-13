@@ -52,7 +52,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         case 0:
             return 3 //title + detail + cash
         case 1:
-            return 2 + max(event.senderStateList.count, event.receiverStateList.count) //person(s) + head with title 一定会有数据
+            return 2 + max(event.ourSideStateList.count, event.opponentStateList.count) //person(s) + head with title 一定会有数据
         case 2:
             return 1 + (event.scoreList.count != 0 ? 1 : 0) + event.scoreList.count//比分(s) + head + title 如果没有数据则无title
         case 3:

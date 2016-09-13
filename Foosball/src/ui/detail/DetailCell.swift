@@ -8,33 +8,8 @@
 
 import UIKit
 
+let margin: CGFloat = 20
 let iconMargin: CGFloat = 6 //图标到边的距离
-
-class DetailCellTools {
-    class func createTitle(v: UIView, s: String) {
-        let w: CGFloat = 10
-        let h: CGFloat = 20
-        let margin: CGFloat = 20
-
-        let icon = UIView(frame: CGRect(x: margin, y: v.frame.height / 2 - h / 2, width: w, height: h))
-        v.addSubview(icon)
-
-        icon.backgroundColor = UIColor.orangeColor()
-
-        let lbl = UILabel()
-        v.addSubview(lbl)
-        lbl.snp_makeConstraints{ make in
-            make.left.equalTo(icon.snp_right).offset(20)
-            make.centerY.equalTo(v.snp_centerY)
-        }
-
-        lbl.font = TitleFont
-        lbl.textColor = TitleColor
-
-        lbl.text = s
-        lbl.sizeToFit()
-    }
-}
 
 class DetailTitleCell: BaseCell {
     var icon: UIImageView! = nil
@@ -133,24 +108,58 @@ class DetailCashCell: BaseCell {
     }
 }
 
-class DetailTeamHeadCell: BaseCell {
-    override class func getCellHeight() -> CGFloat {
-        return 44
-    }
+// ============================================================================================================================
+class DetailHeadCell: BaseCell {
+    func createHead(v: UIView, s: String) {
+        let w: CGFloat = 10
+        let h: CGFloat = 20
 
-    override func initData() {
-        DetailCellTools.createTitle(contentView, s: "队伍信息")
+        let icon = UIView(frame: CGRect(x: margin, y: v.frame.height / 2 - h / 2, width: w, height: h))
+        v.addSubview(icon)
+
+        icon.backgroundColor = UIColor.orangeColor()
+
+        let lbl = UILabel()
+        v.addSubview(lbl)
+        lbl.snp_makeConstraints{ make in
+            make.left.equalTo(icon.snp_right).offset(20)
+            make.centerY.equalTo(v.snp_centerY)
+        }
+
+        lbl.font = TitleFont
+        lbl.textColor = TitleColor
+
+        lbl.text = s
+        lbl.sizeToFit()
     }
 }
 
-class DetailTeamTitleCell: BaseCell {
-    override class func getCellHeight() -> CGFloat {
-        return 44
+class DetailListTitleCell: BaseCell {
+    func createListTitle(leftStr leftStr: String, rightStr: String) -> (UILabel, UILabel) {
+        backgroundColor = UIColor.orangeColor()
+
+        //中线
+        let midLine = UIView(frame: CGRect(x: w / 2, y: 0, width: 1, height: h))
+        contentView.addSubview(midLine)
+        midLine.backgroundColor = UIColor.blackColor()
+
+        //左边
+        let left = createTitleLabel(leftStr, posRate: 0.25)
+
+        //右边
+        let right = createTitleLabel(rightStr, posRate: 0.75)
+
+        return (left, right)
     }
 
-    func createTitleLabel(s: String) -> UILabel {
+    func createTitleLabel(s: String, posRate: Float) -> UILabel {
         let l = UILabel()
         contentView.addSubview(l)
+
+        l.snp_makeConstraints{ make in
+            make.centerX.equalTo(contentView.snp_right).multipliedBy(posRate)
+            make.centerY.equalTo(contentView.snp_centerY)
+        }
 
         l.font = TitleFont
         l.textColor = TitleColor
@@ -160,29 +169,59 @@ class DetailTeamTitleCell: BaseCell {
 
         return l
     }
+}
+
+// ============================================================================================================================
+
+class DetailTeamHeadCell: DetailHeadCell {
+    override class func getCellHeight() -> CGFloat {
+        return 44
+    }
 
     override func initData() {
-        backgroundColor = UIColor.orangeColor()
+        createHead(contentView, s: "队伍信息")
+    }
+}
 
-        //中线
-        let midLine = UIView(frame: CGRect(x: w / 2, y: 0, width: 1, height: h))
-        contentView.addSubview(midLine)
-        midLine.backgroundColor = UIColor.blackColor()
+class DetailTeamTitleCell: DetailListTitleCell {
+    var leftCount: UILabel! = nil
+    var rightCount: UILabel! = nil
 
-        //左边
-        let leftTeam = createTitleLabel("我方")
-        contentView.addSubview(leftTeam)
-        leftTeam.snp_makeConstraints{ make in
-            make.centerX.equalTo(contentView.snp_right).multipliedBy(0.25)
-            make.centerY.equalTo(contentView.snp_centerY)
+    override class func getCellHeight() -> CGFloat {
+        return 44
+    }
+
+    override func initData() {
+        let (left, right) = createListTitle(leftStr: "我方", rightStr: "对方")
+
+        //显示人数
+        leftCount = createPersonCountLabel(left)
+        rightCount = createPersonCountLabel(right)
+    }
+
+    func createPersonCountLabel(posView: UIView) -> UILabel {
+        let countLbl = UILabel()
+        contentView.addSubview(countLbl)
+        countLbl.snp_makeConstraints{ make in
+            make.left.equalTo(posView.snp_right).offset(5)
+            make.bottom.equalTo(posView.snp_bottom)
         }
 
-        //右边
-        let rightTeam = createTitleLabel("对方")
-        rightTeam.snp_makeConstraints{ make in
-            make.centerX.equalTo(contentView.snp_right).multipliedBy(0.75)
-            make.centerY.equalTo(contentView.snp_centerY)
-        }
+        countLbl.font = UIFont.boldSystemFontOfSize(12)
+        countLbl.textColor = UIColor(white: 0.3, alpha: 1)
+
+        return countLbl
+    }
+
+    override func setEvent(e: Event) {
+        //计算人数
+        setCount(leftCount, count: e.ourSideStateList.count)
+        setCount(rightCount, count: e.opponentStateList.count)
+    }
+
+    func setCount(lbl: UILabel, count: Int) {
+        lbl.text = "(" + String(count) + ")"
+        lbl.sizeToFit()
     }
 }
 
@@ -193,26 +232,26 @@ class DetailTeamCell: BaseCell {
 
     override func initData() {
 
-        
     }
 }
 
-class DetailScoreHeadCell: BaseCell {
+class DetailScoreHeadCell: DetailHeadCell {
     override class func getCellHeight() -> CGFloat {
         return 44
     }
 
     override func initData() {
-        DetailCellTools.createTitle(contentView, s: "比赛得分")
+        createHead(contentView, s: "比赛得分")
     }
 }
 
-class DetailScoreTitleCell: BaseCell {
+class DetailScoreTitleCell: DetailListTitleCell {
     override class func getCellHeight() -> CGFloat {
         return 44
     }
 
     override func initData() {
+        createListTitle(leftStr: "我方", rightStr: "对方")
     }
 }
 
@@ -225,13 +264,13 @@ class DetailScoreCell: BaseCell {
     }
 }
 
-class DetailMsgHeadCell: BaseCell {
+class DetailMsgHeadCell: DetailHeadCell {
     override class func getCellHeight() -> CGFloat {
         return 44
     }
 
     override func initData() {
-        DetailCellTools.createTitle(contentView, s: "消息")
+        createHead(contentView, s: "消息")
     }
 }
 
