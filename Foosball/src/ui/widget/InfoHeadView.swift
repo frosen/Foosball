@@ -144,8 +144,8 @@ class InfoHeadView: UIView {
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        let newOffset = (change![.newKey] as AnyObject).cgPointValue
-        updateSubViewsWithScrollOffsetY(newOffset!.y)
+        let newOffset = (change![.newKey] as! NSValue).cgPointValue
+        updateSubViewsWithScrollOffsetY(newOffset.y)
     }
 
     let destY: CGFloat = -64 //44 + 20

@@ -45,7 +45,7 @@ class QRCodeTools: NSObject {
 
         let bytesPerRow = width * 4
         let bytesSize = bytesPerRow * width
-        let rgbImageBuf: UnsafeMutableRawPointer! = malloc(bytesSize)
+        let rgbImageBuf = UnsafeMutableRawPointer.allocate(bytes: bytesSize, alignedTo: 0)
 
         let cs  = CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGImageAlphaInfo.noneSkipLast.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
@@ -63,7 +63,7 @@ class QRCodeTools: NSObject {
         let g: UInt8 = UInt8(components![1] * 255)
         let b: UInt8 = UInt8(components![2] * 255)
         let pixelNum = width * width //宽 * 高
-        var pCurPtr: UnsafeMutablePointer<UInt32> = rgbImageBuf.assumingMemoryBound(to: UInt32.self)
+        var ptr32: UnsafeMutablePointer<UInt32> = rgbImageBuf.assumingMemoryBound(to: UInt32.self)
 
         var line: Int = 1 // 行数
         for i in 0 ..< pixelNum {
@@ -71,19 +71,19 @@ class QRCodeTools: NSObject {
                 line += 1
             }
 
-            let ptr: UnsafeMutablePointer<UInt8> = rgbImageBuf.assumingMemoryBound(to: UInt8.self)
-            if (pCurPtr.pointee & 0xFFFFFF00) < 0x99999900 {
+            let ptr8: UnsafeMutablePointer<UInt8> = ptr32.withMemoryRebound(to: UInt8.self, capacity: 1) { $0 }
+            if (ptr32.pointee & 0xFFFFFF00) < 0x99999900 {
                 let rate: Float = 1 - Float(line) / Float(width) //根据行数，设置一个比例，从指定颜色一直降到黑色，实现渐变
-                ptr[3] = UInt8(rate * Float(r))
-                ptr[2] = UInt8(rate * Float(g))
-                ptr[1] = UInt8(rate * Float(b))
+                ptr8[3] = UInt8(rate * Float(r))
+                ptr8[2] = UInt8(rate * Float(g))
+                ptr8[1] = UInt8(rate * Float(b))
             } else {
-                ptr[0] = 0
+                ptr8[0] = 0
             }
-            pCurPtr = pCurPtr.successor()
+            ptr32 = ptr32.successor()
         }
 
-        let dataProvider = CGDataProvider(dataInfo: nil, data: rgbImageBuf!, size: bytesSize) {_,_,_ in }
+        let dataProvider = CGDataProvider(dataInfo: nil, data: rgbImageBuf, size: bytesSize) {_,_,_ in }
         let imageInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.last.rawValue | CGBitmapInfo.byteOrder32Little.rawValue)
         let imageRef = CGImage(width: width, height: width, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: bytesPerRow, space: cs, bitmapInfo: imageInfo, provider: dataProvider!, decode: nil, shouldInterpolate: true, intent: CGColorRenderingIntent.defaultIntent)
 
