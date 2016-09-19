@@ -34,7 +34,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         initScanning()
 
         //不加这个的话，回到前台动画就没了
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ScanViewController.resetScanAnim), name: "EnterForeground", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ScanViewController.resetScanAnim), name: NSNotification.Name(rawValue: "EnterForeground"), object: nil)
     }
 
     let maskMargin: CGFloat = 35.0
@@ -44,7 +44,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
 
         let borderWidth: CGFloat = 500.0
 
-        mask.layer.borderColor = UIColor(white: 0.0, alpha: 0.7).CGColor
+        mask.layer.borderColor = UIColor(white: 0.0, alpha: 0.7).cgColor
         mask.layer.borderWidth = borderWidth
 
         let maskWidth = baseView.frame.width + borderWidth * 2 - maskMargin * 2
@@ -72,19 +72,19 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         scanWindow.addSubview(corner2)
         corner2.sizeToFit()
         corner2.frame.origin = CGPoint(x: scanWidth - corner2.frame.width, y: 0)
-        corner2.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 0.5))
+        corner2.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI * 0.5))
 
         let corner3 = UIImageView(image: cornerImage)
         scanWindow.addSubview(corner3)
         corner3.sizeToFit()
         corner3.frame.origin = CGPoint(x: scanWidth - corner2.frame.width, y: scanWidth - corner2.frame.height)
-        corner3.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 1))
+        corner3.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI * 1))
 
         let corner4 = UIImageView(image: cornerImage)
         scanWindow.addSubview(corner4)
         corner4.sizeToFit()
         corner4.frame.origin = CGPoint(x: 0, y: scanWidth - corner2.frame.height)
-        corner4.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 1.5))
+        corner4.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI * 1.5))
     }
 
     func initBottomButton() {
@@ -101,20 +101,20 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         }
     }
 
-    func setBtn(action: Selector, imgName: String, selectImgName: String?) -> UIButton {
-        let btn = UIButton(type: .Custom)
+    func setBtn(_ action: Selector, imgName: String, selectImgName: String?) -> UIButton {
+        let btn = UIButton(type: .custom)
         baseView.addSubview(btn)
-        btn.setBackgroundImage(UIImage(named: imgName), forState: .Normal)
+        btn.setBackgroundImage(UIImage(named: imgName), for: UIControlState())
         btn.sizeToFit()
         if selectImgName != nil {
-            btn.setBackgroundImage(UIImage(named: selectImgName!), forState: .Selected)
+            btn.setBackgroundImage(UIImage(named: selectImgName!), for: .selected)
         }
-        btn.addTarget(self, action: action, forControlEvents: .TouchUpInside)
+        btn.addTarget(self, action: action, for: .touchUpInside)
         return btn
     }
 
     func initScanning() {
-        let device = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo) //获取摄像设备
+        let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) //获取摄像设备
         let input: AVCaptureDeviceInput
         do {
             try input = AVCaptureDeviceInput(device: device) //创建输入流
@@ -122,7 +122,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
             return
         }
         let output = AVCaptureMetadataOutput() //创建输出流
-        output.setMetadataObjectsDelegate(self, queue: dispatch_get_main_queue()) //设置代理 在主线程里刷新
+        output.setMetadataObjectsDelegate(self, queue: DispatchQueue.main) //设置代理 在主线程里刷新
 
         //设置有效扫描区域
         let scanCrop = getScanCrop(scanWindow.bounds, readerViewBounds: baseView.bounds)
@@ -138,19 +138,19 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         output.metadataObjectTypes = [AVMetadataObjectTypeQRCode] //只支持二维码，不支持条形码
 
         let layer = AVCaptureVideoPreviewLayer(session: session)
-        layer.videoGravity = AVLayerVideoGravityResizeAspectFill
-        layer.frame = baseView.layer.bounds
-        baseView.layer.insertSublayer(layer, atIndex: 0)
+        layer?.videoGravity = AVLayerVideoGravityResizeAspectFill
+        layer?.frame = baseView.layer.bounds
+        baseView.layer.insertSublayer(layer!, at: 0)
 
         session.startRunning()
     }
 
     // 获取扫描区域的比例关系
-    func getScanCrop(rect: CGRect, readerViewBounds: CGRect) -> CGRect {
-        let readerH = CGRectGetHeight(readerViewBounds)
-        let H = CGRectGetHeight(rect)
-        let readerW = CGRectGetWidth(readerViewBounds)
-        let W = CGRectGetWidth(rect)
+    func getScanCrop(_ rect: CGRect, readerViewBounds: CGRect) -> CGRect {
+        let readerH = readerViewBounds.height
+        let H = rect.height
+        let readerW = readerViewBounds.width
+        let W = rect.width
 
         // AVCapture输出的图片大小都是横着的，而iPhone的屏幕是竖着的，那么我把它旋转90° 所以x用H，y用W
         let x = (readerH - H) / 2 / readerH
@@ -163,7 +163,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
     }
 
     // AVCaptureMetadataOutput的回调
-    func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
+    func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
         if metadataObjects.count > 0 {
             session.stopRunning()
             let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
@@ -171,7 +171,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         }
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         resetScanAnim()
     }
@@ -194,72 +194,72 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         scanAnim.byValue = scanWindowH + scanNetH + 200
         scanAnim.duration = 2.2
         scanAnim.repeatCount = MAXFLOAT
-        scanNet.layer.addAnimation(scanAnim, forKey: "translationAnimation")
+        scanNet.layer.add(scanAnim, forKey: "translationAnimation")
     }
 
     // 各种回调---------------------------------------------------------
     func onBack() {
-        navigationController?.popViewControllerAnimated(true)
+        navigationController?.popViewController(animated: true)
     }
 
     func onOpenAlbum() {
         print("打开相册")
-        if UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary) {
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             let ctrller = UIImagePickerController()
             ctrller.delegate = self
 
-            ctrller.sourceType = .SavedPhotosAlbum
+            ctrller.sourceType = .savedPhotosAlbum
 
-            ctrller.modalTransitionStyle = .FlipHorizontal
-            presentViewController(ctrller, animated: true, completion: nil)
+            ctrller.modalTransitionStyle = .flipHorizontal
+            present(ctrller, animated: true, completion: nil)
         } else {
-            let alert = UIAlertController(title: "提示", message: "设备不支持访问相册，请在设置->隐私->照片中进行设置！", preferredStyle: .Alert)
-            alert.addAction(UIAlertAction(title: "确定", style: .Cancel, handler: nil))
-            presentViewController(alert, animated: true, completion: nil)
+            let alert = UIAlertController(title: "提示", message: "设备不支持访问相册，请在设置->隐私->照片中进行设置！", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: nil))
+            present(alert, animated: true, completion: nil)
         }
     }
 
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let img: UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage//获取图片
         let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]) //初始化监视器
 
-        picker.dismissViewControllerAnimated(true) {
-            let features = detector.featuresInImage(CIImage(CGImage: img.CGImage!))
-            if features.count >= 1 {
-                let feature: CIQRCodeFeature = features[0] as! CIQRCodeFeature
+        picker.dismiss(animated: true) {
+            let features = detector?.features(in: CIImage(cgImage: img.cgImage!))
+            if (features?.count)! >= 1 {
+                let feature: CIQRCodeFeature = features![0] as! CIQRCodeFeature
                 let scanResult = feature.messageString
 
                 // 展示结果
-                UITools.showAlert(self, title: "结果", msg: scanResult, type: 1, callback: nil)
+                UITools.showAlert(self, title: "结果", msg: scanResult!, type: 1, callback: nil)
             } else {
                 UITools.showAlert(self, title: "提示", msg: "图片中并没有二维码", type: 1, callback: nil)
             }
         }
     }
 
-    func onPressFlash(btn: UIButton) {
+    func onPressFlash(_ btn: UIButton) {
         print("闪光灯")
 
-        let device = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
-        if device.hasTorch && device.hasFlash {
+        let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+        if (device?.hasTorch)! && (device?.hasFlash)! {
             do {
-                try device.lockForConfiguration()
+                try device?.lockForConfiguration()
             } catch {
                 return
             }
 
-            btn.selected = !btn.selected
-            let turnOn: Bool = btn.selected
+            btn.isSelected = !btn.isSelected
+            let turnOn: Bool = btn.isSelected
 
             if turnOn == true {
-                device.torchMode = .On
-                device.flashMode = .On
+                device?.torchMode = .on
+                device?.flashMode = .on
             } else {
-                device.torchMode = .Off
-                device.flashMode = .Off
+                device?.torchMode = .off
+                device?.flashMode = .off
             }
 
-            device.unlockForConfiguration()
+            device?.unlockForConfiguration()
         } else {
             UITools.showAlert(self, title: "提示", msg: "并没有闪光灯", type: 1, callback: nil)
         }

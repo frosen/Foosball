@@ -59,14 +59,14 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
         automaticallyAdjustsScrollViewInsets = false
 
         //创建tableView
-        tableView = UITableView(frame: baseView.bounds, style: .Grouped)
+        tableView = UITableView(frame: baseView.bounds, style: .grouped)
         baseView.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 96, right: 0) //48 ＋ 48 tabbar向上48个像素结束
 
         //设置tableview的基本属性，分割线等
-        tableView.separatorInset = UIEdgeInsetsZero
+        tableView.separatorInset = UIEdgeInsets.zero
         tableView.showsVerticalScrollIndicator = false //隐藏滑动条
 
         //添加信息头
@@ -84,11 +84,11 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
     //
     // table view ---------------------------------------------------------------------------------------------------
     //
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return sectionNum
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
             return 2
@@ -99,18 +99,18 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
         }
     }
 
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return (section == 0) ? 0.1 : 10
     }
 
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 1
     }
 
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        switch indexPath.section {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch (indexPath as NSIndexPath).section {
         case 0:
-            if indexPath.row == 0 {
+            if (indexPath as NSIndexPath).row == 0 {
                 return OwnScoreCell.getCellHeight()
             } else {
                 return OwnRankCell.getCellHeight()
@@ -125,40 +125,40 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
     let ownScoCellId = "OScoCellId"
     let ownQRCellId = "OQRCId"
     let ownNorCellId = "ONorCId"
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: UITableViewCell?
 
-        switch indexPath.section {
+        switch (indexPath as NSIndexPath).section {
         case 0:
-            if indexPath.row == 0 { //比赛成绩
-                cell = tableView.dequeueReusableCellWithIdentifier(ownScoCellId)
+            if (indexPath as NSIndexPath).row == 0 { //比赛成绩
+                cell = tableView.dequeueReusableCell(withIdentifier: ownScoCellId)
                 if cell == nil {
                     cell = OwnScoreCell(id: ownScoCellId)
                 }
             } else { //排名
-                cell = tableView.dequeueReusableCellWithIdentifier(ownScoCellId)
+                cell = tableView.dequeueReusableCell(withIdentifier: ownScoCellId)
                 if cell == nil {
                     cell = OwnRankCell(id: ownScoCellId)
                 }
             }
         case 1: //二维码
-            cell = tableView.dequeueReusableCellWithIdentifier(ownQRCellId)
+            cell = tableView.dequeueReusableCell(withIdentifier: ownQRCellId)
             if cell == nil {
                 cell = OwnQRCell(id: ownQRCellId)
             }
         default: //其他项目
-            cell = tableView.dequeueReusableCellWithIdentifier(ownNorCellId)
+            cell = tableView.dequeueReusableCell(withIdentifier: ownNorCellId)
             if cell == nil {
                 cell = OwnNormalCell(id: ownNorCellId)
             }
-            let data: NorCellData = group[indexPath.section - 2][indexPath.row]
+            let data: NorCellData = group[(indexPath as NSIndexPath).section - 2][(indexPath as NSIndexPath).row]
             let norCell = cell as! OwnNormalCell
             norCell.setUIData(image: data.img, title: data.title, subTitle: data.subTitle)
         }
         return cell!
     }
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     }
 
     //scroll view

@@ -31,13 +31,13 @@ class InfoHeadView: UIView {
             self.extraHeight = 64 // 44 + 20
         }
 
-        let w: CGFloat = UIScreen.mainScreen().bounds.width
+        let w: CGFloat = UIScreen.main.bounds.width
         let h: CGFloat = 160
 
         super.init(frame: CGRect(x: 0, y: 0, width: w, height: h))
 
         //设置scroll
-        self.scrollView.addObserver(self, forKeyPath: "contentOffset", options: .New, context: nil)
+        self.scrollView.addObserver(self, forKeyPath: "contentOffset", options: .new, context: nil)
 
         var inset = self.scrollView.contentInset
         inset.top = inset.top + h
@@ -55,8 +55,8 @@ class InfoHeadView: UIView {
         let maskViewShadow = UIView(frame: CGRect(x: 0, y: 0, width: w, height: h + extraHeight))
         addSubview(maskViewShadow)
 
-        maskViewShadow.backgroundColor = UIColor.whiteColor()
-        maskViewShadow.layer.shadowColor = UIColor.grayColor().CGColor
+        maskViewShadow.backgroundColor = UIColor.white
+        maskViewShadow.layer.shadowColor = UIColor.gray.cgColor
         maskViewShadow.layer.shadowOpacity = 0.45
         maskViewShadow.layer.shadowRadius = 3
         maskViewShadow.layer.shadowOffset = CGSize(width: 0, height: 5)
@@ -69,7 +69,7 @@ class InfoHeadView: UIView {
         bg = UIImageView(image: UIImage(named: bgName))
         maskView.addSubview(bg!)
         bg!.frame = CGRect(x: 0, y: (1 - bgYScale) * h + extraHeight, width: w, height: bgYScale * h)
-        bg!.contentMode = .ScaleAspectFill
+        bg!.contentMode = .scaleAspectFill
 
         //头像
         avatarBG = UIView(frame: CGRect(
@@ -79,10 +79,10 @@ class InfoHeadView: UIView {
             height: avatarW))
         maskView.addSubview(avatarBG!)
 
-        avatarBG!.backgroundColor = UIColor.grayColor() //随便给一种颜色，不给不能形成形状
+        avatarBG!.backgroundColor = UIColor.gray //随便给一种颜色，不给不能形成形状
 
         avatarBG!.layer.cornerRadius = avatarW / 2 //圆形
-        avatarBG!.layer.shadowColor = UIColor.blackColor().CGColor
+        avatarBG!.layer.shadowColor = UIColor.black.cgColor
         avatarBG!.layer.shadowOffset = CGSize(width: 1, height: 1)
         avatarBG!.layer.shadowOpacity = 0.9
         avatarBG!.layer.shadowRadius = 5
@@ -90,9 +90,9 @@ class InfoHeadView: UIView {
         avatar = UIImageView()
         avatarBG!.addSubview(avatar!)
 
-        let url = NSURL(string: (AppManager.shareInstance.user?.avatarURL)!)
+        let url = URL(string: (AppManager.shareInstance.user?.avatarURL)!)
         let placeholderImg =  UIImage(named: headImgName)
-        avatar?.sd_setImageWithURL(url, placeholderImage: placeholderImg)
+        avatar?.sd_setImage(with: url, placeholderImage: placeholderImg)
 
         avatar!.frame = CGRect(x: 0, y: 0, width: avatarW, height: avatarW)
 
@@ -110,12 +110,12 @@ class InfoHeadView: UIView {
         title!.center.x = avatarBG!.center.x
         title!.center.y = avatarBG!.center.y + 50
 
-        title!.textAlignment = NSTextAlignment.Center
-        title!.font = UIFont.systemFontOfSize(14.0)
+        title!.textAlignment = NSTextAlignment.center
+        title!.font = UIFont.systemFont(ofSize: 14.0)
         title!.text = titleStr
-        title!.textColor = UIColor.whiteColor()
+        title!.textColor = UIColor.white
 
-        title!.shadowColor = UIColor.blackColor()
+        title!.shadowColor = UIColor.black
         title!.shadowOffset = CGSize(width: 1, height: 1)
 
         //签名
@@ -126,30 +126,30 @@ class InfoHeadView: UIView {
         subTitle!.center.x = avatarBG!.center.x
         subTitle!.center.y = avatarBG!.center.y + 70
 
-        subTitle!.textAlignment = NSTextAlignment.Center
-        subTitle!.font = UIFont.systemFontOfSize(11.0)
+        subTitle!.textAlignment = NSTextAlignment.center
+        subTitle!.font = UIFont.systemFont(ofSize: 11.0)
         subTitle!.text = subTitleStr
-        subTitle!.textColor = UIColor.whiteColor()
+        subTitle!.textColor = UIColor.white
 
-        subTitle!.shadowColor = UIColor.blackColor()
+        subTitle!.shadowColor = UIColor.black
         subTitle!.shadowOffset = CGSize(width: 1, height: 1)
     }
 
     //设置比赛数据，同时显示左右数据视图
-    func initMatchData(fight fight: Int, honor: Int) {
+    func initMatchData(fight: Int, honor: Int) {
         //左侧视图
 
 
         //右侧视图
     }
 
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        let newOffset = change!["new"]?.CGPointValue
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        let newOffset = (change![.newKey] as AnyObject).cgPointValue
         updateSubViewsWithScrollOffsetY(newOffset!.y)
     }
 
     let destY: CGFloat = -64 //44 + 20
-    func updateSubViewsWithScrollOffsetY(newOffsetY: CGFloat){
+    func updateSubViewsWithScrollOffsetY(_ newOffsetY: CGFloat){
         let startY = -(scrollView.contentInset.top)
         let dis = destY - startY
 
@@ -176,8 +176,8 @@ class InfoHeadView: UIView {
         bg?.frame.origin.y = (1 - bgYScale) * frame.size.height + (bgYScale * frame.size.height + destY) * (1 - rate) + extraHeight
 
         let destAvatarY = 0.58 * frame.size.height - 22
-        let t = CGAffineTransformMakeTranslation(0, destAvatarY * (1 - rate))
-        avatarBG?.transform = CGAffineTransformScale(t, imgReduce, imgReduce)
+        let t = CGAffineTransform(translationX: 0, y: destAvatarY * (1 - rate))
+        avatarBG?.transform = t.scaledBy(x: imgReduce, y: imgReduce)
 
         title?.transform = t
         subTitle?.transform = t

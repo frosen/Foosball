@@ -10,7 +10,7 @@
 
 import UIKit
 
-struct NavTabType: OptionSetType {
+struct NavTabType: OptionSet {
     let rawValue: Int
     init(rawValue: Int) { self.rawValue = rawValue }
 
@@ -32,15 +32,15 @@ class BaseController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
         baseView = UIView(frame: view.frame)
         view.addSubview(baseView)
 
         let navBar = navigationController?.navigationBar
         if navBar != nil {
-            navBar!.barTintColor = UIColor.redColor()
+            navBar!.barTintColor = UIColor.red
 
-            navBar!.layer.shadowColor = UIColor.grayColor().CGColor
+            navBar!.layer.shadowColor = UIColor.gray.cgColor
             navBar!.layer.shadowOpacity = 0.45
             navBar!.layer.shadowRadius = 3
             navBar!.layer.shadowOffset = CGSize(width: 0, height: 5)
@@ -54,12 +54,12 @@ class BaseController: UIViewController {
         }
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         handleNavTabState()
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if initDataOnViewAppear {
             willInitData()
@@ -78,9 +78,9 @@ class BaseController: UIViewController {
     func initData() {} //需要实现
 
     func reshowView() {
-        UIView.animateWithDuration(0.2) {
+        UIView.animate(withDuration: 0.2, animations: {
             self.baseView.alpha = 1
-        }
+        }) 
     }
 
     // 设置导航栏和tabbar的样式 -----------------------------------------------------------------------------
@@ -92,30 +92,30 @@ class BaseController: UIViewController {
         // 隐藏导航栏
         let bar = navigationController!.navigationBar
         let NavY: CGFloat = hideNav ? -64 : 0
-        let hideNavOpt: UIViewAnimationOptions = hideNav ? .CurveEaseIn : .CurveEaseOut
+        let hideNavOpt: UIViewAnimationOptions = hideNav ? .curveEaseIn : .curveEaseOut
         if hideNav && hideTab || (!hideNav && !hideTab) { //如果同时隐藏／显示tabbar，则用动效，否则瞬间移动过去
-            UIView.animateWithDuration(0.2, delay: 0.2, options: hideNavOpt, animations: {
-                bar.transform = CGAffineTransformMakeTranslation(0, NavY)
+            UIView.animate(withDuration: 0.2, delay: 0.2, options: hideNavOpt, animations: {
+                bar.transform = CGAffineTransform(translationX: 0, y: NavY)
                 }, completion: nil)
         } else {
-            bar.transform = CGAffineTransformMakeTranslation(0, NavY)
+            bar.transform = CGAffineTransform(translationX: 0, y: NavY)
         }
 
         navigationItem.hidesBackButton = hideNav //隐藏时，同时隐藏后退按钮
-        navigationController!.navigationBar.userInteractionEnabled = !hideNav //隐藏时不可用
+        navigationController!.navigationBar.isUserInteractionEnabled = !hideNav //隐藏时不可用
 
         //透明导航栏
-        UIView.animateWithDuration(0.3, delay: transparentNav ? 0.2 : 0.0, options: .CurveLinear, animations: {
+        UIView.animate(withDuration: 0.3, delay: transparentNav ? 0.2 : 0.0, options: .curveLinear, animations: {
             bar.subviews[0].alpha = transparentNav ? 0.0 : 1.0
             }, completion: nil)
 
         //隐藏tabbar
         let TabY: CGFloat = hideTab ? 60 : 0
-        let hideTabOpt: UIViewAnimationOptions = hideTab ? .CurveEaseIn : .CurveEaseOut
-        UIView.animateWithDuration(0.2, delay: 0.2, options: hideTabOpt, animations: {
-            self.rootVC.myTabBar.transform = CGAffineTransformMakeTranslation(0, TabY)
+        let hideTabOpt: UIViewAnimationOptions = hideTab ? .curveEaseIn : .curveEaseOut
+        UIView.animate(withDuration: 0.2, delay: 0.2, options: hideTabOpt, animations: {
+            self.rootVC.myTabBar.transform = CGAffineTransform(translationX: 0, y: TabY)
             }, completion: nil)
 
-        rootVC.myTabBar.userInteractionEnabled = !hideTab //隐藏时不可用
+        rootVC.myTabBar.isUserInteractionEnabled = !hideTab //隐藏时不可用
     }
 }

@@ -14,7 +14,7 @@ class OwnScoreCell: BaseCell {
     }
 
     override func initData() {
-        self.accessoryType = .DisclosureIndicator
+        self.accessoryType = .disclosureIndicator
     }
 }
 
@@ -24,7 +24,7 @@ class OwnRankCell: BaseCell {
     }
 
     override func initData() {
-        self.accessoryType = .DisclosureIndicator
+        self.accessoryType = .disclosureIndicator
     }
 }
 
@@ -36,7 +36,7 @@ class OwnQRCell: BaseCell {
     override func initData() {
         bounds = CGRect(x: 0, y: 0, width: w, height: h)
 
-        self.selectionStyle = .None //使选中后没有反应
+        self.selectionStyle = .none //使选中后没有反应
 
         //bg
         let bgView = UIView()
@@ -45,7 +45,7 @@ class OwnQRCell: BaseCell {
         bgView.center = CGPoint(x: w / 2, y: 100)
         bgView.backgroundColor = UIColor(white: 1.0, alpha: 1.0)
 
-        bgView.layer.shadowColor = UIColor.blackColor().CGColor
+        bgView.layer.shadowColor = UIColor.black.cgColor
         bgView.layer.shadowOffset = CGSize(width: 2, height: 1)
         bgView.layer.shadowOpacity = 0.5
         bgView.layer.shadowRadius = 2
@@ -54,7 +54,7 @@ class OwnQRCell: BaseCell {
         let lbl = UILabel()
         contentView.addSubview(lbl)
         lbl.text = "扫描二维码加我吧"
-        lbl.font = UIFont.boldSystemFontOfSize(15)
+        lbl.font = UIFont.boldSystemFont(ofSize: 15)
         lbl.sizeToFit()
         lbl.center = CGPoint(x: w / 2, y: 20)
 
@@ -67,10 +67,10 @@ class OwnQRCell: BaseCell {
 
 class OwnNormalCell: UITableViewCell {
     init(id: String) {
-        super.init(style: .Value1, reuseIdentifier: id)
+        super.init(style: .value1, reuseIdentifier: id)
 
-        textLabel?.font = UIFont.systemFontOfSize(13)
-        detailTextLabel?.font = UIFont.systemFontOfSize(13)
+        textLabel?.font = UIFont.systemFont(ofSize: 13)
+        detailTextLabel?.font = UIFont.systemFont(ofSize: 13)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -85,6 +85,6 @@ class OwnNormalCell: UITableViewCell {
         imageView!.image = UIImage(named: imgName)
         textLabel!.text = title
         detailTextLabel!.text = subTitle
-        accessoryType = .DisclosureIndicator
+        accessoryType = .disclosureIndicator
     }
 }

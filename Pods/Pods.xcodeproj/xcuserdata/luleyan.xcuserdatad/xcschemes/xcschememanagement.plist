@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>AVOSCloud.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-Foosball.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -22,17 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0936780C37418275ED8AC9D42263C7B6</key>
+		<key>1A6F6B109A7F7501C6C23077DA04D7F8</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>0B4D0234E3CA8C2B93B14B2DBCC60790</key>
+		<key>788D7B5BDB0B840BD15987108A016DFE</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9103B8F622973C4C3D162A7F48991308</key>
+		<key>CCC02DA9AC15FDE5E62536C8CDE5F465</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FFD52B8BACB812F28AFF922506E880FF</key>
 		<dict>
 			<key>primary</key>
 			<true/>

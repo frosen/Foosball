@@ -15,11 +15,11 @@ class MyTabBarItem: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        setTitleColor(UIColor.blackColor(), forState: .Normal)
+        setTitleColor(UIColor.black, for: UIControlState())
 
-        imageView!.contentMode = .Center //图片居中
-        titleLabel!.textAlignment = .Center //文字居中
-        titleLabel!.font = UIFont.systemFontOfSize(10) //设置文字字体
+        imageView!.contentMode = .center //图片居中
+        titleLabel!.textAlignment = .center //文字居中
+        titleLabel!.font = UIFont.systemFont(ofSize: 10) //设置文字字体
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -27,19 +27,19 @@ class MyTabBarItem: UIButton {
     }
 
     //屏蔽hightlight事件
-    override var highlighted: Bool {
+    override var isHighlighted: Bool {
         set {}
         get {
-            return super.highlighted
+            return super.isHighlighted
         }
     }
 
-    func setItem(item: UITabBarItem) {
+    func setItem(_ item: UITabBarItem) {
         _item = item
 
-        setTitle(_item!.title, forState: .Normal)
-        setImage(_item!.image, forState: .Normal)
-        setImage(_item!.image?.imageWithRenderingMode(.AlwaysTemplate), forState: .Selected)
+        setTitle(_item!.title, for: UIControlState())
+        setImage(_item!.image, for: UIControlState())
+        setImage(_item!.image?.withRenderingMode(.alwaysTemplate), for: .selected)
     }
 
     override func layoutSubviews() {
@@ -62,7 +62,7 @@ class MyTabBarItem: UIButton {
     }
 
     override func tintColorDidChange() {
-        setTitleColor(tintColor, forState: .Selected)
+        setTitleColor(tintColor, for: .selected)
     }
 
 }

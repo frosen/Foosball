@@ -9,22 +9,22 @@
 import UIKit
 
 class UITools {
-    class func createBarBtnItem(target: AnyObject, action: Selector, image img: String) -> UIBarButtonItem {
-        let btn = UIButton(type: .Custom)
-        btn.addTarget(target, action: action, forControlEvents: .TouchUpInside)
-        btn.setBackgroundImage(UIImage(named: img), forState: .Normal)
+    class func createBarBtnItem(_ target: AnyObject, action: Selector, image img: String) -> UIBarButtonItem {
+        let btn = UIButton(type: .custom)
+        btn.addTarget(target, action: action, for: .touchUpInside)
+        btn.setBackgroundImage(UIImage(named: img), for: UIControlState())
         let bSize = btn.currentBackgroundImage!.size
         btn.bounds = CGRect(x: 0, y: 0, width: bSize.width, height: bSize.height)
         return UIBarButtonItem(customView: btn)
     }
 
-    class func showAlert(target: UIViewController, title: String, msg: String, type: Int, callback: ((UIAlertAction) -> Void)?) {
-        let alert = UIAlertController(title: title, message: msg, preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "确定", style: .Cancel, handler: callback))
+    class func showAlert(_ target: UIViewController, title: String, msg: String, type: Int, callback: ((UIAlertAction) -> Void)?) {
+        let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: callback))
         if type == 2 {
-            alert.addAction(UIAlertAction(title: "取消", style: .Cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
         }
-        target.presentViewController(alert, animated: true, completion: nil)
+        target.present(alert, animated: true, completion: nil)
     }
 }
 

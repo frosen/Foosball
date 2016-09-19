@@ -38,10 +38,10 @@ class DetailTitleCell: BaseCell {
         let stringOffset: CGFloat = 20
         title = UILabel()
         contentView.addSubview(title)
-        title.snp_makeConstraints{ make in
-            make.left.equalTo(iconView.snp_right).offset(stringOffset)
-            make.right.equalTo(contentView.snp_right).inset(iconMargin)
-            make.centerY.equalTo(contentView.snp_bottom).multipliedBy(0.3) //0.3 0.7
+        title.snp.makeConstraints{ make in
+            make.left.equalTo(iconView.snp.right).offset(stringOffset)
+            make.right.equalTo(contentView.snp.right).inset(iconMargin)
+            make.centerY.equalTo(contentView.snp.bottom).multipliedBy(0.3) //0.3 0.7
         }
 
         title.font = TitleFont
@@ -50,9 +50,9 @@ class DetailTitleCell: BaseCell {
         // 位置和时间显示
         position = UILabel()
         contentView.addSubview(position)
-        position.snp_makeConstraints{ make in
-            make.left.equalTo(iconView.snp_right).offset(stringOffset)
-            make.centerY.equalTo(contentView.snp_bottom).multipliedBy(0.7) //0.3 0.7
+        position.snp.makeConstraints{ make in
+            make.left.equalTo(iconView.snp.right).offset(stringOffset)
+            make.centerY.equalTo(contentView.snp.bottom).multipliedBy(0.7) //0.3 0.7
         }
 
         position.font = TextFont
@@ -60,16 +60,16 @@ class DetailTitleCell: BaseCell {
 
         createTime = UILabel()
         contentView.addSubview(createTime)
-        createTime.snp_makeConstraints{ make in
-            make.left.equalTo(position.snp_right).offset(20)
-            make.centerY.equalTo(contentView.snp_bottom).multipliedBy(0.7) //0.3 0.7
+        createTime.snp.makeConstraints{ make in
+            make.left.equalTo(position.snp.right).offset(20)
+            make.centerY.equalTo(contentView.snp.bottom).multipliedBy(0.7) //0.3 0.7
         }
 
         createTime.font = TextFont
         createTime.textColor = TextColor
     }
 
-    override func setEvent(e: Event, index: NSIndexPath) {
+    override func setEvent(_ e: Event, index: IndexPath) {
         title.text = "这也是一个很有趣的测试"
         title.sizeToFit()
         position.text = "朝阳/6km"
@@ -92,8 +92,8 @@ class DetailContentCell: BaseCell {
         let downLine = UIView()
         contentView.addSubview(downLine)
         downLine.bounds = CGRect(x: 0, y: 0, width: w, height: 0.5)
-        downLine.snp_makeConstraints{ make in
-            make.bottom.equalTo(contentView.snp_bottom)
+        downLine.snp.makeConstraints{ make in
+            make.bottom.equalTo(contentView.snp.bottom)
         }
         downLine.backgroundColor = LineColor
     }
@@ -111,20 +111,20 @@ class DetailCashCell: BaseCell {
 // ============================================================================================================================
 
 class DetailHeadCell: BaseCell {
-    func createHead(v: UIView, s: String) {
+    func createHead(_ v: UIView, s: String) {
         let w: CGFloat = 10
         let h: CGFloat = 20
 
         let icon = UIView(frame: CGRect(x: margin, y: v.frame.height / 2 - h / 2, width: w, height: h))
         v.addSubview(icon)
 
-        icon.backgroundColor = UIColor.orangeColor()
+        icon.backgroundColor = UIColor.orange
 
         let lbl = UILabel()
         v.addSubview(lbl)
-        lbl.snp_makeConstraints{ make in
-            make.left.equalTo(icon.snp_right).offset(20)
-            make.centerY.equalTo(v.snp_centerY)
+        lbl.snp.makeConstraints{ make in
+            make.left.equalTo(icon.snp.right).offset(20)
+            make.centerY.equalTo(v.snp.centerY)
         }
 
         lbl.font = TitleFont
@@ -136,13 +136,13 @@ class DetailHeadCell: BaseCell {
 }
 
 class DetailListTitleCell: BaseCell {
-    func createListTitle(leftStr leftStr: String, rightStr: String) -> (UILabel, UILabel) {
-        backgroundColor = UIColor.orangeColor()
+    func createListTitle(leftStr: String, rightStr: String) -> (UILabel, UILabel) {
+        backgroundColor = UIColor.orange
 
         //中线
         let midLine = UIView(frame: CGRect(x: w / 2, y: 0, width: 0.5, height: h))
         contentView.addSubview(midLine)
-        midLine.backgroundColor = UIColor.blackColor()
+        midLine.backgroundColor = UIColor.black
 
         let left = createTitleLabel(leftStr, posRate: 0.25) //左边
         let right = createTitleLabel(rightStr, posRate: 0.75) //右边
@@ -150,7 +150,7 @@ class DetailListTitleCell: BaseCell {
         return (left, right)
     }
 
-    func createTitleLabel(s: String, posRate: CGFloat) -> UILabel {
+    func createTitleLabel(_ s: String, posRate: CGFloat) -> UILabel {
         let l = UILabel()
         contentView.addSubview(l)
 
@@ -160,9 +160,9 @@ class DetailListTitleCell: BaseCell {
         l.text = s
         l.sizeToFit()
 
-        l.snp_makeConstraints{ make in
-            make.centerX.equalTo(contentView.snp_right).multipliedBy(posRate)
-            make.centerY.equalTo(contentView.snp_centerY)
+        l.snp.makeConstraints{ make in
+            make.centerX.equalTo(contentView.snp.right).multipliedBy(posRate)
+            make.centerY.equalTo(contentView.snp.centerY)
         }
 
         return l
@@ -197,27 +197,27 @@ class DetailTeamTitleCell: DetailListTitleCell {
         rightCount = createPersonCountLabel(right)
     }
 
-    func createPersonCountLabel(posView: UIView) -> UILabel {
+    func createPersonCountLabel(_ posView: UIView) -> UILabel {
         let countLbl = UILabel()
         contentView.addSubview(countLbl)
-        countLbl.snp_makeConstraints{ make in
-            make.left.equalTo(posView.snp_right).offset(5)
-            make.bottom.equalTo(posView.snp_bottom)
+        countLbl.snp.makeConstraints{ make in
+            make.left.equalTo(posView.snp.right).offset(5)
+            make.bottom.equalTo(posView.snp.bottom)
         }
 
-        countLbl.font = UIFont.boldSystemFontOfSize(12)
+        countLbl.font = UIFont.boldSystemFont(ofSize: 12)
         countLbl.textColor = UIColor(white: 0.3, alpha: 1)
 
         return countLbl
     }
 
-    override func setEvent(e: Event, index: NSIndexPath) {
+    override func setEvent(_ e: Event, index: IndexPath) {
         //计算人数
         setCount(leftCount, count: e.ourSideStateList.count)
         setCount(rightCount, count: e.opponentStateList.count)
     }
 
-    func setCount(lbl: UILabel, count: Int) {
+    func setCount(_ lbl: UILabel, count: Int) {
         lbl.text = "(" + String(count) + ")"
         lbl.sizeToFit()
     }
@@ -232,11 +232,11 @@ class DetailTeamCell: BaseCell {
         //中线
         let midLine = UIView(frame: CGRect(x: w / 2, y: 0, width: 0.5, height: h))
         contentView.addSubview(midLine)
-        midLine.backgroundColor = UIColor.blackColor()
+        midLine.backgroundColor = UIColor.black
     }
 
-    override func setEvent(e: Event, index: NSIndexPath) {
-        if index.row % 2 == 1 {//隔行把颜色稍稍加深
+    override func setEvent(_ e: Event, index: IndexPath) {
+        if (index as NSIndexPath).row % 2 == 1 {//隔行把颜色稍稍加深
             backgroundColor = UIColor(red: 1.0, green: 0.9, blue: 0.8, alpha: 1.0)
         } else {
             backgroundColor = UIColor(white: 1.0, alpha: 1.0)
@@ -260,7 +260,7 @@ class DetailScoreTitleCell: DetailListTitleCell {
     }
 
     override func initData() {
-        createListTitle(leftStr: "我方", rightStr: "对方")
+        let _ = createListTitle(leftStr: "我方", rightStr: "对方")
     }
 }
 

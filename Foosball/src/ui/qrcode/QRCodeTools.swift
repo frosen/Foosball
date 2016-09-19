@@ -9,9 +9,9 @@
 import UIKit
 
 class QRCodeTools: NSObject {
-    class func createQRCode(content: String) -> UIImageView {
+    class func createQRCode(_ content: String) -> UIImageView {
         let width: Int = 150
-        let color: UIColor = UIColor.redColor()
+        let color: UIColor = UIColor.red
 
         let outImg = createQRImg(content)
 
@@ -26,44 +26,44 @@ class QRCodeTools: NSObject {
         return qrview
     }
 
-    class func createQRImg(content: String) -> CIImage {
+    class func createQRImg(_ content: String) -> CIImage {
         let filter: CIFilter! = CIFilter(name: "CIQRCodeGenerator")
         filter.setDefaults()
 
-        let data = content.dataUsingEncoding(NSUTF8StringEncoding)
+        let data = content.data(using: String.Encoding.utf8)
         filter.setValue(data, forKey: "inputMessage")
         filter.setValue("H", forKey: "inputCorrectionLevel") //设置成高容错率
 
         return filter!.outputImage!
     }
 
-    class func setupQRImg(outImg: CIImage, width: Int, color: UIColor) -> UIImage {
+    class func setupQRImg(_ outImg: CIImage, width: Int, color: UIColor) -> UIImage {
         //size
-        let extentRect = CGRectIntegral(outImg.extent)
-        let orignW = CGRectGetWidth(extentRect)
+        let extentRect = outImg.extent.integral
+        let orignW = extentRect.width
         let scale = CGFloat(width) / orignW
 
         let bytesPerRow = width * 4
         let bytesSize = bytesPerRow * width
-        let rgbImageBuf = malloc(bytesSize)
+        let rgbImageBuf: UnsafeMutableRawPointer! = malloc(bytesSize)
 
         let cs  = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = CGImageAlphaInfo.NoneSkipLast.rawValue | CGBitmapInfo.ByteOrder32Little.rawValue
-        let bitmapRef = CGBitmapContextCreate(rgbImageBuf, width, width, 8, bytesPerRow, cs, bitmapInfo)
+        let bitmapInfo = CGImageAlphaInfo.noneSkipLast.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
+        let bitmapRef = CGContext(data: rgbImageBuf, width: width, height: width, bitsPerComponent: 8, bytesPerRow: bytesPerRow, space: cs, bitmapInfo: bitmapInfo)
 
         let context = CIContext(options: nil)
-        let bitmapImage = context.createCGImage(outImg, fromRect: extentRect)
-        CGContextSetInterpolationQuality(bitmapRef, .None)
-        CGContextScaleCTM(bitmapRef, scale, scale)
-        CGContextDrawImage(bitmapRef, extentRect, bitmapImage)
+        let bitmapImage = context.createCGImage(outImg, from: extentRect)
+        bitmapRef!.interpolationQuality = .none
+        bitmapRef?.scaleBy(x: scale, y: scale)
+        bitmapRef?.draw(bitmapImage!, in: extentRect)
 
         // color
-        let components = CGColorGetComponents(color.CGColor)
-        let r: UInt8 = UInt8(components[0] * 255)
-        let g: UInt8 = UInt8(components[1] * 255)
-        let b: UInt8 = UInt8(components[2] * 255)
+        let components = color.cgColor.components
+        let r: UInt8 = UInt8(components![0] * 255)
+        let g: UInt8 = UInt8(components![1] * 255)
+        let b: UInt8 = UInt8(components![2] * 255)
         let pixelNum = width * width //宽 * 高
-        var pCurPtr = UnsafeMutablePointer<UInt32>(rgbImageBuf)
+        var pCurPtr: UnsafeMutablePointer<UInt32> = rgbImageBuf.assumingMemoryBound(to: UInt32.self)
 
         var line: Int = 1 // 行数
         for i in 0 ..< pixelNum {
@@ -71,8 +71,8 @@ class QRCodeTools: NSObject {
                 line += 1
             }
 
-            let ptr = UnsafeMutablePointer<UInt8>(pCurPtr)
-            if (pCurPtr.memory & 0xFFFFFF00) < 0x99999900 {
+            let ptr: UnsafeMutablePointer<UInt8> = rgbImageBuf.assumingMemoryBound(to: UInt8.self)
+            if (pCurPtr.pointee & 0xFFFFFF00) < 0x99999900 {
                 let rate: Float = 1 - Float(line) / Float(width) //根据行数，设置一个比例，从指定颜色一直降到黑色，实现渐变
                 ptr[3] = UInt8(rate * Float(r))
                 ptr[2] = UInt8(rate * Float(g))
@@ -83,10 +83,10 @@ class QRCodeTools: NSObject {
             pCurPtr = pCurPtr.successor()
         }
 
-        let dataProvider = CGDataProviderCreateWithData(nil, rgbImageBuf, bytesSize, nil)
-        let imageInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.Last.rawValue | CGBitmapInfo.ByteOrder32Little.rawValue)
-        let imageRef = CGImageCreate(width, width, 8, 32, bytesPerRow, cs, imageInfo, dataProvider, nil, true, CGColorRenderingIntent.RenderingIntentDefault)
+        let dataProvider = CGDataProvider(dataInfo: nil, data: rgbImageBuf!, size: bytesSize) {_,_,_ in }
+        let imageInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.last.rawValue | CGBitmapInfo.byteOrder32Little.rawValue)
+        let imageRef = CGImage(width: width, height: width, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: bytesPerRow, space: cs, bitmapInfo: imageInfo, provider: dataProvider!, decode: nil, shouldInterpolate: true, intent: CGColorRenderingIntent.defaultIntent)
 
-        return UIImage(CGImage: imageRef!)
+        return UIImage(cgImage: imageRef!)
     }
 }

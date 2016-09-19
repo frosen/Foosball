@@ -16,7 +16,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
     var myTabBar: MyTabBar! = nil
 
     override func viewDidLoad() {
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
         initSubVc()
         initTabBar()
     }
@@ -37,7 +37,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
         addVc(ownVc, title: "个人", image: "my2")
     }
 
-    func addVc(vc: BaseTabController, title t: String, image img: String) {
+    func addVc(_ vc: BaseTabController, title t: String, image img: String) {
         vc.tabBarItem.title = t
 
         // 设置子控制器的图片
@@ -57,22 +57,22 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
     }
 
     func initTabBar() {
-        let midBtn = UIButton(type: .Custom)
-        midBtn.setImage(UIImage(named: "mid_btn"), forState: .Normal)
-        midBtn.setImage(UIImage(named: "mid_btn_press"), forState: .Highlighted)
+        let midBtn = UIButton(type: .custom)
+        midBtn.setImage(UIImage(named: "mid_btn"), for: UIControlState())
+        midBtn.setImage(UIImage(named: "mid_btn_press"), for: .highlighted)
         midBtn.sizeToFit()
 
         myTabBar = MyTabBar.replaceOldTabBar(self, midButton: midBtn, btnItems: items)
         myTabBar.myTabBarDelegate = self
-        myTabBar.tintColor = UIColor.orangeColor()
+        myTabBar.tintColor = UIColor.orange
     }
 
     // MyTabBarDelegate
-    func tabBar(tabBar: MyTabBar, didClickItem item: UIButton) {
+    func tabBar(_ tabBar: MyTabBar, didClickItem item: UIButton) {
         print("item", item.tag)
     }
 
-    func tabBar(tabBar: MyTabBar, didClickMidButton btn: UIButton) {
+    func tabBar(_ tabBar: MyTabBar, didClickMidButton btn: UIButton) {
         print("mid button")
     }
 }

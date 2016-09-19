@@ -14,7 +14,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     weak var event: Event! = nil
     var sectionNum: Int = 0
 
-    func setData(event: Event) {
+    func setData(_ event: Event) {
         self.event = event
     }
     
@@ -29,12 +29,12 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ScanViewController.onBack), image: "go_back")
 
         //创建tableView
-        tableView = UITableView(frame: baseView.bounds, style: .Grouped)
+        tableView = UITableView(frame: baseView.bounds, style: .grouped)
         baseView.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
 
-        tableView.separatorStyle = .None //不用他的分割线，自己画
+        tableView.separatorStyle = .none //不用他的分割线，自己画
     }
 
     override func initData() {
@@ -43,11 +43,11 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     }
 
     //table view
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return sectionNum
     }
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
             return 3 //title + detail + cash
@@ -62,18 +62,18 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         }
     }
 
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return section == 0 ? 0.1 : 10
     }
 
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 1
     }
 
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        switch indexPath.section {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch (indexPath as NSIndexPath).section {
         case 0: //title + detail + cash
-            switch indexPath.row {
+            switch (indexPath as NSIndexPath).row {
             case 0:
                 return DetailTitleCell.getCellHeight()
             case 1:
@@ -84,7 +84,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
                 return 0
             }
         case 1: //person(s) + head
-            switch indexPath.row {
+            switch (indexPath as NSIndexPath).row {
             case 0:
                 return DetailTeamHeadCell.getCellHeight()
             case 1:
@@ -93,7 +93,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
                 return DetailTeamCell.getCellHeight()
             }
         case 2: //比分(s) + head
-            switch indexPath.row {
+            switch (indexPath as NSIndexPath).row {
             case 0:
                 return DetailScoreHeadCell.getCellHeight()
             case 1:
@@ -102,7 +102,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
                 return DetailScoreCell.getCellHeight()
             }
         case 3: //对话(s) + head
-            switch indexPath.row {
+            switch (indexPath as NSIndexPath).row {
             case 0:
                 return DetailMsgHeadCell.getCellHeight()
             case 1:
@@ -115,11 +115,11 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         }
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return BaseCell.create(indexPath, tableView: tableView, e: event) { indexPath in
-            switch indexPath.section {
+            switch (indexPath as NSIndexPath).section {
             case 0:
-                switch indexPath.row {
+                switch (indexPath as NSIndexPath).row {
                 case 0:
                     return BaseCell.CInfo(id: "TitCId", c: DetailTitleCell.self)
                 case 1:
@@ -128,7 +128,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
                     return BaseCell.CInfo(id: "CasCId", c: DetailCashCell.self)
                 }
             case 1:
-                switch indexPath.row {
+                switch (indexPath as NSIndexPath).row {
                 case 0:
                     return BaseCell.CInfo(id: "THCId", c: DetailTeamHeadCell.self)
                 case 1:
@@ -137,7 +137,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
                     return BaseCell.CInfo(id: "TCId", c: DetailTeamCell.self)
                 }
             case 2:
-                switch indexPath.row {
+                switch (indexPath as NSIndexPath).row {
                 case 0:
                     return BaseCell.CInfo(id: "SHCId", c: DetailScoreHeadCell.self)
                 case 1:
@@ -146,7 +146,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
                     return BaseCell.CInfo(id: "SCId", c: DetailScoreCell.self)
                 }
             default:
-                switch indexPath.row {
+                switch (indexPath as NSIndexPath).row {
                 case 0:
                     return BaseCell.CInfo(id: "MHCId", c: DetailMsgHeadCell.self)
                 case 1:
@@ -158,13 +158,13 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         }
     }
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
     }
 
     // 回调
     func onBack() {
-        navigationController?.popViewControllerAnimated(true)
+        navigationController?.popViewController(animated: true)
     }
     
 }

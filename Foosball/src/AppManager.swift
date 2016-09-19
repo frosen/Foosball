@@ -14,7 +14,7 @@ class AppManager: NSObject {
 
     //单例
     static let shareInstance = AppManager()
-    private override init() {
+    fileprivate override init() {
         print("初始化导演类")
     }
 

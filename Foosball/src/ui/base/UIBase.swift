@@ -7,9 +7,9 @@
 //
 
 let LineColor: UIColor = UIColor(white: 0.92, alpha: 1)
-let TitleColor: UIColor = UIColor.blackColor()
+let TitleColor: UIColor = UIColor.black
 let TextColor: UIColor = UIColor(white: 0.25, alpha: 1)
 
-let TitleFont: UIFont = UIFont.boldSystemFontOfSize(15)
-let TextFont: UIFont = UIFont.systemFontOfSize(13)
+let TitleFont: UIFont = UIFont.boldSystemFont(ofSize: 15)
+let TextFont: UIFont = UIFont.systemFont(ofSize: 13)
 

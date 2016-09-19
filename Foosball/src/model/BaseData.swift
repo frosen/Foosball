@@ -27,7 +27,7 @@ func ==(lhs: DataID, rhs: DataID) -> Bool {
 
 //对时间表示的封装
 struct Time {
-    let time: NSDate?
+    let time: Date?
 
     //以当前时间初始化
     init() {

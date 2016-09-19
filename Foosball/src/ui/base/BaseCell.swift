@@ -12,10 +12,10 @@ class BaseCell: UITableViewCell {
     var w: CGFloat = 0
     var h: CGFloat = 0
     required init(id: String?) {
-        super.init(style: .Default, reuseIdentifier: id)
-        self.accessoryType = .None // 默认
-        w = UIScreen.mainScreen().bounds.width
-        h = self.dynamicType.getCellHeight() //dynamicType可以获取对象的类，然后就能使用类函数了
+        super.init(style: .default, reuseIdentifier: id)
+        self.accessoryType = .none // 默认
+        w = UIScreen.main.bounds.width
+        h = type(of: self).getCellHeight() //dynamicType可以获取对象的类，然后就能使用类函数了
 
         initData()
     }
@@ -29,7 +29,7 @@ class BaseCell: UITableViewCell {
     }
 
     func initData() {}
-    func setEvent(e: Event, index: NSIndexPath) {} //需要继承的，把事件设置进去
+    func setEvent(_ e: Event, index: IndexPath) {} //需要继承的，把事件设置进去
 
     //非常方便的创建cell
     struct CInfo {
@@ -41,12 +41,12 @@ class BaseCell: UITableViewCell {
         }
     }
 
-    class func create(index: NSIndexPath, tableView: UITableView, e: Event?, getInfoCallback: (NSIndexPath) -> CInfo) -> UITableViewCell {
+    class func create(_ index: IndexPath, tableView: UITableView, e: Event?, getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
         let info: CInfo! = getInfoCallback(index)
 
         let cls = info.cls as! BaseCell.Type
 
-        var cell: UITableViewCell? = tableView.dequeueReusableCellWithIdentifier(info.id)
+        var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: info.id)
         if cell == nil {
             cell = cls.init(id: info.id)
         }

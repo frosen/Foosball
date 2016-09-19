@@ -9,9 +9,9 @@
 import UIKit
 
 protocol MyTabBarDelegate {
-    func tabBar(tabBar: MyTabBar, didClickItem item: UIButton)
+    func tabBar(_ tabBar: MyTabBar, didClickItem item: UIButton)
 
-    func tabBar(tabBar: MyTabBar, didClickMidButton btn: UIButton)
+    func tabBar(_ tabBar: MyTabBar, didClickMidButton btn: UIButton)
 }
 
 class MyTabBar: UIView {
@@ -33,16 +33,16 @@ class MyTabBar: UIView {
         midButton = btn
         super.init(frame: vc.tabBar.frame)
 
-        midButton.addTarget(self, action: #selector(MyTabBar.onClickMidBtn(_:)), forControlEvents: .TouchUpInside)
+        midButton.addTarget(self, action: #selector(MyTabBar.onClickMidBtn(_:)), for: .touchUpInside)
         self.addSubview(midButton)
 
-        backgroundColor = UIColor.whiteColor()
-        layer.shadowColor = UIColor.grayColor().CGColor
+        backgroundColor = UIColor.white
+        layer.shadowColor = UIColor.gray.cgColor
         layer.shadowOpacity = 0.3
         layer.shadowRadius = 3
     }
 
-    class func replaceOldTabBar(tabVc: UITabBarController, midButton btn: UIButton, btnItems items: [UITabBarItem]) -> MyTabBar {
+    class func replaceOldTabBar(_ tabVc: UITabBarController, midButton btn: UIButton, btnItems items: [UITabBarItem]) -> MyTabBar {
         let tab = MyTabBar(vc: tabVc, midButton: btn)
 
         tabVc.view.insertSubview(tab, aboveSubview: tabVc.tabBar)
@@ -53,18 +53,18 @@ class MyTabBar: UIView {
         return tab
     }
 
-    func setBarItems(items: [UITabBarItem]) {
+    func setBarItems(_ items: [UITabBarItem]) {
         //因为有中间按钮，所以items只能是两个或者4个
         assert(items.count == 2 || items.count == 4)
 
         for item in items {
-            let btn = MyTabBarItem(type: .Custom)
+            let btn = MyTabBarItem(type: .custom)
 
             btn.setItem(item)
 
             btn.tag = buttons.count
 
-            btn.addTarget(self, action: #selector(MyTabBar.onClickItem(_:)), forControlEvents: .TouchDown)
+            btn.addTarget(self, action: #selector(MyTabBar.onClickItem(_:)), for: .touchDown)
 
             addSubview(btn)
             buttons.append(btn)
@@ -102,21 +102,21 @@ class MyTabBar: UIView {
         midButton.center = CGPoint(x: vw * 0.5, y: 1.5 * vh - midButton.frame.size.height)
     }
 
-    func onClickItem(btn: UIButton) {
-        if btn.selected == true {
+    func onClickItem(_ btn: UIButton) {
+        if btn.isSelected == true {
             return
         }
 
-        selectedButton?.selected = false
+        selectedButton?.isSelected = false
         selectedButton = btn
-        selectedButton!.selected = true
+        selectedButton!.isSelected = true
 
         ctrller!.selectedIndex = btn.tag
 
         myTabBarDelegate?.tabBar(self, didClickItem: btn)
     }
 
-    func onClickMidBtn(btn: UIButton) {
+    func onClickMidBtn(_ btn: UIButton) {
         myTabBarDelegate?.tabBar(self, didClickMidButton: btn)
     }
 }
