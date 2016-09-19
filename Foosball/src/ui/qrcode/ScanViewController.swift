@@ -199,7 +199,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
 
     // 各种回调---------------------------------------------------------
     func onBack() {
-        navigationController?.popViewController(animated: true)
+        let _ = navigationController?.popViewController(animated: true)
     }
 
     func onOpenAlbum() {

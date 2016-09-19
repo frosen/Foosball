@@ -164,7 +164,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
 
     // 回调
     func onBack() {
-        navigationController?.popViewController(animated: true)
+        let _ = navigationController?.popViewController(animated: true)
     }
     
 }
