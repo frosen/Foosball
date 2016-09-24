@@ -52,11 +52,11 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         case 0:
             return 3 //title + detail + cash
         case 1:
-            return 2 + max(event.ourSideStateList.count, event.opponentStateList.count) //person(s) + head with title 一定会有数据
+            return 3 //head 友 敌 2. 如果是乱斗应该是不分敌友的所以是2行，但暂时不考虑；3. 以后也可能加入观众，暂不考虑
         case 2:
-            return 1 + (event.scoreList.count != 0 ? 1 : 0) + event.scoreList.count//比分(s) + head + title 如果没有数据则无title
+            return 2 //head body
         case 3:
-            return 1 + (event.msgList.count != 0 ? 1 : 0) + event.msgList.count //对话(s) + head + title 如果没有数据则无title
+            return 1 + event.msgList.count //对话(s) + head
         default:
             return 0
         }
@@ -87,26 +87,20 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
             switch (indexPath as NSIndexPath).row {
             case 0:
                 return DetailTeamHeadCell.getCellHeight()
-            case 1:
-                return DetailTeamTitleCell.getCellHeight()
             default:
                 return DetailTeamCell.getCellHeight()
             }
         case 2: //比分(s) + head
             switch (indexPath as NSIndexPath).row {
             case 0:
-                return DetailScoreHeadCell.getCellHeight()
-            case 1:
-                return DetailScoreTitleCell.getCellHeight() //反正 event.scoreList.count == 0 也不会读取这里了
+                return DetailImageHeadCell.getCellHeight()
             default:
-                return DetailScoreCell.getCellHeight()
+                return DetailImageCell.getCellHeight()
             }
         case 3: //对话(s) + head
             switch (indexPath as NSIndexPath).row {
             case 0:
                 return DetailMsgHeadCell.getCellHeight()
-            case 1:
-                return DetailMsgTitleCell.getCellHeight()
             default:
                 return DetailMsgCell.getCellHeight()
             }
@@ -131,26 +125,20 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
                 switch (indexPath as NSIndexPath).row {
                 case 0:
                     return BaseCell.CInfo(id: "THCId", c: DetailTeamHeadCell.self)
-                case 1:
-                    return BaseCell.CInfo(id: "TTCId", c: DetailTeamTitleCell.self)
                 default:
                     return BaseCell.CInfo(id: "TCId", c: DetailTeamCell.self)
                 }
             case 2:
                 switch (indexPath as NSIndexPath).row {
                 case 0:
-                    return BaseCell.CInfo(id: "SHCId", c: DetailScoreHeadCell.self)
-                case 1:
-                    return BaseCell.CInfo(id: "STCId", c: DetailScoreTitleCell.self)
+                    return BaseCell.CInfo(id: "SHCId", c: DetailImageHeadCell.self)
                 default:
-                    return BaseCell.CInfo(id: "SCId", c: DetailScoreCell.self)
+                    return BaseCell.CInfo(id: "SCId", c: DetailImageCell.self)
                 }
             default:
                 switch (indexPath as NSIndexPath).row {
                 case 0:
                     return BaseCell.CInfo(id: "MHCId", c: DetailMsgHeadCell.self)
-                case 1:
-                    return BaseCell.CInfo(id: "MTCId", c: DetailMsgHeadCell.self)
                 default:
                     return BaseCell.CInfo(id: "MCId", c: DetailMsgCell.self)
                 }

@@ -19,7 +19,7 @@ class DetailTitleCell: BaseCell {
 
     var imgURL: String = ""
 
-    override class func getCellHeight() -> CGFloat {
+    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
         return 72
     }
 
@@ -80,7 +80,7 @@ class DetailTitleCell: BaseCell {
 }
 
 class DetailContentCell: BaseCell {
-    override class func getCellHeight() -> CGFloat {
+    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
 //        let rect = stringList[0].boundingRectWithSize(
 //            CGSize(width: UIScreen.mainScreen().bounds.width, height: CGFloat(MAXFLOAT)),
 //            options: [.UsesLineFragmentOrigin, .UsesFontLeading], attributes: [NSFontAttributeName : UIFont.systemFontOfSize(17)], context: nil)
@@ -100,7 +100,7 @@ class DetailContentCell: BaseCell {
 }
 
 class DetailCashCell: BaseCell {
-    override class func getCellHeight() -> CGFloat {
+    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
         return 44
     }
 
@@ -135,97 +135,24 @@ class DetailHeadCell: BaseCell {
     }
 }
 
-class DetailListTitleCell: BaseCell {
-    func createListTitle(leftStr: String, rightStr: String) -> (UILabel, UILabel) {
-        backgroundColor = UIColor.orange
-
-        //中线
-        let midLine = UIView(frame: CGRect(x: w / 2, y: 0, width: 0.5, height: h))
-        contentView.addSubview(midLine)
-        midLine.backgroundColor = UIColor.black
-
-        let left = createTitleLabel(leftStr, posRate: 0.25) //左边
-        let right = createTitleLabel(rightStr, posRate: 0.75) //右边
-
-        return (left, right)
-    }
-
-    func createTitleLabel(_ s: String, posRate: CGFloat) -> UILabel {
-        let l = UILabel()
-        contentView.addSubview(l)
-
-        l.font = TitleFont
-        l.textColor = TitleColor
-
-        l.text = s
-        l.sizeToFit()
-
-        l.snp.makeConstraints{ make in
-            make.centerX.equalTo(contentView.snp.right).multipliedBy(posRate)
-            make.centerY.equalTo(contentView.snp.centerY)
-        }
-
-        return l
-    }
-}
-
 // ============================================================================================================================
 
 class DetailTeamHeadCell: DetailHeadCell {
-    override class func getCellHeight() -> CGFloat {
+    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
         return 44
     }
 
     override func initData() {
-        createHead(contentView, s: "队伍信息")
+        createHead(contentView, s: "队伍")
     }
 }
 
-class DetailTeamTitleCell: DetailListTitleCell {
-    var leftCount: UILabel! = nil
-    var rightCount: UILabel! = nil
-
-    override class func getCellHeight() -> CGFloat {
-        return 44
-    }
-
-    override func initData() {
-        let (left, right) = createListTitle(leftStr: "我方", rightStr: "对方")
-
-        //显示人数
-        leftCount = createPersonCountLabel(left)
-        rightCount = createPersonCountLabel(right)
-    }
-
-    func createPersonCountLabel(_ posView: UIView) -> UILabel {
-        let countLbl = UILabel()
-        contentView.addSubview(countLbl)
-        countLbl.snp.makeConstraints{ make in
-            make.left.equalTo(posView.snp.right).offset(5)
-            make.bottom.equalTo(posView.snp.bottom)
-        }
-
-        countLbl.font = UIFont.boldSystemFont(ofSize: 12)
-        countLbl.textColor = UIColor(white: 0.3, alpha: 1)
-
-        return countLbl
-    }
-
-    override func setEvent(_ e: Event, index: IndexPath) {
-        //计算人数
-        setCount(leftCount, count: e.ourSideStateList.count)
-        setCount(rightCount, count: e.opponentStateList.count)
-    }
-
-    func setCount(_ lbl: UILabel, count: Int) {
-        lbl.text = "(" + String(count) + ")"
-        lbl.sizeToFit()
-    }
-}
-
+// 一行5个头像，头像下面有名字（因为也不一定会有很多人愿意发头像上来，再没有名字就不知道是谁了）
+// 超过5个则换行
+// 分成友方，敌方，观众
 class DetailTeamCell: BaseCell {
-    override class func getCellHeight() -> CGFloat {
-        return 44
+    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
+        return 44 
     }
 
     override func initData() {
@@ -244,28 +171,18 @@ class DetailTeamCell: BaseCell {
     }
 }
 
-class DetailScoreHeadCell: DetailHeadCell {
-    override class func getCellHeight() -> CGFloat {
+class DetailImageHeadCell: DetailHeadCell {
+    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
         return 44
     }
 
     override func initData() {
-        createHead(contentView, s: "比赛得分")
+        createHead(contentView, s: "瞬间")
     }
 }
 
-class DetailScoreTitleCell: DetailListTitleCell {
-    override class func getCellHeight() -> CGFloat {
-        return 44
-    }
-
-    override func initData() {
-        let _ = createListTitle(leftStr: "我方", rightStr: "对方")
-    }
-}
-
-class DetailScoreCell: BaseCell {
-    override class func getCellHeight() -> CGFloat {
+class DetailImageCell: BaseCell {
+    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
         return 44
     }
 
@@ -274,7 +191,7 @@ class DetailScoreCell: BaseCell {
 }
 
 class DetailMsgHeadCell: DetailHeadCell {
-    override class func getCellHeight() -> CGFloat {
+    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
         return 44
     }
 
@@ -283,17 +200,8 @@ class DetailMsgHeadCell: DetailHeadCell {
     }
 }
 
-class DetailMsgTitleCell: BaseCell {
-    override class func getCellHeight() -> CGFloat {
-        return 44
-    }
-
-    override func initData() {
-    }
-}
-
 class DetailMsgCell: BaseCell {
-    override class func getCellHeight() -> CGFloat {
+    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
         return 44
     }
 

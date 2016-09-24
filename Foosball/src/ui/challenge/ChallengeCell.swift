@@ -11,7 +11,7 @@ import UIKit
 class ChallengeCell: BaseCell {
     var eventBoard: EventBoard! = nil
 
-    override class func getCellHeight() -> CGFloat {
+    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
         return 108
     }
 

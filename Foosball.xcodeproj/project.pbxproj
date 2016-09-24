@@ -48,7 +48,7 @@
 		65AB52401D3291E6005E7D4C /* ChallengeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeController.swift; sourceTree = "<group>"; };
 		65AB52421D3291E6005E7D4C /* OwnCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnCells.swift; sourceTree = "<group>"; };
 		65AB52431D3291E6005E7D4C /* OwnController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OwnController.swift; sourceTree = "<group>"; };
-		65AB52441D3291E6005E7D4C /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RootViewController.swift; path = ui/RootViewController.swift; sourceTree = "<group>"; };
+		65AB52441D3291E6005E7D4C /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		65AD17411D7EB126008AEE3C /* DetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailCell.swift; path = detail/DetailCell.swift; sourceTree = "<group>"; };
 		65AD17431D7EC89A008AEE3C /* BaseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
 		65B4F2F21D67011A00F8E961 /* BaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
@@ -142,7 +142,6 @@
 				65AB52381D3291E6005E7D4C /* Bridging.h */,
 				6507AC0B1D5632B100791FB1 /* model */,
 				65AB523A1D3291E6005E7D4C /* ui */,
-				65AB52441D3291E6005E7D4C /* RootViewController.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -150,6 +149,7 @@
 		65AB523A1D3291E6005E7D4C /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				65AB52441D3291E6005E7D4C /* RootViewController.swift */,
 				65AB523B1D3291E6005E7D4C /* base */,
 				65AB523F1D3291E6005E7D4C /* challenge */,
 				65AB52411D3291E6005E7D4C /* own */,

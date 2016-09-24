@@ -11,11 +11,11 @@ import UIKit
 class BaseCell: UITableViewCell {
     var w: CGFloat = 0
     var h: CGFloat = 0
-    required init(id: String?) {
+    required init(id: String?, e: Event? = nil) {
         super.init(style: .default, reuseIdentifier: id)
         self.accessoryType = .none // 默认
         w = UIScreen.main.bounds.width
-        h = type(of: self).getCellHeight() //dynamicType可以获取对象的类，然后就能使用类函数了
+        h = type(of: self).getCellHeight(e) //dynamicType可以获取对象的类，然后就能使用类函数了
 
         initData()
     }
@@ -24,7 +24,7 @@ class BaseCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    class func getCellHeight() -> CGFloat {
+    class func getCellHeight(_ e: Event? = nil) -> CGFloat {
         return 44
     }
 
@@ -48,7 +48,7 @@ class BaseCell: UITableViewCell {
 
         var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: info.id)
         if cell == nil {
-            cell = cls.init(id: info.id)
+            cell = cls.init(id: info.id, e: e)
         }
 
         let baseCell = cell as! BaseCell

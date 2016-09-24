@@ -9,7 +9,7 @@
 import UIKit
 
 class OwnScoreCell: BaseCell {
-    override class func getCellHeight() -> CGFloat {
+    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
         return 44
     }
 
@@ -19,7 +19,7 @@ class OwnScoreCell: BaseCell {
 }
 
 class OwnRankCell: BaseCell {
-    override class func getCellHeight() -> CGFloat {
+    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
         return 44
     }
 
@@ -29,7 +29,7 @@ class OwnRankCell: BaseCell {
 }
 
 class OwnQRCell: BaseCell {
-    override class func getCellHeight() -> CGFloat {
+    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
         return 200
     }
 
