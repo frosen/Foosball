@@ -19,11 +19,11 @@ class DetailTitleCell: BaseCell {
 
     var imgURL: String = ""
 
-    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
         return 72
     }
 
-    override func initData() {
+    override func initUI() {
         //底部分割线
         let downLine = UIView(frame: CGRect(x: 0, y: h - 0.5, width: w, height: 0.5))
         contentView.addSubview(downLine)
@@ -69,7 +69,7 @@ class DetailTitleCell: BaseCell {
         createTime.textColor = TextColor
     }
 
-    override func setEvent(_ e: Event, index: IndexPath) {
+    override func setData(_ d: Data, index: IndexPath) {
         title.text = "这也是一个很有趣的测试"
         title.sizeToFit()
         position.text = "朝阳/6km"
@@ -80,14 +80,14 @@ class DetailTitleCell: BaseCell {
 }
 
 class DetailContentCell: BaseCell {
-    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
 //        let rect = stringList[0].boundingRectWithSize(
 //            CGSize(width: UIScreen.mainScreen().bounds.width, height: CGFloat(MAXFLOAT)),
 //            options: [.UsesLineFragmentOrigin, .UsesFontLeading], attributes: [NSFontAttributeName : UIFont.systemFontOfSize(17)], context: nil)
         return 88
     }
 
-    override func initData() {
+    override func initUI() {
         //底部分割线
         let downLine = UIView()
         contentView.addSubview(downLine)
@@ -100,11 +100,11 @@ class DetailContentCell: BaseCell {
 }
 
 class DetailCashCell: BaseCell {
-    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
         return 44
     }
 
-    override func initData() {
+    override func initUI() {
     }
 }
 
@@ -138,11 +138,11 @@ class DetailHeadCell: BaseCell {
 // ============================================================================================================================
 
 class DetailTeamHeadCell: DetailHeadCell {
-    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
         return 44
     }
 
-    override func initData() {
+    override func initUI() {
         createHead(contentView, s: "队伍")
     }
 }
@@ -151,18 +151,18 @@ class DetailTeamHeadCell: DetailHeadCell {
 // 超过5个则换行
 // 分成友方，敌方，观众
 class DetailTeamCell: BaseCell {
-    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
         return 44 
     }
 
-    override func initData() {
+    override func initUI() {
         //中线
         let midLine = UIView(frame: CGRect(x: w / 2, y: 0, width: 0.5, height: h))
         contentView.addSubview(midLine)
         midLine.backgroundColor = UIColor.black
     }
 
-    override func setEvent(_ e: Event, index: IndexPath) {
+    override func setData(_ d: Data, index: IndexPath) {
         if (index as NSIndexPath).row % 2 == 1 {//隔行把颜色稍稍加深
             backgroundColor = UIColor(red: 1.0, green: 0.9, blue: 0.8, alpha: 1.0)
         } else {
@@ -172,40 +172,40 @@ class DetailTeamCell: BaseCell {
 }
 
 class DetailImageHeadCell: DetailHeadCell {
-    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
         return 44
     }
 
-    override func initData() {
+    override func initUI() {
         createHead(contentView, s: "瞬间")
     }
 }
 
 class DetailImageCell: BaseCell {
-    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
         return 44
     }
 
-    override func initData() {
+    override func initUI() {
     }
 }
 
 class DetailMsgHeadCell: DetailHeadCell {
-    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
         return 44
     }
 
-    override func initData() {
+    override func initUI() {
         createHead(contentView, s: "消息")
     }
 }
 
 class DetailMsgCell: BaseCell {
-    override class func getCellHeight(_ e: Event? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
         return 44
     }
 
-    override func initData() {
+    override func initUI() {
     }
 }
 

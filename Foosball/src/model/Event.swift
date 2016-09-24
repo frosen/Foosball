@@ -35,7 +35,7 @@ class MsgStruct {
     }
 }
 
-class Event: DataCore {
+class Event: Data {
     //类型 对决 乱斗 挑战 求教 会友
     //    var type: EventType
 

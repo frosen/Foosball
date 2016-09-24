@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UserBrief: DataCore {
+class UserBrief: Data {
     //名字
     var name: String = ""
 
@@ -17,7 +17,7 @@ class UserBrief: DataCore {
     
 }
 
-class User: DataCore {
+class User: Data {
     //登录信息
     var loginName: String = "" //手机号或者设备号
     var passwd: String = "" //或者token

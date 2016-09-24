@@ -110,7 +110,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return BaseCell.create(indexPath, tableView: tableView, e: event) { indexPath in
+        return BaseCell.create(indexPath, tableView: tableView, d: event) { indexPath in
             switch (indexPath as NSIndexPath).section {
             case 0:
                 switch (indexPath as NSIndexPath).row {

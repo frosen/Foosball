@@ -36,7 +36,7 @@ struct Time {
 }
 
 //数据核心
-class DataCore: NSObject {
+class Data: NSObject {
     let ID: DataID //本结构体的id
     init(ID: DataID) {
         self.ID = ID
