@@ -34,7 +34,7 @@ class QRCodeTools: NSObject {
         filter.setValue(data, forKey: "inputMessage")
         filter.setValue("H", forKey: "inputCorrectionLevel") //设置成高容错率
 
-        return filter!.outputImage!
+        return filter.outputImage!
     }
 
     class func setupQRImg(_ outImg: CIImage, width: Int, color: UIColor) -> UIImage {

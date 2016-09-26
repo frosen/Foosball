@@ -213,9 +213,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
             ctrller.modalTransitionStyle = .flipHorizontal
             present(ctrller, animated: true, completion: nil)
         } else {
-            let alert = UIAlertController(title: "提示", message: "设备不支持访问相册，请在设置->隐私->照片中进行设置！", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: nil))
-            present(alert, animated: true, completion: nil)
+            UITools.showAlert(self, title: "提示", msg: "设备不支持访问相册，请在设置->隐私->照片中进行设置！", type: 1, callback: nil)
         }
     }
 

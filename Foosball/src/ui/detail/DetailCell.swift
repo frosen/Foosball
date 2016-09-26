@@ -8,7 +8,7 @@
 
 import UIKit
 
-let margin: CGFloat = 20
+let headMargin: CGFloat = 15
 let iconMargin: CGFloat = 6 //图标到边的距离
 
 class DetailTitleCell: BaseCell {
@@ -112,10 +112,10 @@ class DetailCashCell: BaseCell {
 
 class DetailHeadCell: BaseCell {
     func createHead(_ v: UIView, s: String) {
-        let w: CGFloat = 10
-        let h: CGFloat = 20
+        let vw: CGFloat = 10
+        let vh: CGFloat = 20
 
-        let icon = UIView(frame: CGRect(x: margin, y: v.frame.height / 2 - h / 2, width: w, height: h))
+        let icon = UIView(frame: CGRect(x: headMargin, y: v.frame.height / 2 - h / 2, width: vw, height: vh))
         v.addSubview(icon)
 
         icon.backgroundColor = UIColor.orange
@@ -151,23 +151,24 @@ class DetailTeamHeadCell: DetailHeadCell {
 // 超过5个则换行
 // 分成友方，敌方，观众
 class DetailTeamCell: BaseCell {
+    var title: UILabel! = nil
+
     override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
-        return 44 
+        return 108
     }
 
     override func initUI() {
-        //中线
-        let midLine = UIView(frame: CGRect(x: w / 2, y: 0, width: 0.5, height: h))
-        contentView.addSubview(midLine)
-        midLine.backgroundColor = UIColor.black
+        title = UILabel()
+        contentView.addSubview(title)
+        title.snp.makeConstraints{ make in
+            make.top.equalTo(contentView.snp.top).offset(13)
+            make.left.equalTo(contentView.snp.left).offset(headMargin)
+        }
     }
 
     override func setData(_ d: Data, index: IndexPath) {
-        if (index as NSIndexPath).row % 2 == 1 {//隔行把颜色稍稍加深
-            backgroundColor = UIColor(red: 1.0, green: 0.9, blue: 0.8, alpha: 1.0)
-        } else {
-            backgroundColor = UIColor(white: 1.0, alpha: 1.0)
-        }
+        title.text = "友方"
+        title.sizeToFit()
     }
 }
 
