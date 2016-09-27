@@ -9,31 +9,31 @@
 import UIKit
 
 class OwnScoreCell: BaseCell {
-    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
 
-    override func initUI() {
+    override func initData(_ d: Data?, index: IndexPath?) {
         self.accessoryType = .disclosureIndicator
     }
 }
 
 class OwnRankCell: BaseCell {
-    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
 
-    override func initUI() {
+    override func initData(_ d: Data?, index: IndexPath?) {
         self.accessoryType = .disclosureIndicator
     }
 }
 
 class OwnQRCell: BaseCell {
-    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 200
     }
 
-    override func initUI() {
+    override func initData(_ d: Data?, index: IndexPath?) {
         bounds = CGRect(x: 0, y: 0, width: w, height: h)
 
         self.selectionStyle = .none //使选中后没有反应

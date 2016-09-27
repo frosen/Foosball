@@ -9,24 +9,20 @@
 import UIKit
 
 class ChallengeCell: BaseCell {
-    var eventBoard: EventBoard! = nil
-
-    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 108
     }
 
-    override func initUI() {
+    override func initData(_ d: Data?, index: IndexPath?) {
         bounds = CGRect(x: 0, y: 0, width: w, height: h)
 
         // 因为原来自动的selectionStyle会让subview的backgroundcolor变成透明，所以把自动的关闭，自己写一个
         selectionStyle = .none
 
         //事件板
-        eventBoard = EventBoard()
+        let eventBoard = EventBoard()
         contentView.addSubview(eventBoard)
-    }
 
-    override func setData(_ d: Data, index: IndexPath) {
         let e = d as! Event
         eventBoard.setData(e)
     }

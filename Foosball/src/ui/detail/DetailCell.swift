@@ -12,31 +12,21 @@ let headMargin: CGFloat = 15
 let iconMargin: CGFloat = 6 //图标到边的距离
 
 class DetailTitleCell: BaseCell {
-    var icon: UIImageView! = nil
-    var title: UILabel! = nil
-    var position: UILabel! = nil
-    var createTime: UILabel! = nil
-
-    var imgURL: String = ""
-
-    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 72
     }
 
-    override func initUI() {
+    override func initData(_ d: Data?, index: IndexPath?) {
         //底部分割线
-        let downLine = UIView(frame: CGRect(x: 0, y: h - 0.5, width: w, height: 0.5))
-        contentView.addSubview(downLine)
-        downLine.backgroundColor = LineColor
+        createDownLine()
 
         //图
-        let (iconView, iconTmp) = EventIcon.create(h, iconMargin: iconMargin)
+        let (iconView, _) = EventIcon.create(h, iconMargin: iconMargin)
         addSubview(iconView)
-        icon = iconTmp
 
         //标题
         let stringOffset: CGFloat = 20
-        title = UILabel()
+        let title = UILabel()
         contentView.addSubview(title)
         title.snp.makeConstraints{ make in
             make.left.equalTo(iconView.snp.right).offset(stringOffset)
@@ -48,7 +38,7 @@ class DetailTitleCell: BaseCell {
         title.textColor = TitleColor
 
         // 位置和时间显示
-        position = UILabel()
+        let position = UILabel()
         contentView.addSubview(position)
         position.snp.makeConstraints{ make in
             make.left.equalTo(iconView.snp.right).offset(stringOffset)
@@ -58,7 +48,7 @@ class DetailTitleCell: BaseCell {
         position.font = TextFont
         position.textColor = TextColor
 
-        createTime = UILabel()
+        let createTime = UILabel()
         contentView.addSubview(createTime)
         createTime.snp.makeConstraints{ make in
             make.left.equalTo(position.snp.right).offset(20)
@@ -67,9 +57,8 @@ class DetailTitleCell: BaseCell {
 
         createTime.font = TextFont
         createTime.textColor = TextColor
-    }
 
-    override func setData(_ d: Data, index: IndexPath) {
+        //赋值 -------------------------------------------------------------
         title.text = "这也是一个很有趣的测试"
         title.sizeToFit()
         position.text = "朝阳/6km"
@@ -80,31 +69,25 @@ class DetailTitleCell: BaseCell {
 }
 
 class DetailContentCell: BaseCell {
-    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
 //        let rect = stringList[0].boundingRectWithSize(
 //            CGSize(width: UIScreen.mainScreen().bounds.width, height: CGFloat(MAXFLOAT)),
 //            options: [.UsesLineFragmentOrigin, .UsesFontLeading], attributes: [NSFontAttributeName : UIFont.systemFontOfSize(17)], context: nil)
         return 88
     }
 
-    override func initUI() {
+    override func initData(_ d: Data?, index: IndexPath?) {
         //底部分割线
-        let downLine = UIView()
-        contentView.addSubview(downLine)
-        downLine.bounds = CGRect(x: 0, y: 0, width: w, height: 0.5)
-        downLine.snp.makeConstraints{ make in
-            make.bottom.equalTo(contentView.snp.bottom)
-        }
-        downLine.backgroundColor = LineColor
+        createDownLine()
     }
 }
 
 class DetailCashCell: BaseCell {
-    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
 
-    override func initUI() {
+    override func initData(_ d: Data?, index: IndexPath?) {
     }
 }
 
@@ -115,7 +98,7 @@ class DetailHeadCell: BaseCell {
         let vw: CGFloat = 10
         let vh: CGFloat = 20
 
-        let icon = UIView(frame: CGRect(x: headMargin, y: v.frame.height / 2 - h / 2, width: vw, height: vh))
+        let icon = UIView(frame: CGRect(x: headMargin, y: v.frame.height / 2 - vh / 2, width: vw, height: vh))
         v.addSubview(icon)
 
         icon.backgroundColor = UIColor.orange
@@ -138,12 +121,15 @@ class DetailHeadCell: BaseCell {
 // ============================================================================================================================
 
 class DetailTeamHeadCell: DetailHeadCell {
-    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
 
-    override func initUI() {
+    override func initData(_ d: Data?, index: IndexPath?) {
         createHead(contentView, s: "队伍")
+
+        //底线
+        createDownLine()
     }
 }
 
@@ -151,62 +137,68 @@ class DetailTeamHeadCell: DetailHeadCell {
 // 超过5个则换行
 // 分成友方，敌方，观众
 class DetailTeamCell: BaseCell {
-    var title: UILabel! = nil
-
-    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 108
     }
 
-    override func initUI() {
-        title = UILabel()
+    override func initData(_ d: Data?, index: IndexPath?) {
+        //底线
+        createDownLine()
+
+        //图标和标题
+        let icon = UIImageView(frame: CGRect(x: headMargin, y: 13, width: 13, height: 13))
+        contentView.addSubview(icon)
+        icon.image = UIImage(named: "team")
+
+        let title = UILabel()
         contentView.addSubview(title)
         title.snp.makeConstraints{ make in
-            make.top.equalTo(contentView.snp.top).offset(13)
-            make.left.equalTo(contentView.snp.left).offset(headMargin)
+            make.bottom.equalTo(icon.snp.bottom)
+            make.left.equalTo(icon.snp.left).offset(33)
         }
-    }
 
-    override func setData(_ d: Data, index: IndexPath) {
+        //赋值 ---------------------------------------------------------
+        title.font = UIFont.systemFont(ofSize: 13)
         title.text = "友方"
         title.sizeToFit()
     }
 }
 
 class DetailImageHeadCell: DetailHeadCell {
-    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
 
-    override func initUI() {
+    override func initData(_ d: Data?, index: IndexPath?) {
         createHead(contentView, s: "瞬间")
     }
 }
 
 class DetailImageCell: BaseCell {
-    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
 
-    override func initUI() {
+    override func initData(_ d: Data?, index: IndexPath?) {
     }
 }
 
 class DetailMsgHeadCell: DetailHeadCell {
-    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
 
-    override func initUI() {
+    override func initData(_ d: Data?, index: IndexPath?) {
         createHead(contentView, s: "消息")
     }
 }
 
 class DetailMsgCell: BaseCell {
-    override class func getCellHeight(_ d: Data? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
 
-    override func initUI() {
+    override func initData(_ d: Data?, index: IndexPath?) {
     }
 }
 
