@@ -136,9 +136,20 @@ class DetailTeamHeadCell: DetailHeadCell {
 // 一行5个头像，头像下面有名字（因为也不一定会有很多人愿意发头像上来，再没有名字就不知道是谁了）
 // 超过5个则换行
 // 分成友方，敌方，观众
+let avatarCountIn1Line: Int = 5
 class DetailTeamCell: BaseCell {
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
-        return 108
+        let e = d as! Event?
+        var avatarRowCount: Int
+        switch index!.row {
+        case 0:
+            avatarRowCount = Int(Float(e!.ourSideStateList.count) / Float(avatarCountIn1Line)) + 1
+        case 1:
+            avatarRowCount = Int(Float(e!.opponentStateList.count) / Float(avatarCountIn1Line)) + 1
+        default:
+            avatarRowCount = 0
+        }
+        return CGFloat(avatarRowCount * 84) + 39
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
@@ -150,15 +161,18 @@ class DetailTeamCell: BaseCell {
         contentView.addSubview(icon)
         icon.image = UIImage(named: "team")
 
+
+
+
         let title = UILabel()
         contentView.addSubview(title)
+
         title.snp.makeConstraints{ make in
-            make.bottom.equalTo(icon.snp.bottom)
+            make.center.equalTo(icon.snp.center)
             make.left.equalTo(icon.snp.left).offset(33)
         }
-
+        title.font = UIFont.systemFont(ofSize: 23)
         //赋值 ---------------------------------------------------------
-        title.font = UIFont.systemFont(ofSize: 13)
         title.text = "友方"
         title.sizeToFit()
     }

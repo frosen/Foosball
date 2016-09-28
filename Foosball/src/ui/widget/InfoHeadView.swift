@@ -14,7 +14,6 @@ class InfoHeadView: UIView {
 
     var bg: UIImageView? = nil
     var avatarBG: UIView? = nil
-    var avatar: UIImageView? = nil
     var title: UILabel? = nil
     var subTitle: UILabel? = nil
 
@@ -72,35 +71,22 @@ class InfoHeadView: UIView {
         bg!.contentMode = .scaleAspectFill
 
         //头像
-        avatarBG = UIView(frame: CGRect(
+        let avatarURL = AppManager.shareInstance.user?.avatarURL
+        let hasAvatar = (avatarURL != nil && avatarURL != "")
+        avatarBG = createAvatar(CGRect(
             x: 0.5 * w - 0.5 * avatarW,
             y: 0.42 * h - 0.5 * avatarW + extraHeight,
             width: avatarW,
-            height: avatarW))
+            height: avatarW
+            ),
+            content: hasAvatar ? avatarURL! : titleStr,
+            isURL: hasAvatar)
         maskView.addSubview(avatarBG!)
 
-        avatarBG!.backgroundColor = UIColor.gray //随便给一种颜色，不给不能形成形状
-
-        avatarBG!.layer.cornerRadius = avatarW / 2 //圆形
         avatarBG!.layer.shadowColor = UIColor.black.cgColor
         avatarBG!.layer.shadowOffset = CGSize(width: 1, height: 1)
         avatarBG!.layer.shadowOpacity = 0.9
         avatarBG!.layer.shadowRadius = 5
-
-        avatar = UIImageView()
-        avatarBG!.addSubview(avatar!)
-
-        let url = URL(string: (AppManager.shareInstance.user?.avatarURL)!)
-        let placeholderImg =  UIImage(named: headImgName)
-        avatar?.sd_setImage(with: url, placeholderImage: placeholderImg)
-
-        avatar!.frame = CGRect(x: 0, y: 0, width: avatarW, height: avatarW)
-
-        avatar!.layer.cornerRadius = avatarW / 2 //圆形
-        avatar!.layer.masksToBounds = true //剪切掉边缘以外
-
-//        avatar!.layer.borderColor = UIColor(white: 0.5, alpha: 1.0).CGColor
-//        avatar!.layer.borderWidth = 1.5
 
         //名字
         title = UILabel()
@@ -133,6 +119,52 @@ class InfoHeadView: UIView {
 
         subTitle!.shadowColor = UIColor.black
         subTitle!.shadowOffset = CGSize(width: 1, height: 1)
+    }
+
+    func createAvatar(_ rect: CGRect, content: String, isURL: Bool) -> UIView {
+        let avatarBG = UIView(frame: rect)
+
+        if isURL == true {
+            let avatar = UIImageView(frame: CGRect(x: 0, y: 0, width: rect.width, height: rect.height))
+            avatarBG.addSubview(avatar)
+
+            let url = URL(string: content)
+            avatar.sd_setImage(with: url)
+
+            avatar.layer.cornerRadius = avatarW / 2 //圆形
+            avatar.layer.masksToBounds = true //剪切掉边缘以外
+
+            avatarBG.backgroundColor = UIColor.gray //随便给一种颜色，不给不能形成形状
+        } else { //不是url就是名字
+            let nameLbl = UILabel(frame: CGRect(x: 0, y: 0, width: rect.width, height: rect.height))
+            avatarBG.addSubview(nameLbl)
+
+            // 只获取最多四个字
+            if content.characters.count >= 4 {
+                let index = content.index(content.startIndex, offsetBy: 4)
+                nameLbl.text = content.substring(to: index)
+            } else {
+                nameLbl.text = content
+            }
+
+            nameLbl.textAlignment = NSTextAlignment.center
+            nameLbl.font = UIFont.boldSystemFont(ofSize: 15)
+            nameLbl.textColor = UIColor.white
+
+            // 名字不同底色也不同
+            var asciiTab: [CGFloat] = [0, 0, 0]
+            var i = 0
+            for s in content.unicodeScalars {
+                asciiTab[i] = CGFloat(Int(s.value) % 155 + 100) / 255 //155 - 255 之间的颜色
+                i += 1
+                if i >= 3 { break }
+            }
+            avatarBG.backgroundColor = UIColor(red: asciiTab[0], green: asciiTab[1], blue: asciiTab[2], alpha: 1)
+        }
+
+        avatarBG.layer.cornerRadius = rect.width / 2 //圆形
+
+        return avatarBG
     }
 
     //设置比赛数据，同时显示左右数据视图

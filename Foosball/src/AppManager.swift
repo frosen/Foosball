@@ -64,7 +64,7 @@ class AppManager: NSObject {
         e = Event(ID: DataID(ID: 50001), item: Foosball)
         user!.activeEvents.append(e)
 
-        user!.avatarURL = "http://img4.duitang.com/uploads/item/201501/16/20150116231413_KQdLM.jpeg"
+//        user!.avatarURL = "http://img4.duitang.com/uploads/item/201501/16/20150116231413_KQdLM.jpeg"
     }
 
     
