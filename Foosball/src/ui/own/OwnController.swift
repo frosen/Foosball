@@ -75,7 +75,12 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
     }
 
     override func initData() {
-        infoHead.initUIData(bgImaName: "selfbg", headImgName: "default_avatar", titleStr: "聂小倩", subTitleStr: "个性签名，啦啦啦")
+        infoHead.initUIData(
+            bgImgName: "selfbg",
+            avatarURL: AppManager.shareInstance.user?.avatarURL,
+            titleStr: "聂小倩",
+            subTitleStr: "个性签名，啦啦啦"
+        )
 
         sectionNum = 2 + group.count
         tableView.reloadData()

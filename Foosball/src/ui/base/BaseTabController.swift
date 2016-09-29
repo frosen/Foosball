@@ -8,26 +8,6 @@
 
 import UIKit
 
-class UITools {
-    class func createBarBtnItem(_ target: AnyObject, action: Selector, image img: String) -> UIBarButtonItem {
-        let btn = UIButton(type: .custom)
-        btn.addTarget(target, action: action, for: .touchUpInside)
-        btn.setBackgroundImage(UIImage(named: img), for: UIControlState())
-        let bSize = btn.currentBackgroundImage!.size
-        btn.bounds = CGRect(x: 0, y: 0, width: bSize.width, height: bSize.height)
-        return UIBarButtonItem(customView: btn)
-    }
-
-    class func showAlert(_ target: UIViewController, title: String, msg: String, type: Int, callback: ((UIAlertAction) -> Void)?) {
-        let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: callback))
-        if type == 2 {
-            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-        }
-        target.present(alert, animated: true, completion: nil)
-    }
-}
-
 class BaseTabController: BaseController {
     //设置导航栏控件，如果检测未登陆则使用登陆注册，如果未调用此接口则不设置-----------------------------------------------------
     func initNavBar() {

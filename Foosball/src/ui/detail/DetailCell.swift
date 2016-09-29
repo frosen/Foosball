@@ -161,9 +161,6 @@ class DetailTeamCell: BaseCell {
         contentView.addSubview(icon)
         icon.image = UIImage(named: "team")
 
-
-
-
         let title = UILabel()
         contentView.addSubview(title)
 
