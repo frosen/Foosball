@@ -52,7 +52,8 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         case 0:
             return 3 //title + detail + cash
         case 1:
-            return 3 //head 友 敌 2. 如果是乱斗应该是不分敌友的所以是2行，但暂时不考虑；3. 以后也可能加入观众，暂不考虑
+            //head 友 敌 2. 如果是乱斗应该是不分敌友的所以是2行，但暂时不考虑；3. 以后也可能加入观众，暂不考虑
+            return 2 + (event.opponentStateList.count > 0 ? 1 : 0)
         case 2:
             return 2 //head body
         case 3:
@@ -88,7 +89,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
             case 0:
                 return DetailTeamHeadCell.getCellHeight()
             default:
-                return DetailTeamCell.getCellHeight()
+                return DetailTeamCell.getCellHeight(event, index: indexPath)
             }
         case 2: //比分(s) + head
             switch (indexPath as NSIndexPath).row {

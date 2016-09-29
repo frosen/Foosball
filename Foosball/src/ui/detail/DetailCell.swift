@@ -95,18 +95,17 @@ class DetailCashCell: BaseCell {
 
 class DetailHeadCell: BaseCell {
     func createHead(_ v: UIView, s: String) {
-        let vw: CGFloat = 10
-        let vh: CGFloat = 20
+        let vw: CGFloat = 24
+        let vh: CGFloat = 24
 
-        let icon = UIView(frame: CGRect(x: headMargin, y: v.frame.height / 2 - vh / 2, width: vw, height: vh))
+        let icon = UIImageView(frame: CGRect(x: headMargin, y: v.frame.height / 2 - vh / 2, width: vw, height: vh))
         v.addSubview(icon)
-
-        icon.backgroundColor = UIColor.orange
+        icon.image = UIImage(named: "detail_cell_icon")
 
         let lbl = UILabel()
         v.addSubview(lbl)
         lbl.snp.makeConstraints{ make in
-            make.left.equalTo(icon.snp.right).offset(20)
+            make.left.equalTo(icon.snp.right).offset(headMargin)
             make.centerY.equalTo(v.snp.centerY)
         }
 
@@ -140,15 +139,16 @@ let avatarCountIn1Line: Int = 5
 class DetailTeamCell: BaseCell {
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event?
-        var avatarRowCount: Int
+        var avatarRowRate: Float
         switch index!.row {
-        case 0:
-            avatarRowCount = Int(Float(e!.ourSideStateList.count) / Float(avatarCountIn1Line)) + 1
         case 1:
-            avatarRowCount = Int(Float(e!.opponentStateList.count) / Float(avatarCountIn1Line)) + 1
+            avatarRowRate = Float(e!.ourSideStateList.count) / Float(avatarCountIn1Line)
+        case 2:
+            avatarRowRate = Float(e!.opponentStateList.count) / Float(avatarCountIn1Line)
         default:
-            avatarRowCount = 0
+            avatarRowRate = 0
         }
+        let avatarRowCount = ceil(avatarRowRate)
         return CGFloat(avatarRowCount * 84) + 39
     }
 
@@ -156,21 +156,27 @@ class DetailTeamCell: BaseCell {
         //底线
         createDownLine()
 
-        //图标和标题
-        let icon = UIImageView(frame: CGRect(x: headMargin, y: 13, width: 13, height: 13))
-        contentView.addSubview(icon)
-        icon.image = UIImage(named: "team")
-
+        //图标题
         let title = UILabel()
         contentView.addSubview(title)
 
         title.snp.makeConstraints{ make in
-            make.center.equalTo(icon.snp.center)
-            make.left.equalTo(icon.snp.left).offset(33)
+            make.top.equalTo(contentView.snp.top).offset(13)
+            make.left.equalTo(contentView.snp.left).offset(headMargin)
         }
-        title.font = UIFont.systemFont(ofSize: 23)
+        title.font = UIFont.systemFont(ofSize: 13)
+        title.textColor = TextColor
+
         //赋值 ---------------------------------------------------------
-        title.text = "友方"
+        switch index!.row {
+        case 1:
+            title.text = "• 友方人员"
+        case 2:
+            title.text = "• 对方人员"
+        default:
+            title.text = "• 观战者"
+        }
+
         title.sizeToFit()
     }
 }

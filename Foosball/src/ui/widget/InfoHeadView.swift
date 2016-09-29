@@ -84,9 +84,9 @@ class InfoHeadView: UIView {
         maskView.addSubview(avatarBG!)
 
         avatarBG!.layer.shadowColor = UIColor.black.cgColor
-        avatarBG!.layer.shadowOffset = CGSize(width: 1, height: 1)
-        avatarBG!.layer.shadowOpacity = 0.9
-        avatarBG!.layer.shadowRadius = 5
+        avatarBG!.layer.shadowOffset = CGSize(width: 0, height: 1)
+        avatarBG!.layer.shadowOpacity = 0.7
+        avatarBG!.layer.shadowRadius = 6
 
         //名字
         title = UILabel()
