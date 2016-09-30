@@ -94,20 +94,20 @@ class DetailCashCell: BaseCell {
 // ============================================================================================================================
 
 class DetailHeadCell: BaseCell {
-    func createHead(_ v: UIView, s: String) {
+    func createHead(_ s: String) {
         let vw: CGFloat = 15
         let vh: CGFloat = 15
 
-        let icon = UIImageView(frame: CGRect(x: headMargin, y: v.frame.height / 2 - vh / 2, width: vw, height: vh))
-        v.addSubview(icon)
+        let icon = UIImageView(frame: CGRect(x: headMargin, y: contentView.frame.height / 2 - vh / 2, width: vw, height: vh))
+        contentView.addSubview(icon)
         icon.image = UIImage(named: "detail_cell_icon")
 //        icon.backgroundColor = UIColor.orange
 
         let lbl = UILabel()
-        v.addSubview(lbl)
+        contentView.addSubview(lbl)
         lbl.snp.makeConstraints{ make in
             make.left.equalTo(icon.snp.right).offset(headMargin)
-            make.centerY.equalTo(v.snp.centerY)
+            make.centerY.equalTo(contentView.snp.centerY)
         }
 
         lbl.font = TitleFont
@@ -115,6 +115,10 @@ class DetailHeadCell: BaseCell {
 
         lbl.text = s
         lbl.sizeToFit()
+    }
+
+    func createButton() {
+        
     }
 }
 
@@ -126,21 +130,23 @@ class DetailTeamHeadCell: DetailHeadCell {
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
-        createHead(contentView, s: "队伍")
+        createHead("队伍")
 
         // 邀请按钮
         let btn = UIButton(type: .system)
         contentView.addSubview(btn)
 
-        btn.frame = CGRect(x: 0, y: 0, width: 150, height: 34)
         btn.snp.makeConstraints{ make in
             make.centerY.equalTo(contentView.snp.centerY)
             make.right.equalTo(contentView.snp.right).inset(headMargin)
+            make.size.equalTo(CGSize(width: 65, height: 25))
         }
 
         btn.setTitle("邀请", for: .normal)
+        btn.titleLabel?.font = TextFont
         btn.setTitleColor(UIColor.white, for: .normal)
         btn.backgroundColor = UIColor.purple
+        btn.layer.cornerRadius = 5
 
 
         //底线
@@ -203,7 +209,7 @@ class DetailImageHeadCell: DetailHeadCell {
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
-        createHead(contentView, s: "瞬间")
+        createHead("瞬间")
     }
 }
 
@@ -222,7 +228,7 @@ class DetailMsgHeadCell: DetailHeadCell {
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
-        createHead(contentView, s: "消息")
+        createHead("消息")
     }
 }
 
