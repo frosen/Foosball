@@ -95,12 +95,13 @@ class DetailCashCell: BaseCell {
 
 class DetailHeadCell: BaseCell {
     func createHead(_ v: UIView, s: String) {
-        let vw: CGFloat = 24
-        let vh: CGFloat = 24
+        let vw: CGFloat = 15
+        let vh: CGFloat = 15
 
         let icon = UIImageView(frame: CGRect(x: headMargin, y: v.frame.height / 2 - vh / 2, width: vw, height: vh))
         v.addSubview(icon)
         icon.image = UIImage(named: "detail_cell_icon")
+//        icon.backgroundColor = UIColor.orange
 
         let lbl = UILabel()
         v.addSubview(lbl)
@@ -126,6 +127,21 @@ class DetailTeamHeadCell: DetailHeadCell {
 
     override func initData(_ d: Data?, index: IndexPath?) {
         createHead(contentView, s: "队伍")
+
+        // 邀请按钮
+        let btn = UIButton(type: .system)
+        contentView.addSubview(btn)
+
+        btn.frame = CGRect(x: 0, y: 0, width: 150, height: 34)
+        btn.snp.makeConstraints{ make in
+            make.centerY.equalTo(contentView.snp.centerY)
+            make.right.equalTo(contentView.snp.right).inset(headMargin)
+        }
+
+        btn.setTitle("邀请", for: .normal)
+        btn.setTitleColor(UIColor.white, for: .normal)
+        btn.backgroundColor = UIColor.purple
+
 
         //底线
         createDownLine()
@@ -170,11 +186,11 @@ class DetailTeamCell: BaseCell {
         //赋值 ---------------------------------------------------------
         switch index!.row {
         case 1:
-            title.text = "• 友方人员"
+            title.text = "友方人员"
         case 2:
-            title.text = "• 对方人员"
+            title.text = "对方人员"
         default:
-            title.text = "• 观战者"
+            title.text = "观战者"
         }
 
         title.sizeToFit()
