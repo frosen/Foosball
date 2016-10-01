@@ -71,22 +71,23 @@ class InfoHeadView: UIView {
         bg!.contentMode = .scaleAspectFill
 
         //头像
-        let hasAvatar = (avatarURL != nil && avatarURL != "")
         avatarBG = UITools.createAvatar(CGRect(
                 x: 0.5 * w - 0.5 * avatarW,
                 y: 0.42 * h - 0.5 * avatarW + extraHeight,
                 width: avatarW,
                 height: avatarW
             ),
-            content: hasAvatar ? avatarURL! : titleStr,
-            isURL: hasAvatar
+            name: titleStr,
+            url: avatarURL!
         )
         maskView.addSubview(avatarBG!)
 
-        avatarBG!.layer.shadowColor = UIColor.black.cgColor
-        avatarBG!.layer.shadowOffset = CGSize(width: 0, height: 1)
-        avatarBG!.layer.shadowOpacity = 0.7
-        avatarBG!.layer.shadowRadius = 6
+//        avatarBG!.layer.shadowColor = UIColor.black.cgColor
+//        avatarBG!.layer.shadowOffset = CGSize(width: 0, height: 1)
+//        avatarBG!.layer.shadowOpacity = 0.7
+//        avatarBG!.layer.shadowRadius = 6
+        avatarBG!.layer.borderColor = UIColor.white.cgColor
+        avatarBG!.layer.borderWidth = 2
 
         //名字
         title = UILabel()
@@ -101,8 +102,8 @@ class InfoHeadView: UIView {
         title!.text = titleStr
         title!.textColor = UIColor.white
 
-        title!.shadowColor = UIColor.black
-        title!.shadowOffset = CGSize(width: 1, height: 1)
+        title!.shadowColor = UIColor.darkGray
+        title!.shadowOffset = CGSize(width: 0, height: 1)
 
         //签名
         subTitle = UILabel()
@@ -117,8 +118,8 @@ class InfoHeadView: UIView {
         subTitle!.text = subTitleStr
         subTitle!.textColor = UIColor.white
 
-        subTitle!.shadowColor = UIColor.black
-        subTitle!.shadowOffset = CGSize(width: 1, height: 1)
+        subTitle!.shadowColor = UIColor.darkGray
+        subTitle!.shadowOffset = CGSize(width: 0, height: 1)
     }
 
     //设置比赛数据，同时显示左右数据视图
