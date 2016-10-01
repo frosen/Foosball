@@ -59,7 +59,7 @@ class ChallengeController: BaseTabController, UITableViewDelegate, UITableViewDa
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let e: Event = activeEvents[(indexPath as NSIndexPath).section]
-        return BaseCell.create(indexPath, tableView: tableView, d: e) { indexPath in
+        return BaseCell.create(indexPath, tableView: tableView, d: e, delegate: self) { indexPath in
             return BaseCell.CInfo(id: "chalCellId", c: ChallengeCell.self)
         }
     }

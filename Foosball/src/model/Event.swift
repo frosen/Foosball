@@ -9,8 +9,8 @@
 import UIKit
 
 enum EventState {
-    case invite //生成时给人发送邀请
-    case ongoing //邀请接受后
+    case invite //生成时给人发送邀请 g
+    case ongoing //邀请接受后 o b p r br
     case refuse
     case confirm
     case cash

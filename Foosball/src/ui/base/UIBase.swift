@@ -89,6 +89,5 @@ class UITools {
         
         return avatarBG
     }
-    
 }
 

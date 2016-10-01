@@ -9,6 +9,7 @@
 import UIKit
 
 class ChallengeCell: BaseCell {
+    var eventBoard: EventBoard! = nil
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 108
     }
@@ -20,13 +21,15 @@ class ChallengeCell: BaseCell {
         selectionStyle = .none
 
         //事件板
-        let eventBoard = EventBoard()
+        eventBoard = EventBoard()
         contentView.addSubview(eventBoard)
+    }
 
+    override func setData(_ d: Data?, index: IndexPath?) {
         let e = d as! Event
         eventBoard.setData(e)
     }
-    
+
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         if highlighted == true {

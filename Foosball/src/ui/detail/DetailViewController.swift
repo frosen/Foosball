@@ -35,6 +35,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         tableView.dataSource = self
 
         tableView.separatorStyle = .none //不用他的分割线，自己画
+//        tableView.backgroundColor = UIColor.white //最后再让背景变成白色，否则现在不易设计
     }
 
     override func initData() {
@@ -111,7 +112,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return BaseCell.create(indexPath, tableView: tableView, d: event) { indexPath in
+        return BaseCell.create(indexPath, tableView: tableView, d: event, delegate: self) { indexPath in
             switch (indexPath as NSIndexPath).section {
             case 0:
                 switch (indexPath as NSIndexPath).row {

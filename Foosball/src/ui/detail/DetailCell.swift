@@ -12,6 +12,10 @@ let headMargin: CGFloat = 15
 let iconMargin: CGFloat = 6 //图标到边的距离
 
 class DetailTitleCell: BaseCell {
+    var title: UILabel! = nil
+    var position: UILabel! = nil
+    var createTime: UILabel! = nil
+
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         return 72
     }
@@ -26,7 +30,7 @@ class DetailTitleCell: BaseCell {
 
         //标题
         let stringOffset: CGFloat = 20
-        let title = UILabel()
+        title = UILabel()
         contentView.addSubview(title)
         title.snp.makeConstraints{ make in
             make.left.equalTo(iconView.snp.right).offset(stringOffset)
@@ -38,7 +42,7 @@ class DetailTitleCell: BaseCell {
         title.textColor = TitleColor
 
         // 位置和时间显示
-        let position = UILabel()
+        position = UILabel()
         contentView.addSubview(position)
         position.snp.makeConstraints{ make in
             make.left.equalTo(iconView.snp.right).offset(stringOffset)
@@ -48,7 +52,7 @@ class DetailTitleCell: BaseCell {
         position.font = TextFont
         position.textColor = TextColor
 
-        let createTime = UILabel()
+        createTime = UILabel()
         contentView.addSubview(createTime)
         createTime.snp.makeConstraints{ make in
             make.left.equalTo(position.snp.right).offset(20)
@@ -57,8 +61,9 @@ class DetailTitleCell: BaseCell {
 
         createTime.font = TextFont
         createTime.textColor = TextColor
+    }
 
-        //赋值 -------------------------------------------------------------
+    override func setData(_ d: Data?, index: IndexPath?) {
         title.text = "这也是一个很有趣的测试"
         title.sizeToFit()
         position.text = "朝阳/6km"
@@ -91,7 +96,7 @@ class DetailCashCell: BaseCell {
     }
 }
 
-// ============================================================================================================================
+// =============================================================================================================
 
 class DetailHeadCell: BaseCell {
     func createHead(_ s: String) {
@@ -122,7 +127,7 @@ class DetailHeadCell: BaseCell {
     }
 }
 
-// ============================================================================================================================
+// ==================================================================================================================
 
 class DetailTeamHeadCell: DetailHeadCell {
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
@@ -159,6 +164,7 @@ class DetailTeamHeadCell: DetailHeadCell {
 // 分成友方，敌方，观众
 let avatarCountIn1Line: Int = 5
 class DetailTeamCell: BaseCell {
+    var title: UILabel! = nil
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event?
         var avatarRowRate: Float
@@ -179,7 +185,7 @@ class DetailTeamCell: BaseCell {
         createDownLine()
 
         //图标题
-        let title = UILabel()
+        title = UILabel()
         contentView.addSubview(title)
 
         title.snp.makeConstraints{ make in
@@ -188,8 +194,9 @@ class DetailTeamCell: BaseCell {
         }
         title.font = UIFont.systemFont(ofSize: 13)
         title.textColor = TextColor
+    }
 
-        //赋值 ---------------------------------------------------------
+    override func setData(_ d: Data?, index: IndexPath?) {
         switch index!.row {
         case 1:
             title.text = "友方人员"

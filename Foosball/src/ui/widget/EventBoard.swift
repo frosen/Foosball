@@ -36,6 +36,7 @@ class EventBoard: UIView {
 
     var icon: UIImageView! = nil
     var title: UILabel! = nil
+    var stateView: StateView! = nil
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -69,6 +70,15 @@ class EventBoard: UIView {
         title.textColor = TitleColor
 //        title.textAlignment = .Center
 //        title.backgroundColor = UIColor(white: 0.95, alpha: 1)
+
+        // 标题最右的状态指示
+        let stateView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 12))  //StateView()
+        addSubview(stateView)
+        stateView.backgroundColor = UIColor.black
+        stateView.snp.makeConstraints{ make in
+            make.right.equalTo(self.snp.right).inset(15)
+            make.centerY.equalTo(self.snp.bottom).multipliedBy(0.3)
+        }
 
         //VS显示处用于布局的view
         let VSView = UIView()
@@ -135,5 +145,6 @@ class EventBoard: UIView {
         nameTmp.center = CGPoint(x: icon.frame.width / 2, y: icon.frame.height / 2)
 
         title.text = "这是一个很有意思的测试"
+//        stateView.setState(.invite)
     }
 }
