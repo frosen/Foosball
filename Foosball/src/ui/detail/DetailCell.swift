@@ -162,22 +162,24 @@ class DetailTeamHeadCell: DetailHeadCell {
 // 一行5个头像，头像下面有名字（因为也不一定会有很多人愿意发头像上来，再没有名字就不知道是谁了）
 // 超过5个则换行
 // 分成友方，敌方，观众
-let avatarCountIn1Line: Int = 5
+let memberCountIn1Line: CGFloat = 5
+let memberViewHeight: CGFloat = 84
+let memberTitleHeight: CGFloat = 39
 class DetailTeamCell: BaseCell {
     var title: UILabel! = nil
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event?
-        var avatarRowRate: Float
+        var avatarRowRate: CGFloat
         switch index!.row {
         case 1:
-            avatarRowRate = Float(e!.ourSideStateList.count) / Float(avatarCountIn1Line)
+            avatarRowRate = CGFloat(e!.ourSideStateList.count) / memberCountIn1Line
         case 2:
-            avatarRowRate = Float(e!.opponentStateList.count) / Float(avatarCountIn1Line)
+            avatarRowRate = CGFloat(e!.opponentStateList.count) / memberCountIn1Line
         default:
             avatarRowRate = 0
         }
         let avatarRowCount = ceil(avatarRowRate)
-        return CGFloat(avatarRowCount * 84) + 39
+        return avatarRowCount * memberViewHeight + memberTitleHeight
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
@@ -194,10 +196,18 @@ class DetailTeamCell: BaseCell {
         }
         title.font = UIFont.systemFont(ofSize: 13)
         title.textColor = TextColor
+
+
     }
 
+    var curRow: Int = -1
     override func setData(_ d: Data?, index: IndexPath?) {
-        switch index!.row {
+        if curRow == index!.row {
+            return // row不变里面内容视为不变
+        }
+        curRow = index!.row
+
+        switch curRow {
         case 1:
             title.text = "友方人员"
         case 2:
@@ -207,6 +217,61 @@ class DetailTeamCell: BaseCell {
         }
 
         title.sizeToFit()
+
+        //设置member
+        let e: Event = d as! Event
+        let memberList: [UserState]
+        switch curRow {
+        case 1:
+            memberList = e.ourSideStateList
+        case 2:
+            memberList = e.opponentStateList
+        default:
+            memberList = []
+        }
+
+        var pos: Int = 0
+        var line: Int = 0
+        for m in memberList {
+            let v = createMemberView(m)
+            contentView.addSubview(v)
+            let f = v.frame
+            v.frame = CGRect(
+                x: CGFloat(pos) * f.width,
+                y: CGFloat(line) * f.height + memberTitleHeight,
+                width: f.width,
+                height: f.height
+            )
+
+            pos += 1
+            if pos >= Int(memberCountIn1Line) {
+                pos = 0
+                line += 1
+            }
+        }
+    }
+
+    let avatarMargin: CGFloat = 3
+    func createMemberView(_ state: UserState) -> UIView {
+        let userB = state.user
+        let v = UIView()
+        v.bounds = CGRect(x: 0, y: 0, width: w / memberCountIn1Line, height: memberViewHeight)
+
+        // 头像
+        let avatarWidth = v.frame.width - 2 * avatarMargin
+        let avatar = UITools.createAvatar(
+            CGRect(x: avatarMargin, y: avatarMargin, width: avatarWidth, height: avatarWidth),
+            name: userB.name,
+            url: userB.avatarURL)
+        v.addSubview(avatar)
+
+        // 状态
+        let stateView = StateView()
+        v.addSubview(stateView)
+        v.center = CGPoint(x: v.frame.width / 2, y: v.frame.width + 10)
+        stateView.setState(state.state)
+
+        return UIView()
     }
 }
 
