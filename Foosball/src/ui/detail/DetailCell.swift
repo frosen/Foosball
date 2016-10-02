@@ -162,7 +162,7 @@ class DetailTeamHeadCell: DetailHeadCell {
 // 一行5个头像，头像下面有名字（因为也不一定会有很多人愿意发头像上来，再没有名字就不知道是谁了）
 // 超过5个则换行
 // 分成友方，敌方，观众
-let memberCountIn1Line: CGFloat = 5
+let memberCountIn1Line: CGFloat = 6
 let memberViewHeight: CGFloat = 84
 let memberTitleHeight: CGFloat = 39
 class DetailTeamCell: BaseCell {
@@ -201,6 +201,7 @@ class DetailTeamCell: BaseCell {
     }
 
     var curRow: Int = -1
+    let avatarMargin: CGFloat = 3
     override func setData(_ d: Data?, index: IndexPath?) {
         if curRow == index!.row {
             return // row不变里面内容视为不变
@@ -232,12 +233,13 @@ class DetailTeamCell: BaseCell {
 
         var pos: Int = 0
         var line: Int = 0
+        let margin = headMargin - avatarMargin
         for m in memberList {
             let v = createMemberView(m)
             contentView.addSubview(v)
             let f = v.frame
             v.frame = CGRect(
-                x: CGFloat(pos) * f.width,
+                x: CGFloat(pos) * f.width + margin,
                 y: CGFloat(line) * f.height + memberTitleHeight,
                 width: f.width,
                 height: f.height
@@ -251,11 +253,11 @@ class DetailTeamCell: BaseCell {
         }
     }
 
-    let avatarMargin: CGFloat = 3
     func createMemberView(_ state: UserState) -> UIView {
         let userB = state.user
         let v = UIView()
-        v.bounds = CGRect(x: 0, y: 0, width: w / memberCountIn1Line, height: memberViewHeight)
+        let totalWidth = w - 2 * (headMargin - avatarMargin)
+        v.bounds = CGRect(x: 0, y: 0, width: totalWidth / memberCountIn1Line, height: memberViewHeight)
 
         // 头像
         let avatarWidth = v.frame.width - 2 * avatarMargin
@@ -268,10 +270,10 @@ class DetailTeamCell: BaseCell {
         // 状态
         let stateView = StateView()
         v.addSubview(stateView)
-        v.center = CGPoint(x: v.frame.width / 2, y: v.frame.width + 10)
+        stateView.center = CGPoint(x: v.frame.width / 2, y: v.frame.width - stateView.frame.height / 2)
         stateView.setState(state.state)
 
-        return UIView()
+        return v
     }
 }
 

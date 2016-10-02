@@ -35,13 +35,29 @@ class AppManager: NSObject {
 
         let bb2 = UserBrief(ID: DataID(ID: 1232))
         bb2.name = "小明2"
-        let p2 = UserState(user: bb2, state: .invite)
+        let p2 = UserState(user: bb2, state: .ongoing)
 
         let bb3 = UserBrief(ID: DataID(ID: 1232))
         bb3.name = "小明3"
-        let p3 = UserState(user: bb3, state: .invite)
+        let p3 = UserState(user: bb3, state: .confirm)
 
-        e.ourSideStateList = [p1, p2, p3]
+        let bb12 = UserBrief(ID: DataID(ID: 1232))
+        bb12.name = "明"
+        let p12 = UserState(user: bb12, state: .refuse)
+
+        let bb22 = UserBrief(ID: DataID(ID: 1232))
+        bb22.name = "明2"
+        let p22 = UserState(user: bb22, state: .cash)
+
+        let bb32 = UserBrief(ID: DataID(ID: 1232))
+        bb32.name = "明3"
+        let p32 = UserState(user: bb32, state: .finish)
+
+        let bb321 = UserBrief(ID: DataID(ID: 1232))
+        bb321.name = "明3"
+        let p321 = UserState(user: bb321, state: .finish)
+
+        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 
         // 对方
         let bk1 = UserBrief(ID: DataID(ID: 1232))
