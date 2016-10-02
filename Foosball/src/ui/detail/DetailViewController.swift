@@ -35,6 +35,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         tableView.dataSource = self
 
         tableView.separatorStyle = .none //不用他的分割线，自己画
+        tableView.showsVerticalScrollIndicator = false //隐藏滑动条
 //        tableView.backgroundColor = UIColor.white //最后再让背景变成白色，否则现在不易设计
     }
 
@@ -155,6 +156,11 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     // 回调
     func onBack() {
         let _ = navigationController?.popViewController(animated: true)
+    }
+
+    // 邀请
+    func onClickInvite() {
+        print("invite")
     }
     
 }

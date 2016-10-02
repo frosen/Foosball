@@ -58,8 +58,8 @@ class Event: Data {
 
     //详情
 
-    //比分列表
-    var scoreList: [(Int, Int)] = []
+    //图片列表
+    var imageURLList: [String] = []
 
     //对话list
     var msgList: [MsgStruct] = []

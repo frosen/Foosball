@@ -21,6 +21,8 @@ class DetailTitleCell: BaseCell {
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
+
         //底部分割线
         createDownLine()
 
@@ -82,6 +84,8 @@ class DetailContentCell: BaseCell {
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
+
         //底部分割线
         createDownLine()
     }
@@ -93,6 +97,8 @@ class DetailCashCell: BaseCell {
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
+
     }
 }
 
@@ -122,8 +128,22 @@ class DetailHeadCell: BaseCell {
         lbl.sizeToFit()
     }
 
-    func createButton() {
-        
+    func createButton(_ txt: String, color: UIColor, pos: Int, callback: Selector) {
+        let btn = UIButton(type: .system)
+        contentView.addSubview(btn)
+
+        btn.snp.makeConstraints{ make in
+            make.centerY.equalTo(contentView.snp.centerY)
+            make.right.equalTo(contentView.snp.right).inset(headMargin + CGFloat(pos) * 70)
+            make.size.equalTo(CGSize(width: 60, height: 25))
+        }
+
+        btn.setTitle(txt, for: .normal)
+        btn.titleLabel?.font = TextFont
+        btn.setTitleColor(UIColor.white, for: .normal)
+        btn.backgroundColor = color
+        btn.layer.cornerRadius = 8
+        btn.addTarget(delegate, action: callback, for: .touchUpInside)
     }
 }
 
@@ -135,27 +155,19 @@ class DetailTeamHeadCell: DetailHeadCell {
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
+
         createHead("队伍")
 
         // 邀请按钮
-        let btn = UIButton(type: .system)
-        contentView.addSubview(btn)
-
-        btn.snp.makeConstraints{ make in
-            make.centerY.equalTo(contentView.snp.centerY)
-            make.right.equalTo(contentView.snp.right).inset(headMargin)
-            make.size.equalTo(CGSize(width: 65, height: 25))
-        }
-
-        btn.setTitle("邀请", for: .normal)
-        btn.titleLabel?.font = TextFont
-        btn.setTitleColor(UIColor.white, for: .normal)
-        btn.backgroundColor = UIColor.purple
-        btn.layer.cornerRadius = 5
-
+        createButton("邀请", color: UIColor.purple, pos: 0, callback: #selector(DetailViewController.onClickInvite))
 
         //底线
         createDownLine()
+    }
+
+    func abc() {
+        print("abc")
     }
 }
 
@@ -163,7 +175,7 @@ class DetailTeamHeadCell: DetailHeadCell {
 // 超过5个则换行
 // 分成友方，敌方，观众
 let memberCountIn1Line: CGFloat = 6
-let memberViewHeight: CGFloat = 84
+let memberViewHeight: CGFloat = UIScreen.main.bounds.width / memberCountIn1Line + 10
 let memberTitleHeight: CGFloat = 39
 class DetailTeamCell: BaseCell {
     var title: UILabel! = nil
@@ -183,6 +195,8 @@ class DetailTeamCell: BaseCell {
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
+
         //底线
         createDownLine()
 
@@ -283,7 +297,10 @@ class DetailImageHeadCell: DetailHeadCell {
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
+
         createHead("瞬间")
+        createDownLine()
     }
 }
 
@@ -293,6 +310,8 @@ class DetailImageCell: BaseCell {
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
+
     }
 }
 
@@ -302,6 +321,7 @@ class DetailMsgHeadCell: DetailHeadCell {
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
         createHead("消息")
     }
 }
@@ -312,6 +332,7 @@ class DetailMsgCell: BaseCell {
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
     }
 }
 
