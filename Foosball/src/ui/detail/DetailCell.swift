@@ -8,7 +8,7 @@
 
 import UIKit
 
-let headMargin: CGFloat = 15
+let headMargin: CGFloat = 12
 let iconMargin: CGFloat = 6 //图标到边的距离
 
 class DetailTitleCell: BaseCell {
@@ -134,15 +134,15 @@ class DetailHeadCell: BaseCell {
 
         btn.snp.makeConstraints{ make in
             make.centerY.equalTo(contentView.snp.centerY)
-            make.right.equalTo(contentView.snp.right).inset(headMargin + CGFloat(pos) * 70)
-            make.size.equalTo(CGSize(width: 60, height: 25))
+            make.right.equalTo(contentView.snp.right).inset(headMargin + CGFloat(pos) * 60)
+            make.size.equalTo(CGSize(width: 50, height: 25))
         }
 
         btn.setTitle(txt, for: .normal)
-        btn.titleLabel?.font = TextFont
+        btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         btn.setTitleColor(UIColor.white, for: .normal)
         btn.backgroundColor = color
-        btn.layer.cornerRadius = 8
+        btn.layer.cornerRadius = 9
         btn.addTarget(delegate, action: callback, for: .touchUpInside)
     }
 }
@@ -171,11 +171,16 @@ class DetailTeamHeadCell: DetailHeadCell {
     }
 }
 
-// 一行5个头像，头像下面有名字（因为也不一定会有很多人愿意发头像上来，再没有名字就不知道是谁了）
-// 超过5个则换行
+// 一行6个头像，头像下面有状态
+// 超过6个则换行
 // 分成友方，敌方，观众
+let widthWithoutMargin: CGFloat = UIScreen.main.bounds.width - 2 * headMargin
+
 let memberCountIn1Line: CGFloat = 6
-let memberViewHeight: CGFloat = UIScreen.main.bounds.width / memberCountIn1Line + 10
+let avatarMargin: CGFloat = 3
+let avatarTotalWidth: CGFloat = widthWithoutMargin + 2 * avatarMargin
+let memberViewWidth: CGFloat = widthWithoutMargin / memberCountIn1Line
+let memberViewHeight: CGFloat = memberViewWidth + 10
 let memberTitleHeight: CGFloat = 39
 class DetailTeamCell: BaseCell {
     var title: UILabel! = nil
@@ -210,12 +215,9 @@ class DetailTeamCell: BaseCell {
         }
         title.font = UIFont.systemFont(ofSize: 13)
         title.textColor = TextColor
-
-
     }
 
     var curRow: Int = -1
-    let avatarMargin: CGFloat = 3
     override func setData(_ d: Data?, index: IndexPath?) {
         if curRow == index!.row {
             return // row不变里面内容视为不变
@@ -270,8 +272,7 @@ class DetailTeamCell: BaseCell {
     func createMemberView(_ state: UserState) -> UIView {
         let userB = state.user
         let v = UIView()
-        let totalWidth = w - 2 * (headMargin - avatarMargin)
-        v.bounds = CGRect(x: 0, y: 0, width: totalWidth / memberCountIn1Line, height: memberViewHeight)
+        v.bounds = CGRect(x: 0, y: 0, width: memberViewWidth, height: memberViewHeight)
 
         // 头像
         let avatarWidth = v.frame.width - 2 * avatarMargin
@@ -300,18 +301,63 @@ class DetailImageHeadCell: DetailHeadCell {
         self.selectionStyle = .none //使选中后没有反应
 
         createHead("瞬间")
+        createButton("拍照", color: UIColor.blue, pos: 0, callback: #selector(DetailViewController.onClickPhoto))
+        createButton("图库", color: UIColor.red, pos: 1, callback: #selector(DetailViewController.onClickAlbum))
         createDownLine()
     }
 }
 
+let imageCountIn1Line: CGFloat = 4
+let imgMargin: CGFloat = 2
+let imageWidth: CGFloat = (widthWithoutMargin - 2 * imgMargin) / imageCountIn1Line
 class DetailImageCell: BaseCell {
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
-        return 44
+        let e = d as! Event
+        let lineCount = ceil(CGFloat(e.imageURLList.count) / imageCountIn1Line)
+        return lineCount * imageWidth
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
+    }
 
+    override func setData(_ d: Data?, index: IndexPath?) {
+        let e = d as! Event
+        let margin = headMargin - imgMargin
+        var pos: Int = 0
+        var line: Int = 0
+        for imgUrl in e.imageURLList {
+            let v = createImageView(url: imgUrl)
+            contentView.addSubview(v)
+            let f = v.frame
+            v.frame = CGRect(
+                x: CGFloat(pos) * f.width + margin,
+                y: CGFloat(line) * f.height,
+                width: f.width,
+                height: f.height
+            )
+
+            pos += 1
+            if pos >= Int(imageCountIn1Line) {
+                pos = 0
+                line += 1
+            }
+        }
+
+    }
+
+    func createImageView(url: String) -> UIView {
+        let v = UIView()
+        v.bounds = CGRect(x: 0, y: 0, width: imageWidth, height: imageWidth)
+
+        //添加图片
+        let imgWidth = imageWidth - 2 * imgMargin
+        let img = UIImageView(frame: CGRect(x: imgMargin, y: imgMargin, width: imgWidth, height: imgWidth))
+        v.addSubview(img)
+
+        img.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "img_default"))
+
+        return v
     }
 }
 

@@ -57,7 +57,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
             //head 友 敌 2. 如果是乱斗应该是不分敌友的所以是2行，但暂时不考虑；3. 以后也可能加入观众，暂不考虑
             return 2 + (event.opponentStateList.count > 0 ? 1 : 0)
         case 2:
-            return 2 //head body
+            return 1 + (event.imageURLList.count > 0 ? 1 : 0) //head body
         case 3:
             return 1 + event.msgList.count //对话(s) + head
         default:
@@ -98,14 +98,14 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
             case 0:
                 return DetailImageHeadCell.getCellHeight()
             default:
-                return DetailImageCell.getCellHeight()
+                return DetailImageCell.getCellHeight(event, index: indexPath)
             }
         case 3: //对话(s) + head
             switch (indexPath as NSIndexPath).row {
             case 0:
                 return DetailMsgHeadCell.getCellHeight()
             default:
-                return DetailMsgCell.getCellHeight()
+                return DetailMsgCell.getCellHeight(event, index: indexPath)
             }
         default:
             return 0
@@ -162,5 +162,13 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     func onClickInvite() {
         print("invite")
     }
-    
+
+    // 拍照
+    func onClickPhoto() {
+        print("photo")
+    }
+
+    func onClickAlbum() {
+        print("album")
+    }
 }

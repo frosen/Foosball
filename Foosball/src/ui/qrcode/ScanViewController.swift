@@ -203,7 +203,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
     }
 
     func onOpenAlbum() {
-        print("打开相册")
+        print("打开相册Album")
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             let ctrller = UIImagePickerController()
             ctrller.delegate = self

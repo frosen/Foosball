@@ -75,6 +75,9 @@ class AppManager: NSObject {
         e.opponentStateList = [pk1, pk2, pk3]
 
 
+        e.imageURLList = ["http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg"]
+
+
 
         user!.activeEvents.append(e)
         e = Event(ID: DataID(ID: 50001), item: Foosball)
