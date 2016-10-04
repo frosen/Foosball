@@ -31,27 +31,40 @@ class StateView: UIView {
     }
 
     func setState(_ state: EventState) {
-        var string: String = ""
-        var bgColor: UIColor = UIColor.red
+        var string: String
+        var bgColor: UIColor
+
         switch state {
         case .invite:
-            string = "邀 请"
+            string = "邀请"
             bgColor = UIColor(red: 0, green: 0.9, blue: 0.5, alpha: 1)
-        case .ongoing:
-            string = "进行中"
-            bgColor = UIColor.orange
-        case .confirm:
-            string = "接 受"
+        case .ready:
+            string = "预备"
             bgColor = UIColor.purple
-        case .refuse:
-            string = "拒 绝"
-            bgColor = UIColor.blue
-        case .cash:
-            string = "未兑现"
+        case .ongoing:
+            string = "进行"
             bgColor = UIColor.red
-        case .finish:
-            string = "完 成"
+        case .waiting:
+            string = "等待"
+            bgColor = UIColor.blue
+        case .win:
+            string = "胜利"
+            bgColor = UIColor.orange
+        case .lose:
+            string = "失败"
             bgColor = UIColor.brown
+        case .cashed:
+            string = "兑现"
+            bgColor = UIColor.orange
+        case .finish:
+            string = "完成"
+            bgColor = UIColor.brown
+        case .impeach:
+            string = "质疑"
+            bgColor = UIColor.purple
+        case .keepImpeach:
+            string = "存疑"
+            bgColor = UIColor.purple
         }
 
         lbl.text = string

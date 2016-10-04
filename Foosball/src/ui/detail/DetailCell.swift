@@ -179,7 +179,7 @@ let widthWithoutMargin: CGFloat = UIScreen.main.bounds.width - 2 * headMargin
 let memberCountIn1Line: CGFloat = 6
 let avatarMargin: CGFloat = 3
 let avatarTotalWidth: CGFloat = widthWithoutMargin + 2 * avatarMargin
-let memberViewWidth: CGFloat = widthWithoutMargin / memberCountIn1Line
+let memberViewWidth: CGFloat = avatarTotalWidth / memberCountIn1Line
 let memberViewHeight: CGFloat = memberViewWidth + 10
 let memberTitleHeight: CGFloat = 39
 class DetailTeamCell: BaseCell {
@@ -250,6 +250,7 @@ class DetailTeamCell: BaseCell {
         var pos: Int = 0
         var line: Int = 0
         let margin = headMargin - avatarMargin
+        print(avatarTotalWidth, memberViewWidth)
         for m in memberList {
             let v = createMemberView(m)
             contentView.addSubview(v)
@@ -309,12 +310,12 @@ class DetailImageHeadCell: DetailHeadCell {
 
 let imageCountIn1Line: CGFloat = 4
 let imgMargin: CGFloat = 2
-let imageWidth: CGFloat = (widthWithoutMargin - 2 * imgMargin) / imageCountIn1Line
+let imageViewWidth: CGFloat = (widthWithoutMargin + 2 * imgMargin) / imageCountIn1Line
 class DetailImageCell: BaseCell {
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
         let lineCount = ceil(CGFloat(e.imageURLList.count) / imageCountIn1Line)
-        return lineCount * imageWidth
+        return lineCount * imageViewWidth
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
@@ -348,10 +349,10 @@ class DetailImageCell: BaseCell {
 
     func createImageView(url: String) -> UIView {
         let v = UIView()
-        v.bounds = CGRect(x: 0, y: 0, width: imageWidth, height: imageWidth)
+        v.bounds = CGRect(x: 0, y: 0, width: imageViewWidth, height: imageViewWidth)
 
         //添加图片
-        let imgWidth = imageWidth - 2 * imgMargin
+        let imgWidth = imageViewWidth - 2 * imgMargin
         let img = UIImageView(frame: CGRect(x: imgMargin, y: imgMargin, width: imgWidth, height: imgWidth))
         v.addSubview(img)
 

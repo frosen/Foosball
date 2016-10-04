@@ -39,15 +39,15 @@ class AppManager: NSObject {
 
         let bb3 = UserBrief(ID: DataID(ID: 1232))
         bb3.name = "小明3"
-        let p3 = UserState(user: bb3, state: .confirm)
+        let p3 = UserState(user: bb3, state: .waiting)
 
         let bb12 = UserBrief(ID: DataID(ID: 1232))
         bb12.name = "明"
-        let p12 = UserState(user: bb12, state: .refuse)
+        let p12 = UserState(user: bb12, state: .win)
 
         let bb22 = UserBrief(ID: DataID(ID: 1232))
         bb22.name = "明2"
-        let p22 = UserState(user: bb22, state: .cash)
+        let p22 = UserState(user: bb22, state: .lose)
 
         let bb32 = UserBrief(ID: DataID(ID: 1232))
         bb32.name = "明3"
@@ -55,7 +55,7 @@ class AppManager: NSObject {
 
         let bb321 = UserBrief(ID: DataID(ID: 1232))
         bb321.name = "明3"
-        let p321 = UserState(user: bb321, state: .finish)
+        let p321 = UserState(user: bb321, state: .keepImpeach)
 
         e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 
