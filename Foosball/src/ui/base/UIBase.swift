@@ -8,6 +8,7 @@
 
 let LineColor: UIColor = UIColor(white: 0.92, alpha: 1)
 let TitleColor: UIColor = UIColor.black
+let SubTitleColor: UIColor = UIColor(white: 0.5, alpha: 1)
 let TextColor: UIColor = UIColor(white: 0.25, alpha: 1)
 
 let TitleFont: UIFont = UIFont.boldSystemFont(ofSize: 15)

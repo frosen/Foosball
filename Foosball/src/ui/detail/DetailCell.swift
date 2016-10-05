@@ -10,6 +10,7 @@ import UIKit
 
 let headMargin: CGFloat = 12
 let iconMargin: CGFloat = 6 //图标到边的距离
+let widthWithoutMargin: CGFloat = UIScreen.main.bounds.width - 2 * headMargin
 
 class DetailTitleCell: BaseCell {
     var title: UILabel! = nil
@@ -75,12 +76,33 @@ class DetailTitleCell: BaseCell {
     }
 }
 
+let subTitleHeight: CGFloat = 35
+
+let detailLblSize = CGSize(width: widthWithoutMargin, height: CGFloat(MAXFLOAT))
+let opt: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
+func createParagraphStyle() -> NSMutableParagraphStyle {
+    let paragraphStyle = NSMutableParagraphStyle()
+    paragraphStyle.lineSpacing = 3
+    paragraphStyle.headIndent = 12
+    return paragraphStyle
+}
+
+let contentBottomHeight: CGFloat = 12
 class DetailContentCell: BaseCell {
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
-//        let rect = stringList[0].boundingRectWithSize(
-//            CGSize(width: UIScreen.mainScreen().bounds.width, height: CGFloat(MAXFLOAT)),
-//            options: [.UsesLineFragmentOrigin, .UsesFontLeading], attributes: [NSFontAttributeName : UIFont.systemFontOfSize(17)], context: nil)
-        return 88
+        let e = d as! Event
+        let height = DetailContentCell.calculateLblHeight(e.detail)
+        return height + subTitleHeight + contentBottomHeight
+    }
+
+    class func calculateLblHeight(_ s: String) -> CGFloat {
+        let str = s as NSString
+        let attri: [String : Any] = [
+            NSFontAttributeName: TextFont,
+            NSParagraphStyleAttributeName: createParagraphStyle()
+        ]
+        let size = str.boundingRect(with: detailLblSize, options: opt, attributes: attri, context: nil)
+        return size.height
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
@@ -88,6 +110,38 @@ class DetailContentCell: BaseCell {
 
         //底部分割线
         createDownLine()
+
+        //标题
+        let title = UILabel()
+        contentView.addSubview(title)
+
+        title.snp.makeConstraints{ make in
+            make.top.equalTo(contentView.snp.top).offset(11)
+            make.left.equalTo(contentView.snp.left).offset(headMargin)
+        }
+        title.font = TextFont
+        title.textColor = SubTitleColor
+
+        title.text = "事件内容："
+
+        // 内容 因为唯一，所以可以从这里设置
+        let e = d as! Event
+        let height = DetailContentCell.calculateLblHeight(e.detail)
+
+        let lbl = UILabel()
+        contentView.addSubview(lbl)
+
+        lbl.numberOfLines = 0
+        lbl.lineBreakMode = .byCharWrapping
+        lbl.frame = CGRect(x: headMargin, y: subTitleHeight, width: widthWithoutMargin, height: height)
+
+        lbl.font = TextFont
+
+        //设置行距
+        let attri: [String : Any] = [NSParagraphStyleAttributeName: createParagraphStyle()]
+        let attriStr = NSAttributedString(string: e.detail, attributes: attri)
+
+        lbl.attributedText = attriStr
     }
 }
 
@@ -174,14 +228,12 @@ class DetailTeamHeadCell: DetailHeadCell {
 // 一行6个头像，头像下面有状态
 // 超过6个则换行
 // 分成友方，敌方，观众
-let widthWithoutMargin: CGFloat = UIScreen.main.bounds.width - 2 * headMargin
-
 let memberCountIn1Line: CGFloat = 6
 let avatarMargin: CGFloat = 3
 let avatarTotalWidth: CGFloat = widthWithoutMargin + 2 * avatarMargin
 let memberViewWidth: CGFloat = avatarTotalWidth / memberCountIn1Line
 let memberViewHeight: CGFloat = memberViewWidth + 10
-let memberTitleHeight: CGFloat = 39
+let teamBottomMargin: CGFloat = 4
 class DetailTeamCell: BaseCell {
     var title: UILabel! = nil
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
@@ -196,7 +248,7 @@ class DetailTeamCell: BaseCell {
             avatarRowRate = 0
         }
         let avatarRowCount = ceil(avatarRowRate)
-        return avatarRowCount * memberViewHeight + memberTitleHeight
+        return avatarRowCount * memberViewHeight + subTitleHeight + teamBottomMargin
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
@@ -210,11 +262,11 @@ class DetailTeamCell: BaseCell {
         contentView.addSubview(title)
 
         title.snp.makeConstraints{ make in
-            make.top.equalTo(contentView.snp.top).offset(13)
+            make.top.equalTo(contentView.snp.top).offset(11)
             make.left.equalTo(contentView.snp.left).offset(headMargin)
         }
-        title.font = UIFont.systemFont(ofSize: 13)
-        title.textColor = TextColor
+        title.font = TextFont
+        title.textColor = SubTitleColor
     }
 
     var curRow: Int = -1
@@ -257,7 +309,7 @@ class DetailTeamCell: BaseCell {
             let f = v.frame
             v.frame = CGRect(
                 x: CGFloat(pos) * f.width + margin,
-                y: CGFloat(line) * f.height + memberTitleHeight,
+                y: CGFloat(line) * f.height + subTitleHeight,
                 width: f.width,
                 height: f.height
             )
@@ -311,11 +363,13 @@ class DetailImageHeadCell: DetailHeadCell {
 let imageCountIn1Line: CGFloat = 4
 let imgMargin: CGFloat = 2
 let imageViewWidth: CGFloat = (widthWithoutMargin + 2 * imgMargin) / imageCountIn1Line
+let imgTopMargin: CGFloat = 4
+let imgBottomMargin: CGFloat = 4
 class DetailImageCell: BaseCell {
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
         let lineCount = ceil(CGFloat(e.imageURLList.count) / imageCountIn1Line)
-        return lineCount * imageViewWidth
+        return lineCount * imageViewWidth + imgTopMargin + imgBottomMargin
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
@@ -333,7 +387,7 @@ class DetailImageCell: BaseCell {
             let f = v.frame
             v.frame = CGRect(
                 x: CGFloat(pos) * f.width + margin,
-                y: CGFloat(line) * f.height,
+                y: CGFloat(line) * f.height + imgTopMargin,
                 width: f.width,
                 height: f.height
             )

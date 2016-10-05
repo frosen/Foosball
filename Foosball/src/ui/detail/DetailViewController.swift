@@ -80,9 +80,9 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
             case 0:
                 return DetailTitleCell.getCellHeight()
             case 1:
-                return DetailContentCell.getCellHeight()
+                return DetailContentCell.getCellHeight(event, index: indexPath)
             case 2:
-                return DetailCashCell.getCellHeight()
+                return DetailCashCell.getCellHeight(event, index: indexPath)
             default:
                 return 0
             }
