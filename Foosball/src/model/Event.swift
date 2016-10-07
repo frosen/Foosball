@@ -85,8 +85,8 @@ class Event: Data {
     //操作时间
     var operationTimeList: [OperationTime] = []
 
-    //奖杯（兑现物）用文本记录就好
-    var award: [String] = []
+    //奖杯（兑现物）用文本记录就好，多个奖杯的文本中间以\n连接
+    var award: String = ""
 
     //详情
     var detail: String = ""

@@ -77,6 +77,7 @@ class DetailTitleCell: BaseCell {
 }
 
 let subTitleHeight: CGFloat = 35
+let contentBottomHeight: CGFloat = 12
 
 let detailLblSize = CGSize(width: widthWithoutMargin, height: CGFloat(MAXFLOAT))
 let opt: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
@@ -86,23 +87,53 @@ func createParagraphStyle() -> NSMutableParagraphStyle {
     paragraphStyle.headIndent = 12
     return paragraphStyle
 }
+func calculateLblHeight(_ s: String) -> CGFloat {
+    let str = s as NSString
+    let attri: [String : Any] = [
+        NSFontAttributeName: TextFont,
+        NSParagraphStyleAttributeName: createParagraphStyle()
+    ]
+    let size = str.boundingRect(with: detailLblSize, options: opt, attributes: attri, context: nil)
+    return size.height
+}
 
-let contentBottomHeight: CGFloat = 12
+func initLblData(contentView: UIView, titleStr: String, str: String) {
+    //标题
+    let title = UILabel()
+    contentView.addSubview(title)
+
+    title.snp.makeConstraints{ make in
+        make.top.equalTo(contentView.snp.top).offset(11)
+        make.left.equalTo(contentView.snp.left).offset(headMargin)
+    }
+    title.font = TextFont
+    title.textColor = SubTitleColor
+
+    title.text = titleStr
+
+    // 内容 因为唯一，所以可以从这里设置
+    let height = calculateLblHeight(str)
+
+    let lbl = UILabel()
+    contentView.addSubview(lbl)
+
+    lbl.numberOfLines = 0
+    lbl.lineBreakMode = .byCharWrapping
+    lbl.frame = CGRect(x: headMargin, y: subTitleHeight, width: widthWithoutMargin, height: height)
+
+    lbl.font = TextFont
+
+    //设置行距
+    let attri: [String : Any] = [NSParagraphStyleAttributeName: createParagraphStyle()]
+    let attriStr = NSAttributedString(string: str, attributes: attri)
+
+    lbl.attributedText = attriStr
+}
+
 class DetailContentCell: BaseCell {
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
-        let height = DetailContentCell.calculateLblHeight(e.detail)
-        return height + subTitleHeight + contentBottomHeight
-    }
-
-    class func calculateLblHeight(_ s: String) -> CGFloat {
-        let str = s as NSString
-        let attri: [String : Any] = [
-            NSFontAttributeName: TextFont,
-            NSParagraphStyleAttributeName: createParagraphStyle()
-        ]
-        let size = str.boundingRect(with: detailLblSize, options: opt, attributes: attri, context: nil)
-        return size.height
+        return calculateLblHeight(e.detail) + subTitleHeight + contentBottomHeight
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
@@ -111,48 +142,25 @@ class DetailContentCell: BaseCell {
         //底部分割线
         createDownLine()
 
-        //标题
-        let title = UILabel()
-        contentView.addSubview(title)
-
-        title.snp.makeConstraints{ make in
-            make.top.equalTo(contentView.snp.top).offset(11)
-            make.left.equalTo(contentView.snp.left).offset(headMargin)
-        }
-        title.font = TextFont
-        title.textColor = SubTitleColor
-
-        title.text = "事件内容："
-
-        // 内容 因为唯一，所以可以从这里设置
         let e = d as! Event
-        let height = DetailContentCell.calculateLblHeight(e.detail)
-
-        let lbl = UILabel()
-        contentView.addSubview(lbl)
-
-        lbl.numberOfLines = 0
-        lbl.lineBreakMode = .byCharWrapping
-        lbl.frame = CGRect(x: headMargin, y: subTitleHeight, width: widthWithoutMargin, height: height)
-
-        lbl.font = TextFont
-
-        //设置行距
-        let attri: [String : Any] = [NSParagraphStyleAttributeName: createParagraphStyle()]
-        let attriStr = NSAttributedString(string: e.detail, attributes: attri)
-
-        lbl.attributedText = attriStr
+        initLblData(contentView: contentView, titleStr: "内容：", str: e.detail)
     }
 }
 
 class DetailCashCell: BaseCell {
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
-        return 44
+        let e = d as! Event
+        return calculateLblHeight(e.award) + subTitleHeight + contentBottomHeight
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
 
+        //底部分割线
+        createDownLine()
+
+        let e = d as! Event
+        initLblData(contentView: contentView, titleStr: "奖杯：", str: e.award)
     }
 }
 
