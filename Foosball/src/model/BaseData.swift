@@ -35,6 +35,11 @@ struct Time {
     }
 }
 
+//位置信息的封装
+struct Location {
+    
+}
+
 //数据核心
 class Data: NSObject {
     let ID: DataID //本结构体的id

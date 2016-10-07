@@ -79,7 +79,6 @@ class DetailTitleCell: BaseCell {
 let subTitleHeight: CGFloat = 35
 let contentBottomHeight: CGFloat = 12
 
-let detailLblSize = CGSize(width: widthWithoutMargin, height: CGFloat(MAXFLOAT))
 let opt: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
 func createParagraphStyle() -> NSMutableParagraphStyle {
     let paragraphStyle = NSMutableParagraphStyle()
@@ -87,53 +86,56 @@ func createParagraphStyle() -> NSMutableParagraphStyle {
     paragraphStyle.headIndent = 12
     return paragraphStyle
 }
-func calculateLblHeight(_ s: String) -> CGFloat {
+
+func calculateLblHeight(_ s: String, w: CGFloat) -> CGFloat {
     let str = s as NSString
     let attri: [String : Any] = [
         NSFontAttributeName: TextFont,
         NSParagraphStyleAttributeName: createParagraphStyle()
     ]
-    let size = str.boundingRect(with: detailLblSize, options: opt, attributes: attri, context: nil)
+    let size = str.boundingRect(with: CGSize(width: w, height: CGFloat(MAXFLOAT)), options: opt, attributes: attri, context: nil)
     return size.height
 }
 
-func initLblData(contentView: UIView, titleStr: String, str: String) {
-    //标题
-    let title = UILabel()
-    contentView.addSubview(title)
+class DetailStringCell: BaseCell {
+    func initLblData(contentView: UIView, titleStr: String, str: String) {
+        //标题
+        let title = UILabel()
+        contentView.addSubview(title)
 
-    title.snp.makeConstraints{ make in
-        make.top.equalTo(contentView.snp.top).offset(11)
-        make.left.equalTo(contentView.snp.left).offset(headMargin)
+        title.snp.makeConstraints{ make in
+            make.top.equalTo(contentView.snp.top).offset(11)
+            make.left.equalTo(contentView.snp.left).offset(headMargin)
+        }
+        title.font = TextFont
+        title.textColor = SubTitleColor
+
+        title.text = titleStr
+
+        // 内容 因为唯一，所以可以从这里设置
+        let height = calculateLblHeight(str, w: widthWithoutMargin)
+
+        let lbl = UILabel()
+        contentView.addSubview(lbl)
+
+        lbl.numberOfLines = 0
+        lbl.lineBreakMode = .byCharWrapping
+        lbl.frame = CGRect(x: headMargin, y: subTitleHeight, width: widthWithoutMargin, height: height)
+
+        lbl.font = TextFont
+
+        //设置行距
+        let attri: [String : Any] = [NSParagraphStyleAttributeName: createParagraphStyle()]
+        let attriStr = NSAttributedString(string: str, attributes: attri)
+        
+        lbl.attributedText = attriStr
     }
-    title.font = TextFont
-    title.textColor = SubTitleColor
-
-    title.text = titleStr
-
-    // 内容 因为唯一，所以可以从这里设置
-    let height = calculateLblHeight(str)
-
-    let lbl = UILabel()
-    contentView.addSubview(lbl)
-
-    lbl.numberOfLines = 0
-    lbl.lineBreakMode = .byCharWrapping
-    lbl.frame = CGRect(x: headMargin, y: subTitleHeight, width: widthWithoutMargin, height: height)
-
-    lbl.font = TextFont
-
-    //设置行距
-    let attri: [String : Any] = [NSParagraphStyleAttributeName: createParagraphStyle()]
-    let attriStr = NSAttributedString(string: str, attributes: attri)
-
-    lbl.attributedText = attriStr
 }
 
-class DetailContentCell: BaseCell {
+class DetailContentCell: DetailStringCell {
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
-        return calculateLblHeight(e.detail) + subTitleHeight + contentBottomHeight
+        return calculateLblHeight(e.detail, w: widthWithoutMargin) + subTitleHeight + contentBottomHeight
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
@@ -147,10 +149,10 @@ class DetailContentCell: BaseCell {
     }
 }
 
-class DetailCashCell: BaseCell {
+class DetailCashCell: DetailStringCell {
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
-        return calculateLblHeight(e.award) + subTitleHeight + contentBottomHeight
+        return calculateLblHeight(e.award, w: widthWithoutMargin) + subTitleHeight + contentBottomHeight
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
@@ -226,10 +228,6 @@ class DetailTeamHeadCell: DetailHeadCell {
 
         //底线
         createDownLine()
-    }
-
-    func abc() {
-        print("abc")
     }
 }
 
@@ -310,7 +308,6 @@ class DetailTeamCell: BaseCell {
         var pos: Int = 0
         var line: Int = 0
         let margin = headMargin - avatarMargin
-        print(avatarTotalWidth, memberViewWidth)
         for m in memberList {
             let v = createMemberView(m)
             contentView.addSubview(v)
@@ -435,13 +432,18 @@ class DetailMsgHeadCell: DetailHeadCell {
     }
 }
 
+let msgAvatarWidth: CGFloat = 40
+let msgStrWidth: CGFloat = widthWithoutMargin - msgAvatarWidth - headMargin //这里的headMargin表示头像右边的空
 class DetailMsgCell: BaseCell {
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
-        return 44
+        let e = d as! Event
+        let msgStru: MsgStruct = e.msgList[index!.row - 1]
+        return calculateLblHeight(msgStru.msg, w: msgStrWidth) + subTitleHeight + contentBottomHeight
     }
 
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
+
     }
 }
 

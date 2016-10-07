@@ -8,6 +8,14 @@
 
 import UIKit
 
+enum EventType {
+    case confrontation //对决
+    case melee //混战
+    case challenge //挑战
+    case makeFriend //交友
+    case beApprentice //拜师
+}
+
 enum EventState {
     case invite //接收到邀请，可以同意，或拒绝（会让发送拒绝消息）
     case ready //生成后在到达比赛时间前的状态
@@ -43,11 +51,11 @@ class OperationTime {
 }
 
 class MsgStruct {
-    var user: DataID
+    var user: UserBrief
     var time: Time
     var msg: String = ""
 
-    init(user: DataID, time: Time, msg: String) {
+    init(user: UserBrief, time: Time, msg: String) {
         self.user = user
         self.time = time
         self.msg = msg
@@ -56,7 +64,7 @@ class MsgStruct {
 
 class Event: Data {
     //类型 对决 乱斗 挑战 求教 会友
-    //    var type: EventType
+    var type: EventType = .confrontation
 
     //项目
     var item: ItemType
@@ -75,9 +83,10 @@ class Event: Data {
     var opponentStateList: [UserState] = []
 
     //比赛时间或者截止时间（对于挑战）
-    var time: Time? = nil
+    var time: Time! = nil
 
     //位置信息
+    var location: Location! = nil
 
     //是否发布到了地图上，也就是别人任意人可以加入
     var isPublishToMap: Bool = false

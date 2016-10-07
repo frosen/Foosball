@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DetailViewController: BaseController, UITableViewDelegate, UITableViewDataSource {
+class DetailViewController: BaseController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     var tableView: UITableView! = nil
     weak var event: Event! = nil
@@ -170,5 +170,34 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
 
     func onClickAlbum() {
         print("album")
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            let ctrller = UIImagePickerController()
+            ctrller.delegate = self
+
+            ctrller.sourceType = .savedPhotosAlbum
+
+            ctrller.modalTransitionStyle = .flipHorizontal
+            present(ctrller, animated: true, completion: nil)
+        } else {
+            UITools.showAlert(self, title: "提示", msg: "设备不支持访问相册，请在设置->隐私->照片中进行设置！", type: 1, callback: nil)
+        }
+    }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        let img: UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage//获取图片
+        let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]) //初始化监视器
+
+        picker.dismiss(animated: true) {
+            let features = detector?.features(in: CIImage(cgImage: img.cgImage!))
+            if (features?.count)! >= 1 {
+                let feature: CIQRCodeFeature = features![0] as! CIQRCodeFeature
+                let scanResult = feature.messageString
+
+                // 展示结果
+                UITools.showAlert(self, title: "结果", msg: scanResult!, type: 1, callback: nil)
+            } else {
+                UITools.showAlert(self, title: "提示", msg: "图片中并没有二维码", type: 1, callback: nil)
+            }
+        }
     }
 }

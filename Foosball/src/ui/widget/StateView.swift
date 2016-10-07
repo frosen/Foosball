@@ -10,7 +10,7 @@ import UIKit
 
 class StateView: UIView {
 
-    let rect = CGRect(x: 0, y: 0, width: 34, height: 14)
+    let rect = CGRect(x: 0, y: 0, width: 28, height: 14)
     var lbl: UILabel! = nil
 
     required init?(coder aDecoder: NSCoder) {

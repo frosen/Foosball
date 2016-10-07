@@ -80,6 +80,10 @@ class AppManager: NSObject {
         e.detail = "~ 这是一首简单的小情歌；\n~ 这是一首简单的小情歌；\n~ 这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；\n~ 这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；"
 
         e.award = "~ 红牛杯----胜者每人获得一瓶红牛饮料。\n以上费用败者承担，必须兑现！！"
+
+        let m1 = MsgStruct(user: bk3, time: , msg: "你说什么")
+
+        e.msgList =
         user!.activeEvents.append(e)
         e = Event(ID: DataID(ID: 50001), item: Foosball)
         user!.activeEvents.append(e)
