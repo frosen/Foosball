@@ -127,31 +127,24 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
         }
     }
 
-    let ownScoCellId = "OScoCellId"
-    let ownQRCellId = "OQRCId"
     let ownNorCellId = "ONorCId"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell?
-
-        switch (indexPath as NSIndexPath).section {
-        case 0:
-            if (indexPath as NSIndexPath).row == 0 { //比赛成绩
-                cell = tableView.dequeueReusableCell(withIdentifier: ownScoCellId)
-                if cell == nil {
-                    cell = OwnScoreCell(id: ownScoCellId)
-                }
-            } else { //排名
-                cell = tableView.dequeueReusableCell(withIdentifier: ownScoCellId)
-                if cell == nil {
-                    cell = OwnRankCell(id: ownScoCellId)
+        if indexPath.section == 0 || indexPath.section == 1 {
+            return BaseCell.create(indexPath, tableView: tableView, d: AppManager.shareInstance.user!, delegate: self) { indexPath in
+                switch indexPath.section {
+                case 0:
+                    switch indexPath.row {
+                    case 0:
+                        return BaseCell.CInfo(id: "OScoCellId", c: OwnScoreCell.self)
+                    default:
+                        return BaseCell.CInfo(id: "ORankCellId", c: OwnRankCell.self)
+                    }
+                default:
+                    return BaseCell.CInfo(id: "OQRCId", c: OwnQRCell.self)
                 }
             }
-        case 1: //二维码
-            cell = tableView.dequeueReusableCell(withIdentifier: ownQRCellId)
-            if cell == nil {
-                cell = OwnQRCell(id: ownQRCellId)
-            }
-        default: //其他项目
+        } else {
+            var cell: UITableViewCell?
             cell = tableView.dequeueReusableCell(withIdentifier: ownNorCellId)
             if cell == nil {
                 cell = OwnNormalCell(id: ownNorCellId)
@@ -159,8 +152,8 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
             let data: NorCellData = group[(indexPath as NSIndexPath).section - 2][(indexPath as NSIndexPath).row]
             let norCell = cell as! OwnNormalCell
             norCell.setUIData(image: data.img, title: data.title, subTitle: data.subTitle)
+            return cell!
         }
-        return cell!
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
