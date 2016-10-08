@@ -255,6 +255,7 @@ class DetailTeamCell: BaseCell {
         return avatarRowCount * memberViewHeight + subTitleHeight + teamBottomMargin
     }
 
+    var curRow: Int = -1
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
 
@@ -271,9 +272,10 @@ class DetailTeamCell: BaseCell {
         }
         title.font = TextFont
         title.textColor = SubTitleColor
+
+        curRow = -1
     }
 
-    var curRow: Int = -1
     override func setData(_ d: Data?, index: IndexPath?) {
         if curRow == index!.row {
             return // row不变里面内容视为不变
@@ -451,6 +453,7 @@ class DetailMsgCell: BaseCell {
         return calculateLblHeight(msgStru.msg, w: msgStrWidth) + subTitleHeight + contentBottomHeight
     }
 
+    var curRow: Int = -1
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
 
@@ -482,9 +485,10 @@ class DetailMsgCell: BaseCell {
         txtLbl.numberOfLines = 0
         txtLbl.lineBreakMode = .byCharWrapping
         txtLbl.font = TextFont
+
+        curRow = -1
     }
 
-    var curRow: Int = -1
     override func setData(_ d: Data?, index: IndexPath?) {
         if curRow == index!.row {
             return // row不变里面内容视为不变

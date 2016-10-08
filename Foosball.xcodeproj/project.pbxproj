@@ -226,9 +226,9 @@
 			children = (
 				65F14B821D68439D0073D547 /* EventBoard.swift */,
 				65F14B831D68439D0073D547 /* InfoHeadView.swift */,
+				65BD74921D9F8E00000BDA57 /* StateView.swift */,
 				65F14B841D68439D0073D547 /* MyTabBar.swift */,
 				65F14B851D68439D0073D547 /* MyTabBarItem.swift */,
-				65BD74921D9F8E00000BDA57 /* StateView.swift */,
 			);
 			name = widget;
 			sourceTree = "<group>";

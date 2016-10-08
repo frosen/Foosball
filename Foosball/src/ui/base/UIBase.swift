@@ -53,15 +53,14 @@ class UITools {
         var firstAscii: Int = 0 //取第一个字符的ascii，用于制定文字大小
         for s in name.unicodeScalars {
             if firstAscii == 0 { firstAscii = Int(s.value) }
-            asciiTab[i] = asciiTab[i] + Int(s.value) //名字每个字的int值加和到三个值中
+            asciiTab[i] = asciiTab[i] + Int(s.value) * 5 //名字每个字的int值加和到三个值中 乘以5是让相邻的数得到更大的差异
             i += 1
             if i >= 3 { i = 0 }
         }
         var colorTab: [CGFloat] = [0, 0, 0]
-        for j in 0...2 {
-            colorTab[j] = CGFloat(asciiTab[j] % 155 + 100) / 255 // 三个int值处理到 100-255之间并转成0-1的float
-        }
-        colorTab[2] = 1 - colorTab[2] // 第三个值取反色，为了色彩度更高
+        colorTab[0] = CGFloat(asciiTab[0] % 155 + 100) / 255 // int值处理到 100-255之间并转成0-1的float
+        colorTab[1] = CGFloat(asciiTab[1] % 255) / 255 // 0-200
+        colorTab[2] = CGFloat(asciiTab[1] % 100) / 255 // 0-100
         let colorT = asciiTab[0] + asciiTab[1] + asciiTab[2] // 通过这个值切换三个值对应的rgb，这样可以让颜色差别更大
 
         let r: CGFloat = colorTab[(0 + colorT) % 3]

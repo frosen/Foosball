@@ -30,7 +30,7 @@ class AppManager: NSObject {
 
         //自己方
         let bb1 = UserBrief(ID: DataID(ID: 1232))
-        bb1.name = "小明"
+        bb1.name = "小明1"
         let p1 = UserState(user: bb1, state: .invite)
 
         let bb2 = UserBrief(ID: DataID(ID: 1232))
@@ -42,11 +42,11 @@ class AppManager: NSObject {
         let p3 = UserState(user: bb3, state: .waiting)
 
         let bb12 = UserBrief(ID: DataID(ID: 1232))
-        bb12.name = "明"
+        bb12.name = "明a"
         let p12 = UserState(user: bb12, state: .win)
 
         let bb22 = UserBrief(ID: DataID(ID: 1232))
-        bb22.name = "明2"
+        bb22.name = "明b"
         let p22 = UserState(user: bb22, state: .lose)
 
         let bb32 = UserBrief(ID: DataID(ID: 1232))
@@ -54,22 +54,22 @@ class AppManager: NSObject {
         let p32 = UserState(user: bb32, state: .finish)
 
         let bb321 = UserBrief(ID: DataID(ID: 1232))
-        bb321.name = "明3"
+        bb321.name = "明4"
         let p321 = UserState(user: bb321, state: .keepImpeach)
 
         e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 
         // 对方
         let bk1 = UserBrief(ID: DataID(ID: 1232))
-        bk1.name = "小明"
+        bk1.name = "小王a"
         let pk1 = UserState(user: bk1, state: .invite)
 
         let bk2 = UserBrief(ID: DataID(ID: 1232))
-        bk2.name = "小明2"
+        bk2.name = "小王b"
         let pk2 = UserState(user: bk2, state: .invite)
 
         let bk3 = UserBrief(ID: DataID(ID: 1232))
-        bk3.name = "小明3"
+        bk3.name = "大王c"
         let pk3 = UserState(user: bk3, state: .invite)
 
         e.opponentStateList = [pk1, pk2, pk3]
