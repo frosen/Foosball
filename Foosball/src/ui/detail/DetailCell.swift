@@ -310,7 +310,7 @@ class DetailTeamCell: BaseCell {
         if memberCount > 0 {
             countStr = " (" + String(memberCount) + ")"
         } else {
-            countStr = " ( 还没有人加入，点击上面的按钮邀请吧 ) "
+            countStr = " ( 你的对手尚未就位，等待邀请 ) "
         }
         title.text = titleStr + countStr
         title.sizeToFit()
