@@ -56,7 +56,7 @@ struct Time {
             timeStr = "刚刚"
         } else if interval < 3600 {
             let min = floor(interval / 60)
-            timeStr = String(min) + "分钟前"
+            timeStr = String(Int(min)) + "分钟前"
         } else if interval < 3600 * 24 {
             let formatter: DateFormatter = DateFormatter()
             formatter.dateFormat = "HH:mm"

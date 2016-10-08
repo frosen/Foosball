@@ -64,9 +64,8 @@ class DetailTitleCell: BaseCell {
 
         createTime.font = TextFont
         createTime.textColor = TextColor
-    }
 
-    override func setData(_ d: Data?, index: IndexPath?) {
+        // 唯一 所以这里设置
         title.text = "这也是一个很有趣的测试"
         title.sizeToFit()
         position.text = "朝阳/6km"
@@ -240,6 +239,7 @@ let memberViewHeight: CGFloat = memberViewWidth + 10
 let teamBottomMargin: CGFloat = 4
 class DetailTeamCell: BaseCell {
     var title: UILabel! = nil
+    var memberListView: UIView? = nil
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event?
         var avatarRowRate: CGFloat
@@ -280,6 +280,14 @@ class DetailTeamCell: BaseCell {
         }
         curRow = index!.row
 
+        // 如果变了，就要清理掉原来的内容，并重建
+        if memberListView != nil {
+            memberListView!.removeFromSuperview()
+        }
+        let margin = headMargin - avatarMargin
+        memberListView = UIView(frame: CGRect(x: margin, y: subTitleHeight, width: 0, height: 0))
+        contentView.addSubview(memberListView!)
+
         switch curRow {
         case 1:
             title.text = "友方人员"
@@ -305,14 +313,13 @@ class DetailTeamCell: BaseCell {
 
         var pos: Int = 0
         var line: Int = 0
-        let margin = headMargin - avatarMargin
         for m in memberList {
             let v = createMemberView(m)
-            contentView.addSubview(v)
+            memberListView!.addSubview(v)
             let f = v.frame
             v.frame = CGRect(
-                x: CGFloat(pos) * f.width + margin,
-                y: CGFloat(line) * f.height + subTitleHeight,
+                x: CGFloat(pos) * f.width,
+                y: CGFloat(line) * f.height,
                 width: f.width,
                 height: f.height
             )
@@ -377,9 +384,8 @@ class DetailImageCell: BaseCell {
 
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
-    }
 
-    override func setData(_ d: Data?, index: IndexPath?) {
+        //唯一 所以在此设置
         let e = d as! Event
         let margin = headMargin - imgMargin
         var pos: Int = 0
@@ -401,7 +407,6 @@ class DetailImageCell: BaseCell {
                 line += 1
             }
         }
-
     }
 
     func createImageView(url: String) -> UIView {
@@ -433,7 +438,13 @@ class DetailMsgHeadCell: DetailHeadCell {
 
 let msgAvatarWidth: CGFloat = 40
 let msgStrWidth: CGFloat = widthWithoutMargin - msgAvatarWidth - headMargin //这里的headMargin表示头像右边的空
+let msgStrPosX: CGFloat = headMargin * 2 + msgAvatarWidth
 class DetailMsgCell: BaseCell {
+    var img: UIView? = nil
+    var nameLbl: UILabel! = nil
+    var timeLbl: UILabel! = nil
+    var txtLbl: UILabel! = nil
+
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
         let msgStru: MsgStruct = e.msgList[index!.row - 1]
@@ -445,19 +456,69 @@ class DetailMsgCell: BaseCell {
 
         createDownLine()
 
+        //创建名字和时间的文本
+        nameLbl = UILabel()
+        contentView.addSubview(nameLbl)
+        nameLbl.font = TextFont
+        nameLbl.textColor = SubTitleColor
+        nameLbl.snp.makeConstraints{ make in
+            make.top.equalTo(contentView.snp.top).offset(11)
+            make.left.equalTo(contentView.snp.left).offset(msgStrPosX)
+        }
+
+        timeLbl = UILabel()
+        contentView.addSubview(timeLbl)
+        timeLbl.font = TextFont
+        timeLbl.textColor = SubTitleColor
+        timeLbl.snp.makeConstraints{ make in
+            make.top.equalTo(contentView.snp.top).offset(11)
+            make.right.equalTo(contentView.snp.right).inset(headMargin)
+        }
+
         //创建文本
-        let lbl = UILabel()
-        contentView.addSubview(lbl)
+        txtLbl = UILabel()
+        contentView.addSubview(txtLbl)
 
-        lbl.numberOfLines = 0
-        lbl.lineBreakMode = .byCharWrapping
+        txtLbl.numberOfLines = 0
+        txtLbl.lineBreakMode = .byCharWrapping
+        txtLbl.font = TextFont
+    }
 
-        lbl.font = TextFont
+    var curRow: Int = -1
+    override func setData(_ d: Data?, index: IndexPath?) {
+        if curRow == index!.row {
+            return // row不变里面内容视为不变
+        }
+        curRow = index!.row
 
-        //设置行距
-        let attri: [String : Any] = [NSParagraphStyleAttributeName: createParagraphStyle()]
-        let attriStr = NSAttributedString(string: str, attributes: attri)
+        if img != nil {
+            img!.removeFromSuperview()
+        }
 
+        let e = d as! Event
+        let msgStru: MsgStruct = e.msgList[curRow - 1]
+        let user: UserBrief = msgStru.user
+
+        img = UITools.createAvatar(
+            CGRect(x: headMargin, y: headMargin, width: msgAvatarWidth, height: msgAvatarWidth),
+            name: user.name, url: user.avatarURL)
+        contentView.addSubview(img!)
+
+        //名字和时间
+        nameLbl.text = user.name
+        nameLbl.sizeToFit()
+        timeLbl.text = msgStru.time.toString()
+        timeLbl.sizeToFit()
+
+        //文本
+        let height = calculateLblHeight(msgStru.msg, w: msgStrWidth)
+        txtLbl.frame = CGRect(x: msgStrPosX, y: subTitleHeight, width: msgStrWidth, height: height)
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 3
+        let attri: [String : Any] = [NSParagraphStyleAttributeName: paragraphStyle]
+        let attriStr = NSAttributedString(string: msgStru.msg, attributes: attri)
+        txtLbl.attributedText = attriStr
     }
 }
 
