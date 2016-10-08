@@ -112,22 +112,20 @@ class DetailStringCell: BaseCell {
 
         title.text = titleStr
 
-        // 内容 因为唯一，所以可以从这里设置
-        let height = calculateLblHeight(str, w: widthWithoutMargin)
-
+        // 内容
         let lbl = UILabel()
         contentView.addSubview(lbl)
 
         lbl.numberOfLines = 0
         lbl.lineBreakMode = .byCharWrapping
-        lbl.frame = CGRect(x: headMargin, y: subTitleHeight, width: widthWithoutMargin, height: height)
 
         lbl.font = TextFont
 
-        //设置行距
+        // 因为唯一，所以可以从这里设置
+        let height = calculateLblHeight(str, w: widthWithoutMargin)
+        lbl.frame = CGRect(x: headMargin, y: subTitleHeight, width: widthWithoutMargin, height: height)
         let attri: [String : Any] = [NSParagraphStyleAttributeName: createParagraphStyle()]
         let attriStr = NSAttributedString(string: str, attributes: attri)
-        
         lbl.attributedText = attriStr
     }
 }
@@ -429,6 +427,7 @@ class DetailMsgHeadCell: DetailHeadCell {
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
         createHead("消息")
+        createDownLine()
     }
 }
 
@@ -443,6 +442,21 @@ class DetailMsgCell: BaseCell {
 
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
+
+        createDownLine()
+
+        //创建文本
+        let lbl = UILabel()
+        contentView.addSubview(lbl)
+
+        lbl.numberOfLines = 0
+        lbl.lineBreakMode = .byCharWrapping
+
+        lbl.font = TextFont
+
+        //设置行距
+        let attri: [String : Any] = [NSParagraphStyleAttributeName: createParagraphStyle()]
+        let attriStr = NSAttributedString(string: str, attributes: attri)
 
     }
 }
