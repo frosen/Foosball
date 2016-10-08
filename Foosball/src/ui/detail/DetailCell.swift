@@ -282,26 +282,7 @@ class DetailTeamCell: BaseCell {
         }
         curRow = index!.row
 
-        // 如果变了，就要清理掉原来的内容，并重建
-        if memberListView != nil {
-            memberListView!.removeFromSuperview()
-        }
-        let margin = headMargin - avatarMargin
-        memberListView = UIView(frame: CGRect(x: margin, y: subTitleHeight, width: 0, height: 0))
-        contentView.addSubview(memberListView!)
-
-        switch curRow {
-        case 1:
-            title.text = "友方人员"
-        case 2:
-            title.text = "对方人员"
-        default:
-            title.text = "观战者"
-        }
-
-        title.sizeToFit()
-
-        //设置member
+        // 读取数据
         let e: Event = d as! Event
         let memberList: [UserState]
         switch curRow {
@@ -313,6 +294,40 @@ class DetailTeamCell: BaseCell {
             memberList = []
         }
 
+        // 设置标题
+        var titleStr: String
+        switch curRow {
+        case 1:
+            titleStr = "友方人员"
+        case 2:
+            titleStr = "对方人员"
+        default:
+            titleStr = "观战者"
+        }
+
+        var countStr: String // 标题会显示人数
+        let memberCount = memberList.count
+        if memberCount > 0 {
+            countStr = " (" + String(memberCount) + ")"
+        } else {
+            countStr = " ( 还没有人加入，点击上面的按钮邀请吧 ) "
+        }
+        title.text = titleStr + countStr
+        title.sizeToFit()
+
+        if memberList.count == 0 { // 如果member为0则不用往下走了
+            return
+        }
+
+        // 如果变了，就要清理掉原来的内容，并重建
+        if memberListView != nil {
+            memberListView!.removeFromSuperview()
+        }
+        let margin = headMargin - avatarMargin
+        memberListView = UIView(frame: CGRect(x: margin, y: subTitleHeight, width: 0, height: 0))
+        contentView.addSubview(memberListView!)
+
+        //设置member
         var pos: Int = 0
         var line: Int = 0
         for m in memberList {

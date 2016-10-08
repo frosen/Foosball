@@ -72,7 +72,7 @@ class AppManager: NSObject {
         bk3.name = "大王c"
         let pk3 = UserState(user: bk3, state: .invite)
 
-        e.opponentStateList = [pk1, pk2, pk3]
+//        e.opponentStateList = [pk1, pk2, pk3]
 
 
         e.imageURLList = ["http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg"]
