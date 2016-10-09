@@ -135,9 +135,9 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
                 case 0:
                     switch indexPath.row {
                     case 0:
-                        return BaseCell.CInfo(id: "OScoCellId", c: OwnScoreCell.self)
+                        return BaseCell.CInfo(id: "OScoCId", c: OwnScoreCell.self)
                     default:
-                        return BaseCell.CInfo(id: "ORankCellId", c: OwnRankCell.self)
+                        return BaseCell.CInfo(id: "ORankCId", c: OwnRankCell.self)
                     }
                 default:
                     return BaseCell.CInfo(id: "OQRCId", c: OwnQRCell.self)

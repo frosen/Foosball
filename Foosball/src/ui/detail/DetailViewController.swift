@@ -44,7 +44,8 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         tableView.reloadData()
     }
 
-    //table view
+    // table view delegate ==================================================================================================================
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return sectionNum
     }
@@ -112,6 +113,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         }
     }
 
+    let imageCellId = "ICId"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return BaseCell.create(indexPath, tableView: tableView, d: event, delegate: self) { indexPath in
             switch (indexPath as NSIndexPath).section {
@@ -134,9 +136,9 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
             case 2:
                 switch (indexPath as NSIndexPath).row {
                 case 0:
-                    return BaseCell.CInfo(id: "SHCId", c: DetailImageHeadCell.self)
+                    return BaseCell.CInfo(id: "IHCId", c: DetailImageHeadCell.self)
                 default:
-                    return BaseCell.CInfo(id: "SCId", c: DetailImageCell.self)
+                    return BaseCell.CInfo(id: imageCellId, c: DetailImageCell.self)
                 }
             default:
                 switch (indexPath as NSIndexPath).row {
@@ -153,11 +155,12 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
 
     }
 
-    // 回调
+    // 回调 ==================================================================================================================
     func onBack() {
         let _ = navigationController?.popViewController(animated: true)
     }
 
+    // cell的按钮回调 =========================================================================================================
     // 邀请
     func onClickInvite() {
         print("invite")
@@ -166,38 +169,46 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     // 拍照
     func onClickPhoto() {
         print("photo")
+        startImagePicker(.camera, str: "拍照设备")
     }
 
     func onClickAlbum() {
         print("album")
-        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+        let hasCamera = UIImagePickerController.isSourceTypeAvailable(.camera)
+        startImagePicker(hasCamera ? .photoLibrary : .savedPhotosAlbum, str: "相册")
+    }
+
+    func startImagePicker(_ t: UIImagePickerControllerSourceType, str: String) {
+        if UIImagePickerController.isSourceTypeAvailable(t) {
             let ctrller = UIImagePickerController()
             ctrller.delegate = self
-
-            ctrller.sourceType = .savedPhotosAlbum
-
-            ctrller.modalTransitionStyle = .flipHorizontal
+            ctrller.sourceType = t
+            ctrller.allowsEditing = true
+            ctrller.modalTransitionStyle = .coverVertical
             present(ctrller, animated: true, completion: nil)
         } else {
-            UITools.showAlert(self, title: "提示", msg: "设备不支持访问相册，请在设置->隐私->照片中进行设置！", type: 1, callback: nil)
+            UITools.showAlert(self, title: "提示", msg: "设备不支持访问" + str + "，请在设置->隐私中进行设置！", type: 1, callback: nil)
         }
     }
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        let img: UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage//获取图片
-        let detector = CIDetector(ofType: CIDetectorTypeQRCode, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]) //初始化监视器
+        picker.dismiss(animated: true)
 
-        picker.dismiss(animated: true) {
-            let features = detector?.features(in: CIImage(cgImage: img.cgImage!))
-            if (features?.count)! >= 1 {
-                let feature: CIQRCodeFeature = features![0] as! CIQRCodeFeature
-                let scanResult = feature.messageString
+        //预处理ui
 
-                // 展示结果
-                UITools.showAlert(self, title: "结果", msg: scanResult!, type: 1, callback: nil)
-            } else {
-                UITools.showAlert(self, title: "提示", msg: "图片中并没有二维码", type: 1, callback: nil)
-            }
-        }
+        //获取图片
+        let img: UIImage = info[UIImagePickerControllerEditedImage] as! UIImage
+
+        //保存在本地
+
+        //上传图片
+
+        //获取url
+
+        //更新event
+
+        //取消预处理
+
+        //更新cell
     }
 }
