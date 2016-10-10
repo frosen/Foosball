@@ -102,7 +102,8 @@ func calculateLblHeight(_ s: String, w: CGFloat) -> CGFloat {
 }
 
 class DetailStringCell: StaticCell {
-    func initLblData(contentView: UIView, titleStr: String, str: String) {
+    var lbl: UILabel! = nil
+    func initLblData(contentView: UIView, titleStr: String) {
         //标题
         let title = UILabel()
         contentView.addSubview(title)
@@ -117,15 +118,16 @@ class DetailStringCell: StaticCell {
         title.text = titleStr
 
         // 内容
-        let lbl = UILabel()
+        lbl = UILabel()
         contentView.addSubview(lbl)
 
         lbl.numberOfLines = 0
         lbl.lineBreakMode = .byCharWrapping
 
         lbl.font = TextFont
+    }
 
-        // 因为唯一，所以可以从这里设置
+    func setLblData(contentView: UIView, str: String) {
         let height = calculateLblHeight(str, w: widthWithoutMargin)
         lbl.frame = CGRect(x: headMargin, y: subTitleHeight, width: widthWithoutMargin, height: height)
         let attri: [String : Any] = [NSParagraphStyleAttributeName: createParagraphStyle()]
@@ -145,9 +147,17 @@ class DetailContentCell: DetailStringCell {
 
         //底部分割线
         createDownLine()
+        initLblData(contentView: contentView, titleStr: "内容：")
+    }
 
+    override func setData(_ d: Data?, index: IndexPath?) {
         let e = d as! Event
-        initLblData(contentView: contentView, titleStr: "内容：", str: e.detail)
+        setLblData(contentView: contentView, str: e.detail)
+    }
+
+    override func resetData(_ d: Data?, index: IndexPath?) {
+        let e = d as! Event
+        setLblData(contentView: contentView, str: e.detail)
     }
 }
 
@@ -162,9 +172,17 @@ class DetailCashCell: DetailStringCell {
 
         //底部分割线
         createDownLine()
+        initLblData(contentView: contentView, titleStr: "奖杯：")
+    }
 
+    override func setData(_ d: Data?, index: IndexPath?) {
         let e = d as! Event
-        initLblData(contentView: contentView, titleStr: "奖杯：", str: e.award)
+        setLblData(contentView: contentView, str: e.award)
+    }
+
+    override func resetData(_ d: Data?, index: IndexPath?) {
+        let e = d as! Event
+        setLblData(contentView: contentView, str: e.award)
     }
 }
 
@@ -260,7 +278,6 @@ class DetailTeamCell: StaticCell {
         return avatarRowCount * memberViewHeight + subTitleHeight + teamBottomMargin
     }
 
-    var curRow: Int = -1
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
 
@@ -277,36 +294,22 @@ class DetailTeamCell: StaticCell {
         }
         title.font = TextFont
         title.textColor = SubTitleColor
-
-        curRow = -1
     }
 
     override func setData(_ d: Data?, index: IndexPath?) {
-        if curRow == index!.row {
-            return // row不变里面内容视为不变
-        }
-        curRow = index!.row
-
         // 读取数据
         let e: Event = d as! Event
         let memberList: [UserState]
-        switch curRow {
+        var titleStr: String
+        switch index!.row {
         case 1:
             memberList = e.ourSideStateList
-        case 2:
-            memberList = e.opponentStateList
-        default:
-            memberList = []
-        }
-
-        // 设置标题
-        var titleStr: String
-        switch curRow {
-        case 1:
             titleStr = "友方人员"
         case 2:
+            memberList = e.opponentStateList
             titleStr = "对方人员"
         default:
+            memberList = []
             titleStr = "观战者"
         }
 
@@ -320,11 +323,11 @@ class DetailTeamCell: StaticCell {
         title.text = titleStr + countStr
         title.sizeToFit()
 
-        if memberList.count == 0 { // 如果member为0则不用往下走了
+        if memberCount == 0 { // 如果member为0则不用往下走了
             return
         }
 
-        // 如果变了，就要清理掉原来的内容，并重建
+        // 如果变了，就要清理掉原来的内容，并重建 todo 根据data是否变化而重新设置
         if memberListView != nil {
             memberListView!.removeFromSuperview()
         }
