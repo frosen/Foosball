@@ -12,7 +12,7 @@ let headMargin: CGFloat = 12
 let iconMargin: CGFloat = 6 //图标到边的距离
 let widthWithoutMargin: CGFloat = UIScreen.main.bounds.width - 2 * headMargin
 
-class DetailTitleCell: BaseCell {
+class DetailTitleCell: StaticCell {
     var title: UILabel! = nil
     var position: UILabel! = nil
     var createTime: UILabel! = nil
@@ -64,14 +64,19 @@ class DetailTitleCell: BaseCell {
 
         createTime.font = TextFont
         createTime.textColor = TextColor
+    }
 
-        // 唯一 所以这里设置
+    override func setData(_ d: Data?, index: IndexPath?) {
         title.text = "这也是一个很有趣的测试"
         title.sizeToFit()
         position.text = "朝阳/6km"
         position.sizeToFit()
         createTime.text = "1小时前"
         createTime.sizeToFit()
+    }
+
+    override func resetData(_ d: Data?, index: IndexPath?) {
+        setData(d, index: index)
     }
 }
 
@@ -96,7 +101,7 @@ func calculateLblHeight(_ s: String, w: CGFloat) -> CGFloat {
     return size.height
 }
 
-class DetailStringCell: BaseCell {
+class DetailStringCell: StaticCell {
     func initLblData(contentView: UIView, titleStr: String, str: String) {
         //标题
         let title = UILabel()
@@ -165,7 +170,7 @@ class DetailCashCell: DetailStringCell {
 
 // =============================================================================================================
 
-class DetailHeadCell: BaseCell {
+class DetailHeadCell: StaticCell {
     func createHead(_ s: String) {
         let vw: CGFloat = 15
         let vh: CGFloat = 15
@@ -237,7 +242,7 @@ let avatarTotalWidth: CGFloat = widthWithoutMargin + 2 * avatarMargin
 let memberViewWidth: CGFloat = avatarTotalWidth / memberCountIn1Line
 let memberViewHeight: CGFloat = memberViewWidth + 10
 let teamBottomMargin: CGFloat = 4
-class DetailTeamCell: BaseCell {
+class DetailTeamCell: StaticCell {
     var title: UILabel! = nil
     var memberListView: UIView? = nil
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
@@ -392,7 +397,7 @@ let imgMargin: CGFloat = 2
 let imageViewWidth: CGFloat = (widthWithoutMargin + 2 * imgMargin) / imageCountIn1Line
 let imgTopMargin: CGFloat = 4
 let imgBottomMargin: CGFloat = 4
-class DetailImageCell: BaseCell {
+class DetailImageCell: StaticCell {
     override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
         let lineCount = ceil(CGFloat(e.imageURLList.count) / imageCountIn1Line)

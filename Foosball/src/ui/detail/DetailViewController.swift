@@ -115,7 +115,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
 
     let imageCellId = "ICId"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return BaseCell.create(indexPath, tableView: tableView, d: event, delegate: self) { indexPath in
+        return StaticCell.create(indexPath, tableView: tableView, d: event, delegate: self) { indexPath in
             switch (indexPath as NSIndexPath).section {
             case 0:
                 switch (indexPath as NSIndexPath).row {
