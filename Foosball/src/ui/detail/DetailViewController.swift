@@ -34,7 +34,8 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         tableView.delegate = self
         tableView.dataSource = self
 
-        tableView.separatorStyle = .none //不用他的分割线，自己画
+//        tableView.separatorStyle = .none //不用他的分割线，自己画
+        print(tableView.separatorInset)
         tableView.showsVerticalScrollIndicator = false //隐藏滑动条
 //        tableView.backgroundColor = UIColor.white //最后再让背景变成白色，否则现在不易设计
     }

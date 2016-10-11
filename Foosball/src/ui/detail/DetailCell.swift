@@ -8,7 +8,7 @@
 
 import UIKit
 
-let headMargin: CGFloat = 12
+let headMargin: CGFloat = 15
 let iconMargin: CGFloat = 6 //图标到边的距离
 let widthWithoutMargin: CGFloat = UIScreen.main.bounds.width - 2 * headMargin
 
@@ -23,9 +23,6 @@ class DetailTitleCell: StaticCell {
 
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
-
-        //底部分割线
-        createDownLine()
 
         //图
         let (iconView, _) = EventIcon.create(h, iconMargin: iconMargin)
@@ -140,9 +137,6 @@ class DetailContentCell: DetailStringCell {
 
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
-
-        //底部分割线
-        createDownLine()
         initLblData(contentView: contentView, titleStr: "内容：")
     }
 
@@ -160,9 +154,6 @@ class DetailCashCell: DetailStringCell {
 
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
-
-        //底部分割线
-        createDownLine()
         initLblData(contentView: contentView, titleStr: "奖杯：")
     }
 
@@ -231,9 +222,6 @@ class DetailTeamHeadCell: DetailHeadCell {
 
         // 邀请按钮
         createButton("邀请", color: UIColor.purple, pos: 0, callback: #selector(DetailViewController.onClickInvite))
-
-        //底线
-        createDownLine()
     }
 }
 
@@ -266,9 +254,6 @@ class DetailTeamCell: StaticCell {
 
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
-
-        //底线
-        createDownLine()
 
         //图标题
         title = UILabel()
@@ -377,7 +362,6 @@ class DetailImageHeadCell: DetailHeadCell {
         createHead("瞬间")
         createButton("拍照", color: UIColor.blue, pos: 0, callback: #selector(DetailViewController.onClickPhoto))
         createButton("图库", color: UIColor.red, pos: 1, callback: #selector(DetailViewController.onClickAlbum))
-        createDownLine()
     }
 }
 
@@ -444,7 +428,6 @@ class DetailMsgHeadCell: DetailHeadCell {
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
         createHead("消息")
-        createDownLine()
     }
 }
 
@@ -465,8 +448,6 @@ class DetailMsgCell: BaseCell {
 
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
-
-        createDownLine()
 
         //创建名字和时间的文本
         nameLbl = UILabel()

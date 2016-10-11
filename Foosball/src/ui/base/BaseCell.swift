@@ -61,14 +61,6 @@ class BaseCell: UITableViewCell {
     }
 }
 
-extension BaseCell {
-    func createDownLine() {
-        let downLine = UIView(frame: CGRect(x: 0, y: h - 0.5, width: w, height: 0.5))
-        contentView.addSubview(downLine)
-        downLine.backgroundColor = LineColor
-    }
-}
-
 // 静态cell，不会进行重用，如果要重置，要通过reset方法
 class StaticCell: BaseCell {
     override class func create(_ index: IndexPath, tableView: UITableView, d: Data, delegate: UIViewController,  getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
