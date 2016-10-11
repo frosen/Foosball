@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3250913C82FFF635417020BD /* Pods_Foosball.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81C567789B96B0906D4D436 /* Pods_Foosball.framework */; };
 		6507AC0A1D55B7C900791FB1 /* ChallengeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6507AC091D55B7C900791FB1 /* ChallengeCell.swift */; };
+		654EE8C01DAC8B6C00F99F21 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EE8BF1DAC8B6C00F99F21 /* Avatar.swift */; };
 		6554A3C31D6FE956001AB4D6 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6554A3C21D6FE956001AB4D6 /* ScanViewController.swift */; };
 		6554A3C51D6FE97B001AB4D6 /* QRCodeTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6554A3C41D6FE97B001AB4D6 /* QRCodeTools.swift */; };
 		657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657219201D5EFA2A007DCE6A /* DetailViewController.swift */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		6507AC091D55B7C900791FB1 /* ChallengeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeCell.swift; sourceTree = "<group>"; };
+		654EE8BF1DAC8B6C00F99F21 /* Avatar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Avatar.swift; path = widget/Avatar.swift; sourceTree = "<group>"; };
 		6554A3C21D6FE956001AB4D6 /* ScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScanViewController.swift; path = qrcode/ScanViewController.swift; sourceTree = "<group>"; };
 		6554A3C41D6FE97B001AB4D6 /* QRCodeTools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QRCodeTools.swift; path = qrcode/QRCodeTools.swift; sourceTree = "<group>"; };
 		657219201D5EFA2A007DCE6A /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailViewController.swift; path = detail/DetailViewController.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 		65F14B811D68435D0073D547 /* widget */ = {
 			isa = PBXGroup;
 			children = (
+				654EE8BF1DAC8B6C00F99F21 /* Avatar.swift */,
 				65F14B821D68439D0073D547 /* EventBoard.swift */,
 				65F14B831D68439D0073D547 /* InfoHeadView.swift */,
 				65BD74921D9F8E00000BDA57 /* StateView.swift */,
@@ -374,6 +377,7 @@
 				65F14B891D68439D0073D547 /* MyTabBarItem.swift in Sources */,
 				65F14B871D68439D0073D547 /* InfoHeadView.swift in Sources */,
 				65F14B861D68439D0073D547 /* EventBoard.swift in Sources */,
+				654EE8C01DAC8B6C00F99F21 /* Avatar.swift in Sources */,
 				65AB524D1D3291E6005E7D4C /* RootViewController.swift in Sources */,
 				658E06741D56C7C8008D94FC /* Event.swift in Sources */,
 				65AB524B1D3291E6005E7D4C /* OwnCells.swift in Sources */,

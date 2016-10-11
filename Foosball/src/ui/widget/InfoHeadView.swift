@@ -13,7 +13,7 @@ class InfoHeadView: UIView {
     var extraHeight: CGFloat = 0
 
     var bg: UIImageView? = nil
-    var avatarBG: UIView? = nil
+    var avatar: Avatar? = nil
     var title: UILabel? = nil
     var subTitle: UILabel? = nil
 
@@ -71,7 +71,7 @@ class InfoHeadView: UIView {
         bg!.contentMode = .scaleAspectFill
 
         //头像
-        avatarBG = UITools.createAvatar(CGRect(
+        avatar = Avatar.create(rect: CGRect(
                 x: 0.5 * w - 0.5 * avatarW,
                 y: 0.42 * h - 0.5 * avatarW + extraHeight,
                 width: avatarW,
@@ -80,22 +80,22 @@ class InfoHeadView: UIView {
             name: titleStr,
             url: avatarURL!
         )
-        maskView.addSubview(avatarBG!)
+        maskView.addSubview(avatar!)
 
-//        avatarBG!.layer.shadowColor = UIColor.black.cgColor
-//        avatarBG!.layer.shadowOffset = CGSize(width: 0, height: 1)
-//        avatarBG!.layer.shadowOpacity = 0.7
-//        avatarBG!.layer.shadowRadius = 6
-        avatarBG!.layer.borderColor = UIColor.white.cgColor
-        avatarBG!.layer.borderWidth = 2
+//        avatar!.layer.shadowColor = UIColor.black.cgColor
+//        avatar!.layer.shadowOffset = CGSize(width: 0, height: 1)
+//        avatar!.layer.shadowOpacity = 0.7
+//        avatar!.layer.shadowRadius = 6
+        avatar!.layer.borderColor = UIColor.white.cgColor
+        avatar!.layer.borderWidth = 2
 
         //名字
         title = UILabel()
         maskView.addSubview(title!)
 
         title!.bounds = CGRect(x: 0, y: 0, width: w, height: 0.2 * h)
-        title!.center.x = avatarBG!.center.x
-        title!.center.y = avatarBG!.center.y + 50
+        title!.center.x = avatar!.center.x
+        title!.center.y = avatar!.center.y + 50
 
         title!.textAlignment = NSTextAlignment.center
         title!.font = UIFont.systemFont(ofSize: 14.0)
@@ -110,8 +110,8 @@ class InfoHeadView: UIView {
         maskView.addSubview(subTitle!)
 
         subTitle!.bounds = CGRect(x: 0, y: 0, width: w, height: 0.1 * h)
-        subTitle!.center.x = avatarBG!.center.x
-        subTitle!.center.y = avatarBG!.center.y + 70
+        subTitle!.center.x = avatar!.center.x
+        subTitle!.center.y = avatar!.center.y + 70
 
         subTitle!.textAlignment = NSTextAlignment.center
         subTitle!.font = UIFont.systemFont(ofSize: 11.0)
@@ -164,7 +164,7 @@ class InfoHeadView: UIView {
 
         let destAvatarY = 0.58 * frame.size.height - 22
         let t = CGAffineTransform(translationX: 0, y: destAvatarY * (1 - rate))
-        avatarBG?.transform = t.scaledBy(x: imgReduce, y: imgReduce)
+        avatar?.transform = t.scaledBy(x: imgReduce, y: imgReduce)
 
         title?.transform = t
         subTitle?.transform = t

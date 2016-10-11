@@ -92,7 +92,9 @@ class StaticCell: BaseCell {
         return cell!
     }
 
-    func resetData(_ d: Data?, index: IndexPath?) {} //需要继承的，把事件设置进去
+    func resetData(_ d: Data?, index: IndexPath?) {
+        setData(d, index: index) //如果不继承，则使用set作为reset
+    }
 }
 
 

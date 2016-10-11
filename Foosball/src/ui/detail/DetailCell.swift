@@ -74,10 +74,6 @@ class DetailTitleCell: StaticCell {
         createTime.text = "1小时前"
         createTime.sizeToFit()
     }
-
-    override func resetData(_ d: Data?, index: IndexPath?) {
-        setData(d, index: index)
-    }
 }
 
 let subTitleHeight: CGFloat = 35
@@ -154,11 +150,6 @@ class DetailContentCell: DetailStringCell {
         let e = d as! Event
         setLblData(contentView: contentView, str: e.detail)
     }
-
-    override func resetData(_ d: Data?, index: IndexPath?) {
-        let e = d as! Event
-        setLblData(contentView: contentView, str: e.detail)
-    }
 }
 
 class DetailCashCell: DetailStringCell {
@@ -176,11 +167,6 @@ class DetailCashCell: DetailStringCell {
     }
 
     override func setData(_ d: Data?, index: IndexPath?) {
-        let e = d as! Event
-        setLblData(contentView: contentView, str: e.award)
-    }
-
-    override func resetData(_ d: Data?, index: IndexPath?) {
         let e = d as! Event
         setLblData(contentView: contentView, str: e.award)
     }
@@ -323,10 +309,6 @@ class DetailTeamCell: StaticCell {
         title.text = titleStr + countStr
         title.sizeToFit()
 
-        if memberCount == 0 { // 如果member为0则不用往下走了
-            return
-        }
-
         // 如果变了，就要清理掉原来的内容，并重建 todo 根据data是否变化而重新设置
         if memberListView != nil {
             memberListView!.removeFromSuperview()
@@ -334,6 +316,10 @@ class DetailTeamCell: StaticCell {
         let margin = headMargin - avatarMargin
         memberListView = UIView(frame: CGRect(x: margin, y: subTitleHeight, width: 0, height: 0))
         contentView.addSubview(memberListView!)
+
+        if memberCount == 0 { // 如果member为0则不用往下走了
+            return
+        }
 
         //设置member
         var pos: Int = 0
@@ -364,8 +350,8 @@ class DetailTeamCell: StaticCell {
 
         // 头像
         let avatarWidth = v.frame.width - 2 * avatarMargin
-        let avatar = UITools.createAvatar(
-            CGRect(x: avatarMargin, y: avatarMargin, width: avatarWidth, height: avatarWidth),
+        let avatar = Avatar.create(
+            rect: CGRect(x: avatarMargin, y: avatarMargin, width: avatarWidth, height: avatarWidth),
             name: userB.name,
             url: userB.avatarURL)
         v.addSubview(avatar)
@@ -409,8 +395,9 @@ class DetailImageCell: StaticCell {
 
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
+    }
 
-        //唯一 所以在此设置
+    override func setData(_ d: Data?, index: IndexPath?) {
         let e = d as! Event
         let margin = headMargin - imgMargin
         var pos: Int = 0
@@ -465,7 +452,7 @@ let msgAvatarWidth: CGFloat = 40
 let msgStrWidth: CGFloat = widthWithoutMargin - msgAvatarWidth - headMargin //这里的headMargin表示头像右边的空
 let msgStrPosX: CGFloat = headMargin * 2 + msgAvatarWidth
 class DetailMsgCell: BaseCell {
-    var img: UIView? = nil
+    var img: Avatar? = nil
     var nameLbl: UILabel! = nil
     var timeLbl: UILabel! = nil
     var txtLbl: UILabel! = nil
@@ -476,7 +463,6 @@ class DetailMsgCell: BaseCell {
         return calculateLblHeight(msgStru.msg, w: msgStrWidth) + subTitleHeight + contentBottomHeight
     }
 
-    var curRow: Int = -1
     override func initData(_ d: Data?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
 
@@ -508,26 +494,20 @@ class DetailMsgCell: BaseCell {
         txtLbl.numberOfLines = 0
         txtLbl.lineBreakMode = .byCharWrapping
         txtLbl.font = TextFont
-
-        curRow = -1
     }
 
     override func setData(_ d: Data?, index: IndexPath?) {
-        if curRow == index!.row {
-            return // row不变里面内容视为不变
-        }
-        curRow = index!.row
-
-        if img != nil {
-            img!.removeFromSuperview()
-        }
+        let curRow = index!.row
 
         let e = d as! Event
         let msgStru: MsgStruct = e.msgList[curRow - 1]
         let user: UserBrief = msgStru.user
 
-        img = UITools.createAvatar(
-            CGRect(x: headMargin, y: headMargin, width: msgAvatarWidth, height: msgAvatarWidth),
+        if img != nil {
+            img!.removeFromSuperview()
+        }
+        img = Avatar.create(
+            rect: CGRect(x: headMargin, y: headMargin, width: msgAvatarWidth, height: msgAvatarWidth),
             name: user.name, url: user.avatarURL)
         contentView.addSubview(img!)
 
