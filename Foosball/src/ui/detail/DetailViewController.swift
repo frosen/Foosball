@@ -34,8 +34,6 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         tableView.delegate = self
         tableView.dataSource = self
 
-//        tableView.separatorStyle = .none //不用他的分割线，自己画
-        print(tableView.separatorInset)
         tableView.showsVerticalScrollIndicator = false //隐藏滑动条
 //        tableView.backgroundColor = UIColor.white //最后再让背景变成白色，否则现在不易设计
     }
@@ -161,7 +159,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         let _ = navigationController?.popViewController(animated: true)
     }
 
-    // cell的按钮回调 =========================================================================================================
+    // cell的按钮回调 ===================================================================================================
     // 邀请
     func onClickInvite() {
         print("invite")
@@ -211,5 +209,10 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         //取消预处理
 
         //更新cell
+    }
+
+    //当点击图片时
+    func onClickImageView(tag: Int) {
+        print("onClickImageView", tag)
     }
 }

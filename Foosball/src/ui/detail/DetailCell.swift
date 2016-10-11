@@ -386,8 +386,9 @@ class DetailImageCell: StaticCell {
         let margin = headMargin - imgMargin
         var pos: Int = 0
         var line: Int = 0
+        var index: Int = 0
         for imgUrl in e.imageURLList {
-            let v = createImageView(url: imgUrl)
+            let v = createImageView(url: imgUrl, index: index)
             contentView.addSubview(v)
             let f = v.frame
             v.frame = CGRect(
@@ -402,10 +403,11 @@ class DetailImageCell: StaticCell {
                 pos = 0
                 line += 1
             }
+            index += 1
         }
     }
 
-    func createImageView(url: String) -> UIView {
+    func createImageView(url: String, index: Int) -> UIView {
         let v = UIView()
         v.bounds = CGRect(x: 0, y: 0, width: imageViewWidth, height: imageViewWidth)
 
@@ -416,7 +418,16 @@ class DetailImageCell: StaticCell {
 
         img.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "img_default"))
 
+        v.tag = index
+        let tap = UITapGestureRecognizer(target: self, action: #selector(DetailImageCell.tapImageView(tap:)))
+        v.addGestureRecognizer(tap)
+
         return v
+    }
+
+    func tapImageView(tap: UITapGestureRecognizer) {
+        let ctrller: DetailViewController = delegate as! DetailViewController
+        ctrller.onClickImageView(tag: tap.view!.tag)
     }
 }
 
