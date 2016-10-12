@@ -130,7 +130,7 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
     let ownNorCellId = "ONorCId"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 || indexPath.section == 1 {
-            return BaseCell.create(indexPath, tableView: tableView, d: AppManager.shareInstance.user!, delegate: self) { indexPath in
+            return BaseCell.create(indexPath, tableView: tableView, d: AppManager.shareInstance.user!, ctrlr: self) { indexPath in
                 switch indexPath.section {
                 case 0:
                     switch indexPath.row {

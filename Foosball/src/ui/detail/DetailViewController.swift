@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DetailViewController: BaseController, UITableViewDelegate, UITableViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class DetailViewController: BaseController, UITableViewDelegate, UITableViewDataSource {
 
     var tableView: UITableView! = nil
     weak var event: Event! = nil
@@ -114,7 +114,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
 
     let imageCellId = "ICId"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return StaticCell.create(indexPath, tableView: tableView, d: event, delegate: self) { indexPath in
+        return StaticCell.create(indexPath, tableView: tableView, d: event, ctrlr: self) { indexPath in
             switch (indexPath as NSIndexPath).section {
             case 0:
                 switch (indexPath as NSIndexPath).row {
@@ -157,62 +157,5 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     // 回调 ==================================================================================================================
     func onBack() {
         let _ = navigationController?.popViewController(animated: true)
-    }
-
-    // cell的按钮回调 ===================================================================================================
-    // 邀请
-    func onClickInvite() {
-        print("invite")
-    }
-
-    // 拍照
-    func onClickPhoto() {
-        print("photo")
-        startImagePicker(.camera, str: "拍照设备")
-    }
-
-    func onClickAlbum() {
-        print("album")
-        let hasCamera = UIImagePickerController.isSourceTypeAvailable(.camera)
-        startImagePicker(hasCamera ? .photoLibrary : .savedPhotosAlbum, str: "相册")
-    }
-
-    func startImagePicker(_ t: UIImagePickerControllerSourceType, str: String) {
-        if UIImagePickerController.isSourceTypeAvailable(t) {
-            let ctrller = UIImagePickerController()
-            ctrller.delegate = self
-            ctrller.sourceType = t
-            ctrller.allowsEditing = true
-            ctrller.modalTransitionStyle = .coverVertical
-            present(ctrller, animated: true, completion: nil)
-        } else {
-            UITools.showAlert(self, title: "提示", msg: "设备不支持访问" + str + "，请在设置->隐私中进行设置！", type: 1, callback: nil)
-        }
-    }
-
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        picker.dismiss(animated: true)
-
-        //预处理ui
-
-        //获取图片
-        let img: UIImage = info[UIImagePickerControllerEditedImage] as! UIImage
-
-        //保存在本地
-
-        //上传图片
-
-        //获取url
-
-        //更新event
-
-        //取消预处理
-
-        //更新cell
-    }
-
-    //当点击图片时
-    func onClickImageView(tag: Int) {
-        print("onClickImageView", tag)
     }
 }

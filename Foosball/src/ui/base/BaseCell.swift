@@ -11,7 +11,7 @@ import UIKit
 class BaseCell: UITableViewCell {
     var w: CGFloat = 0
     var h: CGFloat = 0
-    var delegate: UIViewController! = nil
+    var ctrlr: UIViewController! = nil
     required init(id: String, d: Data? = nil, index: IndexPath? = nil) {
         super.init(style: .default, reuseIdentifier: id)
         self.accessoryType = .none // 默认
@@ -40,7 +40,7 @@ class BaseCell: UITableViewCell {
         }
     }
 
-    class func create(_ index: IndexPath, tableView: UITableView, d: Data, delegate: UIViewController,  getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
+    class func create(_ index: IndexPath, tableView: UITableView, d: Data, ctrlr: UIViewController,  getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
         let info: CInfo! = getInfoCallback(index)
 
         let cls = info.cls as! BaseCell.Type
@@ -50,7 +50,7 @@ class BaseCell: UITableViewCell {
             cell = cls.init(id: info.id, d: d, index: index)
 
             let baseCell = cell as! BaseCell
-            baseCell.delegate = delegate
+            baseCell.ctrlr = ctrlr
             baseCell.initData(d, index: index)
         }
 
@@ -63,11 +63,11 @@ class BaseCell: UITableViewCell {
 
 // 静态cell，不会进行重用，如果要重置，要通过reset方法
 class StaticCell: BaseCell {
-    override class func create(_ index: IndexPath, tableView: UITableView, d: Data, delegate: UIViewController,  getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
+    override class func create(_ index: IndexPath, tableView: UITableView, d: Data, ctrlr: UIViewController,  getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
         let info: CInfo! = getInfoCallback(index)
 
         if !(info.cls is StaticCell.Type) { //如果不是静态cell，还是用basecell的创建
-            return BaseCell.create(index, tableView: tableView, d: d, delegate: delegate, getInfoCallback: getInfoCallback)
+            return BaseCell.create(index, tableView: tableView, d: d, ctrlr: ctrlr, getInfoCallback: getInfoCallback)
         }
 
         let cls = info.cls as! StaticCell.Type
@@ -76,7 +76,7 @@ class StaticCell: BaseCell {
             cell = cls.init(id: info.id, d: d, index: index)
 
             let staticCell = cell as! StaticCell
-            staticCell.delegate = delegate
+            staticCell.ctrlr = ctrlr
             staticCell.initData(d, index: index)
             staticCell.setData(d, index: index)
         }
