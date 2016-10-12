@@ -498,7 +498,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CB81153F97C8259E0408EA86 /* Pods-Foosball.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Foosball/Info.plist;
@@ -515,7 +514,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E78D8581CCBC44E615441E59 /* Pods-Foosball.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Foosball/Info.plist;

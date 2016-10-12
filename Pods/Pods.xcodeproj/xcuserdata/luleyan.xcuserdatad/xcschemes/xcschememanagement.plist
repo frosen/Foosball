@@ -19,6 +19,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>SKPhotoBrowser.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>SnapKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -27,22 +32,27 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>1A6F6B109A7F7501C6C23077DA04D7F8</key>
+		<key>246CC203F567EE2D57ABD396B9A6F106</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>788D7B5BDB0B840BD15987108A016DFE</key>
+		<key>46D2C5918C1302E81EEBA7080368843B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6F73702852E62CDB54C292284867E22E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BBD859BA3BD98EB3E9C890C7F13BA722</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>CCC02DA9AC15FDE5E62536C8CDE5F465</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>FFD52B8BACB812F28AFF922506E880FF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
