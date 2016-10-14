@@ -69,7 +69,7 @@ class DetailImageHeadCell: DetailHeadCell, UIImagePickerControllerDelegate, UINa
     }
 }
 
-class DetailImageCell: StaticCell {
+class DetailImageCell: StaticCell, SKPhotoBrowserDelegate {
     static let imageCountIn1Line: CGFloat = 4
     static let imgMargin: CGFloat = 2
     static let imageViewWidth: CGFloat = (DetailG.widthWithoutMargin + 2 * imgMargin) / imageCountIn1Line
@@ -153,10 +153,19 @@ class DetailImageCell: StaticCell {
                 skImgArray.append(photo)
             }
         }
+        let originImg = imgViewArray[index].image
 
-        let browser = SKPhotoBrowser(photos: skImgArray)
+        SKPhotoBrowserOptions.displayDeleteButton = true
+        
+        let browser = SKPhotoBrowser(originImage: originImg!, photos: skImgArray, animatedFromView: self)
         browser.initializePageIndex(index)
+        browser.delegate = self
         ctrlr.present(browser, animated: true, completion: {})
+    }
+
+    func removePhoto(_ browser: SKPhotoBrowser, index: Int, reload: (() -> Void)) {
+        print("deleta img: ", index)
+        
     }
 }
 
