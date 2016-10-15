@@ -134,17 +134,20 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate {
         img.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "img_default"))
 
         v.tag = index
-        let tap = UITapGestureRecognizer(target: self, action: #selector(DetailImageCell.tapImageView(tap:)))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(DetailImageCell.tapImageView(ges:)))
         v.addGestureRecognizer(tap)
+
+        let longP = UILongPressGestureRecognizer(target: self, action: #selector(DetailImageCell.longPressImageView(ges:)))
+        v.addGestureRecognizer(longP)
 
         imgViewArray.append(img)
 
         return v
     }
 
-    func tapImageView(tap: UITapGestureRecognizer) {
+    func tapImageView(ges: UITapGestureRecognizer) {
         print("tapImageView")
-        let index = tap.view!.tag
+        let index = ges.view!.tag
 
         var skImgArray: [SKPhoto] = []
         for imgV in imgViewArray {
@@ -155,17 +158,31 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate {
         }
         let originImg = imgViewArray[index].image
 
-        SKPhotoBrowserOptions.displayDeleteButton = true
+        SKPhotoBrowserOptions.displayStatusbar = true
         
         let browser = SKPhotoBrowser(originImage: originImg!, photos: skImgArray, animatedFromView: self)
         browser.initializePageIndex(index)
-        browser.delegate = self
         ctrlr.present(browser, animated: true, completion: {})
     }
 
-    func removePhoto(_ browser: SKPhotoBrowser, index: Int, reload: (() -> Void)) {
+    func longPressImageView(ges: UILongPressGestureRecognizer) {
+        if ges.state != .began {
+            return
+        }
+        let v = ges.view!
+        removePhoto(ges.view!.tag)
+    }
+
+    func removePhoto(_ index: Int) {
         print("deleta img: ", index)
-        
+        UITools.showAlert(ctrlr, title: "删除图片", msg: "您确定要删除这张图片吗？", type: 2) { _ in
+            print("confirm to delete")
+            let detailCtrlr = self.ctrlr as! DetailViewController
+            let cellIndex = detailCtrlr.tableView.indexPath(for: self)
+            detailCtrlr.changeEvent(cellIndex!, changeType: "C") { event in
+                event.imageURLList.remove(at: index)
+            }
+        }
     }
 }
 

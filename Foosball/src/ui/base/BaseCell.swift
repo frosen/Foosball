@@ -15,8 +15,8 @@ class BaseCell: UITableViewCell {
     required init(id: String, d: Data? = nil, index: IndexPath? = nil) {
         super.init(style: .default, reuseIdentifier: id)
         self.accessoryType = .none // 默认
-        w = UIScreen.main.bounds.width
-        h = type(of: self).getCellHeight(d, index: index) //dynamicType可以获取对象的类，然后就能使用类函数了
+        self.w = UIScreen.main.bounds.width
+        self.h = type(of: self).getCellHeight(d, index: index) //dynamicType可以获取对象的类，然后就能使用类函数了
     }
 
     required init?(coder aDecoder: NSCoder) {

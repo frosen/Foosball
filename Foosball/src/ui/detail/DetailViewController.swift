@@ -158,4 +158,12 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     func onBack() {
         let _ = navigationController?.popViewController(animated: true)
     }
+
+    // 修改event 被cell调用 changeType: C改变当前，N在当前添加，D删除当前，A所有的重刷
+    func changeEvent(_ indexPath: IndexPath, changeType: String, changeFunc: (_ e: Event) -> Void ) {
+        // 修改event
+        changeFunc(event)
+
+        //
+    }
 }

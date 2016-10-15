@@ -26,9 +26,11 @@ class UITools {
 
     class func showAlert(_ target: UIViewController, title: String, msg: String, type: Int, callback: ((UIAlertAction) -> Void)?) {
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: callback))
-        if type == 2 {
+        if type == 1 {
+            alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: callback))
+        } else {
             alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "确定", style: .default, handler: callback))
         }
         target.present(alert, animated: true, completion: nil)
     }
