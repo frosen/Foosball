@@ -34,6 +34,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         tableView.delegate = self
         tableView.dataSource = self
 
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: DetailG.headMargin, bottom: 0, right: DetailG.headMargin)
         tableView.showsVerticalScrollIndicator = false //隐藏滑动条
 //        tableView.backgroundColor = UIColor.white //最后再让背景变成白色，否则现在不易设计
     }

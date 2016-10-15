@@ -9,11 +9,11 @@
 import UIKit
 
 class DetailMsgHeadCell: DetailHeadCell {
-    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
 
-    override func initData(_ d: Data?, index: IndexPath?) {
+    override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
         createHead("消息")
     }
@@ -29,13 +29,13 @@ class DetailMsgCell: BaseCell {
     var timeLbl: UILabel! = nil
     var txtLbl: UILabel! = nil
 
-    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
         let msgStru: MsgStruct = e.msgList[index!.row - 1]
         return DetailG.calculateLblHeight(msgStru.msg, w: msgStrWidth) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
-    override func initData(_ d: Data?, index: IndexPath?) {
+    override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
 
         //创建名字和时间的文本
@@ -66,7 +66,7 @@ class DetailMsgCell: BaseCell {
         txtLbl.font = TextFont
     }
 
-    override func setData(_ d: Data?, index: IndexPath?) {
+    override func setData(_ d: BaseData?, index: IndexPath?) {
         let curRow = index!.row
 
         let e = d as! Event

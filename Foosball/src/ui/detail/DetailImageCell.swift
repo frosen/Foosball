@@ -10,11 +10,11 @@ import UIKit
 import SKPhotoBrowser
 
 class DetailImageHeadCell: DetailHeadCell, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
 
-    override func initData(_ d: Data?, index: IndexPath?) {
+    override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
 
         createHead("瞬间")
@@ -56,12 +56,34 @@ class DetailImageHeadCell: DetailHeadCell, UIImagePickerControllerDelegate, UINa
         let img: UIImage = info[UIImagePickerControllerEditedImage] as! UIImage
 
         //保存在本地
+        let cachesPaths = NSSearchPathForDirectoriesInDomains(
+            FileManager.SearchPathDirectory.cachesDirectory,
+            FileManager.SearchPathDomainMask.userDomainMask, true)
+        let cachesPath = cachesPaths[0]
 
-        //上传图片
+        do {
+            try FileManager.default.removeItem(atPath: cachesPath)
+        } catch {
+        }
 
-        //获取url
+        if let pngData = UIImagePNGRepresentation(img) {
+            do {
+                try pngData.write(to: URL(fileURLWithPath: cachesPath))
+            } catch {
+                print("保存图片有误")
+                return
+            }
+        }
+
+        //上传图片，获取url
 
         //更新event
+        let detailCtrlr = self.ctrlr as! DetailViewController
+        var cellIndex = detailCtrlr.tableView.indexPath(for: self)
+        cellIndex!.row += 1 // 标题下面的
+        detailCtrlr.changeEvent(cellIndex!, changeType: "C") { event in
+
+        }
         
         //取消预处理
         
@@ -78,17 +100,17 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate {
 
     var imgListView: UIView? = nil
     var imgViewArray: [UIImageView] = []
-    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
         let lineCount = ceil(CGFloat(e.imageURLList.count) / imageCountIn1Line)
         return lineCount * imageViewWidth + imgTopMargin + imgBottomMargin
     }
 
-    override func initData(_ d: Data?, index: IndexPath?) {
+    override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
     }
 
-    override func setData(_ d: Data?, index: IndexPath?) {
+    override func setData(_ d: BaseData?, index: IndexPath?) {
         // 如果变了，就要清理掉原来的内容，并重建
         if imgListView != nil {
             imgListView!.removeFromSuperview()
@@ -156,11 +178,8 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate {
                 skImgArray.append(photo)
             }
         }
-        let originImg = imgViewArray[index].image
-
-        SKPhotoBrowserOptions.displayStatusbar = true
-        
-        let browser = SKPhotoBrowser(originImage: originImg!, photos: skImgArray, animatedFromView: self)
+        let originImg = imgViewArray[index].image!
+        let browser = SKPhotoBrowser(originImage: originImg, photos: skImgArray, animatedFromView: self)
         browser.initializePageIndex(index)
         ctrlr.present(browser, animated: true, completion: {})
     }
@@ -169,7 +188,6 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate {
         if ges.state != .began {
             return
         }
-        let v = ges.view!
         removePhoto(ges.view!.tag)
     }
 

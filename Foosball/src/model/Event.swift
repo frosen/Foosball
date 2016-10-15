@@ -40,10 +40,10 @@ class UserState {
 
 // 谁在什么时间转换到了什么状态
 class OperationTime {
-    var userId: Data
+    var userId: DataID
     var time: Time
     var toState: EventState
-    init(userId: Data, time: Time, toState: EventState) {
+    init(userId: DataID, time: Time, toState: EventState) {
         self.userId = userId
         self.time = time
         self.toState = toState
@@ -62,7 +62,7 @@ class MsgStruct {
     }
 }
 
-class Event: Data {
+class Event: BaseData {
     //类型 对决 乱斗 挑战 求教 会友
     var type: EventType = .confrontation
 

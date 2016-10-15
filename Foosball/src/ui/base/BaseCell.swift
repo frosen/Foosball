@@ -12,7 +12,7 @@ class BaseCell: UITableViewCell {
     var w: CGFloat = 0
     var h: CGFloat = 0
     var ctrlr: UIViewController! = nil
-    required init(id: String, d: Data? = nil, index: IndexPath? = nil) {
+    required init(id: String, d: BaseData? = nil, index: IndexPath? = nil) {
         super.init(style: .default, reuseIdentifier: id)
         self.accessoryType = .none // 默认
         self.w = UIScreen.main.bounds.width
@@ -23,12 +23,12 @@ class BaseCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
+    class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
 
-    func initData(_ d: Data?, index: IndexPath?) {} //需要继承的，把事件设置进去
-    func setData(_ d: Data?, index: IndexPath?) {}
+    func initData(_ d: BaseData?, index: IndexPath?) {} //需要继承的，把事件设置进去
+    func setData(_ d: BaseData?, index: IndexPath?) {}
 
     //非常方便的创建cell
     struct CInfo {
@@ -40,7 +40,7 @@ class BaseCell: UITableViewCell {
         }
     }
 
-    class func create(_ index: IndexPath, tableView: UITableView, d: Data, ctrlr: UIViewController,  getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
+    class func create(_ index: IndexPath, tableView: UITableView, d: BaseData, ctrlr: UIViewController,  getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
         let info: CInfo! = getInfoCallback(index)
 
         let cls = info.cls as! BaseCell.Type
@@ -63,7 +63,7 @@ class BaseCell: UITableViewCell {
 
 // 静态cell，不会进行重用，如果要重置，要通过reset方法
 class StaticCell: BaseCell {
-    override class func create(_ index: IndexPath, tableView: UITableView, d: Data, ctrlr: UIViewController,  getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
+    override class func create(_ index: IndexPath, tableView: UITableView, d: BaseData, ctrlr: UIViewController,  getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
         let info: CInfo! = getInfoCallback(index)
 
         if !(info.cls is StaticCell.Type) { //如果不是静态cell，还是用basecell的创建
@@ -84,7 +84,7 @@ class StaticCell: BaseCell {
         return cell!
     }
 
-    func resetData(_ d: Data?, index: IndexPath?) {
+    func resetData(_ d: BaseData?, index: IndexPath?) {
         setData(d, index: index) //如果不继承，则使用set作为reset
     }
 }

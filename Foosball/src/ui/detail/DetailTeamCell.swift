@@ -9,11 +9,11 @@
 import UIKit
 
 class DetailTeamHeadCell: DetailHeadCell {
-    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
 
-    override func initData(_ d: Data?, index: IndexPath?) {
+    override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
 
         createHead("队伍")
@@ -34,13 +34,13 @@ class DetailTeamCell: StaticCell {
     static let avatarMargin: CGFloat = 3
     static let avatarTotalWidth: CGFloat = DetailG.widthWithoutMargin + 2 * avatarMargin
     static let memberViewWidth: CGFloat = avatarTotalWidth / memberCountIn1Line
-    static let memberViewHeight: CGFloat = memberViewWidth + 10
+    static let memberViewHeight: CGFloat = memberViewWidth + 15
     static let teamBottomMargin: CGFloat = 4
 
     var title: UILabel! = nil
     var memberListView: UIView? = nil
 
-    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event?
         var avatarRowRate: CGFloat
         switch index!.row {
@@ -55,7 +55,7 @@ class DetailTeamCell: StaticCell {
         return avatarRowCount * memberViewHeight + DetailG.subTitleHeight + teamBottomMargin
     }
 
-    override func initData(_ d: Data?, index: IndexPath?) {
+    override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
 
         //图标题
@@ -70,7 +70,7 @@ class DetailTeamCell: StaticCell {
         title.textColor = SubTitleColor
     }
 
-    override func setData(_ d: Data?, index: IndexPath?) {
+    override func setData(_ d: BaseData?, index: IndexPath?) {
         // 读取数据
         let e: Event = d as! Event
         let memberList: [UserState]

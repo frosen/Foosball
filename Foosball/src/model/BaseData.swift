@@ -83,8 +83,8 @@ struct Location {
     
 }
 
-//数据核心
-class Data: NSObject {
+//基础数据
+class BaseData: NSObject {
     let ID: DataID //本结构体的id
     init(ID: DataID) {
         self.ID = ID

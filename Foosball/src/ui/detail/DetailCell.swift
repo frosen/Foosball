@@ -44,11 +44,11 @@ class DetailTitleCell: StaticCell {
     var position: UILabel! = nil
     var createTime: UILabel! = nil
 
-    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         return 72
     }
 
-    override func initData(_ d: Data?, index: IndexPath?) {
+    override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
 
         //图
@@ -90,7 +90,7 @@ class DetailTitleCell: StaticCell {
         createTime.textColor = TextColor
     }
 
-    override func setData(_ d: Data?, index: IndexPath?) {
+    override func setData(_ d: BaseData?, index: IndexPath?) {
         title.text = "这也是一个很有趣的测试"
         title.sizeToFit()
         position.text = "朝阳/6km"
@@ -136,34 +136,34 @@ class DetailStringCell: StaticCell {
 }
 
 class DetailContentCell: DetailStringCell {
-    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
         return DetailG.calculateLblHeight(e.detail, w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
-    override func initData(_ d: Data?, index: IndexPath?) {
+    override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
         initLblData(contentView: contentView, titleStr: "内容：")
     }
 
-    override func setData(_ d: Data?, index: IndexPath?) {
+    override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
         setLblData(contentView: contentView, str: e.detail)
     }
 }
 
 class DetailCashCell: DetailStringCell {
-    override class func getCellHeight(_ d: Data? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
         return DetailG.calculateLblHeight(e.award, w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
-    override func initData(_ d: Data?, index: IndexPath?) {
+    override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
         initLblData(contentView: contentView, titleStr: "奖杯：")
     }
 
-    override func setData(_ d: Data?, index: IndexPath?) {
+    override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
         setLblData(contentView: contentView, str: e.award)
     }

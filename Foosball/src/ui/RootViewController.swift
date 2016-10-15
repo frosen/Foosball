@@ -19,6 +19,13 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
         view.backgroundColor = UIColor.white
         initSubVc()
         initTabBar()
+
+        let homePath = NSHomeDirectory()
+        let imgLocalPath = homePath + "/tmp/tmp_photo.png"
+        let url = URL(fileURLWithPath: imgLocalPath)
+
+        
+        
     }
 
     func initSubVc() {
