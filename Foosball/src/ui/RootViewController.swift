@@ -18,14 +18,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
     override func viewDidLoad() {
         view.backgroundColor = UIColor.white
         initSubVc()
-        initTabBar()
-
-        let homePath = NSHomeDirectory()
-        let imgLocalPath = homePath + "/tmp/tmp_photo.png"
-        let url = URL(fileURLWithPath: imgLocalPath)
-
-        
-        
+        initTabBar() 
     }
 
     func initSubVc() {
@@ -71,7 +64,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
 
         myTabBar = MyTabBar.replaceOldTabBar(self, midButton: midBtn, btnItems: items)
         myTabBar.myTabBarDelegate = self
-        myTabBar.tintColor = UIColor.orange
+        myTabBar.tintColor = BaseColor
     }
 
     // MyTabBarDelegate

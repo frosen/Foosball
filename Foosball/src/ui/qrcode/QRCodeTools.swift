@@ -11,7 +11,7 @@ import UIKit
 class QRCodeTools: NSObject {
     class func createQRCode(_ content: String) -> UIImageView {
         let width: Int = 150
-        let color: UIColor = UIColor.red
+        let color: UIColor = BaseColor
 
         let outImg = createQRImg(content)
 

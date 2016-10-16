@@ -26,7 +26,7 @@ class EventIcon {
         icon.layer.shadowOpacity = 0.9
         icon.layer.shadowRadius = 3
 
-        icon.backgroundColor = UIColor.red
+        icon.backgroundColor = BaseColor
 
         return (iconView, icon)
     }
