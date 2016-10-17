@@ -48,46 +48,25 @@ class DetailImageHeadCell: DetailHeadCell, UIImagePickerControllerDelegate, UINa
     }
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        picker.dismiss(animated: true)
-
-        //预处理ui
-
         //获取图片
         let img: UIImage = info[UIImagePickerControllerEditedImage] as! UIImage
 
-        //保存在本地
-        let cachesPaths = NSSearchPathForDirectoriesInDomains(
-            FileManager.SearchPathDirectory.cachesDirectory,
-            FileManager.SearchPathDomainMask.userDomainMask, true)
-        let cachesPath = cachesPaths[0]
+        //转圈
 
-        do {
-            try FileManager.default.removeItem(atPath: cachesPath)
-        } catch {
-        }
+        //上传图片，获取url，如果没有网，则提示是否重复，还是保存本地/取消
 
-        if let pngData = UIImagePNGRepresentation(img) {
-            do {
-                try pngData.write(to: URL(fileURLWithPath: cachesPath))
-            } catch {
-                print("保存图片有误")
-                return
-            }
-        }
+        //取消转圈
 
-        //上传图片，获取url
-
-        //更新event
+        //更新event，并上传，然后更新cell
         let detailCtrlr = self.ctrlr as! DetailViewController
-        var cellIndex = detailCtrlr.tableView.indexPath(for: self)
-        cellIndex!.row += 1 // 标题下面的
-        detailCtrlr.changeEvent(cellIndex!, changeType: "C") { event in
-
+        var cellIndex = detailCtrlr.tableView.indexPath(for: self)!
+        cellIndex.row += 1 //这里是标题，取标题下一个cell
+        detailCtrlr.changeEvent(cellIndex, changeType: "C") { event in
+            event.imageURLList.append("http://up.qqjia.com/z/25/tu32700_3.png")
         }
-        
-        //取消预处理
-        
-        //更新cell
+
+        //切换场景后更新cell
+        picker.dismiss(animated: true)
     }
 }
 
