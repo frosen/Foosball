@@ -9,6 +9,7 @@
 import UIKit
 
 class DetailMsgHeadCell: DetailHeadCell {
+    var textInputView: InputView! = nil
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
@@ -16,6 +17,58 @@ class DetailMsgHeadCell: DetailHeadCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
         createHead("消息")
+
+        createButton("说话", color: UIColor.purple, pos: 0, callback: #selector(DetailMsgHeadCell.onClickSaying))
+
+        textInputView = InputView()
+        ctrlr.view.addSubview(textInputView)
+
+        // 初始化时，y为总高是为了隐藏到最底下
+        var inputFrame = textInputView.frame
+        inputFrame.origin.y = UIScreen.main.bounds.height
+        textInputView.frame = inputFrame
+
+        NotificationCenter.default.addObserver(self, selector: #selector(DetailMsgHeadCell.keyboardWillShow), name: NSNotification.Name(rawValue: "UIKeyboardWillShowNotification"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(DetailMsgHeadCell.keyBoardWillHide), name: NSNotification.Name(rawValue: "UIKeyboardWillHideNotification"), object: nil)
+    }
+
+    func onClickSaying() {
+        print("saying")
+//        textInputView.beginInput()
+    }
+
+    func keyboardWillShow(note: Notification) {
+        let userInfo = (note as NSNotification).userInfo!
+        let keyBoardBounds = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+        let deltaY = keyBoardBounds.size.height
+
+        let animations:(() -> Void) = {
+            self.textInputView.transform = CGAffineTransform(translationX: 0, y: -deltaY - self.textInputView.frame.height)
+        }
+
+        if duration > 0 {
+            let options = UIViewAnimationOptions(rawValue: UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue << 16))
+            UIView.animate(withDuration: duration, delay: 0, options:options, animations: animations, completion: nil)
+        }else{
+            animations()
+        }
+    }
+
+    func keyBoardWillHide(note: Notification) {
+        let userInfo = (note as NSNotification).userInfo!
+        let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+
+        let animations:(() -> Void) = {
+            self.textInputView.transform = CGAffineTransform.identity
+        }
+
+        if duration > 0 {
+            let options = UIViewAnimationOptions(rawValue: UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue << 16))
+            UIView.animate(withDuration: duration, delay: 0, options:options, animations: animations, completion: nil)
+        }else{
+            animations()
+        }
     }
 }
 

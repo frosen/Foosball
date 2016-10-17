@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3250913C82FFF635417020BD /* Pods_Foosball.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81C567789B96B0906D4D436 /* Pods_Foosball.framework */; };
+		650151A51DB4D6F9009D8ABC /* InputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650151A41DB4D6F9009D8ABC /* InputView.swift */; };
 		6507AC0A1D55B7C900791FB1 /* ChallengeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6507AC091D55B7C900791FB1 /* ChallengeCell.swift */; };
 		654EE8C01DAC8B6C00F99F21 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654EE8BF1DAC8B6C00F99F21 /* Avatar.swift */; };
 		6554A3C31D6FE956001AB4D6 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6554A3C21D6FE956001AB4D6 /* ScanViewController.swift */; };
@@ -41,6 +42,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		650151A41DB4D6F9009D8ABC /* InputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputView.swift; path = widget/InputView.swift; sourceTree = "<group>"; };
 		6507AC091D55B7C900791FB1 /* ChallengeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeCell.swift; sourceTree = "<group>"; };
 		654EE8BF1DAC8B6C00F99F21 /* Avatar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Avatar.swift; path = widget/Avatar.swift; sourceTree = "<group>"; };
 		6554A3C21D6FE956001AB4D6 /* ScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScanViewController.swift; path = qrcode/ScanViewController.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				65EEB75D1DAE393000BB767D /* DetailTeamCell.swift */,
 				65EEB75F1DAE398D00BB767D /* DetailImageCell.swift */,
 				65EEB7611DAE3A0500BB767D /* DetailMsgCell.swift */,
+				650151A41DB4D6F9009D8ABC /* InputView.swift */,
 			);
 			name = detail;
 			sourceTree = "<group>";
@@ -400,6 +403,7 @@
 				65CBEF6E1D7FEC19008EAC60 /* UIBase.swift in Sources */,
 				6507AC0A1D55B7C900791FB1 /* ChallengeCell.swift in Sources */,
 				65AB524C1D3291E6005E7D4C /* OwnController.swift in Sources */,
+				650151A51DB4D6F9009D8ABC /* InputView.swift in Sources */,
 				657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
