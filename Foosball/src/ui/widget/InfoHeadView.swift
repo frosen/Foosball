@@ -24,10 +24,10 @@ class InfoHeadView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(scrollView: UIScrollView, includeNavBar: Bool = false) {
+    init(scrollView: UIScrollView, extraHeight: CGFloat? = nil) {
         self.scrollView = scrollView
-        if includeNavBar {
-            self.extraHeight = 64 // 44 + 20
+        if extraHeight != nil {
+            self.extraHeight = extraHeight!
         }
 
         let w: CGFloat = UIScreen.main.bounds.width
@@ -44,14 +44,15 @@ class InfoHeadView: UIView {
         self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset
     }
 
-    let bgYScale: CGFloat = 1.5
+    let topMargin: CGFloat = 80
+    let bottomMargin: CGFloat = 120
     let avatarW: CGFloat = 70
     func initUIData(bgImgName bgName: String, avatarURL: String?, titleStr: String, subTitleStr: String) {
         let w: CGFloat = frame.size.width
         let h: CGFloat = frame.size.height
 
         //裁剪背景图
-        let maskViewShadow = UIView(frame: CGRect(x: 0, y: 0, width: w, height: h + extraHeight))
+        let maskViewShadow = UIView(frame: CGRect(x: 0, y: -bottomMargin, width: w, height: h + extraHeight + bottomMargin))
         addSubview(maskViewShadow)
 
         maskViewShadow.backgroundColor = UIColor.white
@@ -67,13 +68,13 @@ class InfoHeadView: UIView {
         //背景
         bg = UIImageView(image: UIImage(named: bgName))
         maskView.addSubview(bg!)
-        bg!.frame = CGRect(x: 0, y: (1 - bgYScale) * h + extraHeight, width: w, height: bgYScale * h)
+        bg!.frame = CGRect(x: 0, y: extraHeight - topMargin + bottomMargin, width: w, height: h + topMargin + bottomMargin)
         bg!.contentMode = .scaleAspectFill
 
         //头像
         avatar = Avatar.create(rect: CGRect(
                 x: 0.5 * w - 0.5 * avatarW,
-                y: 0.42 * h - 0.5 * avatarW + extraHeight,
+                y: 0.42 * h - 0.5 * avatarW + extraHeight + bottomMargin,
                 width: avatarW,
                 height: avatarW
             ),
@@ -93,7 +94,7 @@ class InfoHeadView: UIView {
         title = UILabel()
         maskView.addSubview(title!)
 
-        title!.bounds = CGRect(x: 0, y: 0, width: w, height: 0.2 * h)
+        title!.bounds = CGRect(x: 0, y: bottomMargin, width: w, height: 0.2 * h)
         title!.center.x = avatar!.center.x
         title!.center.y = avatar!.center.y + 50
 
@@ -109,7 +110,7 @@ class InfoHeadView: UIView {
         subTitle = UILabel()
         maskView.addSubview(subTitle!)
 
-        subTitle!.bounds = CGRect(x: 0, y: 0, width: w, height: 0.1 * h)
+        subTitle!.bounds = CGRect(x: 0, y: bottomMargin, width: w, height: 0.1 * h)
         subTitle!.center.x = avatar!.center.x
         subTitle!.center.y = avatar!.center.y + 70
 
@@ -142,8 +143,10 @@ class InfoHeadView: UIView {
 
         var realOffsetY: CGFloat
         //计算位置
-        if newOffsetY < startY {
-            realOffsetY = startY
+        let startLimit = startY - bottomMargin * 0.5
+        if newOffsetY < startLimit {
+            realOffsetY = startLimit
+            return
         } else if newOffsetY < destY {
             realOffsetY = newOffsetY
         } else {
@@ -154,13 +157,13 @@ class InfoHeadView: UIView {
 
         let rate = 1 - curY / dis
         let curAlpha = 1 - curY / (dis - extraHeight * 1.5) //为了在有nav时更早的隐藏，以便不遮挡其他UI
-        let imgReduce = 1 - 0.5 * curY / dis
+        let imgReduce = min(0.5 + 0.5 * rate, 1) //不可大于1倍
 
         title?.alpha = curAlpha
         subTitle?.alpha = curAlpha
         frame.origin.y = -curY
 
-        bg?.frame.origin.y = (1 - bgYScale) * frame.size.height + (bgYScale * frame.size.height + destY) * (1 - rate) + extraHeight
+        bg?.frame.origin.y = extraHeight - topMargin + bottomMargin + (frame.size.height + topMargin + destY) * (1 - rate)
 
         let destAvatarY = 0.58 * frame.size.height - 22
         let t = CGAffineTransform(translationX: 0, y: destAvatarY * (1 - rate))

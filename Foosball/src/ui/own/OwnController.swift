@@ -70,7 +70,7 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
         tableView.showsVerticalScrollIndicator = false //隐藏滑动条
 
         //添加信息头
-        infoHead = InfoHeadView(scrollView: tableView)
+        infoHead = InfoHeadView(scrollView: tableView, extraHeight: 20)
         baseView.insertSubview(infoHead, aboveSubview: tableView)
     }
 
