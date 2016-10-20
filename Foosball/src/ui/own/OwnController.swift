@@ -149,7 +149,7 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
             if cell == nil {
                 cell = OwnNormalCell(id: ownNorCellId)
             }
-            let data: NorCellData = group[(indexPath as NSIndexPath).section - 2][(indexPath as NSIndexPath).row]
+            let data: NorCellData = group[indexPath.section - 2][indexPath.row]
             let norCell = cell as! OwnNormalCell
             norCell.setUIData(image: data.img, title: data.title, subTitle: data.subTitle)
             return cell!

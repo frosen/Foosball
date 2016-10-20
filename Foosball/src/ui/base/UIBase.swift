@@ -7,6 +7,8 @@
 //
 
 let BaseColor: UIColor = UIColor(hue: 16 / 360, saturation: 0.7, brightness: 1.0, alpha: 1.0)
+let DarkBaseColor: UIColor = UIColor(hue: 16 / 360, saturation: 0.9, brightness: 0.8, alpha: 1.0)
+
 let LineColor: UIColor = UIColor(white: 0.92, alpha: 1)
 let TitleColor: UIColor = UIColor.black
 let SubTitleColor: UIColor = UIColor(white: 0.5, alpha: 1)

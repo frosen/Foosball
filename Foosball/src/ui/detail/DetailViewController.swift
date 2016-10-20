@@ -14,6 +14,10 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     weak var event: Event! = nil
     var sectionNum: Int = 0
 
+    var isShowKeyboard: Bool = false
+    var keyboardH: CGFloat = 0 //暂存用
+    var textInputView: InputView! = nil
+
     func setData(_ event: Event) {
         self.event = event
     }
@@ -37,6 +41,24 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         tableView.separatorInset = UIEdgeInsets(top: 0, left: DetailG.headMargin, bottom: 0, right: DetailG.headMargin)
         tableView.showsVerticalScrollIndicator = false //隐藏滑动条
 //        tableView.backgroundColor = UIColor.white //最后再让背景变成白色，否则现在不易设计
+
+        //按钮栏
+
+        //隐藏在最下面的输入栏
+        textInputView = InputView()
+        baseView.addSubview(textInputView)
+
+        // 初始化时，y为总高是为了隐藏到最底下
+        var inputFrame = textInputView.frame
+        inputFrame.origin.y = UIScreen.main.bounds.height
+        textInputView.frame = inputFrame
+
+        NotificationCenter.default.addObserver(self, selector: #selector(DetailViewController.keyboardWillShow), name: NSNotification.Name(rawValue: "UIKeyboardWillShowNotification"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(DetailViewController.keyBoardWillHide), name: NSNotification.Name(rawValue: "UIKeyboardWillHideNotification"), object: nil)
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(DetailViewController.endInput(ges:)))
+        baseView.addGestureRecognizer(tap)
+        
     }
 
     override func initData() {
@@ -166,5 +188,63 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         changeFunc(event)
 
         //
+    }
+
+    // 虚拟键盘和输入相关
+    func keyboardWillShow(note: Notification) {
+        let userInfo = (note as NSNotification).userInfo!
+        let keyBoardBounds = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+        keyboardH = keyBoardBounds.size.height
+
+        isShowKeyboard = true
+
+        let animations:(() -> Void) = {
+            self.baseView.transform = CGAffineTransform(translationX: 0, y: -self.keyboardH - self.textInputView.frame.height)
+        }
+
+        if duration > 0 {
+            let options = UIViewAnimationOptions(rawValue: UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue << 16))
+            UIView.animate(withDuration: duration, delay: 0, options:options, animations: animations, completion: nil)
+        }else{
+            animations()
+        }
+    }
+
+    func keyBoardWillHide(note: Notification) {
+        let userInfo = (note as NSNotification).userInfo!
+        let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+
+        isShowKeyboard = false
+
+        let animations:(() -> Void) = {
+            self.baseView.transform = CGAffineTransform.identity
+        }
+
+        if duration > 0 {
+            let options = UIViewAnimationOptions(rawValue: UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue << 16))
+            UIView.animate(withDuration: duration, delay: 0, options:options, animations: animations, completion: nil)
+        }else{
+            animations()
+        }
+    }
+
+    func beginInput() {
+        print("saying")
+        textInputView.beginInput()
+    }
+
+    func endInput(ges: UITapGestureRecognizer) {
+        if isShowKeyboard == true {
+            textInputView.endInput()
+        }
+    }
+
+    func onInputViewHeightReset() {
+        if isShowKeyboard == true {
+            baseView.transform = CGAffineTransform(translationX: 0, y: -keyboardH - self.textInputView.frame.height)
+        } else {
+            baseView.transform = CGAffineTransform.identity
+        }
     }
 }

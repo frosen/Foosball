@@ -19,19 +19,29 @@ class DetailG {
     static let contentBottomHeight: CGFloat = 12
 
     static let opt: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
-    class func createParagraphStyle() -> NSMutableParagraphStyle {
+    static var paragraphStyle: NSMutableParagraphStyle {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 3
         paragraphStyle.headIndent = 12
         return paragraphStyle
     }
 
-    class func calculateLblHeight(_ s: String, w: CGFloat) -> CGFloat {
-        let str = s as NSString
+    static var lblStyleAttri: [String : Any] {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 3
+        paragraphStyle.headIndent = 12
+
         let attri: [String : Any] = [
             NSFontAttributeName: TextFont,
-            NSParagraphStyleAttributeName: createParagraphStyle()
+            NSParagraphStyleAttributeName: paragraphStyle
         ]
+
+        return attri
+    }
+
+    class func calculateLblHeight(_ s: String, w: CGFloat, style: [String : Any]? = nil) -> CGFloat {
+        let str = s as NSString
+        let attri = style != nil ? style : lblStyleAttri
         let size = str.boundingRect(with: CGSize(width: w, height: CGFloat(MAXFLOAT)), options: opt, attributes: attri, context: nil)
         return size.height
     }
@@ -129,7 +139,7 @@ class DetailStringCell: StaticCell {
     func setLblData(contentView: UIView, str: String) {
         let height = DetailG.calculateLblHeight(str, w: DetailG.widthWithoutMargin)
         lbl.frame = CGRect(x: DetailG.headMargin, y: DetailG.subTitleHeight, width: DetailG.widthWithoutMargin, height: height)
-        let attri: [String : Any] = [NSParagraphStyleAttributeName: DetailG.createParagraphStyle()]
+        let attri: [String : Any] = [NSParagraphStyleAttributeName: DetailG.paragraphStyle]
         let attriStr = NSAttributedString(string: str, attributes: attri)
         lbl.attributedText = attriStr
     }
@@ -210,7 +220,7 @@ class DetailHeadCell: StaticCell {
         btn.setTitleColor(UIColor.white, for: .normal)
         btn.backgroundColor = color
         btn.layer.cornerRadius = 9
-        btn.addTarget(ctrlr, action: callback, for: .touchUpInside)
+        btn.addTarget(self, action: callback, for: .touchUpInside)
     }
 }
 

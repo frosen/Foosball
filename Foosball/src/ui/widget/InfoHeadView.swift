@@ -39,7 +39,7 @@ class InfoHeadView: UIView {
         self.scrollView.addObserver(self, forKeyPath: "contentOffset", options: .new, context: nil)
 
         var inset = self.scrollView.contentInset
-        inset.top = inset.top + h
+        inset.top = inset.top + h + self.extraHeight
         self.scrollView.contentInset = inset
         self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset
     }
@@ -68,7 +68,7 @@ class InfoHeadView: UIView {
         //背景
         bg = UIImageView(image: UIImage(named: bgName))
         maskView.addSubview(bg!)
-        bg!.frame = CGRect(x: 0, y: extraHeight - topMargin + bottomMargin, width: w, height: h + topMargin + bottomMargin)
+        bg!.frame = CGRect(x: 0, y: extraHeight - topMargin + bottomMargin, width: w, height: h + topMargin + bottomMargin + extraHeight)
         bg!.contentMode = .scaleAspectFill
 
         //头像
