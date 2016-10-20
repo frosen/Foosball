@@ -65,6 +65,7 @@ class InputView: UIView, UITextViewDelegate {
         sendBtn.backgroundColor = BaseColor
         sendBtn.setTitle("发送", for: .normal)
         sendBtn.layer.cornerRadius = 10
+        sendBtn.addTarget(self, action: #selector(InputView.onClickSend), for: .touchUpInside)
 
         underLine = UIView(frame: CGRect(x: margin, y: btnHeight + btnY, width: inputWidth, height: 1))
         addSubview(underLine)
@@ -116,5 +117,7 @@ class InputView: UIView, UITextViewDelegate {
         }
     }
 
-
+    func onClickSend() {
+        input.text = ""
+    }
 }
