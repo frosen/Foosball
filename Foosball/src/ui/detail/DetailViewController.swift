@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DetailViewController: BaseController, UITableViewDelegate, UITableViewDataSource {
+class DetailViewController: BaseController, UITableViewDelegate, UITableViewDataSource, InputViewDelegate {
 
     var tableView: UITableView! = nil
     weak var event: Event! = nil
@@ -47,6 +47,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         //隐藏在最下面的输入栏
         textInputView = InputView()
         baseView.addSubview(textInputView)
+        textInputView.delegate = self
 
         // 初始化时，y为总高是为了隐藏到最底下
         var inputFrame = textInputView.frame

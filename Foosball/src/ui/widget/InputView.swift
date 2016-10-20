@@ -28,7 +28,6 @@ class InputView: UIView, UITextViewDelegate {
     static let inputFont: UIFont = UIFont.systemFont(ofSize: 18)
     static var lblStyleAttri: [String : Any] {
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 3
         paragraphStyle.lineBreakMode = .byWordWrapping
 
         let attri: [String : Any] = [
@@ -40,7 +39,8 @@ class InputView: UIView, UITextViewDelegate {
     }
 
     var input: UITextView! = nil
-    var endView: UIView! = nil
+    var sendBtn: UIButton! = nil
+    var underLine: UIView! = nil
     var curInputHeight: CGFloat = 0
     init() {
         super.init(frame: CGRect(x: 0.0, y: 0.0, width: w, height: h))
@@ -59,14 +59,14 @@ class InputView: UIView, UITextViewDelegate {
         addSubview(headLine)
         headLine.backgroundColor = UIColor(white: 0.5, alpha: 1.0)
 
-        let sendBtn = UIButton(frame: CGRect(x: w - margin - btnWidth, y: btnY, width: btnWidth, height: btnHeight))
+        sendBtn = UIButton(frame: CGRect(x: w - margin - btnWidth, y: btnY, width: btnWidth, height: btnHeight))
         addSubview(sendBtn)
 
         sendBtn.backgroundColor = BaseColor
         sendBtn.setTitle("发送", for: .normal)
         sendBtn.layer.cornerRadius = 10
 
-        let underLine = UIView(frame: CGRect(x: margin, y: btnHeight + btnY, width: inputWidth, height: 1))
+        underLine = UIView(frame: CGRect(x: margin, y: btnHeight + btnY, width: inputWidth, height: 1))
         addSubview(underLine)
         underLine.backgroundColor = UIColor(white: 0.5, alpha: 1.0)
     }
@@ -85,19 +85,34 @@ class InputView: UIView, UITextViewDelegate {
         input.resignFirstResponder()
     }
 
+    func changeHeight(_ v: UIView, h: CGFloat) {
+        let oldFrame = v.frame
+        v.frame = CGRect(x: oldFrame.origin.x, y: oldFrame.origin.y, width: oldFrame.width, height: h)
+    }
+
+    func changePosY(_ v: UIView, y: CGFloat) {
+        let oldFrame = v.frame
+        v.frame = CGRect(x: oldFrame.origin.x, y: y, width: oldFrame.width, height: oldFrame.height)
+    }
+
     func textViewDidChange(_ textView: UITextView) {
         let text = textView.text
-        let h = DetailG.calculateLblHeight(text!, w: inputWidth - 10, style: InputView.lblStyleAttri)
-        
-        if h - curInputHeight > 1 { //+1为了防止float误差
+        let h = DetailG.calculateLblHeight(text!, w: inputWidth - 10, style: InputView.lblStyleAttri) // 减少10，才能获得和textView保持一致的高度
+        print(h, curInputHeight)
+        if (abs(curInputHeight - btnHeight) < 1 && h > curInputHeight) || (curInputHeight > btnHeight + 1 && abs(h - curInputHeight) > 1) {
             print("高度变化")
-//            curInputHeight = max(btnY, h)
+            if h < btnHeight {
+                curInputHeight = btnHeight
+            } else {
+                curInputHeight = h + 18 //不加上这么多的数，最后一行输入框显示不出来，不知道为什么
+            }
+            let newHeight = btnY + curInputHeight + btnY
+            changeHeight(self, h: newHeight)
+            changeHeight(input, h: curInputHeight)
+            changePosY(sendBtn, y: newHeight - btnY - btnHeight)
+            changePosY(underLine, y: newHeight - btnY)
 
-//            let oldFrame = frame
-//            let newHeight = btnY + curInputHeight + btnY
-//            frame = CGRect(x: oldFrame.origin.x, y: oldFrame.origin.y, width: oldFrame.width, height: newHeight)
-//
-//            delegate?.onInputViewHeightReset()
+            delegate?.onInputViewHeightReset()
         }
     }
 
