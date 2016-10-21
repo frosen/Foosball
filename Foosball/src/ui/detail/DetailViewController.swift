@@ -15,7 +15,6 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     var sectionNum: Int = 0
 
     var isShowKeyboard: Bool = false
-    var keyboardH: CGFloat = 0 //暂存用
     var textInputView: InputView! = nil
 
     func setData(_ event: Event) {
@@ -196,12 +195,13 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         let userInfo = (note as NSNotification).userInfo!
         let keyBoardBounds = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
-        keyboardH = keyBoardBounds.size.height
 
         isShowKeyboard = true
 
         let animations:(() -> Void) = {
-            self.baseView.transform = CGAffineTransform(translationX: 0, y: -self.keyboardH - self.textInputView.frame.height)
+            print(UIScreen.main.bounds.height - self.textInputView.frame.height, UIScreen.main.bounds.height, self.textInputView.frame.height)
+            self.baseView.transform = CGAffineTransform(translationX: 0, y: -keyBoardBounds.size.height)
+            self.textInputView.frame.origin.y = UIScreen.main.bounds.height - self.textInputView.frame.height
         }
 
         if duration > 0 {
@@ -220,6 +220,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
 
         let animations:(() -> Void) = {
             self.baseView.transform = CGAffineTransform.identity
+            self.textInputView.frame.origin.y = UIScreen.main.bounds.height
         }
 
         if duration > 0 {
@@ -243,9 +244,10 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
 
     func onInputViewHeightReset() {
         if isShowKeyboard == true {
-            baseView.transform = CGAffineTransform(translationX: 0, y: -keyboardH - self.textInputView.frame.height)
+            print(UIScreen.main.bounds.height - self.textInputView.frame.height, UIScreen.main.bounds.height, self.textInputView.frame.height)
+            self.textInputView.frame.origin.y = UIScreen.main.bounds.height - self.textInputView.frame.height
         } else {
-            baseView.transform = CGAffineTransform.identity
+            self.textInputView.frame.origin.y = UIScreen.main.bounds.height
         }
     }
 }

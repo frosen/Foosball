@@ -62,7 +62,7 @@ class InputView: UIView, UITextViewDelegate {
         sendBtn = UIButton(frame: CGRect(x: w - margin - btnWidth, y: btnY, width: btnWidth, height: btnHeight))
         addSubview(sendBtn)
 
-        sendBtn.backgroundColor = BaseColor
+        sendBtn.backgroundColor = UIColor.gray
         sendBtn.setTitle("发送", for: .normal)
         sendBtn.layer.cornerRadius = 10
         sendBtn.addTarget(self, action: #selector(InputView.onClickSend), for: .touchUpInside)
@@ -86,38 +86,39 @@ class InputView: UIView, UITextViewDelegate {
         input.resignFirstResponder()
     }
 
-    func changeHeight(_ v: UIView, h: CGFloat) {
-        let oldFrame = v.frame
-        v.frame = CGRect(x: oldFrame.origin.x, y: oldFrame.origin.y, width: oldFrame.width, height: h)
-    }
-
-    func changePosY(_ v: UIView, y: CGFloat) {
-        let oldFrame = v.frame
-        v.frame = CGRect(x: oldFrame.origin.x, y: y, width: oldFrame.width, height: oldFrame.height)
-    }
-
     func textViewDidChange(_ textView: UITextView) {
         let text = textView.text
+
+        // 检测发送按钮是否可用
+        sendBtn.backgroundColor = (text!.characters.count > 0) ? BaseColor : UIColor.gray
+
+        // 设置高度
         let h = DetailG.calculateLblHeight(text!, w: inputWidth - 10, style: InputView.lblStyleAttri) // 减少10，才能获得和textView保持一致的高度
         print(h, curInputHeight)
         if (abs(curInputHeight - btnHeight) < 1 && h > curInputHeight) || (curInputHeight > btnHeight + 1 && abs(h - curInputHeight) > 1) {
             print("高度变化")
-            if h < btnHeight {
-                curInputHeight = btnHeight
-            } else {
-                curInputHeight = h + 18 //不加上这么多的数，最后一行输入框显示不出来，不知道为什么
-            }
-            let newHeight = btnY + curInputHeight + btnY
-            changeHeight(self, h: newHeight)
-            changeHeight(input, h: curInputHeight)
-            changePosY(sendBtn, y: newHeight - btnY - btnHeight)
-            changePosY(underLine, y: newHeight - btnY)
+            curInputHeight = h < btnHeight ? btnHeight : h
+            let realInputHeight = h < btnHeight ? btnHeight : h + 18 //不加上这么多的数，最后一行输入框显示不出来，不知道为什么
+
+            let newHeight = btnY + realInputHeight + btnY
+            frame.size.height = newHeight
+            input.frame.size.height = realInputHeight
+            sendBtn.frame.origin.y = newHeight - btnY - btnHeight
+            underLine.frame.origin.y = newHeight - btnY
 
             delegate?.onInputViewHeightReset()
         }
     }
 
     func onClickSend() {
+        print("send")
+        let newMsg = input.text
+        if newMsg == "" {
+            return
+        }
+
         input.text = ""
+        textViewDidChange(input)
+        endInput()
     }
 }
