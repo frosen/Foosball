@@ -10,6 +10,7 @@ import UIKit
 
 protocol InputViewDelegate {
     func onInputViewHeightReset()
+    func onSend(text: String)
 }
 
 class InputView: UIView, UITextViewDelegate {
@@ -120,5 +121,7 @@ class InputView: UIView, UITextViewDelegate {
         input.text = ""
         textViewDidChange(input)
         endInput()
+
+        delegate?.onSend(text: newMsg!)
     }
 }

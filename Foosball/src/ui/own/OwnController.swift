@@ -66,7 +66,7 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 96, right: 0) //48 ＋ 48 tabbar向上48个像素结束
 
         //设置tableview的基本属性，分割线等
-        tableView.separatorInset = UIEdgeInsets.zero
+//        tableView.separatorInset = UIEdgeInsets.zero
         tableView.showsVerticalScrollIndicator = false //隐藏滑动条
 
         //添加信息头

@@ -250,4 +250,13 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
             self.textInputView.frame.origin.y = UIScreen.main.bounds.height
         }
     }
+
+    func onSend(text: String) {
+        let index = IndexPath(row: 1, section: 3) // msg内容的第一个
+        changeEvent(index, changeType: "N") { event in
+            let u = AppManager.shareInstance.user!
+            let mS = MsgStruct(user: u.getBrief(), time: Time.now, msg: text)
+            event.msgList.append(mS)
+        }
+    }
 }

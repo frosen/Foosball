@@ -38,4 +38,13 @@ class User: BaseData {
     var firends: [UserBrief]? = nil
 }
 
+extension User {
+    func getBrief() -> UserBrief {
+        let br = UserBrief(ID: ID)
+        br.name = name
+        br.avatarURL = avatarURL
+        return br
+    }
+}
+
 
