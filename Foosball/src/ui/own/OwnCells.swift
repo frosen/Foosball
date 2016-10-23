@@ -39,29 +39,30 @@ class OwnQRCell: BaseCell {
         self.selectionStyle = .none //使选中后没有反应
 
         //bg
+        let qrbgW: CGFloat = 170
         let bgView = UIView()
         contentView.addSubview(bgView)
-        bgView.bounds = CGRect(x: 0, y: 0, width: 170, height: 185)
+        bgView.bounds = CGRect(x: 0, y: 0, width: qrbgW, height: 185)
         bgView.center = CGPoint(x: w / 2, y: 100)
         bgView.backgroundColor = UIColor(white: 1.0, alpha: 1.0)
 
-        bgView.layer.shadowColor = UIColor.black.cgColor
-        bgView.layer.shadowOffset = CGSize(width: 2, height: 1)
+        bgView.layer.shadowColor = UIColor.gray.cgColor
+        bgView.layer.shadowOffset = CGSize(width: 1, height: 1)
         bgView.layer.shadowOpacity = 0.5
         bgView.layer.shadowRadius = 2
 
         //标题
         let lbl = UILabel()
-        contentView.addSubview(lbl)
+        bgView.addSubview(lbl)
         lbl.text = "扫描二维码加我吧"
         lbl.font = UIFont.boldSystemFont(ofSize: 15)
         lbl.sizeToFit()
-        lbl.center = CGPoint(x: w / 2, y: 20)
+        lbl.center = CGPoint(x: qrbgW / 2, y: 15)
 
         // 设置二维码
-        let qrimg = QRCodeTools.createQRCode("www.baidu.com/www.baidu.com/www.baidu.com/www.baidu.com")
-        contentView.addSubview(qrimg)
-        qrimg.center = CGPoint(x: w / 2, y: 110)
+        let qrimg = QRCodeTools.createQRCode("http://www.baidu.com")
+        bgView.addSubview(qrimg)
+        qrimg.center = CGPoint(x: qrbgW / 2, y: 103)
     }
 }
 

@@ -47,6 +47,9 @@ class InputView: UIView, UITextViewDelegate {
         super.init(frame: CGRect(x: 0.0, y: 0.0, width: w, height: h))
         
         backgroundColor = UIColor(white: 0.96, alpha: 1.0)
+        layer.shadowColor = UIColor.gray.cgColor
+        layer.shadowOpacity = 0.3
+        layer.shadowRadius = 3
 
         input = UITextView(frame: CGRect(x: margin, y: btnY, width: inputWidth, height: btnHeight))
         addSubview(input)
@@ -55,10 +58,6 @@ class InputView: UIView, UITextViewDelegate {
         input.font = InputView.inputFont
         input.backgroundColor = UIColor.clear
         curInputHeight = btnHeight
-
-        let headLine = UIView(frame: CGRect(x: 0, y: 0, width: w, height: 0.5))
-        addSubview(headLine)
-        headLine.backgroundColor = UIColor(white: 0.5, alpha: 1.0)
 
         sendBtn = UIButton(frame: CGRect(x: w - margin - btnWidth, y: btnY, width: btnWidth, height: btnHeight))
         addSubview(sendBtn)
@@ -95,7 +94,6 @@ class InputView: UIView, UITextViewDelegate {
 
         // 设置高度
         let h = DetailG.calculateLblHeight(text!, w: inputWidth - 10, style: InputView.lblStyleAttri) // 减少10，才能获得和textView保持一致的高度
-        print(h, curInputHeight)
         if (abs(curInputHeight - btnHeight) < 1 && h > curInputHeight) || (curInputHeight > btnHeight + 1 && abs(h - curInputHeight) > 1) {
             print("高度变化")
             curInputHeight = h < btnHeight ? btnHeight : h

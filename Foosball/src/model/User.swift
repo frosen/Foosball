@@ -23,7 +23,7 @@ class User: BaseData {
     var passwd: String = "" //或者token
 
     //个人信息
-    var name: String = ""
+    var name: String = "玩家"
     var avatarURL: String = ""
 
     //状态数据

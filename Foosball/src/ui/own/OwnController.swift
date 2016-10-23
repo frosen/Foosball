@@ -75,10 +75,11 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
     }
 
     override func initData() {
+        let user = AppManager.shareInstance.user!
         infoHead.initUIData(
             bgImgName: "selfbg",
-            avatarURL: AppManager.shareInstance.user?.avatarURL,
-            titleStr: "聂小倩",
+            avatarURL: user.avatarURL,
+            titleStr: user.name,
             subTitleStr: "个性签名，啦啦啦"
         )
 

@@ -8,14 +8,15 @@
 
 import UIKit
 
-class DetailViewController: BaseController, UITableViewDelegate, UITableViewDataSource, InputViewDelegate {
+class DetailViewController: BaseController, UITableViewDelegate, UITableViewDataSource, DetailToolbarDelegate, InputViewDelegate {
 
     var tableView: UITableView! = nil
     weak var event: Event! = nil
     var sectionNum: Int = 0
 
-    var isShowKeyboard: Bool = false
+    var toolbar: DetailToolbar! = nil
     var textInputView: InputView! = nil
+    var isShowKeyboard: Bool = false
 
     func setData(_ event: Event) {
         self.event = event
@@ -42,16 +43,19 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
 //        tableView.backgroundColor = UIColor.white //最后再让背景变成白色，否则现在不易设计
 
         //按钮栏
+        toolbar = DetailToolbar()
+        baseView.addSubview(toolbar)
+        toolbar.delegate = self
+        toolbar.frame.origin.y = UIScreen.main.bounds.height - toolbar.h
 
         //隐藏在最下面的输入栏
         textInputView = InputView()
         baseView.addSubview(textInputView)
         textInputView.delegate = self
 
-        // 初始化时，y为总高是为了隐藏到最底下
-        var inputFrame = textInputView.frame
-        inputFrame.origin.y = UIScreen.main.bounds.height
-        textInputView.frame = inputFrame
+        // 初始化时，y为总高是为了隐藏到最底下，并且隐藏
+        textInputView.frame.origin.y = UIScreen.main.bounds.height
+        textInputView.isHidden = true
 
         NotificationCenter.default.addObserver(self, selector: #selector(DetailViewController.keyboardWillShow), name: NSNotification.Name(rawValue: "UIKeyboardWillShowNotification"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(DetailViewController.keyBoardWillHide), name: NSNotification.Name(rawValue: "UIKeyboardWillHideNotification"), object: nil)
@@ -187,16 +191,22 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
         // 修改event
         changeFunc(event)
 
-        //
+        // 改变本地cell
+        tableView.resetCell(type: changeType, indexs: [indexPath], d: event)
+
+        // 发送
     }
 
     // 虚拟键盘和输入相关
     func keyboardWillShow(note: Notification) {
+        print("keyboardWillShow")
         let userInfo = (note as NSNotification).userInfo!
         let keyBoardBounds = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
 
         isShowKeyboard = true
+        textInputView.isHidden = false
+        self.toolbar.isHidden = true
 
         let animations:(() -> Void) = {
             print(UIScreen.main.bounds.height - self.textInputView.frame.height, UIScreen.main.bounds.height, self.textInputView.frame.height)
@@ -206,17 +216,19 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
 
         if duration > 0 {
             let options = UIViewAnimationOptions(rawValue: UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue << 16))
-            UIView.animate(withDuration: duration, delay: 0, options:options, animations: animations, completion: nil)
+            UIView.animate(withDuration: duration, delay: 0, options:options, animations: animations)
         }else{
             animations()
         }
     }
 
     func keyBoardWillHide(note: Notification) {
+        print("keyBoardWillHide")
         let userInfo = (note as NSNotification).userInfo!
         let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
 
         isShowKeyboard = false
+        toolbar.isHidden = false
 
         let animations:(() -> Void) = {
             self.baseView.transform = CGAffineTransform.identity
@@ -225,9 +237,12 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
 
         if duration > 0 {
             let options = UIViewAnimationOptions(rawValue: UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).intValue << 16))
-            UIView.animate(withDuration: duration, delay: 0, options:options, animations: animations, completion: nil)
+            UIView.animate(withDuration: duration, delay: 0, options:options, animations: animations) { _ in
+                self.textInputView.isHidden = true
+            }
         }else{
             animations()
+            textInputView.isHidden = true
         }
     }
 
@@ -244,7 +259,6 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
 
     func onInputViewHeightReset() {
         if isShowKeyboard == true {
-            print(UIScreen.main.bounds.height - self.textInputView.frame.height, UIScreen.main.bounds.height, self.textInputView.frame.height)
             self.textInputView.frame.origin.y = UIScreen.main.bounds.height - self.textInputView.frame.height
         } else {
             self.textInputView.frame.origin.y = UIScreen.main.bounds.height
@@ -252,11 +266,21 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     }
 
     func onSend(text: String) {
+        perform(#selector(DetailViewController.sendMsg(text:)), with: text, afterDelay: 0.5)
+    }
+
+    func sendMsg(text: String) {
         let index = IndexPath(row: 1, section: 3) // msg内容的第一个
         changeEvent(index, changeType: "N") { event in
             let u = AppManager.shareInstance.user!
             let mS = MsgStruct(user: u.getBrief(), time: Time.now, msg: text)
+            for mS in (AppManager.shareInstance.user?.activeEvents[0].msgList)! {
+                print(mS.user.name, mS.msg)
+            }
             event.msgList.append(mS)
+            for mS in (AppManager.shareInstance.user?.activeEvents[0].msgList)! {
+                print(mS.user.name, mS.msg)
+            }
         }
     }
 }

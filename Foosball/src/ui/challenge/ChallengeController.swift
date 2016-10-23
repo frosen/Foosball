@@ -72,23 +72,4 @@ class ChallengeController: BaseTabController, UITableViewDelegate, UITableViewDa
         vc.setData(e)
         navigationController!.pushViewController(vc, animated: true)
     }
-
-    //更新cell 不使用reload，而是用动画，
-    //在此之前必须更新好数据源，否则发现numberOfSectionsInTableView什么的不对了会报错
-    func resetCell() {
-
-        tableView.beginUpdates()
-
-        //更新cell数据
-        tableView.reloadSections(IndexSet(integer: 3), with: .none)
-
-        //插入删除
-        let set = IndexSet(integer: 0)
-        tableView.insertSections(set, with: .fade)
-
-        let set2 = IndexSet(integer: 2)
-        tableView.deleteSections(set2, with: .fade)
-
-        tableView.endUpdates()
-    }
 }

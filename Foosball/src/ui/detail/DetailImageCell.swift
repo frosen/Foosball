@@ -18,8 +18,8 @@ class DetailImageHeadCell: DetailHeadCell, UIImagePickerControllerDelegate, UINa
         self.selectionStyle = .none //使选中后没有反应
 
         createHead("瞬间")
-        createButton("拍照", color: UIColor.blue, pos: 0, callback: #selector(DetailImageHeadCell.onClickPhoto))
-        createButton("图库", color: UIColor.red, pos: 1, callback: #selector(DetailImageHeadCell.onClickAlbum))
+        let posX = createButton("拍照", fromPosX: 0, callback: #selector(DetailImageHeadCell.onClickPhoto))
+        let _ = createButton("图库", fromPosX: posX, callback: #selector(DetailImageHeadCell.onClickAlbum))
     }
 
     // 拍照

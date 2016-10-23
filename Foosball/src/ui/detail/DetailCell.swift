@@ -205,22 +205,26 @@ class DetailHeadCell: StaticCell {
         lbl.sizeToFit()
     }
 
-    func createButton(_ txt: String, color: UIColor, pos: Int, callback: Selector) {
+    func createButton(_ txt: String, fromPosX: CGFloat, callback: Selector) -> CGFloat {
         let btn = UIButton(type: .system)
         contentView.addSubview(btn)
 
+        let btnWidth: CGFloat = 15.0 * CGFloat(txt.characters.count) + 20.0
+
         btn.snp.makeConstraints{ make in
             make.centerY.equalTo(contentView.snp.centerY)
-            make.right.equalTo(contentView.snp.right).inset(DetailG.headMargin + CGFloat(pos) * 60)
-            make.size.equalTo(CGSize(width: 50, height: 25))
+            make.right.equalTo(contentView.snp.right).inset(DetailG.headMargin + fromPosX)
+            make.size.equalTo(CGSize(width: btnWidth, height: 25))
         }
 
         btn.setTitle(txt, for: .normal)
         btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         btn.setTitleColor(UIColor.white, for: .normal)
-        btn.backgroundColor = color
+        btn.backgroundColor = BaseColor
         btn.layer.cornerRadius = 9
         btn.addTarget(self, action: callback, for: .touchUpInside)
+
+        return btnWidth + DetailG.headMargin + fromPosX
     }
 }
 

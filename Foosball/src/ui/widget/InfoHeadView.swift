@@ -31,7 +31,7 @@ class InfoHeadView: UIView {
         }
 
         let w: CGFloat = UIScreen.main.bounds.width
-        let h: CGFloat = 160
+        let h: CGFloat = 200
 
         super.init(frame: CGRect(x: 0, y: 0, width: w, height: h))
 
@@ -96,7 +96,7 @@ class InfoHeadView: UIView {
 
         title!.bounds = CGRect(x: 0, y: bottomMargin, width: w, height: 0.2 * h)
         title!.center.x = avatar!.center.x
-        title!.center.y = avatar!.center.y + 50
+        title!.center.y = avatar!.center.y + 55
 
         title!.textAlignment = NSTextAlignment.center
         title!.font = UIFont.systemFont(ofSize: 14.0)
@@ -112,7 +112,7 @@ class InfoHeadView: UIView {
 
         subTitle!.bounds = CGRect(x: 0, y: bottomMargin, width: w, height: 0.1 * h)
         subTitle!.center.x = avatar!.center.x
-        subTitle!.center.y = avatar!.center.y + 70
+        subTitle!.center.y = avatar!.center.y + 80
 
         subTitle!.textAlignment = NSTextAlignment.center
         subTitle!.font = UIFont.systemFont(ofSize: 11.0)

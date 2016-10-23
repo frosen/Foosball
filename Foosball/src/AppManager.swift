@@ -81,11 +81,11 @@ class AppManager: NSObject {
 
         e.award = "~ 红牛杯----胜者每人获得一瓶红牛饮料。\n以上费用败者承担，必须兑现！！"
 
-        let m1 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么")
-        let m2 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么\n~ 这是一首简单的小情歌；\n~ 这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首")
-        let m3 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么")
-        let m4 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么")
-        let m5 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么")
+        let m1 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么1")
+        let m2 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么2")
+        let m3 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么3")
+        let m4 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么4")
+        let m5 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么5")
 
         e.msgList = [m1, m2, m3, m4, m5]
         user!.activeEvents.append(e)

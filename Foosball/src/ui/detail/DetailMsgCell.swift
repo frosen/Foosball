@@ -18,11 +18,16 @@ class DetailMsgHeadCell: DetailHeadCell {
         self.selectionStyle = .none //使选中后没有反应
         createHead("消息")
 
-        createButton("说话", color: UIColor.purple, pos: 0, callback: #selector(DetailMsgHeadCell.onClickSaying))
+        let posX = createButton("说话", fromPosX: 0, callback: #selector(DetailMsgHeadCell.onClickSaying))
+        let _ = createButton("记录比分", fromPosX: posX, callback: #selector(DetailMsgHeadCell.onClickScore))
     }
 
     func onClickSaying() {
         (ctrlr as! DetailViewController).beginInput()
+    }
+
+    func onClickScore() {
+        
     }
 }
 
@@ -89,7 +94,7 @@ class DetailMsgCell: BaseCell {
         let curRow = index!.row
 
         let e = d as! Event
-        let msgStru: MsgStruct = e.msgList[curRow - 1]
+        let msgStru: MsgStruct = e.msgList[e.msgList.count - curRow] // 这里的减法是为了倒过来显示，时间靠后的放上面
         let user: UserBrief = msgStru.user
 
         if img != nil {

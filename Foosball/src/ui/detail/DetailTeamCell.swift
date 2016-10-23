@@ -17,7 +17,7 @@ class DetailTeamHeadCell: DetailHeadCell {
         self.selectionStyle = .none //使选中后没有反应
 
         createHead("队伍")
-        createButton("邀请", color: UIColor.purple, pos: 0, callback: #selector(DetailTeamHeadCell.onClickInvite)) // 邀请按钮
+        let _ = createButton("邀请", fromPosX: 0, callback: #selector(DetailTeamHeadCell.onClickInvite)) // 邀请按钮
     }
 
     // 邀请
