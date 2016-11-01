@@ -18,16 +18,13 @@ class UserBrief: BaseData {
 }
 
 class User: BaseData {
-    //登录信息
-    var loginName: String = "" //手机号或者设备号
-    var passwd: String = "" //或者token
-
     //个人信息
     var name: String = "玩家"
     var avatarURL: String = ""
 
     //状态数据
 
+    // 以下为需要时再获取的数据 -------------------------------------------------------------------------
     //活动事件列表
     var activeEvents: [Event] = []
 

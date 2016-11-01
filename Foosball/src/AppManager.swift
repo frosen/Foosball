@@ -22,7 +22,17 @@ class AppManager: NSObject {
     func onStart() {
         //读取配置文件
 
+        //初始化网络
+        Network.shareInstance.onStart()
+
+        //登录
+        
+
         //假数据
+        fakeData()
+    }
+
+    func fakeData() {
         user = User(ID: DataID(ID: 123))
 
         var e: Event! = nil
@@ -72,7 +82,7 @@ class AppManager: NSObject {
         bk3.name = "大王c"
         let pk3 = UserState(user: bk3, state: .invite)
 
-//        e.opponentStateList = [pk1, pk2, pk3]
+        //        e.opponentStateList = [pk1, pk2, pk3]
 
 
         e.imageURLList = ["http://up.qqjia.com/z/25/tu32700_3.png", "http://up.qqjia.com/z/25/tu32718_6.png", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg"]
@@ -91,8 +101,8 @@ class AppManager: NSObject {
         user!.activeEvents.append(e)
         e = Event(ID: DataID(ID: 50001), item: Foosball)
         user!.activeEvents.append(e)
-
-//        user!.avatarURL = "http://img4.duitang.com/uploads/item/201501/16/20150116231413_KQdLM.jpeg"
+        
+        //        user!.avatarURL = "http://img4.duitang.com/uploads/item/201501/16/20150116231413_KQdLM.jpeg"
     }
 
     
