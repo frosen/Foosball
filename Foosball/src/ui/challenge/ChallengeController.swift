@@ -13,9 +13,11 @@ class ChallengeController: BaseTabController, UITableViewDelegate, UITableViewDa
 
     var tableView: UITableView! = nil
 
+    var activeEventCount: Int = 0
     var activeEvents: [Event] = []
 
     override func viewDidLoad() {
+        initDataOnViewAppear = true
         super.viewDidLoad()
         print("挑战页面")
 
@@ -31,14 +33,17 @@ class ChallengeController: BaseTabController, UITableViewDelegate, UITableViewDa
         tableView.separatorStyle = .none //不用他的分割线，自己画
 
         tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -3) //否则滚动条和屏幕边会有一段间隔
+    }
 
-        //引用数据-------------
+    override func initData() {
         activeEvents = AppManager.shareInstance.user!.activeEvents
+        activeEventCount = activeEvents.count
+        tableView.reloadData()
     }
 
     //table view
     func numberOfSections(in tableView: UITableView) -> Int {
-        return activeEvents.count //因为要利用section的head作为留白，所以每个section就是一行数据
+        return activeEventCount //因为要利用section的head作为留白，所以每个section就是一行数据
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
