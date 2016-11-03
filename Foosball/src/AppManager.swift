@@ -10,27 +10,17 @@ import Foundation
 
 class AppManager: NSObject {
 
-    var user: User? = nil
+
 
     //单例
-    static let shareInstance = AppManager()
+    fileprivate static let shareInstance = AppManager()
     fileprivate override init() {
         print("初始化导演类")
+
     }
 
-    //在所有之前调用
-    func onStart() {
-        //读取配置文件
-
-        //初始化网络
-        Network.shareInstance.onStart()
-
-        //登录
-        
-
-        //假数据
-        fakeData()
-    }
+    // 数据管理器
+    var activeEventsMgr: ActiveEventsMgr = ActiveEventsMgr.shareInstance
 
     func fakeData() {
         user = User(ID: DataID(ID: 123))
@@ -104,6 +94,8 @@ class AppManager: NSObject {
         
         //        user!.avatarURL = "http://img4.duitang.com/uploads/item/201501/16/20150116231413_KQdLM.jpeg"
     }
+}
 
-    
+var APP: AppManager {
+    return AppManager.shareInstance
 }

@@ -8,12 +8,11 @@
 
 import UIKit
 
-class ChallengeController: BaseTabController, UITableViewDelegate, UITableViewDataSource {
+class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource {
     var dataPage: Int = 1
 
     var tableView: UITableView! = nil
 
-    var activeEventCount: Int = 0
     var activeEvents: [Event] = []
 
     override func viewDidLoad() {
@@ -36,14 +35,31 @@ class ChallengeController: BaseTabController, UITableViewDelegate, UITableViewDa
     }
 
     override func initData() {
-        activeEvents = AppManager.shareInstance.user!.activeEvents
-        activeEventCount = activeEvents.count
-        tableView.reloadData()
+        APP.activeEventsMgr.register(observer: self, key: "ChallengeController")
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        <#code#>
+    }
+
+    // ActiveEventsMgrObserver
+    func checkDataModify(oldData: [Event], newData: [Event]) -> [String : String] {
+        return [:]
+    }
+
+    func onDataModify(newData: [Event], resDict: [String : String]) {
+        if resDict.count == 0 { //初始化
+            activeEvents = newData
+            tableView.reloadData()
+        } else {
+
+        }
+
     }
 
     //table view
     func numberOfSections(in tableView: UITableView) -> Int {
-        return activeEventCount //因为要利用section的head作为留白，所以每个section就是一行数据
+        return activeEvents.count //因为要利用section的head作为留白，所以每个section就是一行数据
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

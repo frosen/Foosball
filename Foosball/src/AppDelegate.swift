@@ -15,8 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
-        //初始化
-        AppManager.shareInstance.onStart()
+        //初始化APP
+        let _ = APP
 
         let winFrame = UIScreen.main.bounds
         window = UIWindow(frame: winFrame)
