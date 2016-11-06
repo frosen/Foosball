@@ -24,15 +24,12 @@ class User: BaseData {
 
     //状态数据
 
-    // 以下为需要时再获取的数据 -------------------------------------------------------------------------
-    //活动事件列表
-    
+    //登录信息，不可以又用户改变
+    var token: String = ""
 
-    //全部事件列表
-    var events: [Event]? = nil
-
-    //好友概要列表
-    var firends: [UserBrief]? = nil
+    var activeEId: Int = 0 //活动事件列表
+    var eventsId: Int = 0 //全部事件列表
+    var firendsId: Int = 0 //好友概要列表
 }
 
 extension User {

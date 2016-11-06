@@ -19,7 +19,7 @@ struct NorCellData {
     }
 }
 
-class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSource {
+class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UITableViewDataSource {
     //信息头，比赛成绩，QR，其他项目等group
     let group = [
         //section
@@ -47,7 +47,9 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
 
     var infoHead: InfoHeadView! = nil
     var tableView: UITableView! = nil
-    var sectionNum: Int = 0 
+    var sectionNum: Int = 0
+
+    var curUser: User! = nil
 
     override func viewDidLoad() {
         initDataOnViewAppear = true
@@ -75,16 +77,30 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
     }
 
     override func initData() {
-        let user = AppManager.shareInstance.user!
-        infoHead.initUIData(
+        APP.userMgr.register(observer: self, key: "OwnController")
+    }
+
+    //
+    // observer ---------------------------------------------------------------------------------------------------
+    //
+    func onModify(user: User, isInit: Bool) {
+        curUser = user
+
+        infoHead.initUI()
+
+        infoHead.resetData(
             bgImgName: "selfbg",
             avatarURL: user.avatarURL,
             titleStr: user.name,
             subTitleStr: "个性签名，啦啦啦"
         )
 
-        sectionNum = 2 + group.count
-        tableView.reloadData()
+        if isInit == true {
+            sectionNum = 2 + group.count
+            tableView.reloadData()
+        } else { //只刷新相应的cell
+
+        }
     }
 
     //
@@ -131,7 +147,7 @@ class OwnController: BaseTabController, UITableViewDelegate, UITableViewDataSour
     let ownNorCellId = "ONorCId"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 || indexPath.section == 1 {
-            return BaseCell.create(indexPath, tableView: tableView, d: AppManager.shareInstance.user!, ctrlr: self) { indexPath in
+            return BaseCell.create(indexPath, tableView: tableView, d: curUser, ctrlr: self) { indexPath in
                 switch indexPath.section {
                 case 0:
                     switch indexPath.row {

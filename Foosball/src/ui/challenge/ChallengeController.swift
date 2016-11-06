@@ -13,7 +13,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
 
     var tableView: UITableView! = nil
 
-    var activeEvents: [Event] = []
+    var curActiveEvents: [Event] = []
 
     override func viewDidLoad() {
         initDataOnViewAppear = true
@@ -21,6 +21,9 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         print("挑战页面")
 
         initNavBar()
+
+        //标题
+        title = "兑现"
         
         //创建tableView
         tableView = UITableView(frame: baseView.bounds, style: .grouped)
@@ -38,18 +41,14 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         APP.activeEventsMgr.register(observer: self, key: "ChallengeController")
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        <#code#>
-    }
-
     // ActiveEventsMgrObserver
-    func checkDataModify(oldData: [Event], newData: [Event]) -> [String : String] {
+    func checkModify(activeEvents: [Event]) -> [String : String] {
         return [:]
     }
 
-    func onDataModify(newData: [Event], resDict: [String : String]) {
-        if resDict.count == 0 { //初始化
-            activeEvents = newData
+    func onModify(activeEvents: [Event], byDict dict: [String : String]) {
+        if dict.count == 0 { //初始化
+            curActiveEvents = activeEvents
             tableView.reloadData()
         } else {
 
@@ -59,7 +58,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
 
     //table view
     func numberOfSections(in tableView: UITableView) -> Int {
-        return activeEvents.count //因为要利用section的head作为留白，所以每个section就是一行数据
+        return curActiveEvents.count //因为要利用section的head作为留白，所以每个section就是一行数据
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -79,7 +78,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let e: Event = activeEvents[(indexPath as NSIndexPath).section]
+        let e: Event = curActiveEvents[(indexPath as NSIndexPath).section]
         return BaseCell.create(indexPath, tableView: tableView, d: e, ctrlr: self) { indexPath in
             return BaseCell.CInfo(id: "chalCellId", c: ChallengeCell.self)
         }
@@ -89,8 +88,8 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         let vc = DetailViewController()
         vc.rootVC = rootVC
 
-        let e: Event = activeEvents[(indexPath as NSIndexPath).section]
-        vc.setData(e)
+        let e: Event = curActiveEvents[(indexPath as NSIndexPath).section]
+        vc.setDataId(e.ID)
         navigationController!.pushViewController(vc, animated: true)
     }
 }

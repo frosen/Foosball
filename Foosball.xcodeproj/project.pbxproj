@@ -15,6 +15,7 @@
 		6554A3C51D6FE97B001AB4D6 /* QRCodeTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6554A3C41D6FE97B001AB4D6 /* QRCodeTools.swift */; };
 		657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657219201D5EFA2A007DCE6A /* DetailViewController.swift */; };
 		658E06741D56C7C8008D94FC /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E06731D56C7C8008D94FC /* Event.swift */; };
+		6593C0BD1DCDD65D00589943 /* UserMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6593C0BC1DCDD65D00589943 /* UserMgr.swift */; };
 		65A5DBFA1DBC6ACD001F5A05 /* DetailToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A5DBF91DBC6ACD001F5A05 /* DetailToolbar.swift */; };
 		65AB52451D3291E6005E7D4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52371D3291E6005E7D4C /* AppDelegate.swift */; };
 		65AB52461D3291E6005E7D4C /* AppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52391D3291E6005E7D4C /* AppManager.swift */; };
@@ -34,7 +35,6 @@
 		65D427FC1D6073D700994EA8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D427FB1D6073D700994EA8 /* User.swift */; };
 		65D427FE1D60748400994EA8 /* BaseData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D427FD1D60748400994EA8 /* BaseData.swift */; };
 		65D61CFD1DBF70900032C2E7 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D61CFC1DBF70900032C2E7 /* Network.swift */; };
-		65D61CFF1DBF70A90032C2E7 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D61CFE1DBF70A90032C2E7 /* Login.swift */; };
 		65D61D101DC0602D0032C2E7 /* ActiveEventsMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D61D0F1DC0602D0032C2E7 /* ActiveEventsMgr.swift */; };
 		65EEB75E1DAE393000BB767D /* DetailTeamCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EEB75D1DAE393000BB767D /* DetailTeamCell.swift */; };
 		65EEB7601DAE398D00BB767D /* DetailImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EEB75F1DAE398D00BB767D /* DetailImageCell.swift */; };
@@ -53,6 +53,7 @@
 		6554A3C41D6FE97B001AB4D6 /* QRCodeTools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QRCodeTools.swift; path = qrcode/QRCodeTools.swift; sourceTree = "<group>"; };
 		657219201D5EFA2A007DCE6A /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailViewController.swift; path = detail/DetailViewController.swift; sourceTree = "<group>"; };
 		658E06731D56C7C8008D94FC /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = model/Event.swift; sourceTree = "<group>"; };
+		6593C0BC1DCDD65D00589943 /* UserMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserMgr.swift; path = functions/UserMgr.swift; sourceTree = "<group>"; };
 		65A5DBF91DBC6ACD001F5A05 /* DetailToolbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailToolbar.swift; path = detail/DetailToolbar.swift; sourceTree = "<group>"; };
 		65AB52371D3291E6005E7D4C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65AB52381D3291E6005E7D4C /* Bridging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bridging.h; sourceTree = "<group>"; };
@@ -75,7 +76,6 @@
 		65D427FB1D6073D700994EA8 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = model/User.swift; sourceTree = "<group>"; };
 		65D427FD1D60748400994EA8 /* BaseData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseData.swift; path = model/BaseData.swift; sourceTree = "<group>"; };
 		65D61CFC1DBF70900032C2E7 /* Network.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Network.swift; path = functions/Network.swift; sourceTree = "<group>"; };
-		65D61CFE1DBF70A90032C2E7 /* Login.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Login.swift; path = functions/Login.swift; sourceTree = "<group>"; };
 		65D61D0F1DC0602D0032C2E7 /* ActiveEventsMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ActiveEventsMgr.swift; path = functions/ActiveEventsMgr.swift; sourceTree = "<group>"; };
 		65EEB75D1DAE393000BB767D /* DetailTeamCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailTeamCell.swift; path = detail/DetailTeamCell.swift; sourceTree = "<group>"; };
 		65EEB75F1DAE398D00BB767D /* DetailImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailImageCell.swift; path = detail/DetailImageCell.swift; sourceTree = "<group>"; };
@@ -166,8 +166,8 @@
 				65AB52391D3291E6005E7D4C /* AppManager.swift */,
 				65AB52381D3291E6005E7D4C /* Bridging.h */,
 				6507AC0B1D5632B100791FB1 /* model */,
-				65AB523A1D3291E6005E7D4C /* ui */,
 				65D61CF11DBF360A0032C2E7 /* functions */,
+				65AB523A1D3291E6005E7D4C /* ui */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -248,9 +248,9 @@
 		65D61CF11DBF360A0032C2E7 /* functions */ = {
 			isa = PBXGroup;
 			children = (
+				6593C0BC1DCDD65D00589943 /* UserMgr.swift */,
 				65D61D0F1DC0602D0032C2E7 /* ActiveEventsMgr.swift */,
 				65D61CFC1DBF70900032C2E7 /* Network.swift */,
-				65D61CFE1DBF70A90032C2E7 /* Login.swift */,
 			);
 			name = functions;
 			sourceTree = "<group>";
@@ -425,10 +425,10 @@
 				65AD17441D7EC89A008AEE3C /* BaseCell.swift in Sources */,
 				65CBEF6E1D7FEC19008EAC60 /* UIBase.swift in Sources */,
 				6507AC0A1D55B7C900791FB1 /* ChallengeCell.swift in Sources */,
+				6593C0BD1DCDD65D00589943 /* UserMgr.swift in Sources */,
 				65AB524C1D3291E6005E7D4C /* OwnController.swift in Sources */,
 				650151A51DB4D6F9009D8ABC /* InputView.swift in Sources */,
 				657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */,
-				65D61CFF1DBF70A90032C2E7 /* Login.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

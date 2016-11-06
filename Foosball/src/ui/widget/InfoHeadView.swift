@@ -12,13 +12,11 @@ class InfoHeadView: UIView {
     var scrollView: UIScrollView
     var extraHeight: CGFloat = 0
 
-    var bg: UIImageView? = nil
-    var avatar: Avatar? = nil
-    var title: UILabel? = nil
-    var subTitle: UILabel? = nil
-
-    var leftDataView: UIView? = nil
-    var rightDataView: UIView? = nil
+    var bg: UIImageView! = nil
+    var viewMask: UIView! = nil
+    var avatar: Avatar! = nil
+    var title: UILabel! = nil
+    var subTitle: UILabel! = nil
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -47,7 +45,7 @@ class InfoHeadView: UIView {
     let topMargin: CGFloat = 80
     let bottomMargin: CGFloat = 120
     let avatarW: CGFloat = 70
-    func initUIData(bgImgName bgName: String, avatarURL: String?, titleStr: String, subTitleStr: String) {
+    func initUI() {
         let w: CGFloat = frame.size.width
         let h: CGFloat = frame.size.height
 
@@ -61,74 +59,75 @@ class InfoHeadView: UIView {
         maskViewShadow.layer.shadowRadius = 3
         maskViewShadow.layer.shadowOffset = CGSize(width: 0, height: 5)
 
-        let maskView = UIView(frame: CGRect(x: 0, y: 0, width: maskViewShadow.frame.width, height: maskViewShadow.frame.height))
-        maskViewShadow.addSubview(maskView)
-        maskView.layer.masksToBounds = true
+        viewMask = UIView(frame: CGRect(x: 0, y: 0, width: maskViewShadow.frame.width, height: maskViewShadow.frame.height))
+        maskViewShadow.addSubview(viewMask)
+        viewMask.layer.masksToBounds = true
 
         //背景
-        bg = UIImageView(image: UIImage(named: bgName))
-        maskView.addSubview(bg!)
-        bg!.frame = CGRect(x: 0, y: extraHeight - topMargin + bottomMargin, width: w, height: h + topMargin + bottomMargin + extraHeight)
-        bg!.contentMode = .scaleAspectFill
-
-        //头像
-        avatar = Avatar.create(rect: CGRect(
-                x: 0.5 * w - 0.5 * avatarW,
-                y: 0.42 * h - 0.5 * avatarW + extraHeight + bottomMargin,
-                width: avatarW,
-                height: avatarW
-            ),
-            name: titleStr,
-            url: avatarURL!
-        )
-        maskView.addSubview(avatar!)
-
-//        avatar!.layer.shadowColor = UIColor.black.cgColor
-//        avatar!.layer.shadowOffset = CGSize(width: 0, height: 1)
-//        avatar!.layer.shadowOpacity = 0.7
-//        avatar!.layer.shadowRadius = 6
-        avatar!.layer.borderColor = UIColor.white.cgColor
-        avatar!.layer.borderWidth = 2
+        bg = UIImageView()
+        viewMask.addSubview(bg)
+        bg.frame = CGRect(x: 0, y: extraHeight - topMargin + bottomMargin, width: w, height: h + topMargin + bottomMargin + extraHeight)
+        bg.contentMode = .scaleAspectFill
 
         //名字
         title = UILabel()
-        maskView.addSubview(title!)
+        viewMask.addSubview(title)
 
-        title!.bounds = CGRect(x: 0, y: bottomMargin, width: w, height: 0.2 * h)
-        title!.center.x = avatar!.center.x
-        title!.center.y = avatar!.center.y + 55
+        title.bounds = CGRect(x: 0, y: bottomMargin, width: w, height: 0.2 * h)
+        title.center.x = 0.5 * w
+        title.center.y = 0.42 * h + extraHeight + bottomMargin + 55
 
-        title!.textAlignment = NSTextAlignment.center
-        title!.font = UIFont.systemFont(ofSize: 14.0)
-        title!.text = titleStr
-        title!.textColor = UIColor.white
+        title.textAlignment = NSTextAlignment.center
+        title.font = UIFont.systemFont(ofSize: 14.0)
 
-        title!.shadowColor = UIColor.darkGray
-        title!.shadowOffset = CGSize(width: 0, height: 1)
+        title.textColor = UIColor.white
+
+        title.shadowColor = UIColor.darkGray
+        title.shadowOffset = CGSize(width: 0, height: 1)
 
         //签名
         subTitle = UILabel()
-        maskView.addSubview(subTitle!)
+        viewMask.addSubview(subTitle)
 
-        subTitle!.bounds = CGRect(x: 0, y: bottomMargin, width: w, height: 0.1 * h)
-        subTitle!.center.x = avatar!.center.x
-        subTitle!.center.y = avatar!.center.y + 80
+        subTitle.bounds = CGRect(x: 0, y: bottomMargin, width: w, height: 0.1 * h)
+        subTitle.center.x = 0.5 * w
+        subTitle.center.y = 0.42 * h + extraHeight + bottomMargin + 80
 
-        subTitle!.textAlignment = NSTextAlignment.center
-        subTitle!.font = UIFont.systemFont(ofSize: 11.0)
-        subTitle!.text = subTitleStr
-        subTitle!.textColor = UIColor.white
+        subTitle.textAlignment = NSTextAlignment.center
+        subTitle.font = UIFont.systemFont(ofSize: 11.0)
+        subTitle.textColor = UIColor.white
 
-        subTitle!.shadowColor = UIColor.darkGray
-        subTitle!.shadowOffset = CGSize(width: 0, height: 1)
+        subTitle.shadowColor = UIColor.darkGray
+        subTitle.shadowOffset = CGSize(width: 0, height: 1)
     }
 
-    //设置比赛数据，同时显示左右数据视图
-    func initMatchData(fight: Int, honor: Int) {
-        //左侧视图
+    func resetData(bgImgName bgName: String, avatarURL: String, titleStr: String, subTitleStr: String) {
+        let w: CGFloat = frame.size.width
+        let h: CGFloat = frame.size.height
 
+        //头像
+        if avatar != nil {
+            avatar.removeFromSuperview()
+        }
 
-        //右侧视图
+        avatar = Avatar.create(rect: CGRect(
+            x: 0.5 * w - 0.5 * avatarW,
+            y: 0.42 * h - 0.5 * avatarW + extraHeight + bottomMargin,
+            width: avatarW,
+            height: avatarW
+            ),
+            name: titleStr,
+            url: avatarURL
+        )
+        viewMask.addSubview(avatar)
+
+        avatar.layer.borderColor = UIColor.white.cgColor
+        avatar.layer.borderWidth = 2
+
+        //其他属性
+        bg.image = UIImage(named: bgName)
+        title.text = titleStr
+        subTitle.text = subTitleStr
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -137,7 +136,7 @@ class InfoHeadView: UIView {
     }
 
     let destY: CGFloat = -64 //44 + 20
-    func updateSubViewsWithScrollOffsetY(_ newOffsetY: CGFloat){
+    fileprivate func updateSubViewsWithScrollOffsetY(_ newOffsetY: CGFloat){
         let startY = -(scrollView.contentInset.top)
         let dis = destY - startY
 

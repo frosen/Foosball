@@ -43,6 +43,8 @@ class BaseController: UIViewController {
             navBar!.layer.shadowOpacity = 0.45
             navBar!.layer.shadowRadius = 3
             navBar!.layer.shadowOffset = CGSize(width: 0, height: 5)
+
+            navBar!.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
         }
 
         // 初始化数据，根据设置的不同，在不同的时期进行

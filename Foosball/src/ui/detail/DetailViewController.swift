@@ -8,18 +8,19 @@
 
 import UIKit
 
-class DetailViewController: BaseController, UITableViewDelegate, UITableViewDataSource, DetailToolbarDelegate, InputViewDelegate {
+class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource, DetailToolbarDelegate, InputViewDelegate {
 
-    var tableView: UITableView! = nil
-    weak var event: Event! = nil
+    var curEventId: DataID! = nil
+    var curEvent: Event! = nil
     var sectionNum: Int = 0
 
+    var tableView: UITableView! = nil
     var toolbar: DetailToolbar! = nil
     var textInputView: InputView! = nil
     var isShowKeyboard: Bool = false
 
-    func setData(_ event: Event) {
-        self.event = event
+    func setDataId(_ id: DataID) {
+        self.curEventId = id
     }
     
     override func viewDidLoad() {
@@ -66,11 +67,44 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     }
 
     override func initData() {
+        APP.activeEventsMgr.register(observer: self, key: "DetailViewController")
         sectionNum = 4
         tableView.reloadData()
     }
 
-    // table view delegate ==================================================================================================================
+    // ActiveEventsMgrObserver
+    func checkModify(activeEvents: [Event]) -> [String : String] {
+        return [:]
+    }
+
+    func onModify(activeEvents: [Event], byDict dict: [String : String]) {
+        if dict.count == 0 { //初始化
+            let e = getCurEvent(activeEvents)
+            if e != nil {
+                curEvent = e!
+                tableView.reloadData()
+            } else {
+                UITools.showAlert(self, title: "没这个事件了", msg: "好的", type: 1) { _ in
+                    self.onBack()
+                }
+            }
+
+        } else {
+
+        }
+        
+    }
+
+    func getCurEvent(_ activeEvents: [Event]) -> Event? {
+        for e in activeEvents {
+            if e.ID == curEventId {
+                return e
+            }
+        }
+        return nil
+    }
+
+    // table view delegate ==========================================================================================
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return sectionNum
@@ -84,9 +118,9 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
             //head 友 敌 2. 如果是乱斗应该是不分敌友的所以是2行，但暂时不考虑；3. 以后也可能加入观众，暂不考虑
             return 3 //友一定有自己，敌如果没有也有个标题表示没有的状态
         case 2:
-            return 1 + (event.imageURLList.count > 0 ? 1 : 0) //head body
+            return 1 + (curEvent.imageURLList.count > 0 ? 1 : 0) //head body
         case 3:
-            return 1 + event.msgList.count //对话(s) + head
+            return 1 + curEvent.msgList.count //对话(s) + head
         default:
             return 0
         }
@@ -107,9 +141,9 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
             case 0:
                 return DetailTitleCell.getCellHeight()
             case 1:
-                return DetailContentCell.getCellHeight(event, index: indexPath)
+                return DetailContentCell.getCellHeight(curEvent, index: indexPath)
             case 2:
-                return DetailCashCell.getCellHeight(event, index: indexPath)
+                return DetailCashCell.getCellHeight(curEvent, index: indexPath)
             default:
                 return 0
             }
@@ -118,21 +152,21 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
             case 0:
                 return DetailTeamHeadCell.getCellHeight()
             default:
-                return DetailTeamCell.getCellHeight(event, index: indexPath)
+                return DetailTeamCell.getCellHeight(curEvent, index: indexPath)
             }
         case 2: //比分(s) + head
             switch (indexPath as NSIndexPath).row {
             case 0:
                 return DetailImageHeadCell.getCellHeight()
             default:
-                return DetailImageCell.getCellHeight(event, index: indexPath)
+                return DetailImageCell.getCellHeight(curEvent, index: indexPath)
             }
         case 3: //对话(s) + head
             switch (indexPath as NSIndexPath).row {
             case 0:
                 return DetailMsgHeadCell.getCellHeight()
             default:
-                return DetailMsgCell.getCellHeight(event, index: indexPath)
+                return DetailMsgCell.getCellHeight(curEvent, index: indexPath)
             }
         default:
             return 0
@@ -141,7 +175,7 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
 
     let imageCellId = "ICId"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return StaticCell.create(indexPath, tableView: tableView, d: event, ctrlr: self) { indexPath in
+        return StaticCell.create(indexPath, tableView: tableView, d: curEvent, ctrlr: self) { indexPath in
             switch (indexPath as NSIndexPath).section {
             case 0:
                 switch (indexPath as NSIndexPath).row {
@@ -183,16 +217,17 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
 
     // 回调 ==================================================================================================================
     func onBack() {
+        APP.activeEventsMgr.unregister(key: "DetailViewController")
         let _ = navigationController?.popViewController(animated: true)
     }
 
     // 修改event 被cell调用 changeType: C改变当前，N在当前添加，D删除当前，A所有的重刷
     func changeEvent(_ indexPath: IndexPath, changeType: String, changeFunc: (_ e: Event) -> Void ) {
         // 修改event
-        changeFunc(event)
+        changeFunc(curEvent)
 
         // 改变本地cell
-        tableView.resetCell(type: changeType, indexs: [indexPath], d: event)
+        tableView.resetCell(type: changeType, indexs: [indexPath], d: curEvent)
 
         // 发送
     }
@@ -270,17 +305,11 @@ class DetailViewController: BaseController, UITableViewDelegate, UITableViewData
     }
 
     func sendMsg(text: String) {
-        let index = IndexPath(row: 1, section: 3) // msg内容的第一个
-        changeEvent(index, changeType: "N") { event in
-            let u = AppManager.shareInstance.user!
-            let mS = MsgStruct(user: u.getBrief(), time: Time.now, msg: text)
-            for mS in (AppManager.shareInstance.user?.activeEvents[0].msgList)! {
-                print(mS.user.name, mS.msg)
-            }
-            event.msgList.append(mS)
-            for mS in (AppManager.shareInstance.user?.activeEvents[0].msgList)! {
-                print(mS.user.name, mS.msg)
-            }
-        }
+        APP.activeEventsMgr.changeData(changeFunc: { activeEvents in
+            let e = getCurEvent(activeEvents)!
+            let meBrief = APP.userMgr.user.getBrief()
+            let mS = MsgStruct(user: meBrief, time: Time.now, msg: text)
+            e.msgList.append(mS)
+        }, needUpload: true)
     }
 }
