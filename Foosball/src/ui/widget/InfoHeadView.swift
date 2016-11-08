@@ -40,12 +40,14 @@ class InfoHeadView: UIView {
         inset.top = inset.top + h + self.extraHeight
         self.scrollView.contentInset = inset
         self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset
+
+        initUI()
     }
 
     let topMargin: CGFloat = 80
     let bottomMargin: CGFloat = 120
     let avatarW: CGFloat = 70
-    func initUI() {
+    private func initUI() {
         let w: CGFloat = frame.size.width
         let h: CGFloat = frame.size.height
 
@@ -135,8 +137,8 @@ class InfoHeadView: UIView {
         updateSubViewsWithScrollOffsetY(newOffset.y)
     }
 
-    let destY: CGFloat = -64 //44 + 20
-    fileprivate func updateSubViewsWithScrollOffsetY(_ newOffsetY: CGFloat){
+    private let destY: CGFloat = -64 //44 + 20
+    private func updateSubViewsWithScrollOffsetY(_ newOffsetY: CGFloat){
         let startY = -(scrollView.contentInset.top)
         let dis = destY - startY
 

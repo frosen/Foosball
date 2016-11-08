@@ -83,10 +83,8 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
     //
     // observer ---------------------------------------------------------------------------------------------------
     //
-    func onModify(user: User, isInit: Bool) {
+    func onInit(user: User) {
         curUser = user
-
-        infoHead.initUI()
 
         infoHead.resetData(
             bgImgName: "selfbg",
@@ -95,12 +93,19 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
             subTitleStr: "个性签名，啦啦啦"
         )
 
-        if isInit == true {
-            sectionNum = 2 + group.count
-            tableView.reloadData()
-        } else { //只刷新相应的cell
+        sectionNum = 2 + group.count
+        tableView.reloadData()
+    }
 
-        }
+    func onModify(user: User) {
+        curUser = user
+
+        infoHead.resetData(
+            bgImgName: "selfbg",
+            avatarURL: user.avatarURL,
+            titleStr: user.name,
+            subTitleStr: "个性签名，啦啦啦"
+        )
     }
 
     //

@@ -9,18 +9,28 @@
 import UIKit
 
 protocol UserMgrObserver {
-
-    // 数据调整后出发的方法
-    func onModify(user: User, isInit: Bool)
+    func onInit(user: User)
+    func onModify(user: User)
 }
 
-class UserMgr: NSObject {
+class UserMgr: NSObject, DataMgr {
+
+    typealias DATA = User
+    typealias OB = UserMgrObserver
 
     //数据
-    var user: User! = nil
+    var user: DATA! = nil
 
     // 逻辑数据
-    var obDict: [String: UserMgrObserver] = [:]
+    private class ObStruct {
+        var ob: OB
+        var hide: Bool = false
+        var needUpdata: Bool = false
+        init(ob: OB) {
+            self.ob = ob
+        }
+    }
+    private var obDict: [String: ObStruct] = [:]
 
     override init() {
         super.init()
@@ -35,24 +45,39 @@ class UserMgr: NSObject {
     }
 
     //注册和注销观察者
-    func register(observer ob: UserMgrObserver, key: String) {
-        obDict[key] = ob
-        ob.onModify(user: user, isInit: true)
+    func register(observer ob: OB, key: String) {
+        obDict[key] = ObStruct(ob: ob)
+        ob.onInit(user: user)
     }
 
     func unregister(key: String) {
         obDict.removeValue(forKey: key)
     }
 
+    //显示和隐藏
+    func set(hide: Bool, key: String) {
+        let obStru = obDict[key]!
+        if hide == false && obStru.hide == true && obStru.needUpdata == true {
+            obStru.needUpdata = false
+            obStru.ob.onModify(user: user)
+        }
+        obStru.hide = hide
+    }
+
     // 变化数据
-    func changeData(changeFunc: ((User) -> Void), needUpload: Bool = false) {
+    func changeData(changeFunc: ((DATA) -> Void), needUpload: Bool = false) {
 
         // 接受新变化
         changeFunc(user)
 
         // 在每个观察者中进行对比
         for obTup in self.obDict {
-            obTup.value.onModify(user: user, isInit: false)
+            let obStru = obTup.value
+            if obStru.hide {
+                obStru.needUpdata = true
+            } else {
+                obStru.ob.onModify(user: user)
+            }
         }
 
         //保存本地

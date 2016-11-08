@@ -10,21 +10,28 @@
 import UIKit
 
 protocol ActiveEventsMgrObserver {
-
-    // 检测数据是否调整了
-    func checkModify(activeEvents: [Event]) -> [String: String]
-
-    // 数据调整后出发的方法
-    func onModify(activeEvents: [Event], byDict dict: [String: String])
+    func onInit(activeEvents: [Event])
+    func onModify(activeEvents: [Event])
 }
 
-class ActiveEventsMgr: NSObject {
+class ActiveEventsMgr: NSObject, DataMgr {
+
+    typealias DATA = [Event]
+    typealias OB = ActiveEventsMgrObserver
 
     // 数据
-    var activeEvents: [Event] = []
+    private var activeEvents: DATA = []
 
     // 逻辑数据
-    var obDict: [String: ActiveEventsMgrObserver] = [:]
+    private class ObStruct {
+        var ob: OB
+        var hide: Bool = false
+        var needUpdata: Bool = false
+        init(ob: OB) {
+            self.ob = ob
+        }
+    }
+    private var obDict: [String: ObStruct] = [:]
 
     override init() {
         super.init()
@@ -114,27 +121,38 @@ class ActiveEventsMgr: NSObject {
     }
 
     //注册和注销观察者
-    func register(observer ob: ActiveEventsMgrObserver, key: String) {
-        obDict[key] = ob
-        ob.onModify(activeEvents: activeEvents, byDict: [:])
+    func register(observer ob: OB, key: String) {
+        obDict[key] = ObStruct(ob: ob)
+        ob.onInit(activeEvents: activeEvents)
     }
 
     func unregister(key: String) {
         obDict.removeValue(forKey: key)
     }
 
+    //显示和隐藏
+    func set(hide: Bool, key: String) {
+        let obStru = obDict[key]!
+        if hide == false && obStru.hide == true && obStru.needUpdata == true {
+            obStru.needUpdata = false
+            obStru.ob.onModify(activeEvents: activeEvents)
+        }
+        obStru.hide = hide
+    }
+
     // 变化数据
-    func changeData(changeFunc: (([Event]) -> Void), needUpload: Bool = false) {
+    func changeData(changeFunc: ((DATA) -> Void), needUpload: Bool = false) {
 
         // 接受新变化
         changeFunc(activeEvents)
 
         // 在每个观察者中进行对比
         for obTup in self.obDict {
-            let ob = obTup.value
-            let resDict = ob.checkModify(activeEvents: activeEvents)
-            if resDict.count > 0 {
-                ob.onModify(activeEvents: activeEvents, byDict: resDict)
+            let obStru = obTup.value
+            if obStru.hide {
+                obStru.needUpdata = true
+            } else {
+                obStru.ob.onModify(activeEvents: activeEvents)
             }
         }
 

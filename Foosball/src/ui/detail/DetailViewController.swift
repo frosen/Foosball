@@ -68,31 +68,22 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
     override func initData() {
         APP.activeEventsMgr.register(observer: self, key: "DetailViewController")
-        sectionNum = 4
-        tableView.reloadData()
+
     }
 
     // ActiveEventsMgrObserver
-    func checkModify(activeEvents: [Event]) -> [String : String] {
-        return [:]
+    func onInit(activeEvents: [Event]) {
+        if let e = getCurEvent(activeEvents) {
+            sectionNum = 4
+            curEvent = e
+            tableView.reloadData()
+        }
     }
 
-    func onModify(activeEvents: [Event], byDict dict: [String : String]) {
-        if dict.count == 0 { //初始化
-            let e = getCurEvent(activeEvents)
-            if e != nil {
-                curEvent = e!
-                tableView.reloadData()
-            } else {
-                UITools.showAlert(self, title: "没这个事件了", msg: "好的", type: 1) { _ in
-                    self.onBack()
-                }
-            }
-
-        } else {
-
+    func onModify(activeEvents: [Event]) {
+        if let e = getCurEvent(activeEvents) {
+            print(e.memberCount)
         }
-        
     }
 
     func getCurEvent(_ activeEvents: [Event]) -> Event? {
@@ -306,10 +297,13 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
     func sendMsg(text: String) {
         APP.activeEventsMgr.changeData(changeFunc: { activeEvents in
-            let e = getCurEvent(activeEvents)!
+            let e = getCurEvent(activeEvents)
+            if e == nil {
+                return
+            }
             let meBrief = APP.userMgr.user.getBrief()
             let mS = MsgStruct(user: meBrief, time: Time.now, msg: text)
-            e.msgList.append(mS)
+            e!.msgList.append(mS)
         }, needUpload: true)
     }
 }
