@@ -37,21 +37,35 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -3) //否则滚动条和屏幕边会有一段间隔
     }
 
+    private let DataObKey = "ChallengeController"
     override func initData() {
-        APP.activeEventsMgr.register(observer: self, key: "ChallengeController")
+        APP.activeEventsMgr.register(observer: self, key: DataObKey)
     }
 
-    // ActiveEventsMgrObserver
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        APP.activeEventsMgr.set(hide: false, key: DataObKey)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        APP.activeEventsMgr.set(hide: true, key: DataObKey)
+    }
+
+    // ActiveEventsMgrObserver =============================================================================================
+
     func onInit(activeEvents: [Event]) {
         curActiveEvents = activeEvents
         tableView.reloadData()
     }
 
     func onModify(activeEvents: [Event]) {
-
+        curActiveEvents = activeEvents
+        tableView.reloadData()
     }
 
-    //table view
+    //table view =============================================================================================
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return curActiveEvents.count //因为要利用section的head作为留白，所以每个section就是一行数据
     }

@@ -66,12 +66,24 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         
     }
 
+    private let DataObKey = "DetailViewController"
     override func initData() {
-        APP.activeEventsMgr.register(observer: self, key: "DetailViewController")
+        APP.activeEventsMgr.register(observer: self, key: DataObKey)
 
     }
 
-    // ActiveEventsMgrObserver
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        APP.activeEventsMgr.set(hide: false, key: DataObKey)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        APP.activeEventsMgr.set(hide: true, key: DataObKey)
+    }
+
+    // ActiveEventsMgrObserver ==============================================================================
+
     func onInit(activeEvents: [Event]) {
         if let e = getCurEvent(activeEvents) {
             sectionNum = 4
@@ -301,7 +313,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             if e == nil {
                 return
             }
-            let meBrief = APP.userMgr.user.getBrief()
+            let meBrief = APP.userMgr.data.getBrief()
             let mS = MsgStruct(user: meBrief, time: Time.now, msg: text)
             e!.msgList.append(mS)
         }, needUpload: true)

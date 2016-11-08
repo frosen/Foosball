@@ -76,8 +76,19 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
         baseView.insertSubview(infoHead, aboveSubview: tableView)
     }
 
+    private let DataObKey = "OwnController"
     override func initData() {
-        APP.userMgr.register(observer: self, key: "OwnController")
+        APP.userMgr.register(observer: self, key: DataObKey)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        APP.userMgr.set(hide: false, key: DataObKey)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        APP.userMgr.set(hide: true, key: DataObKey)
     }
 
     //

@@ -14,24 +14,7 @@ protocol ActiveEventsMgrObserver {
     func onModify(activeEvents: [Event])
 }
 
-class ActiveEventsMgr: NSObject, DataMgr {
-
-    typealias DATA = [Event]
-    typealias OB = ActiveEventsMgrObserver
-
-    // 数据
-    private var activeEvents: DATA = []
-
-    // 逻辑数据
-    private class ObStruct {
-        var ob: OB
-        var hide: Bool = false
-        var needUpdata: Bool = false
-        init(ob: OB) {
-            self.ob = ob
-        }
-    }
-    private var obDict: [String: ObStruct] = [:]
+class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
     override init() {
         super.init()
@@ -101,65 +84,33 @@ class ActiveEventsMgr: NSObject, DataMgr {
         let m4 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么4")
         let m5 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么5")
 
+        data = []
+
         e.msgList = [m1, m2, m3, m4, m5]
-        activeEvents.append(e)
+        data.append(e)
         e = Event(ID: DataID(ID: 50001), item: Foosball)
-        activeEvents.append(e)
+        data.append(e)
 
         e = Event(ID: DataID(ID: 50001), item: Foosball)
-        activeEvents.append(e)
+        data.append(e)
         e = Event(ID: DataID(ID: 50001), item: Foosball)
-        activeEvents.append(e)
+        data.append(e)
         e = Event(ID: DataID(ID: 50001), item: Foosball)
-        activeEvents.append(e)
+        data.append(e)
         e = Event(ID: DataID(ID: 50001), item: Foosball)
-        activeEvents.append(e)
+        data.append(e)
         e = Event(ID: DataID(ID: 50001), item: Foosball)
-        activeEvents.append(e)
+        data.append(e)
 
         // 初始化时候直接启动轮询
     }
 
-    //注册和注销观察者
-    func register(observer ob: OB, key: String) {
-        obDict[key] = ObStruct(ob: ob)
-        ob.onInit(activeEvents: activeEvents)
+    override func initObserver(_ ob: ActiveEventsMgrObserver) {
+        ob.onInit(activeEvents: data)
     }
 
-    func unregister(key: String) {
-        obDict.removeValue(forKey: key)
+    override func modifyObserver(_ ob: ActiveEventsMgrObserver) {
+        ob.onModify(activeEvents: data)
     }
 
-    //显示和隐藏
-    func set(hide: Bool, key: String) {
-        let obStru = obDict[key]!
-        if hide == false && obStru.hide == true && obStru.needUpdata == true {
-            obStru.needUpdata = false
-            obStru.ob.onModify(activeEvents: activeEvents)
-        }
-        obStru.hide = hide
-    }
-
-    // 变化数据
-    func changeData(changeFunc: ((DATA) -> Void), needUpload: Bool = false) {
-
-        // 接受新变化
-        changeFunc(activeEvents)
-
-        // 在每个观察者中进行对比
-        for obTup in self.obDict {
-            let obStru = obTup.value
-            if obStru.hide {
-                obStru.needUpdata = true
-            } else {
-                obStru.ob.onModify(activeEvents: activeEvents)
-            }
-        }
-
-        //保存本地
-
-        if needUpload { //上传网络
-
-        }
-    }
 }
