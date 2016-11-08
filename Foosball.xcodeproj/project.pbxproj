@@ -14,6 +14,7 @@
 		6554A3C31D6FE956001AB4D6 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6554A3C21D6FE956001AB4D6 /* ScanViewController.swift */; };
 		6554A3C51D6FE97B001AB4D6 /* QRCodeTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6554A3C41D6FE97B001AB4D6 /* QRCodeTools.swift */; };
 		657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657219201D5EFA2A007DCE6A /* DetailViewController.swift */; };
+		658CC7671DD0C8940085DCFD /* DataMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658CC7661DD0C8940085DCFD /* DataMgr.swift */; };
 		658E06741D56C7C8008D94FC /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E06731D56C7C8008D94FC /* Event.swift */; };
 		6593C0BD1DCDD65D00589943 /* UserMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6593C0BC1DCDD65D00589943 /* UserMgr.swift */; };
 		65A5DBFA1DBC6ACD001F5A05 /* DetailToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A5DBF91DBC6ACD001F5A05 /* DetailToolbar.swift */; };
@@ -52,6 +53,7 @@
 		6554A3C21D6FE956001AB4D6 /* ScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScanViewController.swift; path = qrcode/ScanViewController.swift; sourceTree = "<group>"; };
 		6554A3C41D6FE97B001AB4D6 /* QRCodeTools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QRCodeTools.swift; path = qrcode/QRCodeTools.swift; sourceTree = "<group>"; };
 		657219201D5EFA2A007DCE6A /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailViewController.swift; path = detail/DetailViewController.swift; sourceTree = "<group>"; };
+		658CC7661DD0C8940085DCFD /* DataMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataMgr.swift; sourceTree = "<group>"; };
 		658E06731D56C7C8008D94FC /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = model/Event.swift; sourceTree = "<group>"; };
 		6593C0BC1DCDD65D00589943 /* UserMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserMgr.swift; path = functions/UserMgr.swift; sourceTree = "<group>"; };
 		65A5DBF91DBC6ACD001F5A05 /* DetailToolbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailToolbar.swift; path = detail/DetailToolbar.swift; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 		65D61CF11DBF360A0032C2E7 /* functions */ = {
 			isa = PBXGroup;
 			children = (
+				658CC7661DD0C8940085DCFD /* DataMgr.swift */,
 				6593C0BC1DCDD65D00589943 /* UserMgr.swift */,
 				65D61D0F1DC0602D0032C2E7 /* ActiveEventsMgr.swift */,
 				65D61CFC1DBF70900032C2E7 /* Network.swift */,
@@ -412,6 +415,7 @@
 				65F14B891D68439D0073D547 /* MyTabBarItem.swift in Sources */,
 				65F14B871D68439D0073D547 /* InfoHeadView.swift in Sources */,
 				65F14B861D68439D0073D547 /* EventBoard.swift in Sources */,
+				658CC7671DD0C8940085DCFD /* DataMgr.swift in Sources */,
 				654EE8C01DAC8B6C00F99F21 /* Avatar.swift in Sources */,
 				65EEB7601DAE398D00BB767D /* DetailImageCell.swift in Sources */,
 				65AB524D1D3291E6005E7D4C /* RootViewController.swift in Sources */,

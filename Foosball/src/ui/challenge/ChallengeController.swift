@@ -42,17 +42,12 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
     }
 
     // ActiveEventsMgrObserver
-    func checkModify(activeEvents: [Event]) -> [String : String] {
-        return [:]
+    func onInit(activeEvents: [Event]) {
+        curActiveEvents = activeEvents
+        tableView.reloadData()
     }
 
-    func onModify(activeEvents: [Event], byDict dict: [String : String]) {
-        if dict.count == 0 { //初始化
-            curActiveEvents = activeEvents
-            tableView.reloadData()
-        } else {
-
-        }
+    func onModify(activeEvents: [Event]) {
 
     }
 

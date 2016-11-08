@@ -39,7 +39,7 @@ struct Time {
         return Time(t: getCurrentTime())
     }
 
-    static fileprivate func getCurrentTime() -> Date {
+    static private func getCurrentTime() -> Date {
         let zone: TimeZone = TimeZone.current // 设置系统时区为本地时区
         let second: Int = zone.secondsFromGMT() // 计算本地时区与 GMT 时区的时间差
         return Date(timeIntervalSinceNow: TimeInterval(second)) // 在 GMT 时间基础上追加时间差值，得到本地时间
