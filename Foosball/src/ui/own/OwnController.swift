@@ -58,7 +58,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
 
         //隐藏导航栏，并让tableview位置忽略导航栏
         navTabType = .HideNav
-        automaticallyAdjustsScrollViewInsets = false
+        baseView.frame.origin.y -= 64 // 设置nav的backImg后，automaticallyAdjustsScrollViewInsets = false无效了，所以用这个取代
 
         //创建tableView
         tableView = UITableView(frame: baseView.bounds, style: .grouped)
