@@ -38,7 +38,7 @@ class BaseController: UIViewController {
 
         let navBar = navigationController?.navigationBar
         if navBar != nil {
-            navBar!.barTintColor = BaseColor
+            navBar!.setBackgroundImage(UIImage(named: "nav_color"), for: .default)
             navBar!.layer.shadowColor = UIColor.lightGray.cgColor
             navBar!.layer.shadowOpacity = 0.45
             navBar!.layer.shadowRadius = 3
