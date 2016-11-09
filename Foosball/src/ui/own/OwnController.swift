@@ -53,19 +53,16 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
 
     override func viewDidLoad() {
         initDataOnViewAppear = true
+        navTabType = .HideNav //隐藏导航栏，并让tableview位置忽略导航栏
         super.viewDidLoad()
         print("个人页面")
-
-        //隐藏导航栏，并让tableview位置忽略导航栏
-        navTabType = .HideNav
-        baseView.frame.origin.y -= 64 // 设置nav的backImg后，automaticallyAdjustsScrollViewInsets = false无效了，所以用这个取代
 
         //创建tableView
         tableView = UITableView(frame: baseView.bounds, style: .grouped)
         baseView.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 96, right: 0) //48 ＋ 48 tabbar向上48个像素结束
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 49, right: 0) //下面空出一些像素
 
         //设置tableview的基本属性，分割线等
 //        tableView.separatorInset = UIEdgeInsets.zero

@@ -25,11 +25,11 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     
     override func viewDidLoad() {
         initDataOnViewAppear = true
+        navTabType = .HideTab
         super.viewDidLoad()
         print("详情页面")
 
         title = "详情"
-        navTabType = [.HideTab]
 
         navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ScanViewController.onBack), image: "go_back")
 

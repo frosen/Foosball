@@ -33,8 +33,23 @@ class BaseController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
-        baseView = UIView(frame: view.frame)
+
+        // 根据不同的navTabbar类型设置baseView的尺寸
+        // 之所以这么做，是因为baseView不会随着view尺寸而变化，而增加nav和tabbar时view会变化
+        var baseViewFrame = view.frame
+        if navTabType.contains(.HideNav) || navTabType.contains(.TransparentNav) {
+            baseViewFrame.origin.y = -64
+        } else {
+            baseViewFrame.size.height -= 64
+        }
+        if !navTabType.contains(.HideTab) {
+            baseViewFrame.size.height -= 49
+        }
+        baseView = UIView(frame: baseViewFrame)
         view.addSubview(baseView)
+
+        // 既然使用baseView并且自己指定尺寸，就不需要自动调整了，否则tableview会有问题
+        automaticallyAdjustsScrollViewInsets = false
 
         let navBar = navigationController?.navigationBar
         if navBar != nil {

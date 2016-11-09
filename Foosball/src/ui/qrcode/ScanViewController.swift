@@ -18,11 +18,9 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
     var session: AVCaptureSession! = nil
 
     override func viewDidLoad() {
+        navTabType = [.HideTab, .TransparentNav] // 隐藏导航栏和tabbar
         super.viewDidLoad()
 
-        // 隐藏导航栏和tabbar
-        navTabType = [.HideTab, .TransparentNav]
-        automaticallyAdjustsScrollViewInsets = false
         navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ScanViewController.onBack), image: "go_back")
 
         baseView.clipsToBounds = true //这个属性必须打开否则返回的时候会出现黑边
