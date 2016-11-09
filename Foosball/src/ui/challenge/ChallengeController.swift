@@ -31,7 +31,6 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         tableView.delegate = self
         tableView.dataSource = self
 
-        tableView.bounces = false
         tableView.separatorStyle = .none //不用他的分割线，自己画
 
         tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -3) //否则滚动条和屏幕边会有一段间隔
