@@ -91,13 +91,44 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             sectionNum = 4
             curEvent = e
             tableView.reloadData()
+            saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
         }
     }
 
     func onModify(activeEvents: [Event]) {
         if let e = getCurEvent(activeEvents) {
             curEvent = e
-            tableView.reloadData()
+
+            tableView.beginUpdates()
+
+            // team和瞬间的更新
+            let indexList = [
+                IndexPath(row: 1, section: 1),
+                IndexPath(row: 2, section: 1),
+                IndexPath(row: 1, section: 2)
+            ]
+            tableView.reloadRows(at: indexList, with: .none)
+
+            // 前几个不是上次记录的最新的对话，展示在ui上
+            var i = e.msgList.count - 1
+            var resetRow: Int = 1
+            while true {
+                let msg = e.msgList[i]
+                if !isNewestMsg(msg) {
+                    tableView.insertRows(at: [IndexPath(row: resetRow, section: 3)], with: .fade)
+                    resetRow += 1
+                } else {
+                    break
+                }
+
+                i -= 1
+                if i < 0 {
+                    break
+                }
+            }
+            tableView.endUpdates()
+
+            saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
         }
     }
 
@@ -108,6 +139,22 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             }
         }
         return nil
+    }
+
+    // 记录最新的对话，方便更新对话列表
+    var newestMsgUserId: DataID? = nil
+    var newestMsgTime: Time? = nil
+    func saveNewestMsg(_ msg: MsgStruct) {
+        newestMsgUserId = msg.user.ID
+        newestMsgTime = msg.time
+    }
+
+    func isNewestMsg(_ msg: MsgStruct) -> Bool {
+        if newestMsgUserId == nil || newestMsgTime == nil {
+            return true // 没有记录时，都是最新的
+        } else {
+            return msg.user.ID == newestMsgUserId! && msg.time == newestMsgTime!
+        }
     }
 
     // table view delegate ==========================================================================================
@@ -124,7 +171,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             //head 友 敌 2. 如果是乱斗应该是不分敌友的所以是2行，但暂时不考虑；3. 以后也可能加入观众，暂不考虑
             return 3 //友一定有自己，敌如果没有也有个标题表示没有的状态
         case 2:
-            return 1 + (curEvent.imageURLList.count > 0 ? 1 : 0) //head body
+            return 2 // head body 就算是没有图片时，也应该有个默认的图
         case 3:
             return 1 + curEvent.msgList.count //对话(s) + head
         default:

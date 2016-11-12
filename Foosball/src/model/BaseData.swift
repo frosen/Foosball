@@ -84,6 +84,10 @@ struct Time {
     }
 }
 
+func ==(lhs: Time, rhs: Time) -> Bool {
+    return lhs.time == rhs.time
+}
+
 //位置信息的封装
 struct Location {
     
