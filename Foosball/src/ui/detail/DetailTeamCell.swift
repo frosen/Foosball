@@ -15,8 +15,13 @@ class DetailTeamHeadCell: DetailHeadCell {
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
+        createHead()
+    }
 
-        createHead("队伍")
+    override func setData(_ d: BaseData?, index: IndexPath?) {
+        setHeadLabel("队伍")
+
+        clearButtons()
         let _ = createButton("邀请", fromPosX: 0, callback: #selector(DetailTeamHeadCell.onClickInvite)) // 邀请按钮
     }
 
@@ -29,7 +34,7 @@ class DetailTeamHeadCell: DetailHeadCell {
 // 一行6个头像，头像下面有状态
 // 超过6个则换行
 // 分成友方，敌方，观众
-class DetailTeamCell: StaticCell {
+class DetailTeamCell: BaseCell {
     static let memberCountIn1Line: CGFloat = 6
     static let avatarMargin: CGFloat = 3
     static let avatarTotalWidth: CGFloat = DetailG.widthWithoutMargin + 2 * avatarMargin

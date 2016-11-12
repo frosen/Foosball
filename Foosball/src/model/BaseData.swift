@@ -76,6 +76,12 @@ struct Time {
         formatter.dateFormat = "yyyy年MM月dd日HH点mm分"
         return formatter.string(from: time)
     }
+
+    func toNumber() -> Int {
+        let t = time.timeIntervalSince1970
+        print("time", t)
+        return Int(t * 1000)
+    }
 }
 
 //位置信息的封装

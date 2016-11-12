@@ -82,7 +82,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         let m2 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么2")
         let m3 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么3")
         let m4 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么4")
-        let m5 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么5")
+        let m5 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5")
 
         data = []
 

@@ -47,7 +47,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         toolbar = DetailToolbar()
         baseView.addSubview(toolbar)
         toolbar.delegate = self
-        toolbar.frame.origin.y = UIScreen.main.bounds.height - toolbar.h
+        toolbar.frame.origin.y = baseView.frame.height - toolbar.h
+
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: toolbar.h, right: 0)
 
         //隐藏在最下面的输入栏
         textInputView = InputView()
@@ -55,7 +57,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         textInputView.delegate = self
 
         // 初始化时，y为总高是为了隐藏到最底下，并且隐藏
-        textInputView.frame.origin.y = UIScreen.main.bounds.height
+        textInputView.frame.origin.y = baseView.frame.height
         textInputView.isHidden = true
 
         NotificationCenter.default.addObserver(self, selector: #selector(DetailViewController.keyboardWillShow), name: NSNotification.Name(rawValue: "UIKeyboardWillShowNotification"), object: nil)
@@ -94,7 +96,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
     func onModify(activeEvents: [Event]) {
         if let e = getCurEvent(activeEvents) {
-            print(e.memberCount)
+            curEvent = e
+            tableView.reloadData()
         }
     }
 
@@ -224,17 +227,6 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         let _ = navigationController?.popViewController(animated: true)
     }
 
-    // 修改event 被cell调用 changeType: C改变当前，N在当前添加，D删除当前，A所有的重刷
-    func changeEvent(_ indexPath: IndexPath, changeType: String, changeFunc: (_ e: Event) -> Void ) {
-        // 修改event
-        changeFunc(curEvent)
-
-        // 改变本地cell
-        tableView.resetCell(type: changeType, indexs: [indexPath], d: curEvent)
-
-        // 发送
-    }
-
     // 虚拟键盘和输入相关
     func keyboardWillShow(note: Notification) {
         print("keyboardWillShow")
@@ -249,7 +241,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         let animations:(() -> Void) = {
             print(UIScreen.main.bounds.height - self.textInputView.frame.height, UIScreen.main.bounds.height, self.textInputView.frame.height)
             self.baseView.transform = CGAffineTransform(translationX: 0, y: -keyBoardBounds.size.height)
-            self.textInputView.frame.origin.y = UIScreen.main.bounds.height - self.textInputView.frame.height
+            self.textInputView.frame.origin.y = self.baseView.frame.height - self.textInputView.frame.height
         }
 
         if duration > 0 {
@@ -270,7 +262,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
         let animations:(() -> Void) = {
             self.baseView.transform = CGAffineTransform.identity
-            self.textInputView.frame.origin.y = UIScreen.main.bounds.height
+            self.textInputView.frame.origin.y = self.baseView.frame.height
         }
 
         if duration > 0 {
@@ -297,9 +289,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
     func onInputViewHeightReset() {
         if isShowKeyboard == true {
-            self.textInputView.frame.origin.y = UIScreen.main.bounds.height - self.textInputView.frame.height
+            self.textInputView.frame.origin.y = baseView.frame.height - self.textInputView.frame.height
         } else {
-            self.textInputView.frame.origin.y = UIScreen.main.bounds.height
+            self.textInputView.frame.origin.y = baseView.frame.height
         }
     }
 

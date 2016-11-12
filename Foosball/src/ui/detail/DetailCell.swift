@@ -181,8 +181,10 @@ class DetailCashCell: DetailStringCell {
 
 // =============================================================================================================
 
-class DetailHeadCell: StaticCell {
-    func createHead(_ s: String) {
+class DetailHeadCell: BaseCell {
+    var lbl: UILabel! = nil
+
+    func createHead() {
         let vw: CGFloat = 15
         let vh: CGFloat = 15
 
@@ -191,7 +193,7 @@ class DetailHeadCell: StaticCell {
         icon.image = UIImage(named: "detail_cell_icon")
 //        icon.backgroundColor = UIColor.orange
 
-        let lbl = UILabel()
+        lbl = UILabel()
         contentView.addSubview(lbl)
         lbl.snp.makeConstraints{ make in
             make.left.equalTo(icon.snp.right).offset(DetailG.headMargin)
@@ -200,14 +202,18 @@ class DetailHeadCell: StaticCell {
 
         lbl.font = TitleFont
         lbl.textColor = TitleColor
+    }
 
+    func setHeadLabel(_ s: String) {
         lbl.text = s
         lbl.sizeToFit()
     }
 
+    var btnList: [UIButton] = []
     func createButton(_ txt: String, fromPosX: CGFloat, callback: Selector) -> CGFloat {
         let btn = UIButton(type: .system)
         contentView.addSubview(btn)
+        btnList.append(btn)
 
         let btnWidth: CGFloat = 15.0 * CGFloat(txt.characters.count) + 20.0
 
@@ -225,6 +231,12 @@ class DetailHeadCell: StaticCell {
         btn.addTarget(self, action: callback, for: .touchUpInside)
 
         return btnWidth + DetailG.headMargin + fromPosX
+    }
+
+    func clearButtons() {
+        for btn in btnList {
+            btn.removeFromSuperview()
+        }
     }
 }
 

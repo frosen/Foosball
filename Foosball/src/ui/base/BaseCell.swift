@@ -89,29 +89,4 @@ class StaticCell: BaseCell {
     }
 }
 
-extension UITableView {
-    //更新cell 不使用reload，而是用动画，
-    //在此之前必须更新好数据源，否则发现numberOfSectionsInTableView什么的不对了会报错
-    func resetCell(type: String, indexs: [IndexPath], d: BaseData? = nil) {
-        if type == "C" {
-            for index in indexs {
-                let c = cellForRow(at: index)
-                if let sc = c as? StaticCell {
-                    sc.resetData(d, index: index)
-                } else {
-                    reloadRows(at: [index], with: .none)
-                }
-            }
-        } else {
-            beginUpdates()
-            if type == "N" {
-                insertRows(at: indexs, with: .fade)
-            } else {
-                deleteRows(at: indexs, with: .fade)
-            }
-            endUpdates()
-        }
-    }
-}
-
 

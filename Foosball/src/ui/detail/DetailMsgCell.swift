@@ -16,8 +16,13 @@ class DetailMsgHeadCell: DetailHeadCell {
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
-        createHead("消息")
+        createHead()
+    }
 
+    override func setData(_ d: BaseData?, index: IndexPath?) {
+        setHeadLabel("消息")
+
+        clearButtons()
         let posX = createButton("说话", fromPosX: 0, callback: #selector(DetailMsgHeadCell.onClickSaying))
         let _ = createButton("记录比分", fromPosX: posX, callback: #selector(DetailMsgHeadCell.onClickScore))
     }
@@ -55,7 +60,7 @@ class DetailMsgCell: BaseCell {
 
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
-        let msgStru: MsgStruct = e.msgList[index!.row - 1]
+        let msgStru: MsgStruct = e.msgList[e.msgList.count - index!.row] // 倒过来显示的
         return DetailG.calculateLblHeight(msgStru.msg, w: msgStrWidth, style: lblStyleAttri) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 

@@ -16,8 +16,13 @@ class DetailImageHeadCell: DetailHeadCell, UIImagePickerControllerDelegate, UINa
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
+        createHead()
+    }
 
-        createHead("瞬间")
+    override func setData(_ d: BaseData?, index: IndexPath?) {
+        setHeadLabel("瞬间")
+
+        clearButtons()
         let posX = createButton("拍照", fromPosX: 0, callback: #selector(DetailImageHeadCell.onClickPhoto))
         let _ = createButton("图库", fromPosX: posX, callback: #selector(DetailImageHeadCell.onClickAlbum))
     }
@@ -59,18 +64,20 @@ class DetailImageHeadCell: DetailHeadCell, UIImagePickerControllerDelegate, UINa
 
         //更新event，并上传，然后更新cell
         let detailCtrlr = self.ctrlr as! DetailViewController
-        var cellIndex = detailCtrlr.tableView.indexPath(for: self)!
-        cellIndex.row += 1 //这里是标题，取标题下一个cell
-        detailCtrlr.changeEvent(cellIndex, changeType: "C") { event in
-            event.imageURLList.append("http://up.qqjia.com/z/25/tu32700_3.png")
-        }
+        APP.activeEventsMgr.changeData(changeFunc: { activeEvents in
+            let e = detailCtrlr.getCurEvent(activeEvents)
+            if e == nil {
+                return
+            }
+            e!.imageURLList.append("http://up.qqjia.com/z/25/tu32700_3.png")
+        }, needUpload: true)
 
         //切换场景后更新cell
         picker.dismiss(animated: true)
     }
 }
 
-class DetailImageCell: StaticCell, SKPhotoBrowserDelegate {
+class DetailImageCell: BaseCell, SKPhotoBrowserDelegate {
     static let imageCountIn1Line: CGFloat = 4
     static let imgMargin: CGFloat = 2
     static let imageViewWidth: CGFloat = (DetailG.widthWithoutMargin + 2 * imgMargin) / imageCountIn1Line
@@ -79,6 +86,8 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate {
 
     var imgListView: UIView? = nil
     var imgViewArray: [UIImageView] = []
+    var imgUrlList: [Int: String] = [:]
+
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
         let lineCount = ceil(CGFloat(e.imageURLList.count) / imageCountIn1Line)
@@ -142,6 +151,7 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate {
         v.addGestureRecognizer(longP)
 
         imgViewArray.append(img)
+        imgUrlList[index] = url
 
         return v
     }
@@ -175,10 +185,21 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate {
         UITools.showAlert(ctrlr, title: "删除图片", msg: "您确定要删除这张图片吗？", type: 2) { _ in
             print("confirm to delete")
             let detailCtrlr = self.ctrlr as! DetailViewController
-            let cellIndex = detailCtrlr.tableView.indexPath(for: self)
-            detailCtrlr.changeEvent(cellIndex!, changeType: "C") { event in
-                event.imageURLList.remove(at: index)
-            }
+            APP.activeEventsMgr.changeData(changeFunc: { activeEvents in
+                let e = detailCtrlr.getCurEvent(activeEvents)
+                if e == nil {
+                    return
+                }
+
+                // 之所以要重新搜索一遍，是因为过程中有可能更新了
+                let removeUrl: String = self.imgUrlList[index]!
+                for i in 0..<e!.imageURLList.count {
+                    if removeUrl == e!.imageURLList[i] {
+                        e!.imageURLList.remove(at: i)
+                        break
+                    }
+                }
+            }, needUpload: true)
         }
     }
 }
