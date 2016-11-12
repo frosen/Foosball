@@ -16,13 +16,8 @@ class DetailMsgHeadCell: DetailHeadCell {
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
-        createHead()
-    }
+        createHead("消息")
 
-    override func setData(_ d: BaseData?, index: IndexPath?) {
-        setHeadLabel("消息")
-
-        clearButtons()
         let posX = createButton("说话", fromPosX: 0, callback: #selector(DetailMsgHeadCell.onClickSaying))
         let _ = createButton("记录比分", fromPosX: posX, callback: #selector(DetailMsgHeadCell.onClickScore))
     }

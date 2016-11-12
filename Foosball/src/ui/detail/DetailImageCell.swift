@@ -16,13 +16,7 @@ class DetailImageHeadCell: DetailHeadCell, UIImagePickerControllerDelegate, UINa
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
-        createHead()
-    }
-
-    override func setData(_ d: BaseData?, index: IndexPath?) {
-        setHeadLabel("瞬间")
-
-        clearButtons()
+        createHead("瞬间")
         let posX = createButton("拍照", fromPosX: 0, callback: #selector(DetailImageHeadCell.onClickPhoto))
         let _ = createButton("图库", fromPosX: posX, callback: #selector(DetailImageHeadCell.onClickAlbum))
     }
