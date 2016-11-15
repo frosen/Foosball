@@ -16,6 +16,8 @@ protocol MyTabBarDelegate {
 
 class MyTabBar: UIView {
 
+    static let midBtnCenterPosHeight: CGFloat = 33 //中间中心抬起的高度
+
     weak var ctrller: UITabBarController?
     var midButton: UIButton
 
@@ -99,7 +101,7 @@ class MyTabBar: UIView {
         }
 
         // 设置中央按钮的位置
-        midButton.center = CGPoint(x: vw * 0.5, y: 1.5 * vh - midButton.frame.size.height)
+        midButton.center = CGPoint(x: vw * 0.5, y: vh - MyTabBar.midBtnCenterPosHeight)
     }
 
     func onClickItem(_ btn: UIButton) {
