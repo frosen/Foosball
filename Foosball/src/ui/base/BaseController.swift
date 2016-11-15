@@ -72,6 +72,7 @@ class BaseController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        rootVC.currentCtrlr = self
         handleNavTabState()
     }
 

@@ -10,10 +10,12 @@ import UIKit
 import SnapKit
 import SDWebImage
 
-class RootViewController: UITabBarController, MyTabBarDelegate {
+class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationControllerDelegate {
     var items: [UITabBarItem] = []
 
     var myTabBar: MyTabBar! = nil
+
+    var currentCtrlr: BaseController! = nil
 
     override func viewDidLoad() {
         view.backgroundColor = UIColor.white
@@ -45,6 +47,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
 
         // 先给外面传进来的小控制器 包装 一个导航控制器
         let nav = UINavigationController(rootViewController: vc)
+        nav.delegate = self
 
         // 添加为子控制器
         addChildViewController(nav)
@@ -74,8 +77,53 @@ class RootViewController: UITabBarController, MyTabBarDelegate {
 
     func tabBar(_ tabBar: MyTabBar, didClickMidButton btn: UIButton) {
         print("mid button")
+
+        let createCtrlr = CreateController()
+        createCtrlr.rootVC = self
+        currentCtrlr.navigationController!.pushViewController(createCtrlr, animated: true)
+    }
+
+    // UINavigationControllerDelegate
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        print("aaa")
+        return nil
     }
 }
+
+// 环状场景过渡
+class RinglikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning {
+    enum TransType {
+        case push
+        case pop
+    }
+
+    var t: TransType! = nil
+    init(t: TransType) {
+        super.init()
+        self.t = t
+    }
+
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return 0.5
+    }
+
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        if (t == .push) {
+            doPush(using: transitionContext)
+        } else {
+            doPop(using: transitionContext)
+        }
+    }
+
+    func doPush(using transitionContext: UIViewControllerContextTransitioning) {
+
+    }
+
+    func doPop(using transitionContext: UIViewControllerContextTransitioning) {
+        
+    }
+}
+
 
 
 
