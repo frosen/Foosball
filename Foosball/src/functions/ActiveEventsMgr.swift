@@ -88,19 +88,19 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
         e.msgList = [m1, m2, m3, m4, m5]
         data.append(e)
-//        e = Event(ID: DataID(ID: 50001), item: Foosball)
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001), item: Foosball)
-//        data.append(e)
-//        e = Event(ID: DataID(ID: 50001), item: Foosball)
-//        data.append(e)
-//        e = Event(ID: DataID(ID: 50001), item: Foosball)
-//        data.append(e)
-//        e = Event(ID: DataID(ID: 50001), item: Foosball)
-//        data.append(e)
-//        e = Event(ID: DataID(ID: 50001), item: Foosball)
-//        data.append(e)
+        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        data.append(e)
+
+        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        data.append(e)
+        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        data.append(e)
+        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        data.append(e)
+        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        data.append(e)
+        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        data.append(e)
 
         // 初始化时候直接启动轮询
     }

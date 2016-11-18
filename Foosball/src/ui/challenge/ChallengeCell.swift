@@ -46,15 +46,8 @@ class ChallengeCell: BaseCell {
         VS.text = "VS"
         VS.sizeToFit()
 
-        let vsWidth: CGFloat = VS.frame.width
-        let teamInterval: CGFloat = 6
         let teamWidth = teamView.frame.height
-        let maxWidth = (teamView.frame.size.width - vsWidth) / 2
-        let ourInterval = calculateAvatarInterval(
-            count: e.ourSideStateList.count, designWidth: teamWidth + teamInterval, maxWidth: maxWidth)
-        let theirInterval = calculateAvatarInterval(
-            count: e.opponentStateList.count, designWidth: teamWidth + teamInterval, maxWidth: maxWidth)
-        let interval = min(ourInterval, theirInterval)
+        let interval: CGFloat = 18
 
         var memberPosX: CGFloat = 0
 
@@ -73,8 +66,8 @@ class ChallengeCell: BaseCell {
         }
 
         VS.center.y = teamView.frame.height / 2
-        VS.frame.origin.x = memberPosX
-        memberPosX += VS.frame.width
+        VS.frame.origin.x = memberPosX + (teamWidth - interval) + 5 // 5是留白
+        memberPosX = VS.frame.origin.x + VS.frame.width + 5
 
         c = 0
         for m in e.opponentStateList {
@@ -87,16 +80,6 @@ class ChallengeCell: BaseCell {
             if c >= maxMemberCount {
                 break
             }
-        }
-    }
-
-    // 允许头像有部分重叠，如果头像按照不重叠排列超过区域最大宽度，则重叠
-    func calculateAvatarInterval(count: Int, designWidth: CGFloat, maxWidth: CGFloat) -> CGFloat {
-        let realCount = min(count, maxMemberCount)
-        if designWidth * CGFloat(realCount) > maxWidth {
-            return (maxWidth - designWidth) / CGFloat(realCount - 1) // 减去最后一个距离，前面平均算
-        } else {
-            return designWidth
         }
     }
 
