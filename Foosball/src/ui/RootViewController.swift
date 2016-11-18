@@ -80,12 +80,11 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
 
         let createCtrlr = CreateController()
         createCtrlr.rootVC = self
-        currentCtrlr.navigationController!.pushViewController(createCtrlr, animated: true)
+        currentCtrlr.navigationController!.pushViewController(createCtrlr, animated: true) // 没有用模态跳转，是因为模态会在最上而挡住tabbar
     }
 
     // UINavigationControllerDelegate
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        print("aaa")
         if toVC is CreateController {
             return RinglikeTransitioning(t: .push)
         } else if fromVC is CreateController {
@@ -96,112 +95,6 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
     }
 }
 
-// 环状场景过渡
-class RinglikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning, CAAnimationDelegate {
-    enum TransType {
-        case push
-        case pop
-    }
-
-    weak var transitionContext: UIViewControllerContextTransitioning?
-
-    var t: TransType! = nil
-    init(t: TransType) {
-        super.init()
-        self.t = t
-    }
-
-    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.35
-    }
-
-    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        if (t == .push) {
-            doPush(using: transitionContext)
-        } else {
-            doPop(using: transitionContext)
-        }
-    }
-
-    func doPush(using transitionContext: UIViewControllerContextTransitioning) {
-        print("do self push")
-
-        self.transitionContext = transitionContext
-
-        let toVC = transitionContext.viewController(forKey: .to)! as! BaseController
-        transitionContext.containerView.addSubview(toVC.view)
-
-        // 计算位置
-        let beginPos = CGPoint(x: UIScreen.main.bounds.width / 2, y: toVC.baseView.frame.height - MyTabBar.midBtnCenterPosHeight)
-        let beginSize: CGFloat = 10
-        let beginFrame = CGRect(x: beginPos.x - beginSize / 2, y: beginPos.y - beginSize / 2, width: beginSize, height: beginSize)
-
-        let endRadius = sqrt(beginPos.x * beginPos.x + beginPos.y * beginPos.y)
-        let endFrame = beginFrame.insetBy(dx: -endRadius, dy: -endRadius)
-
-        let circleMaskPathInitial = UIBezierPath(ovalIn: beginFrame)
-        let circleMaskPathFinal = UIBezierPath(ovalIn: endFrame)
-
-        // 创建蒙版
-        let maskLayer = CAShapeLayer()
-        maskLayer.path = circleMaskPathFinal.cgPath
-        toVC.view.layer.mask = maskLayer
-
-        // 蒙版动画
-        let maskLayerAnim = CABasicAnimation(keyPath: "path")
-        maskLayerAnim.fromValue = circleMaskPathInitial.cgPath
-        maskLayerAnim.toValue = circleMaskPathFinal.cgPath
-        maskLayerAnim.duration = self.transitionDuration(using: transitionContext)
-        maskLayerAnim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
-        maskLayerAnim.delegate = self
-        maskLayer.add(maskLayerAnim, forKey: "path")
-    }
-
-    func doPop(using transitionContext: UIViewControllerContextTransitioning) {
-        print("do self pop")
-
-        self.transitionContext = transitionContext
-
-        let fromVC = transitionContext.viewController(forKey: .from)! as! BaseController
-        transitionContext.containerView.addSubview(fromVC.view)
-
-        // 计算位置
-        let (beginFrame, endFrame) = calculatePos(v: fromVC.baseView)
-
-        let circleMaskPathInitial = UIBezierPath(ovalIn: endFrame)
-        let circleMaskPathFinal = UIBezierPath(ovalIn: beginFrame)
-
-        // 创建蒙版
-        let maskLayer = CAShapeLayer()
-        maskLayer.path = circleMaskPathFinal.cgPath
-        fromVC.view.layer.mask = maskLayer
-
-        // 蒙版动画
-        let maskLayerAnim = CABasicAnimation(keyPath: "path")
-        maskLayerAnim.fromValue = circleMaskPathInitial.cgPath
-        maskLayerAnim.toValue = circleMaskPathFinal.cgPath
-        maskLayerAnim.duration = self.transitionDuration(using: transitionContext)
-        maskLayerAnim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
-        maskLayerAnim.delegate = self
-        maskLayer.add(maskLayerAnim, forKey: "path")
-    }
-
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        self.transitionContext?.completeTransition(!self.transitionContext!.transitionWasCancelled)
-        self.transitionContext?.viewController(forKey: .from)?.view.layer.mask = nil
-    }
-
-    func calculatePos(v: UIView) -> (CGRect, CGRect) {
-        let beginPos = CGPoint(x: UIScreen.main.bounds.width / 2, y: v.frame.height - MyTabBar.midBtnCenterPosHeight)
-        let beginSize: CGFloat = 10
-        let beginFrame = CGRect(x: beginPos.x - beginSize / 2, y: beginPos.y - beginSize / 2, width: beginSize, height: beginSize)
-
-        let endRadius = sqrt(beginPos.x * beginPos.x + beginPos.y * beginPos.y)
-        let endFrame = beginFrame.insetBy(dx: -endRadius, dy: -endRadius)
-
-        return (beginFrame, endFrame)
-    }
-}
 
 
 

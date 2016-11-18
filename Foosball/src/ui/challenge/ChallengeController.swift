@@ -10,10 +10,11 @@ import UIKit
 
 class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource {
     var dataPage: Int = 1
-
     var tableView: UITableView! = nil
 
     var curActiveEvents: [Event] = []
+
+    var selectedCell: ChallengeCell? = nil
 
     override func viewDidLoad() {
         initDataOnViewAppear = true
@@ -93,6 +94,8 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedCell = tableView.cellForRow(at: indexPath) as! ChallengeCell
+
         let vc = DetailViewController()
         vc.rootVC = rootVC
 
