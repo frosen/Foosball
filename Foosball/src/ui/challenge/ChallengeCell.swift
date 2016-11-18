@@ -25,9 +25,91 @@ class ChallengeCell: BaseCell {
         contentView.addSubview(eventBoard)
     }
 
+    let maxMemberCount: Int = 6
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
         eventBoard.setData(e)
+
+        // 加载team数据
+        let teamView = eventBoard.contentView!
+        for item in teamView.subviews {
+            item.removeFromSuperview()
+        }
+
+        // 中间的vs字样
+        let VS = UILabel()
+        teamView.addSubview(VS)
+
+        VS.font = UIFont.boldSystemFont(ofSize: 15)
+        VS.textColor = UIColor.black
+        VS.textAlignment = .center
+        VS.text = "VS"
+        VS.sizeToFit()
+
+        let vsWidth: CGFloat = VS.frame.width
+        let teamInterval: CGFloat = 6
+        let teamWidth = teamView.frame.height
+        let maxWidth = (teamView.frame.size.width - vsWidth) / 2
+        let ourInterval = calculateAvatarInterval(
+            count: e.ourSideStateList.count, designWidth: teamWidth + teamInterval, maxWidth: maxWidth)
+        let theirInterval = calculateAvatarInterval(
+            count: e.opponentStateList.count, designWidth: teamWidth + teamInterval, maxWidth: maxWidth)
+        let interval = min(ourInterval, theirInterval)
+
+        var memberPosX: CGFloat = 0
+
+        var c: Int // 这个值来计算头像数量，一旦超过最大限度，就跳出
+        c = 0
+        for m in e.ourSideStateList {
+            let v = createMemberView(m, avatarWidth: teamWidth)
+            teamView.addSubview(v)
+            v.frame.origin.x = memberPosX
+            memberPosX += interval
+
+            c += 1
+            if c >= maxMemberCount {
+                break
+            }
+        }
+
+        VS.center.y = teamView.frame.height / 2
+        VS.frame.origin.x = memberPosX
+        memberPosX += VS.frame.width
+
+        c = 0
+        for m in e.opponentStateList {
+            let v = createMemberView(m, avatarWidth: teamWidth)
+            teamView.addSubview(v)
+            v.frame.origin.x = memberPosX
+            memberPosX += interval
+
+            c += 1
+            if c >= maxMemberCount {
+                break
+            }
+        }
+    }
+
+    // 允许头像有部分重叠，如果头像按照不重叠排列超过区域最大宽度，则重叠
+    func calculateAvatarInterval(count: Int, designWidth: CGFloat, maxWidth: CGFloat) -> CGFloat {
+        let realCount = min(count, maxMemberCount)
+        if designWidth * CGFloat(realCount) > maxWidth {
+            return (maxWidth - designWidth) / CGFloat(realCount - 1) // 减去最后一个距离，前面平均算
+        } else {
+            return designWidth
+        }
+    }
+
+    func createMemberView(_ user: UserState, avatarWidth: CGFloat) -> UIView {
+        let avatar =  Avatar.create(
+            rect: CGRect(x: 0, y: 0, width: avatarWidth, height: avatarWidth),
+            name: user.user.name,
+            url: user.user.avatarURL)
+
+        avatar.layer.borderColor = UIColor.white.cgColor
+        avatar.layer.borderWidth = 3
+
+        return avatar
     }
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {

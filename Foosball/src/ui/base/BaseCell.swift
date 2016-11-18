@@ -40,6 +40,7 @@ class BaseCell: UITableViewCell {
         }
     }
 
+    // 利用swift的动态语言机制，根据配置表创建cell
     class func create(_ index: IndexPath, tableView: UITableView, d: BaseData, ctrlr: UIViewController,  getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
         let info: CInfo! = getInfoCallback(index)
 

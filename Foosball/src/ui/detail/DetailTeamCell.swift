@@ -114,13 +114,8 @@ class DetailTeamCell: BaseCell {
         for m in memberList {
             let v = createMemberView(m)
             memberListView!.addSubview(v)
-            let f = v.frame
-            v.frame = CGRect(
-                x: CGFloat(pos) * f.width,
-                y: CGFloat(line) * f.height,
-                width: f.width,
-                height: f.height
-            )
+            v.frame.origin.x = CGFloat(pos) * v.frame.width
+            v.frame.origin.y = CGFloat(line) * v.frame.height
 
             pos += 1
             if pos >= Int(DetailTeamCell.memberCountIn1Line) {

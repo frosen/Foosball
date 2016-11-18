@@ -37,6 +37,7 @@ class EventBoard: UIView {
     var icon: UIImageView! = nil
     var title: UILabel! = nil
     var stateView: StateView! = nil
+    var contentView: UIView! = nil //加载各个位置不同的控件
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -47,86 +48,40 @@ class EventBoard: UIView {
         let h: CGFloat = 72
         super.init(frame: CGRect(x: 0, y: 0, width: w, height: h))
 
-        //底部分割线
-        let downLine = UIView(frame: CGRect(x: 0, y: h - 0.5, width: w, height: 0.5))
-        addSubview(downLine)
-        downLine.backgroundColor = LineColor
-
         let iconMargin: CGFloat = 6
         let (iconView, iconTmp) = EventIcon.create(h, iconMargin: iconMargin)
         addSubview(iconView)
         icon = iconTmp
-
-        //标题
-        title = UILabel()
-        addSubview(title)
-        title.snp.makeConstraints{ make in
-            make.left.equalTo(iconView.snp.right).offset(5)
-            make.right.equalTo(self.snp.right).inset(iconMargin)
-            make.centerY.equalTo(self.snp.bottom).multipliedBy(0.3) //0.3 0.7
-        }
-
-        title.font = TitleFont
-        title.textColor = TitleColor
-//        title.textAlignment = .Center
-//        title.backgroundColor = UIColor(white: 0.95, alpha: 1)
 
         // 标题最右的状态指示
         stateView = StateView()
         addSubview(stateView)
         stateView.center = CGPoint(x: w - 15 - stateView.frame.width / 2, y: h * 0.3)
 
-        //VS显示处用于布局的view
-        let VSView = UIView()
-        addSubview(VSView)
-        VSView.snp.makeConstraints{ make in
-            make.left.equalTo(iconView.snp.right)
-            make.right.equalTo(self.snp.right).inset(iconMargin)
-            make.centerY.equalTo(self.snp.bottom).multipliedBy(0.7)
-            make.height.equalTo(25)
-        }
+        //标题
+        title = UILabel()
+        addSubview(title)
 
-        VSView.backgroundColor = UIColor(white: 0.95, alpha: 1)
-//        VSView.layer.cornerRadius = 3 //圆角
-//        VSView.layer.masksToBounds = true //剪切掉边缘以外
+        title.frame = CGRect(
+            x: iconView.frame.width + 6,
+            y: 0,
+            width: w - (iconView.frame.width + 6 + (w - stateView.frame.origin.x) + 6),
+            height: 25)
+        title.center.y = h * 0.3
 
-        let VS = UILabel()
-        VSView.addSubview(VS)
-        VS.snp.makeConstraints{ make in
-            make.center.equalTo(VSView.snp.center)
-        }
+        title.font = TitleFont
+        title.textColor = TitleColor
 
-        VS.font = UIFont.boldSystemFont(ofSize: 15)
-        VS.textColor = UIColor.black
-        VS.textAlignment = .center
-        VS.text = "VS"
+        // 内容位置
+        contentView = UIView()
+        addSubview(contentView)
 
-        // 左右
-        let left = UILabel()
-        VSView.addSubview(left)
-        left.snp.makeConstraints{ make in
-            make.left.equalTo(VSView.snp.left)
-            make.right.equalTo(VSView.snp.centerX)
-            make.centerY.equalTo(VSView.snp.centerY)
-        }
-
-        left.font = UIFont.boldSystemFont(ofSize: 12)
-        left.textColor = UIColor.black
-        left.textAlignment = .center
-        left.text = "left"
-
-        let right = UILabel()
-        VSView.addSubview(right)
-        right.snp.makeConstraints{ make in
-            make.left.equalTo(VSView.snp.centerX)
-            make.right.equalTo(VSView.snp.right)
-            make.centerY.equalTo(VSView.snp.centerY)
-        }
-
-        right.font = UIFont.boldSystemFont(ofSize: 12)
-        right.textColor = UIColor.black
-        right.textAlignment = .center
-        right.text = "right"
+        contentView.frame = CGRect(
+            x: iconView.frame.width + 6,
+            y: 0,
+            width: w - (iconView.frame.width + 6 + iconMargin),
+            height: 25)
+        contentView.center.y = h * 0.7
     }
 
     func setData(_ event: Event) {
