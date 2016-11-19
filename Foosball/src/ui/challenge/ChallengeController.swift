@@ -94,7 +94,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedCell = tableView.cellForRow(at: indexPath) as! ChallengeCell
+        selectedCell = tableView.cellForRow(at: indexPath) as? ChallengeCell
 
         let vc = DetailViewController()
         vc.rootVC = rootVC

@@ -127,7 +127,15 @@ class KeynotelikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning 
         case pop
     }
 
-    weak var transitionContext: UIViewControllerContextTransitioning?
+    // 记录转景信息，用于pop
+    static weak var snapshot: UIView! = nil
+    static var originPosY: CGFloat = 0
+    static var originView: UIView! = nil
+
+    // 在场景中调用
+    class func hideSnapshot() {
+        snapshot.isHidden = true
+    }
 
     var t: TransType! = nil
     init(t: TransType) {
@@ -136,7 +144,7 @@ class KeynotelikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning 
     }
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.5
+        return 0.35
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -152,7 +160,7 @@ class KeynotelikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning 
 
         //1.获取动画的源控制器和目标控制器
         let fromVC = transitionContext.viewController(forKey: .from)! as! ChallengeController
-        let toVC = transitionContext.viewController(forKey: .to)! as! BaseController
+        let toVC = transitionContext.viewController(forKey: .to)! as! DetailViewController
         let container = transitionContext.containerView
 
         //2.创建一个 Cell 中 imageView 的截图，并把 imageView 隐藏，造成使用户以为移动的就是 imageView 的假象
@@ -169,14 +177,17 @@ class KeynotelikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning 
         container.addSubview(toVC.view)
         container.addSubview(snapshotView)
 
-        //5.执行动画
+        //5.记录到静态属性中，用于pop
+        KeynotelikeTransitioning.snapshot = snapshotView
+        KeynotelikeTransitioning.originPosY = snapshotView.frame.origin.y
+        KeynotelikeTransitioning.originView = selectedView
+
+        //6.执行动画
         let t = transitionDuration(using: transitionContext)
         UIView.animate(withDuration: t, delay: 0, options: UIViewAnimationOptions.curveEaseInOut, animations: { _ in
-            snapshotView.frame.origin.y = 0
+            snapshotView.frame.origin.y = 64
             toVC.view.alpha = 1
         }, completion: { _ in
-            snapshotView.removeFromSuperview()
-
             //一定要记得动画完成后执行此方法，让系统管理 navigation
             transitionContext.completeTransition(true)
         })
@@ -184,6 +195,36 @@ class KeynotelikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning 
 
     func doPop(using transitionContext: UIViewControllerContextTransitioning) {
         print("do keynote lick pop")
+
+        //1.获取动画的源控制器和目标控制器
+        let fromVC = transitionContext.viewController(forKey: .from)! as! DetailViewController
+        let toVC = transitionContext.viewController(forKey: .to)! as! ChallengeController
+        let container = transitionContext.containerView
+
+        let snapshotView = KeynotelikeTransitioning.snapshot!
+        snapshotView.isHidden = false
+
+        // snapshot初始位置计算
+//        fromVC.tableView.cellForRow(at: IndexPath(row: 0, section: 0)
+
+        // 添加到转景容器中
+        container.addSubview(toVC.view)
+        container.addSubview(fromVC.view)
+        container.addSubview(snapshotView)
+
+        //执行动画
+        let t = transitionDuration(using: transitionContext)
+        UIView.animate(withDuration: t, delay: 0, options: .curveEaseInOut, animations: { _ in
+            snapshotView.frame.origin.y = KeynotelikeTransitioning.originPosY
+            fromVC.view.alpha = 0
+            toVC.view.alpha = 1
+        }, completion: { _ in
+            snapshotView.removeFromSuperview()
+            KeynotelikeTransitioning.originView.isHidden = false
+
+            //一定要记得动画完成后执行此方法，让系统管理 navigation
+            transitionContext.completeTransition(true)
+        })
     }
 }
 

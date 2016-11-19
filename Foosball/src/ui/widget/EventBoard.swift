@@ -48,6 +48,8 @@ class EventBoard: UIView {
         let h: CGFloat = 72
         super.init(frame: CGRect(x: 0, y: 0, width: w, height: h))
 
+        backgroundColor = UIColor.white // 因为EventBoard会移动，在移动时候不显示下面的控件，所以不能透明
+
         let iconMargin: CGFloat = 6
         let (iconView, iconTmp) = EventIcon.create(h, iconMargin: iconMargin)
         addSubview(iconView)

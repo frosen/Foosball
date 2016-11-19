@@ -87,8 +87,16 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         if toVC is CreateController {
             return RinglikeTransitioning(t: .push)
+
         } else if fromVC is CreateController {
             return RinglikeTransitioning(t: .pop)
+
+        } else if toVC is DetailViewController {
+            return KeynotelikeTransitioning(t: .push)
+
+        } else if fromVC is DetailViewController {
+            return KeynotelikeTransitioning(t: .pop)
+
         } else {
             return nil
         }

@@ -30,6 +30,8 @@ class BaseController: UIViewController {
     var hasInitData: Bool = false
     var baseView: UIView! = nil
 
+    var callbackOnFinishInit: ((Bool) -> Swift.Void)? = nil
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
@@ -97,7 +99,7 @@ class BaseController: UIViewController {
     func reshowView() {
         UIView.animate(withDuration: 0.2, animations: {
             self.baseView.alpha = 1
-        }) 
+        }, completion: callbackOnFinishInit)
     }
 
     // 设置导航栏和tabbar的样式 -----------------------------------------------------------------------------

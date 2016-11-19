@@ -33,6 +33,12 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
         navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ScanViewController.onBack), image: "go_back")
 
+        baseView.isUserInteractionEnabled = false
+        callbackOnFinishInit = { _ in
+            self.baseView.isUserInteractionEnabled = true
+            KeynotelikeTransitioning.hideSnapshot() //这里编码十分耦合，要注意
+        }
+
         //创建tableView
         tableView = UITableView(frame: baseView.bounds, style: .grouped)
         baseView.addSubview(tableView)
