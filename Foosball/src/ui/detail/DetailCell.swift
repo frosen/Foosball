@@ -50,7 +50,7 @@ class DetailG {
 // -------------------------------------------------------------------------------------------------------
 
 class DetailTitleCell: StaticCell {
-    var title: UILabel! = nil
+    var eventBoard: EventBoard! = nil
     var position: UILabel! = nil
     var createTime: UILabel! = nil
 
@@ -61,52 +61,35 @@ class DetailTitleCell: StaticCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
 
-        //图
-        let (iconView, _) = EventIcon.create(h, iconMargin: DetailG.iconMargin)
-        addSubview(iconView)
-
-        //标题
-        let stringOffset: CGFloat = 20
-        title = UILabel()
-        contentView.addSubview(title)
-        title.snp.makeConstraints{ make in
-            make.left.equalTo(iconView.snp.right).offset(stringOffset)
-            make.right.equalTo(contentView.snp.right).inset(DetailG.iconMargin)
-            make.centerY.equalTo(contentView.snp.bottom).multipliedBy(0.3) //0.3 0.7
-        }
-
-        title.font = TitleFont
-        title.textColor = TitleColor
+        //事件板
+        eventBoard = EventBoard()
+        contentView.addSubview(eventBoard)
+        
+        let eventConV = eventBoard.contentView!
+        let halfEventConVWidth = eventConV.frame.width / 2
+        let eventConVHeight = eventConV.frame.height
 
         // 位置和时间显示
-        position = UILabel()
-        contentView.addSubview(position)
-        position.snp.makeConstraints{ make in
-            make.left.equalTo(iconView.snp.right).offset(stringOffset)
-            make.centerY.equalTo(contentView.snp.bottom).multipliedBy(0.7) //0.3 0.7
-        }
+        position = UILabel(frame: CGRect(x: 0, y: 0, width: halfEventConVWidth, height: eventConVHeight))
+        eventConV.addSubview(position)
 
         position.font = TextFont
         position.textColor = TextColor
 
-        createTime = UILabel()
-        contentView.addSubview(createTime)
-        createTime.snp.makeConstraints{ make in
-            make.left.equalTo(position.snp.right).offset(20)
-            make.centerY.equalTo(contentView.snp.bottom).multipliedBy(0.7) //0.3 0.7
-        }
+        createTime = UILabel(frame: CGRect(x: halfEventConVWidth, y: 0, width: halfEventConVWidth, height: eventConVHeight))
+        eventConV.addSubview(createTime)
 
         createTime.font = TextFont
         createTime.textColor = TextColor
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
-        title.text = "这也是一个很有趣的测试"
-        title.sizeToFit()
-        position.text = "朝阳/6km"
-        position.sizeToFit()
-        createTime.text = "1小时前"
-        createTime.sizeToFit()
+        let e = d as! Event
+        eventBoard.setData(e)
+
+        let locationStr = e.location.toString
+        position.text = "位置：" + locationStr
+        createTime.text = "时间：" + e.operationTimeList[0].time.toString()
     }
 }
 

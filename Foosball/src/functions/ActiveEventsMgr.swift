@@ -84,6 +84,11 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         let m4 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么4")
         let m5 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5")
 
+        let ot = OperationTime(userId: DataID(ID: 123), time: Time.now, toState: .cashed)
+        e.operationTimeList.append(ot)
+
+        e.location = Location()
+
         data = []
 
         e.msgList = [m1, m2, m3, m4, m5]

@@ -134,7 +134,9 @@ class KeynotelikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning 
 
     // 在场景中调用
     class func hideSnapshot() {
-        snapshot.isHidden = true
+        UIView.animate(withDuration: 0.2) {
+            snapshot.alpha = 0
+        }
     }
 
     var t: TransType! = nil
@@ -202,10 +204,11 @@ class KeynotelikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning 
         let container = transitionContext.containerView
 
         let snapshotView = KeynotelikeTransitioning.snapshot!
-        snapshotView.isHidden = false
+        snapshotView.alpha = 1
 
         // snapshot初始位置计算
-//        fromVC.tableView.cellForRow(at: IndexPath(row: 0, section: 0)
+        let offsetY = min(fromVC.tableView.contentOffset.y, 100)
+        snapshotView.frame.origin.y -= offsetY
 
         // 添加到转景容器中
         container.addSubview(toVC.view)

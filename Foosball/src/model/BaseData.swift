@@ -90,7 +90,9 @@ func ==(lhs: Time, rhs: Time) -> Bool {
 
 //位置信息的封装
 struct Location {
-    
+    var toString: String {
+        return "朝阳/3km"
+    }
 }
 
 //基础数据
