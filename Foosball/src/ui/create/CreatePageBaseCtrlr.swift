@@ -26,9 +26,11 @@ class CreatePageBaseCtrlr: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        setUI()
     }
+
+    func setUI() {}
+    func beginAnim(isFromLeft: Bool) {}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

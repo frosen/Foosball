@@ -11,7 +11,9 @@ import UIKit
 class CreateController: BaseTabController, UIScrollViewDelegate {
 
     var pageView: UIScrollView! = nil
-    var subviews: [UIViewController]! = nil
+    var subviews: [CreatePageBaseCtrlr]! = nil
+
+    var page: Int = 0
 
     override func viewDidLoad() {
         navTabType = .HideTab
@@ -34,6 +36,8 @@ class CreateController: BaseTabController, UIScrollViewDelegate {
 
         pageView.delegate = self
 
+        pageView.isScrollEnabled = false //禁止手动滑动
+
         //加载页面
         let pageVSize = pageView.frame.size
         subviews = [
@@ -50,8 +54,23 @@ class CreateController: BaseTabController, UIScrollViewDelegate {
 
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        subviews[page].beginAnim(isFromLeft: true)
+    }
+
     func onBack() {
         let _ = navigationController?.popViewController(animated: true)
+    }
+
+    // 移动到另一页，参数true向右
+    func movePage(gotoRight: Bool) {
+        page += ( gotoRight ? 1 : -1)
+        let nextX = CGFloat(page) * pageView.frame.size.width
+        pageView.setContentOffset(CGPoint(x: nextX, y: 0), animated: true)
+
+        //开始动画
+        subviews[page].beginAnim(isFromLeft: (gotoRight ? true : false))
     }
 }
 

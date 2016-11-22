@@ -10,9 +10,7 @@ import UIKit
 
 class CreateCtrlrStep2: CreatePageBaseCtrlr {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
+    override func setUI() {
         view.backgroundColor = UIColor.blue
     }
 
