@@ -10,20 +10,75 @@ import UIKit
 
 class CreateCtrlrStep1: CreatePageBaseCtrlr {
 
+    // 类型按钮的属性结构和列表
+    struct TypeBtnAttri {
+        var color: UIColor
+
+        init(c: UIColor) {
+            self.color = c
+        }
+    }
+
+    let typeBtnAttriList: [TypeBtnAttri] = [
+        TypeBtnAttri(c: UIColor(hue: 353 / 360, saturation: 0.54, brightness: 0.97, alpha: 1.0)),
+        TypeBtnAttri(c: UIColor(hue: 343 / 360, saturation: 0.44, brightness: 0.75, alpha: 1.0)),
+        TypeBtnAttri(c: UIColor(hue: 257 / 360, saturation: 0.57, brightness: 0.49, alpha: 1.0)),
+        TypeBtnAttri(c: UIColor(hue: 205 / 360, saturation: 0.71, brightness: 0.89, alpha: 1.0)),
+    ]
+
+    // 各种控件
+    var typeBtns: [UIView] = [] // 类型按钮
+
     override func setUI() {
-        view.backgroundColor = UIColor.red
 
-        let v = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
-        v.backgroundColor = UIColor.blue
-        view.addSubview(v)
+        // 步骤1
+        let typeBtnCount: Int = typeBtnAttriList.count
+        let typeBtnHeight: CGFloat = pageSize.height / CGFloat(typeBtnCount)
 
-        print("vv", view.frame)
-        let v2 = UIView(frame: CGRect(x: 0, y: pageSize.height - 20, width: 20, height: 20))
-        v2.backgroundColor = UIColor.blue
-        view.addSubview(v2)
+        for i in 0 ..< typeBtnCount {
+            // 计算位置
+            let pos = typeBtnCount - i - 1
+            let btnY = CGFloat(pos) * typeBtnHeight
+            let viewTypeBtn = UIView(frame: CGRect(x: 0, y: btnY, width: pageSize.width, height: typeBtnHeight))
+            view.addSubview(viewTypeBtn)
+            typeBtns.append(viewTypeBtn)
 
-        let v3 = UIView(frame: CGRect(x: 20, y: pageSize.height - 120, width: 20, height: 120))
-        v3.backgroundColor = UIColor.blue
-        view.addSubview(v3)
+            // 点击事件
+            viewTypeBtn.tag = i
+            let tap = UITapGestureRecognizer(target: self, action: #selector(CreateCtrlrStep1.tapBtn(ges:)))
+            viewTypeBtn.addGestureRecognizer(tap)
+
+            // 按钮属性
+            let attri = typeBtnAttriList[pos]
+
+            // 底色 为了以后的晃动效果，底色比view要大
+            let cRect = CGRect(
+                x: -typeBtnHeight, y: -typeBtnHeight,
+                width: viewTypeBtn.frame.width + (typeBtnHeight * 2),
+                // 除了最下面的一个btn，其他btn的color要和本身下边对其，所以是1倍的btnHeight，否则会遮挡下面的btn，而最下一个要2倍是防止晃动时露边
+                height: viewTypeBtn.frame.height + (typeBtnHeight * (i == 0 ? 2 : 1))
+            )
+            let colorView = UIView(frame: cRect)
+            viewTypeBtn.addSubview(colorView)
+            colorView.backgroundColor = attri.color
+        }
+    }
+
+    override func beginAnim(isFromLeft: Bool) {
+        if isFromLeft {
+            
+        }
+    }
+
+    func tapBtn(ges: UITapGestureRecognizer) {
+
     }
 }
+
+
+
+
+
+
+
+
