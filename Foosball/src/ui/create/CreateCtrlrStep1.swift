@@ -67,20 +67,18 @@ class CreateCtrlrStep1: CreatePageBaseCtrlr {
 
     override func beginAnim(isFromLeft: Bool) {
         if isFromLeft {
-            print("do")
 
             let moveDis: CGFloat = 20
             var delayTime: CFTimeInterval = 0
             for v in typeBtns {
                 v.center.y += moveDis
 
-                let springAnim = POPBasicAnimation(propertyNamed: kPOPLayerPositionY)!
+                let springAnim = POPSpringAnimation(propertyNamed: kPOPLayerPositionY)!
                 springAnim.toValue = v.center.y - moveDis
                 springAnim.beginTime = CACurrentMediaTime() + delayTime
                 delayTime += 0.1
-                springAnim.duration = 0.25
-//                springAnim.springBounciness = 18
-//                springAnim.springSpeed = 13
+                springAnim.springBounciness = 15
+                springAnim.springSpeed = 13
 
                 v.pop_add(springAnim, forKey: "shake")
             }
