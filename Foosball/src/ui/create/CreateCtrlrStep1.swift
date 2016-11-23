@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import pop
 
 class CreateCtrlrStep1: CreatePageBaseCtrlr {
 
@@ -20,8 +21,8 @@ class CreateCtrlrStep1: CreatePageBaseCtrlr {
     }
 
     let typeBtnAttriList: [TypeBtnAttri] = [
-        TypeBtnAttri(c: UIColor(hue: 353 / 360, saturation: 0.54, brightness: 0.97, alpha: 1.0)),
-        TypeBtnAttri(c: UIColor(hue: 343 / 360, saturation: 0.44, brightness: 0.75, alpha: 1.0)),
+        TypeBtnAttri(c: UIColor(hue: 3 / 360, saturation: 0.84, brightness: 0.97, alpha: 1.0)),
+        TypeBtnAttri(c: UIColor(hue: 343 / 360, saturation: 0.74, brightness: 0.75, alpha: 1.0)),
         TypeBtnAttri(c: UIColor(hue: 257 / 360, saturation: 0.57, brightness: 0.49, alpha: 1.0)),
         TypeBtnAttri(c: UIColor(hue: 205 / 360, saturation: 0.71, brightness: 0.89, alpha: 1.0)),
     ]
@@ -53,8 +54,8 @@ class CreateCtrlrStep1: CreatePageBaseCtrlr {
 
             // 底色 为了以后的晃动效果，底色比view要大
             let cRect = CGRect(
-                x: -typeBtnHeight, y: -typeBtnHeight,
-                width: viewTypeBtn.frame.width + (typeBtnHeight * 2),
+                x: 0, y: -typeBtnHeight,
+                width: viewTypeBtn.frame.width,
                 // 除了最下面的一个btn，其他btn的color要和本身下边对其，所以是1倍的btnHeight，否则会遮挡下面的btn，而最下一个要2倍是防止晃动时露边
                 height: viewTypeBtn.frame.height + (typeBtnHeight * (i == 0 ? 2 : 1))
             )
@@ -66,7 +67,23 @@ class CreateCtrlrStep1: CreatePageBaseCtrlr {
 
     override func beginAnim(isFromLeft: Bool) {
         if isFromLeft {
-            
+            print("do")
+
+            let moveDis: CGFloat = 20
+            var delayTime: CFTimeInterval = 0
+            for v in typeBtns {
+                v.center.y += moveDis
+
+                let springAnim = POPBasicAnimation(propertyNamed: kPOPLayerPositionY)!
+                springAnim.toValue = v.center.y - moveDis
+                springAnim.beginTime = CACurrentMediaTime() + delayTime
+                delayTime += 0.1
+                springAnim.duration = 0.25
+//                springAnim.springBounciness = 18
+//                springAnim.springSpeed = 13
+
+                v.pop_add(springAnim, forKey: "shake")
+            }
         }
     }
 
