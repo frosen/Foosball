@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import pop
 
 class CreateCtrlrStep1: CreatePageBaseCtrlr {
 
@@ -62,26 +61,6 @@ class CreateCtrlrStep1: CreatePageBaseCtrlr {
             let colorView = UIView(frame: cRect)
             viewTypeBtn.addSubview(colorView)
             colorView.backgroundColor = attri.color
-        }
-    }
-
-    override func beginAnim(isFromLeft: Bool) {
-        if isFromLeft {
-
-            let moveDis: CGFloat = 20
-            var delayTime: CFTimeInterval = 0
-            for v in typeBtns {
-                v.center.y += moveDis
-
-                let springAnim = POPSpringAnimation(propertyNamed: kPOPLayerPositionY)!
-                springAnim.toValue = v.center.y - moveDis
-                springAnim.beginTime = CACurrentMediaTime() + delayTime
-                delayTime += 0.1
-                springAnim.springBounciness = 15
-                springAnim.springSpeed = 13
-
-                v.pop_add(springAnim, forKey: "shake")
-            }
         }
     }
 

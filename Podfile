@@ -8,7 +8,6 @@ pod 'AVOSCloud'
 pod 'SDWebImage'
 pod 'SnapKit'
 pod 'SKPhotoBrowser', :git => 'https://github.com/suzuki-0000/SKPhotoBrowser.git', :branch => 'swift3'
-pod 'pop'
 
 end
 
