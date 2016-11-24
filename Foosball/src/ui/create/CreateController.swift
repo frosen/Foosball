@@ -29,7 +29,6 @@ class CreateController: BaseTabController, UIScrollViewDelegate {
         pageView = UIScrollView(frame: baseView.bounds)
         baseView.addSubview(pageView)
 
-        pageView.backgroundColor = UIColor.orange
         pageView.isPagingEnabled = true
         pageView.bounces = false
         pageView.showsHorizontalScrollIndicator = false
@@ -54,11 +53,6 @@ class CreateController: BaseTabController, UIScrollViewDelegate {
 
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        subviews[page].beginAnim(isFromLeft: true)
-    }
-
     func onBack() {
         let _ = navigationController?.popViewController(animated: true)
     }
@@ -68,9 +62,6 @@ class CreateController: BaseTabController, UIScrollViewDelegate {
         page += ( gotoRight ? 1 : -1)
         let nextX = CGFloat(page) * pageView.frame.size.width
         pageView.setContentOffset(CGPoint(x: nextX, y: 0), animated: true)
-
-        //开始动画
-        subviews[page].beginAnim(isFromLeft: (gotoRight ? true : false))
     }
 }
 

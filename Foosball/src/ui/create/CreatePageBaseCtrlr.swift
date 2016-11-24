@@ -30,7 +30,6 @@ class CreatePageBaseCtrlr: UIViewController {
     }
 
     func setUI() {}
-    func beginAnim(isFromLeft: Bool) {}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

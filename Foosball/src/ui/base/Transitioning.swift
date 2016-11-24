@@ -25,7 +25,7 @@ class RinglikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning, CA
     }
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.35
+        return 0.25
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -65,7 +65,7 @@ class RinglikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning, CA
         maskLayerAnim.fromValue = circleMaskPathInitial.cgPath
         maskLayerAnim.toValue = circleMaskPathFinal.cgPath
         maskLayerAnim.duration = self.transitionDuration(using: transitionContext)
-        maskLayerAnim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        maskLayerAnim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
         maskLayerAnim.delegate = self
         maskLayer.add(maskLayerAnim, forKey: "path")
     }
