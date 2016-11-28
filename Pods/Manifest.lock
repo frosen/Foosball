@@ -1,5 +1,5 @@
 PODS:
-  - AVOSCloud (3.5.0)
+  - AVOSCloud (3.7.1)
   - SDWebImage (3.8.2):
     - SDWebImage/Core (= 3.8.2)
   - SDWebImage/Core (3.8.2)
@@ -23,11 +23,11 @@ CHECKOUT OPTIONS:
     :git: https://github.com/suzuki-0000/SKPhotoBrowser.git
 
 SPEC CHECKSUMS:
-  AVOSCloud: 827244bd0705df52b0b0d6bde8290daf6081bc63
+  AVOSCloud: 0ef0e068cbbe871c79257a501555c3e67fe8d866
   SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
   SKPhotoBrowser: 4690ffb59db79849454241ecc65cc3d6af9965bf
   SnapKit: 2e456761aa92d4d4067a7a5594c18769d451a8ad
 
 PODFILE CHECKSUM: 7794680049777fe49d6dc44b4ad26af6f312e5bb
 
-COCOAPODS: 1.1.0.rc.3
+COCOAPODS: 1.1.1

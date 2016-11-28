@@ -6,7 +6,10 @@
 #import "AVObject.h"
 #import "AVSubclassing.h"
 
+@class AVRole;
 @class AVQuery;
+
+NS_ASSUME_NONNULL_BEGIN
 
 /*!
 A LeanCloud Framework User Object that is a local representation of a user persisted to the LeanCloud. This class
@@ -26,7 +29,7 @@ A LeanCloud Framework User Object that is a local representation of a user persi
  Gets the currently logged in user from disk and returns an instance of it.
  @return a AVUser that is the currently logged in user. If there is none, returns nil.
  */
-+ (instancetype)currentUser;
++ (nullable instancetype)currentUser;
 
 /*!
  * change the current login user manually.
@@ -34,21 +37,19 @@ A LeanCloud Framework User Object that is a local representation of a user persi
  *  @param save 是否需要把 newUser 保存到本地缓存。如果 newUser==nil && save==YES，则会清除本地缓存
  * Note: 请注意不要随意调用这个函数！
  */
-+(void)changeCurrentUser:(AVUser *)newUser
++(void)changeCurrentUser:(nullable AVUser *)newUser
                     save:(BOOL)save;
 
 /// The session token for the AVUser. This is set by the server upon successful authentication.
-@property (nonatomic, retain) NSString *sessionToken;
+@property (nonatomic, copy, nullable) NSString *sessionToken;
 
 /// Whether the AVUser was just created from a request. This is only set after a Facebook or Twitter login.
-@property (readonly, assign) BOOL isNew;
+@property (nonatomic, assign, readonly) BOOL isNew;
 
 /*!
- Whether the user is an authenticated object for the device. An authenticated AVUser is one that is obtained via
- a signUp or logIn method. An authenticated object is required in order to save (with altered values) or delete it.
- @return whether the user is authenticated.
+ Whether the user is an authenticated object with the given sessionToken.
  */
-- (BOOL)isAuthenticated;
+- (void)isAuthenticatedWithSessionToken:(NSString *)sessionToken callback:(AVBooleanResultBlock)callback;
 
 /** @name Creating a New User */
 
@@ -68,28 +69,28 @@ A LeanCloud Framework User Object that is a local representation of a user persi
 + (void)enableAutomaticUser;
 
 /// The username for the AVUser.
-@property (nonatomic, retain) NSString *username;
+@property (nonatomic, copy, nullable) NSString *username;
 
 /** 
  The password for the AVUser. This will not be filled in from the server with
  the password. It is only meant to be set.
  */
-@property (nonatomic, retain) NSString *password;
+@property (nonatomic, copy, nullable) NSString *password;
 
 /**
  *  Email of the user. If enable "Enable Email Verification" option in the console, when register a user, will send a verification email to the user. Otherwise, only save the email to the server.
  */
-@property (nonatomic, retain) NSString *email;
+@property (nonatomic, copy, nullable) NSString *email;
 
 /**
  *  Mobile phone number of the user. Can be set when registering. If enable the "Enable Mobile Phone Number Verification" option in the console, when register a user, will send an sms message to the phone. Otherwise, only save the mobile phone number to the server.
  */
-@property (nonatomic, strong) NSString *mobilePhoneNumber;
+@property (nonatomic, copy, nullable) NSString *mobilePhoneNumber;
 
 /**
  *  Mobile phone number verification flag. Read-only. if calling verifyMobilePhone:withBlock: succeeds, the server will set this value YES.
  */
-@property (nonatomic, readonly) BOOL mobilePhoneVerified;
+@property (nonatomic, assign, readonly) BOOL mobilePhoneVerified;
 
 /**
  *  请求重发验证邮件
@@ -122,6 +123,22 @@ A LeanCloud Framework User Object that is a local representation of a user persi
 +(void)verifyMobilePhone:(NSString *)code withBlock:(AVBooleanResultBlock)block;
 
 /*!
+ Get roles which current user belongs to.
+
+ @param error The error of request, or nil if request did succeed.
+
+ @return An array of roles, or nil if some error occured.
+ */
+- (nullable NSArray<AVRole *> *)getRoles:(NSError **)error;
+
+/*!
+ Asynchronously get roles which current user belongs to.
+
+ @param block The callback for request.
+ */
+- (void)getRolesInBackgroundWithBlock:(void (^)(NSArray<AVRole *> * _Nullable objects, NSError * _Nullable error))block;
+
+/*!
  Signs up the user. Make sure that password and username are set. This will also enforce that the username isn't already taken.
  @param error Error object to set on error. 
  @return whether the sign up was successful.
@@ -152,9 +169,9 @@ A LeanCloud Framework User Object that is a local representation of a user persi
  @param error The error object to set on error.
  @return an instance of the AVUser on success. If login failed for either wrong password or wrong username, returns nil.
  */
-+ (instancetype)logInWithUsername:(NSString *)username
-                     password:(NSString *)password
-                        error:(NSError **)error;
++ (nullable instancetype)logInWithUsername:(NSString *)username
+                                  password:(NSString *)password
+                                     error:(NSError **)error;
 
 /*!
  Makes an asynchronous request to log in a user with specified credentials.
@@ -175,9 +192,9 @@ A LeanCloud Framework User Object that is a local representation of a user persi
  *  @param password 密码
  *  @param error 发生错误通过此参数返回
  */
-+ (instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
-                                  password:(NSString *)password
-                                     error:(NSError **)error;
++ (nullable instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
+                                           password:(NSString *)password
+                                              error:(NSError **)error;
 /*!
  *  使用手机号码和密码登录
  *  @param phoneNumber 11位电话号码
@@ -203,9 +220,9 @@ A LeanCloud Framework User Object that is a local representation of a user persi
  *  @param code 6位验证码
  *  @param error 发生错误通过此参数返回
  */
-+ (instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
-                                   smsCode:(NSString *)code
-                                     error:(NSError **)error;
++ (nullable instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
+                                            smsCode:(NSString *)code
+                                              error:(NSError **)error;
 
 /*!
  *  使用手机号码和验证码登录
@@ -225,9 +242,9 @@ A LeanCloud Framework User Object that is a local representation of a user persi
  *  @param code 6位验证码
  *  @param error 发生错误通过此参数返回
  */
-+ (instancetype)signUpOrLoginWithMobilePhoneNumber:(NSString *)phoneNumber
-                                           smsCode:(NSString *)code
-                                             error:(NSError **)error;
++ (nullable instancetype)signUpOrLoginWithMobilePhoneNumber:(NSString *)phoneNumber
+                                                    smsCode:(NSString *)code
+                                                      error:(NSError **)error;
 
 /*!
  *  使用手机号码和验证码注册或登录
@@ -303,7 +320,7 @@ A LeanCloud Framework User Object that is a local representation of a user persi
  *  @param error        回调错误
  *  @return 登录的用户对象
  */
-+ (instancetype)becomeWithSessionToken:(NSString *)sessionToken error:(NSError **)error;
++ (nullable instancetype)becomeWithSessionToken:(NSString *)sessionToken error:(NSError **)error;
 
 /** @name Querying for Users */
 
@@ -351,8 +368,8 @@ A LeanCloud Framework User Object that is a local representation of a user persi
  @param password The password of the user.
  @return an instance of the AVUser on success. If login failed for either wrong password or wrong username, returns nil.
  */
-+ (instancetype)logInWithUsername:(NSString *)username
-                         password:(NSString *)password  AV_DEPRECATED("2.6.10");
++ (nullable instancetype)logInWithUsername:(NSString *)username
+                                  password:(NSString *)password  AV_DEPRECATED("2.6.10");
 
 /*!
  Makes an asynchronous request to login a user with specified credentials.
@@ -379,8 +396,8 @@ A LeanCloud Framework User Object that is a local representation of a user persi
                                target:(id)target
                              selector:(SEL)selector AV_DEPRECATED("2.6.10");
 
-+ (instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
-                                  password:(NSString *)password AV_DEPRECATED("2.6.10");
++ (nullable instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
+                                           password:(NSString *)password AV_DEPRECATED("2.6.10");
 + (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
                                       password:(NSString *)password AV_DEPRECATED("2.6.10");
 + (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
@@ -388,8 +405,8 @@ A LeanCloud Framework User Object that is a local representation of a user persi
                                         target:(id)target
                                       selector:(SEL)selector AV_DEPRECATED("2.6.10");
 
-+ (instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
-                                   smsCode:(NSString *)code AV_DEPRECATED("2.6.10");
++ (nullable instancetype)logInWithMobilePhoneNumber:(NSString *)phoneNumber
+                                            smsCode:(NSString *)code AV_DEPRECATED("2.6.10");
 + (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
                                        smsCode:(NSString *)code AV_DEPRECATED("2.6.10");
 + (void)logInWithMobilePhoneNumberInBackground:(NSString *)phoneNumber
@@ -425,4 +442,13 @@ A LeanCloud Framework User Object that is a local representation of a user persi
                                           target:(id)target
                                         selector:(SEL)selector AV_DEPRECATED("2.6.10");
 
+/*!
+ Whether the user is an authenticated object for the device. An authenticated AVUser is one that is obtained via
+ a signUp or logIn method. An authenticated object is required in order to save (with altered values) or delete it.
+ @return whether the user is authenticated.
+ */
+- (BOOL)isAuthenticated AV_DEPRECATED("Deprecated in AVOSCloud SDK 3.7.0. Use -[AVUser isAuthenticatedWithSessionToken:callback:] instead.");
+
 @end
+
+NS_ASSUME_NONNULL_END

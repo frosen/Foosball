@@ -14,7 +14,7 @@
 #import "AVQuery_Internal.h"
 #import "SDMacros.h"
 #import "AVUtils.h"
-
+#import "AVUser_Internal.h"
 
 NSString * const kAVStatusTypeTimeline=@"default";
 NSString * const kAVStatusTypePrivateMessage=@"private";
@@ -22,9 +22,9 @@ NSString * const kAVStatusTypePrivateMessage=@"private";
 @interface AVStatus () {
     
 }
-@property(nonatomic,strong) NSString *objectId;
-@property(nonatomic,strong) NSDate *createdAt;
-@property(nonatomic,assign) NSUInteger messageId;
+@property (nonatomic,   copy) NSString *objectId;
+@property (nonatomic, strong) NSDate *createdAt;
+@property (nonatomic, assign) NSUInteger messageId;
 
 /* 用Query来设定受众群 */
 @property(nonatomic,strong) AVQuery *targetQuery;
@@ -166,7 +166,7 @@ NSString * const kAVStatusTypePrivateMessage=@"private";
 }
 
 +(NSError*)permissionCheck{
-    if (![AVUser currentUser].isAuthenticated) {
+    if (![[AVUser currentUser] isAuthDataExistInMemory]) {
         NSError *error= [AVErrorUtils errorWithCode:kAVErrorUserCannotBeAlteredWithoutSession];
         return error;
     }
