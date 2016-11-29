@@ -24,11 +24,15 @@ class CreateCtrlrStep1: CreatePageBaseCtrlr {
     var typeBtnAttriList: [TypeBtnAttri] = []
 
     // 各种控件
+    var step1View: UIView! = nil //第一步的按钮所在的区域
     var typeBtns: [UIView] = [] // 类型按钮
 
     override func setUI() {
 
         // 步骤1
+        step1View = UIView(frame: CGRect(x: 0, y: 0, width: pageSize.width, height: pageSize.height))
+        view.addSubview(step1View)
+
         let mg: CGFloat = 4 // 留边
         let designW = pageSize.width / 2
         let designH = pageSize.height / 2
@@ -60,7 +64,7 @@ class CreateCtrlrStep1: CreatePageBaseCtrlr {
             let attri = typeBtnAttriList[i]
 
             let viewTypeBtn = UIView(frame: attri.rect)
-            view.addSubview(viewTypeBtn)
+            step1View.addSubview(viewTypeBtn)
             typeBtns.append(viewTypeBtn)
 
             // 点击事件
@@ -76,19 +80,22 @@ class CreateCtrlrStep1: CreatePageBaseCtrlr {
             graLr.frame = CGRect(x: 0, y: 0, width: attri.rect.width, height: attri.rect.height)
             viewTypeBtn.layer.addSublayer(graLr)
 
-            graLr.cornerRadius = 9 // 圆角
-
             // 图标
 
             // 标题
 
             // 描述
         }
+
+        // 步骤2
+        
     }
 
     func tapBtn(ges: UITapGestureRecognizer) {
         let index = ges.view!.tag
         print("step 1 select: ", index)
+
+
     }
 }
 
