@@ -53,17 +53,6 @@ class BaseController: UIViewController {
         // 既然使用baseView并且自己指定尺寸，就不需要自动调整了，否则tableview会有问题
         automaticallyAdjustsScrollViewInsets = false
 
-        let navBar = navigationController?.navigationBar
-        if navBar != nil {
-            navBar!.setBackgroundImage(UIImage(named: "nav_color"), for: .default)
-            navBar!.layer.shadowColor = UIColor.lightGray.cgColor
-            navBar!.layer.shadowOpacity = 0.45
-            navBar!.layer.shadowRadius = 3
-            navBar!.layer.shadowOffset = CGSize(width: 0, height: 5)
-
-            navBar!.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
-        }
-
         // 初始化数据，根据设置的不同，在不同的时期进行
         if initDataOnViewAppear {
             baseView.alpha = 0

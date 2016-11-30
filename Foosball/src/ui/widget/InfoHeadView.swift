@@ -56,10 +56,6 @@ class InfoHeadView: UIView {
         addSubview(maskViewShadow)
 
         maskViewShadow.backgroundColor = UIColor.white
-        maskViewShadow.layer.shadowColor = UIColor.gray.cgColor
-        maskViewShadow.layer.shadowOpacity = 0.45
-        maskViewShadow.layer.shadowRadius = 3
-        maskViewShadow.layer.shadowOffset = CGSize(width: 0, height: 5)
 
         viewMask = UIView(frame: CGRect(x: 0, y: 0, width: maskViewShadow.frame.width, height: maskViewShadow.frame.height))
         maskViewShadow.addSubview(viewMask)

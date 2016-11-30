@@ -28,7 +28,6 @@ class CreateCtrlrStep1: CreatePageBaseCtrlr {
     var typeBtns: [UIView] = [] // 类型按钮
 
     override func setUI() {
-
         // 步骤1
         step1View = UIView(frame: CGRect(x: 0, y: 0, width: pageSize.width, height: pageSize.height))
         view.addSubview(step1View)
@@ -91,11 +90,22 @@ class CreateCtrlrStep1: CreatePageBaseCtrlr {
         
     }
 
+    func enterStep2() {
+
+    }
+
+    func enterNextPage() {
+
+    }
+
+    func gobackToStep1() {
+
+    }
+
+    // -------------------------
     func tapBtn(ges: UITapGestureRecognizer) {
         let index = ges.view!.tag
         print("step 1 select: ", index)
-
-
     }
 }
 

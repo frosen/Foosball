@@ -19,8 +19,15 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
 
     override func viewDidLoad() {
         view.backgroundColor = UIColor.white
+        initNav()
         initSubVc()
         initTabBar() 
+    }
+
+    func initNav() {
+        let navBar = UINavigationBar.appearance()
+        navBar.setBackgroundImage(UIImage(named: "nav_color"), for: .default)
+        navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
     }
 
     func initSubVc() {
