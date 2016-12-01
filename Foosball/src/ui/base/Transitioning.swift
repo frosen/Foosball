@@ -25,7 +25,7 @@ class RinglikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning, CA
     }
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.25
+        return 0.35
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -45,12 +45,7 @@ class RinglikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning, CA
         transitionContext.containerView.addSubview(toVC.view)
 
         // 计算位置
-        let beginPos = CGPoint(x: UIScreen.main.bounds.width / 2, y: toVC.baseView.frame.height - MyTabBar.midBtnCenterPosHeight)
-        let beginSize: CGFloat = 10
-        let beginFrame = CGRect(x: beginPos.x - beginSize / 2, y: beginPos.y - beginSize / 2, width: beginSize, height: beginSize)
-
-        let endRadius = sqrt(beginPos.x * beginPos.x + beginPos.y * beginPos.y)
-        let endFrame = beginFrame.insetBy(dx: -endRadius, dy: -endRadius)
+        let (beginFrame, endFrame) = calculatePos(v: toVC.baseView)
 
         let circleMaskPathInitial = UIBezierPath(ovalIn: beginFrame)
         let circleMaskPathFinal = UIBezierPath(ovalIn: endFrame)
@@ -108,11 +103,14 @@ class RinglikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning, CA
     }
 
     func calculatePos(v: UIView) -> (CGRect, CGRect) {
-        let beginPos = CGPoint(x: UIScreen.main.bounds.width / 2, y: v.frame.height - MyTabBar.midBtnCenterPosHeight)
+        let beginPos = CGPoint(
+            x: UIScreen.main.bounds.width / 2,
+            y: v.frame.height - MyTabBar.midBtnCenterPosHeight - 64 //由于透明化了nav，所以把这段距离减去
+        )
         let beginSize: CGFloat = 10
         let beginFrame = CGRect(x: beginPos.x - beginSize / 2, y: beginPos.y - beginSize / 2, width: beginSize, height: beginSize)
 
-        let endRadius = sqrt(beginPos.x * beginPos.x + beginPos.y * beginPos.y)
+        let endRadius = sqrt(beginPos.x * beginPos.x + (beginPos.y + 64) * (beginPos.y + 64))
         let endFrame = beginFrame.insetBy(dx: -endRadius, dy: -endRadius)
         
         return (beginFrame, endFrame)

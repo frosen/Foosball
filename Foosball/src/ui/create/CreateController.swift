@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateController: BaseTabController, UIScrollViewDelegate {
+class CreateController: BaseController, UIScrollViewDelegate {
 
     var pageView: UIScrollView! = nil
     var subviews: [CreatePageBaseCtrlr]! = nil
@@ -16,7 +16,7 @@ class CreateController: BaseTabController, UIScrollViewDelegate {
     var page: Int = 0
 
     override func viewDidLoad() {
-        navTabType = .HideTab
+        navTabType = [.HideTab, .TransparentNav]
         super.viewDidLoad()
         print("创建事件的页面")
 
