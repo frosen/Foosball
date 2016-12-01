@@ -53,7 +53,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
 
     override func viewDidLoad() {
         initDataOnViewAppear = true
-        navTabType = .HideNav //隐藏导航栏，并让tableview位置忽略导航栏
+        navTabType = .TransparentNav //隐藏导航栏，并让tableview位置忽略导航栏
         super.viewDidLoad()
         print("个人页面")
 

@@ -21,8 +21,6 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         super.viewDidLoad()
         print("挑战页面")
 
-        initNavBar()
-
         //标题
         title = "兑现"
         

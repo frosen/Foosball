@@ -9,6 +9,12 @@
 import UIKit
 
 class BaseTabController: BaseController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        initNavBar()
+    }
+
     //设置导航栏控件，如果检测未登陆则使用登陆注册，如果未调用此接口则不设置-----------------------------------------------------
     func initNavBar() {
         //左
