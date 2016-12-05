@@ -22,8 +22,7 @@ class CreateController: BaseController, UIScrollViewDelegate {
 
         // 位置初始化 自定义的转景，系统不会重置view的位置，所以自己来
         view.frame.origin.y += 64
-
-        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(CreateController.onBack), image: "go_back")
+        baseView.backgroundColor = UIColor(red: 0.12, green: 0.12, blue: 0.24, alpha: 1)
 
         // 添加page
         pageView = UIScrollView(frame: baseView.bounds)
@@ -43,6 +42,7 @@ class CreateController: BaseController, UIScrollViewDelegate {
             CreateCtrlrStep1(rootCtrlr: self, pageSize: pageVSize),
             CreateCtrlrStep2(rootCtrlr: self, pageSize: pageVSize),
             CreateCtrlrStep3(rootCtrlr: self, pageSize: pageVSize),
+            CreateCtrlrStep4(rootCtrlr: self, pageSize: pageVSize),
         ]
 
         pageView.contentSize = CGSize(width: pageVSize.width * CGFloat(subviews.count), height: pageVSize.height)
@@ -51,17 +51,38 @@ class CreateController: BaseController, UIScrollViewDelegate {
             pageView.addSubview(subviews[i].view)
         }
 
+        // 导航栏
+        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(CreateController.onBack), image: "go_back")
+        setStepLebel()
     }
 
     func onBack() {
-        let _ = navigationController?.popViewController(animated: true)
+        if page == 0 {
+            let _ = navigationController?.popViewController(animated: true)
+        } else {
+            movePage(gotoRight: false)
+        }
     }
 
     // 移动到另一页，参数true向右
     func movePage(gotoRight: Bool) {
         page += ( gotoRight ? 1 : -1)
+        setStepLebel()
         let nextX = CGFloat(page) * pageView.frame.size.width
         pageView.setContentOffset(CGPoint(x: nextX, y: 0), animated: true)
+    }
+
+    // 设置步骤
+    var stepLabel: UIBarButtonItem! = nil // 用于记录步骤
+    func setStepLebel() {
+        if stepLabel == nil {
+            stepLabel = UIBarButtonItem(title: "1/3", style: .done, target: nil, action: nil)
+            stepLabel.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: .normal)
+            stepLabel.isEnabled = false
+            navigationItem.rightBarButtonItem = stepLabel
+        }
+        let stepStr: String = String(page + 1) + "/" + String(subviews.count)
+        stepLabel.title! = stepStr
     }
 }
 
