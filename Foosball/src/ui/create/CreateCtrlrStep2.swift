@@ -10,11 +10,6 @@ import UIKit
 
 class CreateCtrlrStep2: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDataSource {
 
-    let group = [
-        "1111",
-        "2222"
-    ]
-
     var tableview: UITableView! = nil
 
     override func setUI() {
@@ -30,7 +25,7 @@ class CreateCtrlrStep2: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return group.count
+        return ItemType.count
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -52,11 +47,13 @@ class CreateCtrlrStep2: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         if cell == nil {
             cell = UITableViewCell(style: .value1, reuseIdentifier: step2CellId)
         }
-        cell!.textLabel!.text = group[indexPath.row]
+        print(ItemType.list[indexPath.row].name)
+        cell!.textLabel!.text = ItemType.list[indexPath.row].name
 
         return cell!
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        rootCtrlr.movePage(gotoRight: true)
     }
 }

@@ -51,6 +51,7 @@ class RinglikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning, CA
         let circleMaskPathFinal = UIBezierPath(ovalIn: endFrame)
 
         // 创建蒙版
+        // 一个关于动画的文章 http://www.cocoachina.com/ios/20161202/18252.html
         let maskLayer = CAShapeLayer()
         maskLayer.path = circleMaskPathFinal.cgPath
         toVC.view.layer.mask = maskLayer

@@ -76,12 +76,6 @@ class Event: BaseData {
     //其他人是否可以增加新人 对决为false，其他为true，如果为true还能设置人数上限，默认不限
     var canInvite: Bool = false
 
-    //自己方以及状态，第一个肯定是自己
-    var ourSideStateList: [UserState] = []
-
-    //对方以及状态
-    var opponentStateList: [UserState] = []
-
     //比赛时间或者截止时间（对于挑战）
     var time: Time! = nil
 
@@ -91,20 +85,28 @@ class Event: BaseData {
     //是否发布到了地图上，也就是别人任意人可以加入
     var isPublishToMap: Bool = false
 
-    //操作时间
-    var operationTimeList: [OperationTime] = []
-
     //奖杯（兑现物）用文本记录就好，多个奖杯的文本中间以\n连接
     var award: String = ""
 
     //详情
     var detail: String = ""
 
+    //生成后可以继续修改的数据 ---------------------------------
+    //自己方以及状态，第一个肯定是自己
+    var ourSideStateList: [UserState] = []
+
+    //对方以及状态
+    var opponentStateList: [UserState] = []
+
     //图片列表
     var imageURLList: [String] = []
 
     //对话list
     var msgList: [MsgStruct] = []
+
+    //被动修改的数据 -------------------------------------------
+    //操作时间
+    var operationTimeList: [OperationTime] = []
 
     init(ID: DataID, item: ItemType) {
         self.item = item

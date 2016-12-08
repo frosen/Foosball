@@ -11,14 +11,19 @@ import Foundation
 class AppManager: NSObject {
 
     // 数据管理器
-    let userMgr: UserMgr = UserMgr()
-    let activeEventsMgr: ActiveEventsMgr = ActiveEventsMgr()
+    let userMgr: UserMgr
+    let activeEventsMgr: ActiveEventsMgr
 
     //单例
     fileprivate static let shareInstance = AppManager()
     fileprivate override init() {
-        super.init()
         print("初始化导演类")
+
+        ItemType.initAllItem()
+        userMgr = UserMgr()
+        activeEventsMgr = ActiveEventsMgr()
+
+        super.init()
     }
 }
 

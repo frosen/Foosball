@@ -23,7 +23,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         // 读取本地数据
 
         var e: Event! = nil
-        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        e = Event(ID: DataID(ID: 50001), item: ItemType.list[0])
 
         //自己方
         let bb1 = UserBrief(ID: DataID(ID: 1232))
@@ -93,18 +93,18 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
         e.msgList = [m1, m2, m3, m4, m5]
         data.append(e)
-        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        e = Event(ID: DataID(ID: 50001), item: ItemType.list[0])
         data.append(e)
 
-        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        e = Event(ID: DataID(ID: 50001), item: ItemType.list[0])
         data.append(e)
-        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        e = Event(ID: DataID(ID: 50001), item: ItemType.list[0])
         data.append(e)
-        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        e = Event(ID: DataID(ID: 50001), item: ItemType.list[0])
         data.append(e)
-        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        e = Event(ID: DataID(ID: 50001), item: ItemType.list[0])
         data.append(e)
-        e = Event(ID: DataID(ID: 50001), item: Foosball)
+        e = Event(ID: DataID(ID: 50001), item: ItemType.list[0])
         data.append(e)
 
         // 初始化时候直接启动轮询
