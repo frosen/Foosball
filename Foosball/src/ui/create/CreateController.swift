@@ -10,6 +10,8 @@ import UIKit
 
 class CreateController: BaseController, UIScrollViewDelegate {
 
+    var createEvent: Event! = nil
+
     var pageView: UIScrollView! = nil
     var subviews: [CreatePageBaseCtrlr]! = nil
 

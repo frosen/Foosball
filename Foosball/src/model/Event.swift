@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum EventType {
+enum EventType: Int {
     case confrontation //对决
     case melee //混战
     case challenge //挑战
@@ -67,7 +67,7 @@ class Event: BaseData {
     var type: EventType = .confrontation
 
     //项目
-    var item: ItemType
+    var item: ItemType = ItemType.list[0]
 
     //人数 不同类型下表示的不一样 -1代表不限
     var memberCount: Int = -1
@@ -107,10 +107,4 @@ class Event: BaseData {
     //被动修改的数据 -------------------------------------------
     //操作时间
     var operationTimeList: [OperationTime] = []
-
-    init(ID: DataID, item: ItemType) {
-        self.item = item
-        super.init(ID: ID)
-
-    }
 }

@@ -48,12 +48,16 @@ class CreateCtrlrStep2: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
             cell = UITableViewCell(style: .value1, reuseIdentifier: step2CellId)
         }
         print(ItemType.list[indexPath.row].name)
+        cell!.imageView!.image = UIImage(named: "setting")
         cell!.textLabel!.text = ItemType.list[indexPath.row].name
 
         return cell!
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        rootCtrlr.createEvent.item = ItemType.list[indexPath.row]
+
         rootCtrlr.movePage(gotoRight: true)
     }
 }

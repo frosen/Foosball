@@ -108,8 +108,9 @@ class BaseController: UIViewController {
 
         //隐藏tabbar
         let TabY: CGFloat = hideTab ? 60 : 0
+        let delayTime: TimeInterval = hideTab ? 0.2 : 0.0
         let hideTabOpt: UIViewAnimationOptions = hideTab ? .curveEaseIn : .curveEaseOut
-        UIView.animate(withDuration: 0.2, delay: 0.2, options: hideTabOpt, animations: {
+        UIView.animate(withDuration: 0.2, delay: delayTime, options: hideTabOpt, animations: {
             self.rootVC.myTabBar.transform = CGAffineTransform(translationX: 0, y: TabY)
             }, completion: nil)
 

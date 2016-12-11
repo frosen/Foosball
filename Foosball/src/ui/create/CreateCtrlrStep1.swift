@@ -91,6 +91,11 @@ class CreateCtrlrStep1: CreatePageBaseCtrlr {
     func tapBtn(ges: UITapGestureRecognizer) {
         let index = ges.view!.tag
         print("step 1 select: ", index)
+
+        let e = Event(ID: DataID(ID: 0))
+        e.type = EventType(rawValue: index)!
+        rootCtrlr.createEvent = e
+
         rootCtrlr.movePage(gotoRight: true)
     }
 }

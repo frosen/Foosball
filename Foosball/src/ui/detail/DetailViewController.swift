@@ -232,7 +232,6 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         }
     }
 
-    let imageCellId = "ICId"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return StaticCell.create(indexPath, tableView: tableView, d: curEvent, ctrlr: self) { indexPath in
             switch (indexPath as NSIndexPath).section {
@@ -257,7 +256,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
                 case 0:
                     return BaseCell.CInfo(id: "IHCId", c: DetailImageHeadCell.self)
                 default:
-                    return BaseCell.CInfo(id: imageCellId, c: DetailImageCell.self)
+                    return BaseCell.CInfo(id: "ICId", c: DetailImageCell.self)
                 }
             default:
                 switch (indexPath as NSIndexPath).row {
