@@ -1,7 +1,7 @@
 //
 //  CreateStep3Ctrlr.swift
 //  Foosball
-//  时间，地点，兑现物，其他详情
+//  时间地点，兑现物，其他详情
 //  Created by luleyan on 2016/11/17.
 //  Copyright © 2016年 卢乐颜. All rights reserved.
 //
@@ -23,17 +23,17 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
 
     // tableview -----------------------------------------------------------------------
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return 3
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 1
+            return 2 // 时间 + 地点
         case 1:
-            return 1
+            return 2 // 标题 + 默认的一个
         default:
-            return 1
+            return 1 // 标题
         }
     }
 
@@ -42,7 +42,7 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 1
+        return 5
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -53,27 +53,25 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         return StaticCell.create(indexPath, tableView: tableView, d: rootCtrlr.createEvent, ctrlr: self) { indexPath in
             switch (indexPath as NSIndexPath).section {
             case 0:
-                return BaseCell.CInfo(id: "CS3TimeCId", c: DetailTitleCell.self)
+                switch (indexPath as NSIndexPath).row {
+                case 0:
+                    return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
+                default:
+                    return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
+                }
             case 1:
                 switch (indexPath as NSIndexPath).row {
                 case 0:
-                    return BaseCell.CInfo(id: "THCId", c: DetailTeamHeadCell.self)
+                    return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
                 default:
-                    return BaseCell.CInfo(id: "TCId", c: DetailTeamCell.self)
-                }
-            case 2:
-                switch (indexPath as NSIndexPath).row {
-                case 0:
-                    return BaseCell.CInfo(id: "IHCId", c: DetailImageHeadCell.self)
-                default:
-                    return BaseCell.CInfo(id: "ICId", c: DetailImageCell.self)
+                    return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
                 }
             default:
                 switch (indexPath as NSIndexPath).row {
                 case 0:
-                    return BaseCell.CInfo(id: "MHCId", c: DetailMsgHeadCell.self)
+                    return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
                 default:
-                    return BaseCell.CInfo(id: "MCId", c: DetailMsgCell.self)
+                    return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
                 }
             }
         }

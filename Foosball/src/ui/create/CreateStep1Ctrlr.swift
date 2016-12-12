@@ -92,10 +92,7 @@ class CreateStep1Ctrlr: CreatePageBaseCtrlr {
         let index = ges.view!.tag
         print("step 1 select: ", index)
 
-        let e = Event(ID: DataID(ID: 0))
-        e.type = EventType(rawValue: index)!
-        rootCtrlr.createEvent = e
-
+        rootCtrlr.createEvent.type = EventType(rawValue: index)!
         rootCtrlr.movePage(gotoRight: true)
     }
 }

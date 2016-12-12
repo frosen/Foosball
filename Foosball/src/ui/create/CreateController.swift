@@ -10,7 +10,7 @@ import UIKit
 
 class CreateController: BaseController, UIScrollViewDelegate {
 
-    var createEvent: Event! = nil
+    var createEvent: Event = Event(ID: DataID(ID: -1))
 
     var pageView: UIScrollView! = nil
     var subviews: [CreatePageBaseCtrlr]! = nil
