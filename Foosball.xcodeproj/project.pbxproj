@@ -35,6 +35,7 @@
 		65AB524D1D3291E6005E7D4C /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52441D3291E6005E7D4C /* RootViewController.swift */; };
 		65AD17421D7EB126008AEE3C /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AD17411D7EB126008AEE3C /* DetailCell.swift */; };
 		65AD17441D7EC89A008AEE3C /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AD17431D7EC89A008AEE3C /* BaseCell.swift */; };
+		65B364B21DFE841900AA1C69 /* TimePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B364B11DFE841900AA1C69 /* TimePickerView.swift */; };
 		65B4F2F31D67011A00F8E961 /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B4F2F21D67011A00F8E961 /* BaseController.swift */; };
 		65B775471D3228710040716C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65B775461D3228710040716C /* Assets.xcassets */; };
 		65B7754A1D3228710040716C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65B775481D3228710040716C /* LaunchScreen.storyboard */; };
@@ -83,6 +84,7 @@
 		65AB52441D3291E6005E7D4C /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		65AD17411D7EB126008AEE3C /* DetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailCell.swift; path = detail/DetailCell.swift; sourceTree = "<group>"; };
 		65AD17431D7EC89A008AEE3C /* BaseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
+		65B364B11DFE841900AA1C69 /* TimePickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimePickerView.swift; path = widget/TimePickerView.swift; sourceTree = "<group>"; };
 		65B4F2F21D67011A00F8E961 /* BaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
 		65B7753A1D3228710040716C /* Foosball.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Foosball.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65B775461D3228710040716C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -299,6 +301,7 @@
 				65BD74921D9F8E00000BDA57 /* StateView.swift */,
 				65F14B841D68439D0073D547 /* MyTabBar.swift */,
 				65F14B851D68439D0073D547 /* MyTabBarItem.swift */,
+				65B364B11DFE841900AA1C69 /* TimePickerView.swift */,
 			);
 			name = widget;
 			sourceTree = "<group>";
@@ -463,6 +466,7 @@
 				65EEB75E1DAE393000BB767D /* DetailTeamCell.swift in Sources */,
 				65AB52471D3291E6005E7D4C /* BaseTabController.swift in Sources */,
 				65AA3A6D1DFD714D0021406E /* CreateStep3Cell.swift in Sources */,
+				65B364B21DFE841900AA1C69 /* TimePickerView.swift in Sources */,
 				65AB52461D3291E6005E7D4C /* AppManager.swift in Sources */,
 				65D427F91D5FEB5900994EA8 /* Item.swift in Sources */,
 				65AD17441D7EC89A008AEE3C /* BaseCell.swift in Sources */,
