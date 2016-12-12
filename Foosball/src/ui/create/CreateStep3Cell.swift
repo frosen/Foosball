@@ -15,6 +15,8 @@ class CreateStep3TimeCell: StaticCell {
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
+        textLabel?.font = UIFont.systemFont(ofSize: 13)
+        detailTextLabel?.font = UIFont.systemFont(ofSize: 13)
         textLabel?.text = "时间"
         detailTextLabel!.text = "15月32日66:66"
     }
