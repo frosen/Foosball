@@ -12,11 +12,10 @@ class BaseCell: UITableViewCell {
     var w: CGFloat = 0
     var h: CGFloat = 0
     var ctrlr: UIViewController! = nil
-    required init(id: String, d: BaseData? = nil, index: IndexPath? = nil) {
-        super.init(style: .default, reuseIdentifier: id)
-        self.accessoryType = .none // 默认
-        self.w = UIScreen.main.bounds.width
-        self.h = type(of: self).getCellHeight(d, index: index) //dynamicType可以获取对象的类，然后就能使用类函数了
+
+    required init(id: String, s: UITableViewCellStyle, t: UITableViewCellAccessoryType) {
+        super.init(style: s, reuseIdentifier: id)
+        self.accessoryType = t // 默认
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -40,17 +39,22 @@ class BaseCell: UITableViewCell {
         }
     }
 
+    class func new(cls: BaseCell.Type, id: String) -> BaseCell {
+        return cls.init(id: id, s: .default, t: .none)
+    }
+
     // 利用swift的动态语言机制，根据配置表创建cell
     class func create(_ index: IndexPath, tableView: UITableView, d: BaseData, ctrlr: UIViewController,  getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
         let info: CInfo! = getInfoCallback(index)
 
-        let cls = info.cls as! BaseCell.Type
-
         var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: info.id)
         if cell == nil {
-            cell = cls.init(id: info.id, d: d, index: index)
+            let cls = info.cls as! BaseCell.Type
+            cell = cls.new(cls: cls, id: info.id)
 
             let baseCell = cell as! BaseCell
+            baseCell.w = UIScreen.main.bounds.width
+            baseCell.h = type(of: baseCell).getCellHeight(d, index: index) //dynamicType可以获取对象的类，然后就能使用类函数了
             baseCell.ctrlr = ctrlr
             baseCell.initData(d, index: index)
         }
@@ -71,10 +75,10 @@ class StaticCell: BaseCell {
             return BaseCell.create(index, tableView: tableView, d: d, ctrlr: ctrlr, getInfoCallback: getInfoCallback)
         }
 
-        let cls = info.cls as! StaticCell.Type
         var cell: UITableViewCell? = tableView.cellForRow(at: index)
         if cell == nil {
-            cell = cls.init(id: info.id, d: d, index: index)
+            let cls = info.cls as! StaticCell.Type
+            cell = cls.new(cls: cls, id: info.id)
 
             let staticCell = cell as! StaticCell
             staticCell.ctrlr = ctrlr

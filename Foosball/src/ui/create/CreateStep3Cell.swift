@@ -10,11 +10,13 @@ import UIKit
 
 class CreateStep3TimeCell: StaticCell {
 
-    private let cellStyle: UITableViewCellStyle = .value1
+    override class func new(cls: BaseCell.Type, id: String) -> BaseCell {
+        return cls.init(id: id, s: .value1, t: .disclosureIndicator)
+    }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
         textLabel?.text = "时间"
-        detailTextLabel?.text = "2015年15月32日"
+        detailTextLabel!.text = "15月32日66:66"
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
