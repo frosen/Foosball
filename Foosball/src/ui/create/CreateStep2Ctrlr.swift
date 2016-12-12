@@ -1,40 +1,31 @@
 //
-//  CreateCtrlrStep3.swift
+//  CreateStep2Ctrlr.swift
 //  Foosball
-//  时间，地点，兑现物，其他详情
+//
 //  Created by luleyan on 2016/11/17.
 //  Copyright © 2016年 卢乐颜. All rights reserved.
 //
 
 import UIKit
 
-class CreateCtrlrStep3: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDataSource {
+class CreateStep2Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDataSource {
 
     var tableview: UITableView! = nil
-    
+
     override func setUI() {
-        tableview = UITableView(frame: CGRect(x: 0, y: 64, width: pageSize.width, height: pageSize.height - 64 - 49)) // 要减去底部按钮层的高度
+        tableview = UITableView(frame: CGRect(x: 0, y: 64, width: pageSize.width, height: pageSize.height - 64))
         view.addSubview(tableview)
         tableview.delegate = self
         tableview.dataSource = self
-
-        //底部的按钮层 直接发布、邀请朋友
     }
 
     // tableview -----------------------------------------------------------------------
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return 1
-        case 1:
-            return 1
-        default:
-            return 1
-        }
+        return ItemType.count
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -49,7 +40,7 @@ class CreateCtrlrStep3: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         return 44
     }
 
-    let step2CellId = "step3CellId"
+    let step2CellId = "step2CellId"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: UITableViewCell?
         cell = tableView.dequeueReusableCell(withIdentifier: step2CellId)
@@ -64,6 +55,9 @@ class CreateCtrlrStep3: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        rootCtrlr.createEvent.item = ItemType.list[indexPath.row]
+
         rootCtrlr.movePage(gotoRight: true)
     }
 }

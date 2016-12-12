@@ -1,5 +1,5 @@
 //
-//  CreateCtrlrStep1.swift
+//  CreateStep1Ctrlr.swift
 //  Foosball
 //
 //  Created by luleyan on 2016/11/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateCtrlrStep1: CreatePageBaseCtrlr {
+class CreateStep1Ctrlr: CreatePageBaseCtrlr {
 
     // 类型按钮的属性结构和列表
     struct TypeBtnAttri {
@@ -68,7 +68,7 @@ class CreateCtrlrStep1: CreatePageBaseCtrlr {
 
             // 点击事件
             viewTypeBtn.tag = i
-            let tap = UITapGestureRecognizer(target: self, action: #selector(CreateCtrlrStep1.tapBtn(ges:)))
+            let tap = UITapGestureRecognizer(target: self, action: #selector(CreateStep1Ctrlr.tapBtn(ges:)))
             viewTypeBtn.addGestureRecognizer(tap)
 
             // 添加渐变色背景

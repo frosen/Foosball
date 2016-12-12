@@ -41,10 +41,10 @@ class CreateController: BaseController, UIScrollViewDelegate {
         //加载页面
         let pageVSize = pageView.frame.size
         subviews = [
-            CreateCtrlrStep1(rootCtrlr: self, pageSize: pageVSize),
-            CreateCtrlrStep2(rootCtrlr: self, pageSize: pageVSize),
-            CreateCtrlrStep3(rootCtrlr: self, pageSize: pageVSize),
-            CreateCtrlrStep4(rootCtrlr: self, pageSize: pageVSize),
+            CreateStep1Ctrlr(rootCtrlr: self, pageSize: pageVSize),
+            CreateStep2Ctrlr(rootCtrlr: self, pageSize: pageVSize),
+            CreateStep3Ctrlr(rootCtrlr: self, pageSize: pageVSize),
+            CreateStep4Ctrlr(rootCtrlr: self, pageSize: pageVSize),
         ]
 
         pageView.contentSize = CGSize(width: pageVSize.width * CGFloat(subviews.count), height: pageVSize.height)
