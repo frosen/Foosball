@@ -73,7 +73,7 @@ struct Time {
 
     func toWholeString() -> String {
         let formatter: DateFormatter = DateFormatter()
-        formatter.dateFormat = "yyyy年MM月dd日HH点mm分"
+        formatter.dateFormat = "MM月dd日 HH:mm"
         return formatter.string(from: time)
     }
 

@@ -10,7 +10,7 @@ import UIKit
 
 class CreateController: BaseController, UIScrollViewDelegate {
 
-    var createEvent: Event = Event(ID: DataID(ID: -1))
+    var createEvent: Event! = nil
 
     var pageView: UIScrollView! = nil
     var subviews: [CreatePageBaseCtrlr]! = nil
@@ -21,6 +21,10 @@ class CreateController: BaseController, UIScrollViewDelegate {
         navTabType = [.HideTab, .TransparentNav]
         super.viewDidLoad()
         print("创建事件的页面")
+
+        // 初始化数据
+        createEvent = Event(ID: DataID(ID: -1))
+        createEvent.time = Time.now
 
         // 位置初始化 自定义的转景，系统不会重置view的位置，所以自己来
         view.frame.origin.y += 64

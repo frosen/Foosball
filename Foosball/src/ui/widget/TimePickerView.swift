@@ -20,21 +20,29 @@ class TimePickerView: UIView {
     private var title: UILabel! = nil
     private var calendarView: UIView! = nil
 
-    private var currentMonthDateArray: [Double] = []
+    private var confirmCallback: ((Date) -> Void)! = nil
+
+    private var curSelectedDate: Date! = nil
     private var year: Int = 0
     private var month: Int = 0
+
+    private var dayDateMap: [Int: Date] = [:]
+    private weak var curSelectedDayView: UILabel? = nil
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init() {
+    init(date: Date, callback: @escaping ((Date) -> Void)) {
         let ww = UIScreen.main.bounds.width
         let wh = UIScreen.main.bounds.height
         super.init(frame: CGRect(x: 0, y: 0, width: ww, height: wh))
 
+        curSelectedDate = date
+        confirmCallback = callback
+
         let calendar = Calendar.current
-        let dateCom = calendar.dateComponents([.year, .month, .day], from: Time.now.time)
+        let dateCom = calendar.dateComponents([.year, .month, .day], from: curSelectedDate)
         year = dateCom.year!
         month = dateCom.month!
 
@@ -82,7 +90,7 @@ class TimePickerView: UIView {
 
         // 日历区间
         let calendarBGView = UIView(frame: CGRect(x: 0, y: headHeight, width: contentBGView.frame.width, height: tableHeight * CGFloat(rowNum)))
-        addSubview(calendarBGView)
+        contentBGView.addSubview(calendarBGView)
         calendarBGView.backgroundColor = UIColor(white: 0.93, alpha: 1.0)
 
         let weekStrs = ["日", "一", "二", "三", "四", "五", "六"];
@@ -96,7 +104,23 @@ class TimePickerView: UIView {
         }
 
         calendarView = UIView(frame: CGRect(x: 0, y: headHeight + tableHeight, width: contentBGView.frame.width, height: tableHeight * (CGFloat(rowNum) - 1)))
-        addSubview(calendarView)
+        contentBGView.addSubview(calendarView)
+
+        // 下方按钮
+        let confirmBtn = UIButton(type: .custom)
+        contentBGView.addSubview(confirmBtn)
+
+        confirmBtn.bounds = CGRect(x: 0, y: 0, width: 140, height: 35)
+        confirmBtn.center = CGPoint(x: contentBGView.frame.width / 2, y: contentBGView.frame.height - tailHeight / 2)
+
+        confirmBtn.setTitle("确  定", for: .normal)
+        confirmBtn.setTitleColor(UIColor.white, for: .normal)
+
+        confirmBtn.backgroundColor = BaseColor
+        confirmBtn.layer.cornerRadius = 3
+        confirmBtn.layer.masksToBounds = true
+
+        confirmBtn.addTarget(self, action: #selector(TimePickerView.onConfirm), for: .touchUpInside)
     }
 
     func showDateView() {
@@ -104,7 +128,6 @@ class TimePickerView: UIView {
         for item in calendarView.subviews {
             item.removeFromSuperview()
         }
-        currentMonthDateArray = []
 
         let now = Time.now.time
 
@@ -124,23 +147,30 @@ class TimePickerView: UIView {
 
             let dayView = UILabel(frame: CGRect(x: w, y: h, width: tableWidth, height: tableHeight))
             calendarView.addSubview(dayView)
-            dayView.tag = i
             dayView.font = UIFont.systemFont(ofSize: 10)
             dayView.textAlignment = .center
 
             let dayDate = date1.addingTimeInterval(TimeInterval(i - date1Week) * 24 * 3600)
-            currentMonthDateArray[i] = dayDate.timeIntervalSince1970
 
             let dayCom = calendar.dateComponents([.month, .day], from: dayDate)
             let dayIndex = dayCom.day
             if dayDate == now {
                 dayView.text = "今天"
-                setDayViewUI(dayView, checked: true, enable: true) // 默认选择到今天
                 dayView.layer.borderColor = BaseColor.cgColor
                 dayView.layer.borderWidth = 1
             } else {
                 dayView.text = String(describing: dayIndex)
-                setDayViewUI(dayView, checked: false, enable: dayDate > now) // 今天以前禁用
+            }
+
+            // 今天以前禁用
+            if dayDate < now {
+                dayView.textColor = UIColor(white: 0.17, alpha: 1.0)
+            } else {
+                setDayViewUI(dayView, checked: dayDate == curSelectedDate)
+
+                let dayTap = UITapGestureRecognizer(target: self, action: #selector(TimePickerView.tapToTurnDay(ges:)))
+                dayView.addGestureRecognizer(dayTap)
+                dayView.tag = dayIndex!
             }
 
             // 1号下面加月份
@@ -154,12 +184,6 @@ class TimePickerView: UIView {
                 monthLab.text = String(describing: dayCom.month)
                 monthLab.tag = 109 // 为了变色时候查找方便
             }
-
-            if dayDate >= now {
-                let dayTap = UITapGestureRecognizer(target: self, action: #selector(TimePickerView.tapToTurnDay(ges:)))
-                dayView.addGestureRecognizer(dayTap)
-            }
-
         }
 
     }
@@ -175,27 +199,50 @@ class TimePickerView: UIView {
         } else {
             return
         }
+
+        month += leftDir ? -1 : 1
+        if month > 12 {
+            month = 1
+            year += 1
+        } else if month < 1 {
+            month = 12
+            year -= 1
+        }
+
+        showDateView()
     }
 
     func tapToTurnDay(ges: UITapGestureRecognizer) {
-
+        let dayView = ges.view! as! UILabel
+        onSelect(dayView: dayView)
     }
 
-    private func setDayViewUI(_ l: UILabel, checked: Bool, enable: Bool) {
-        if !enable {
-            l.textColor = UIColor(white: 0.17, alpha: 1.0)
-            l.backgroundColor = UIColor.clear
-        } else if checked {
+    func onSelect(dayView: UILabel) {
+        let day = dayView.tag
+        if let curDate = curSelectedDayView {
+            setDayViewUI(curDate, checked: false)
+        }
+
+        setDayViewUI(dayView, checked: true)
+        curSelectedDate = dayDateMap[day]
+        curSelectedDayView = dayView
+    }
+
+    private func setDayViewUI(_ l: UILabel, checked: Bool) {
+        if checked {
             l.textColor = UIColor.white
             l.backgroundColor = BaseColor
         } else {
             l.textColor = UIColor(white: 0.75, alpha: 1.0)
             l.backgroundColor = UIColor.clear
-
         }
 
         let monthLab = l.viewWithTag(109) as! UILabel?
         monthLab?.textColor = l.textColor
+    }
+
+    func onConfirm() {
+        confirmCallback(curSelectedDate)
     }
 }
 

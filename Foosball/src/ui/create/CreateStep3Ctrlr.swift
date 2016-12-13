@@ -78,6 +78,7 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        rootCtrlr.movePage(gotoRight: true)
+        let cell = tableView.cellForRow(at: indexPath) as! BaseCell
+        cell.onSelected()
     }
 }
