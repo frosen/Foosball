@@ -17,8 +17,6 @@ class DetailTeamHeadCell: DetailHeadCell {
         self.selectionStyle = .none //使选中后没有反应
         createHead("队伍")
     }
-
-
 }
 
 // 一行6个头像，头像下面有状态
@@ -26,10 +24,10 @@ class DetailTeamHeadCell: DetailHeadCell {
 // 分成友方，敌方，观众
 class DetailTeamCell: BaseCell {
     static let memberCountIn1Line: CGFloat = 6
-    static let avatarMargin: CGFloat = 3
+    static let avatarMargin: CGFloat = 5
     static let avatarTotalWidth: CGFloat = DetailG.widthWithoutMargin + 2 * avatarMargin
     static let memberViewWidth: CGFloat = avatarTotalWidth / memberCountIn1Line
-    static let memberViewHeight: CGFloat = memberViewWidth + 15
+    static let memberViewHeight: CGFloat = memberViewWidth + 27
     static let teamBottomMargin: CGFloat = 4
 
     var title: UILabel! = nil
@@ -132,11 +130,26 @@ class DetailTeamCell: BaseCell {
         v.addSubview(avatar)
 
         // 状态
-        let stateView = StateView()
+        let stateView = StateView(small: true)
         v.addSubview(stateView)
-        stateView.center = CGPoint(x: v.frame.width / 2, y: v.frame.width - stateView.frame.height / 2)
+        stateView.frame.origin = CGPoint(
+            x: DetailTeamCell.avatarMargin,
+            y: v.frame.width - DetailTeamCell.avatarMargin - stateView.frame.height
+        )
         stateView.setState(state.state)
-        
+
+        // 名称
+        let nameLbl = UILabel()
+        v.addSubview(nameLbl)
+        nameLbl.bounds = CGRect(x: 0, y: 0, width: avatarWidth, height: 14)
+        nameLbl.center = CGPoint(x: DetailTeamCell.memberViewWidth / 2, y: DetailTeamCell.memberViewHeight - 19)
+        nameLbl.font = UIFont.systemFont(ofSize: 11)
+        nameLbl.textAlignment = .center
+        nameLbl.textColor = SubTitleColor
+        nameLbl.numberOfLines = 1
+        nameLbl.lineBreakMode = .byTruncatingTail
+        nameLbl.text = userB.name
+
         return v
     }
 
@@ -154,6 +167,16 @@ class DetailTeamCell: BaseCell {
         btn.layer.cornerRadius =  avatarWidth / 2
         btn.layer.masksToBounds = true
         btn.addTarget(self, action: #selector(DetailTeamCell.onClickInvite), for: .touchUpInside)
+
+        // 文字
+        let lbl = UILabel()
+        v.addSubview(lbl)
+        lbl.bounds = CGRect(x: 0, y: 0, width: avatarWidth, height: 14)
+        lbl.center = CGPoint(x: DetailTeamCell.memberViewWidth / 2, y: DetailTeamCell.memberViewHeight - 19)
+        lbl.font = UIFont.systemFont(ofSize: 11)
+        lbl.textAlignment = .center
+        lbl.textColor = SubTitleColor
+        lbl.text = "邀请"
 
         return v
     }

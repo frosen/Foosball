@@ -168,13 +168,12 @@ class DetailHeadCell: StaticCell {
     var lbl: UILabel! = nil
 
     func createHead(_ s: String) {
-        let vw: CGFloat = 15
+        let vw: CGFloat = 5
         let vh: CGFloat = 15
 
-        let icon = UIImageView(frame: CGRect(x: DetailG.headMargin, y: contentView.frame.height / 2 - vh / 2, width: vw, height: vh))
+        let icon = UIView(frame: CGRect(x: DetailG.headMargin, y: contentView.frame.height / 2 - vh / 2, width: vw, height: vh))
         contentView.addSubview(icon)
-        icon.image = UIImage(named: "detail_cell_icon")
-//        icon.backgroundColor = UIColor.orange
+        icon.backgroundColor = BaseColor
 
         lbl = UILabel()
         contentView.addSubview(lbl)
@@ -188,28 +187,6 @@ class DetailHeadCell: StaticCell {
 
         lbl.font = TitleFont
         lbl.textColor = TitleColor
-    }
-
-    func createButton(_ txt: String, fromPosX: CGFloat, callback: Selector) -> CGFloat {
-        let btn = UIButton(type: .system)
-        contentView.addSubview(btn)
-
-        let btnWidth: CGFloat = 15.0 * CGFloat(txt.characters.count) + 20.0
-
-        btn.snp.makeConstraints{ make in
-            make.centerY.equalTo(contentView.snp.centerY)
-            make.right.equalTo(contentView.snp.right).inset(DetailG.headMargin + fromPosX)
-            make.size.equalTo(CGSize(width: btnWidth, height: 25))
-        }
-
-        btn.setTitle(txt, for: .normal)
-        btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
-        btn.setTitleColor(UIColor.white, for: .normal)
-        btn.backgroundColor = BaseColor
-        btn.layer.cornerRadius = 9
-        btn.addTarget(self, action: callback, for: .touchUpInside)
-
-        return btnWidth + DetailG.headMargin + fromPosX
     }
 }
 

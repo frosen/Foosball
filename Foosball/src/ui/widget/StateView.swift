@@ -10,24 +10,28 @@ import UIKit
 
 class StateView: UIView {
 
-    let rect = CGRect(x: 0, y: 0, width: 28, height: 14)
-    var lbl: UILabel! = nil
+    static private let h: CGFloat = 16
+    private var lbl: UILabel! = nil
+
+    private var small: Bool = false
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init() {
-        super.init(frame: rect)
+    init(small: Bool = false) {
+        let r = CGRect(x: 0, y: 0, width: StateView.h * (small ? 1 : 2), height: StateView.h)
+        super.init(frame: r)
+        self.small = small
 
-        lbl = UILabel(frame: rect)
+        lbl = UILabel(frame: r)
         addSubview(lbl)
 
         lbl.textAlignment = .center
-        lbl.font = UIFont.boldSystemFont(ofSize: 10)
+        lbl.font = UIFont.boldSystemFont(ofSize: 12)
         lbl.textColor = UIColor.white
 
-        layer.cornerRadius = 3
+        layer.cornerRadius = StateView.h / 2
     }
 
     func setState(_ state: EventState) {
@@ -67,7 +71,7 @@ class StateView: UIView {
             bgColor = UIColor.purple
         }
 
-        lbl.text = string
+        lbl.text = small ? string.substring(to: string.index(string.startIndex, offsetBy: 1)) : string
         backgroundColor = bgColor
     }
 }
