@@ -16,13 +16,9 @@ class DetailTeamHeadCell: DetailHeadCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
         createHead("队伍")
-        let _ = createButton("邀请", fromPosX: 0, callback: #selector(DetailTeamHeadCell.onClickInvite)) // 邀请按钮
     }
 
-    // 邀请
-    func onClickInvite() {
-        print("invite")
-    }
+
 }
 
 // 一行6个头像，头像下面有状态
@@ -41,16 +37,16 @@ class DetailTeamCell: BaseCell {
 
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event?
-        var avatarRowRate: CGFloat
+        var avatarRowCount_float: CGFloat
         switch index!.row {
         case 1:
-            avatarRowRate = CGFloat(e!.ourSideStateList.count) / memberCountIn1Line
+            avatarRowCount_float = CGFloat(e!.ourSideStateList.count + 1) / memberCountIn1Line // +1 是添加按钮
         case 2:
-            avatarRowRate = CGFloat(e!.opponentStateList.count) / memberCountIn1Line
+            avatarRowCount_float = CGFloat(e!.opponentStateList.count + 1) / memberCountIn1Line
         default:
-            avatarRowRate = 0
+            avatarRowCount_float = 0
         }
-        let avatarRowCount = ceil(avatarRowRate)
+        let avatarRowCount = ceil(avatarRowCount_float)
         return avatarRowCount * memberViewHeight + DetailG.subTitleHeight + teamBottomMargin
     }
 
@@ -86,13 +82,9 @@ class DetailTeamCell: BaseCell {
             titleStr = "观战者"
         }
 
-        var countStr: String // 标题会显示人数
+        // 标题会显示人数
         let memberCount = memberList.count
-        if memberCount > 0 {
-            countStr = " (" + String(memberCount) + ")"
-        } else {
-            countStr = " ( 你的对手尚未就位，等待邀请 ) "
-        }
+        let countStr = " (" + String(memberCount) + ")"
         title.text = titleStr + countStr
         title.sizeToFit()
 
@@ -104,18 +96,14 @@ class DetailTeamCell: BaseCell {
         memberListView = UIView(frame: CGRect(x: margin, y: DetailG.subTitleHeight, width: 99999, height: 99999))
         contentView.addSubview(memberListView!)
 
-        if memberCount == 0 { // 如果member为0则不用往下走了
-            return
-        }
-
         //设置member
         var pos: Int = 0
         var line: Int = 0
         for m in memberList {
             let v = createMemberView(m)
             memberListView!.addSubview(v)
-            v.frame.origin.x = CGFloat(pos) * v.frame.width
-            v.frame.origin.y = CGFloat(line) * v.frame.height
+            v.frame.origin.x = CGFloat(pos) * DetailTeamCell.memberViewWidth
+            v.frame.origin.y = CGFloat(line) * DetailTeamCell.memberViewHeight
 
             pos += 1
             if pos >= Int(DetailTeamCell.memberCountIn1Line) {
@@ -123,6 +111,11 @@ class DetailTeamCell: BaseCell {
                 line += 1
             }
         }
+
+        let newBtn = createNewBtn()
+        memberListView!.addSubview(newBtn)
+        newBtn.frame.origin.x = CGFloat(pos) * DetailTeamCell.memberViewWidth
+        newBtn.frame.origin.y = CGFloat(line) * DetailTeamCell.memberViewHeight
     }
 
     func createMemberView(_ state: UserState) -> UIView {
@@ -145,5 +138,28 @@ class DetailTeamCell: BaseCell {
         stateView.setState(state.state)
         
         return v
+    }
+
+    func createNewBtn() -> UIView {
+        let v = UIView()
+        v.bounds = CGRect(x: 0, y: 0, width: DetailTeamCell.memberViewWidth, height: DetailTeamCell.memberViewHeight)
+
+        // 按钮
+        let avatarWidth = v.frame.width - 2 * DetailTeamCell.avatarMargin
+        let btn = UIButton(type: .custom)
+        v.addSubview(btn)
+        btn.frame = CGRect(x: DetailTeamCell.avatarMargin, y: DetailTeamCell.avatarMargin, width: avatarWidth, height: avatarWidth)
+        btn.setImage(UIImage(named: "plus"), for: .normal)
+        btn.backgroundColor = UIColor(white: 0.91, alpha: 1.0)
+        btn.layer.cornerRadius =  avatarWidth / 2
+        btn.layer.masksToBounds = true
+        btn.addTarget(self, action: #selector(DetailTeamCell.onClickInvite), for: .touchUpInside)
+
+        return v
+    }
+
+    // 邀请
+    func onClickInvite() {
+        print("invite")
     }
 }
