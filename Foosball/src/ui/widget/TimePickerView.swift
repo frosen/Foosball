@@ -19,6 +19,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
     private var title: UILabel! = nil
     private var calendarView: UIView! = nil
+    private var timePicker: UIPickerView! = nil
 
     private var confirmCallback: ((Date) -> Void)! = nil
 
@@ -124,7 +125,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         contentBGView.addSubview(calendarView)
 
         // 时间选则
-        let timePicker = UIPickerView(frame: CGRect(
+        timePicker = UIPickerView(frame: CGRect(
             x: contentBGView.frame.width * 0.25,
             y: contentBGView.frame.height - tailHeight - pickerHeight,
             width: contentBGView.frame.width * 0.5,
@@ -135,7 +136,6 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         timePicker.dataSource = self
 
         // 初始位置，10 * 24 是为了循环滚动设置的，-1是把值和row匹配
-        print(sHour, sMinute)
         timePicker.selectRow(10 * 24 + sHour - 1, inComponent: 0, animated: false)
         timePicker.selectRow(10 * 60 + sMinute - 1, inComponent: 1, animated: false)
 
@@ -305,7 +305,9 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
     func onConfirm() {
-        let selectedCom = DateComponents(year: sYear, month: sMonth, day: sDay)
+        let hour = timePicker.selectedRow(inComponent: 0) + 1
+        let min = timePicker.selectedRow(inComponent: 1) + 1
+        let selectedCom = DateComponents(year: sYear, month: sMonth, day: sDay, hour: hour, minute: min)
         confirmCallback(selectedCom.date!)
     }
 
@@ -320,10 +322,6 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         } else {
             return 60 * 20// 分钟
         }
-    }
-
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        print("did s", row, component)
     }
 
     final public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
