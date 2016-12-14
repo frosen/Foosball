@@ -9,24 +9,27 @@
 import UIKit
 
 class TimePickerView: UIView {
-    private let tableWidth: CGFloat = 35
-    private let tableHeight: CGFloat = 35 * 0.8
+    private let tableWidth: CGFloat = 42
+    private let tableHeight: CGFloat = 33
     private let rowNum: Int = 7 //行数
     private let colNum: Int = 7 //列数
     private let headHeight: CGFloat = 35
     private let tailHeight: CGFloat = 40
 
-    private var contentBGView: UIView! = nil
     private var title: UILabel! = nil
     private var calendarView: UIView! = nil
 
     private var confirmCallback: ((Date) -> Void)! = nil
 
-    private var curSelectedDate: Date! = nil
-    private var year: Int = 0
-    private var month: Int = 0
+    // 展示的年月
+    private var onShowYear: Int = 0
+    private var onShowMonth: Int = 0
 
-    private var dayDateMap: [Int: Date] = [:]
+    // 被选中的日期
+    private var sYear: Int = 0
+    private var sMonth: Int = 0
+    private var sDay: Int = 0
+
     private weak var curSelectedDayView: UILabel? = nil
 
     required init?(coder aDecoder: NSCoder) {
@@ -38,13 +41,16 @@ class TimePickerView: UIView {
         let wh = UIScreen.main.bounds.height
         super.init(frame: CGRect(x: 0, y: 0, width: ww, height: wh))
 
-        curSelectedDate = date
         confirmCallback = callback
 
         let calendar = Calendar.current
-        let dateCom = calendar.dateComponents([.year, .month, .day], from: curSelectedDate)
-        year = dateCom.year!
-        month = dateCom.month!
+        let dateCom = calendar.dateComponents([.year, .month, .day], from: date)
+        sYear = dateCom.year!
+        sMonth = dateCom.month!
+        sDay = dateCom.day!
+
+        onShowYear = sYear
+        onShowMonth = sMonth
 
         initUI()
         showDateView()
@@ -58,13 +64,11 @@ class TimePickerView: UIView {
         bgV.backgroundColor = UIColor.black
 
         // 内容区域
-        contentBGView = UIView()
+        let contentBGView = UIView()
         addSubview(contentBGView)
         contentBGView.bounds = CGRect(x: 0, y: 0, width: tableWidth * CGFloat(colNum), height: headHeight + tableHeight * CGFloat(rowNum) + tailHeight)
         contentBGView.center = CGPoint(x: frame.width / 2, y: frame.height / 2)
-
-        contentBGView.layer.cornerRadius = 2.0
-        contentBGView.layer.masksToBounds = true
+        contentBGView.backgroundColor = UIColor.white
 
         // 翻月箭头
         let arrowEdge: CGFloat = 30
@@ -75,10 +79,10 @@ class TimePickerView: UIView {
 
         let right = UIImageView(image: UIImage(named: "arrows_right"))
         contentBGView.addSubview(right)
-        right.center = CGPoint(x: frame.width - arrowEdge, y: headHeight / 2)
+        right.center = CGPoint(x: contentBGView.frame.width - arrowEdge, y: headHeight / 2)
 
         // 标题
-        title = UILabel(frame: CGRect(x: 0, y: 0, width: frame.width, height: headHeight))
+        title = UILabel(frame: CGRect(x: 0, y: 0, width: contentBGView.frame.width, height: headHeight))
         contentBGView.addSubview(title)
         title.textColor = UIColor.black
         title.font = UIFont.systemFont(ofSize: 14)
@@ -86,6 +90,7 @@ class TimePickerView: UIView {
 
         // 标题占了整个head，所以靠点击标题，并查看在左还是在右出发翻月份，而不是箭头
         let titleTap = UITapGestureRecognizer(target: self, action: #selector(TimePickerView.tapToTurnMonth(ges:)))
+        title.isUserInteractionEnabled = true
         title.addGestureRecognizer(titleTap)
 
         // 日历区间
@@ -110,11 +115,12 @@ class TimePickerView: UIView {
         let confirmBtn = UIButton(type: .custom)
         contentBGView.addSubview(confirmBtn)
 
-        confirmBtn.bounds = CGRect(x: 0, y: 0, width: 140, height: 35)
+        confirmBtn.bounds = CGRect(x: 0, y: 0, width: 108, height: 28)
         confirmBtn.center = CGPoint(x: contentBGView.frame.width / 2, y: contentBGView.frame.height - tailHeight / 2)
 
         confirmBtn.setTitle("确  定", for: .normal)
         confirmBtn.setTitleColor(UIColor.white, for: .normal)
+        confirmBtn.titleLabel!.font = UIFont.systemFont(ofSize: 14)
 
         confirmBtn.backgroundColor = BaseColor
         confirmBtn.layer.cornerRadius = 3
@@ -124,25 +130,32 @@ class TimePickerView: UIView {
     }
 
     func showDateView() {
+        // 标题
+        title.text = String(onShowYear) + "年" + String(onShowMonth) + "月"
+
         // 移除原有的控件
         for item in calendarView.subviews {
             item.removeFromSuperview()
         }
 
-        let now = Time.now.time
-
         // 获取本月第一天是星期几
-        let dateCom: DateComponents = DateComponents(year: year, month: month, day: 1)
+        let dateCom: DateComponents = DateComponents(year: onShowYear, month: onShowMonth, day: 1)
         let calendar = Calendar.current
         let date1 = calendar.date(from: dateCom)!
         let date1Week = calendar.ordinality(of: .weekday, in: .weekOfMonth, for: date1)! - 1
 
+        let nowCom = calendar.dateComponents([.year, .month, .day], from: Time.now.time)
+
         var w: CGFloat = 0
         var h: CGFloat = 0
         for i in 0 ..< colNum * (rowNum - 1) { // -1 是减去显示星期的一行
-            if i % colNum == 0 {
+            if i == 0 {
+                // pass
+            } else if i % colNum == 0 {
                 h += tableHeight
                 w = 0
+            } else {
+                w += tableWidth
             }
 
             let dayView = UILabel(frame: CGRect(x: w, y: h, width: tableWidth, height: tableHeight))
@@ -152,25 +165,28 @@ class TimePickerView: UIView {
 
             let dayDate = date1.addingTimeInterval(TimeInterval(i - date1Week) * 24 * 3600)
 
-            let dayCom = calendar.dateComponents([.month, .day], from: dayDate)
-            let dayIndex = dayCom.day
-            if dayDate == now {
+            let dayCom = calendar.dateComponents([.year, .month, .day], from: dayDate)
+            let dayIndex = dayCom.day!
+
+            if dayCom.year! == nowCom.year! && dayCom.month! == nowCom.month! && dayCom.day! == nowCom.day! {
                 dayView.text = "今天"
                 dayView.layer.borderColor = BaseColor.cgColor
                 dayView.layer.borderWidth = 1
             } else {
-                dayView.text = String(describing: dayIndex)
+                dayView.text = String(dayIndex)
             }
 
             // 今天以前禁用
-            if dayDate < now {
-                dayView.textColor = UIColor(white: 0.17, alpha: 1.0)
+            if dayCom.year! * 10000 + dayCom.month! * 100 + dayCom.day! < nowCom.year! * 10000 + nowCom.month! * 100 + nowCom.day! {
+                dayView.textColor = UIColor(white: 0.75, alpha: 1.0)
             } else {
-                setDayViewUI(dayView, checked: dayDate == curSelectedDate)
+                let isSelectedDay = (dayCom.year! == sYear && dayCom.month! == sMonth && dayCom.day! == sDay)
+                setDayViewUI(dayView, checked: isSelectedDay)
 
+                dayView.isUserInteractionEnabled = true
                 let dayTap = UITapGestureRecognizer(target: self, action: #selector(TimePickerView.tapToTurnDay(ges:)))
                 dayView.addGestureRecognizer(dayTap)
-                dayView.tag = dayIndex!
+                dayView.tag = dayIndex
             }
 
             // 1号下面加月份
@@ -181,7 +197,7 @@ class TimePickerView: UIView {
                 monthLab.textAlignment = .center
                 monthLab.font = UIFont.systemFont(ofSize: 7)
                 monthLab.textColor = dayView.textColor
-                monthLab.text = String(describing: dayCom.month)
+                monthLab.text = String(dayCom.month!) + "月"
                 monthLab.tag = 109 // 为了变色时候查找方便
             }
         }
@@ -200,13 +216,15 @@ class TimePickerView: UIView {
             return
         }
 
-        month += leftDir ? -1 : 1
-        if month > 12 {
-            month = 1
-            year += 1
-        } else if month < 1 {
-            month = 12
-            year -= 1
+        print("tapToTurnMonth", leftDir)
+
+        onShowMonth += leftDir ? -1 : 1
+        if onShowMonth > 12 {
+            onShowMonth = 1
+            onShowYear += 1
+        } else if onShowMonth < 1 {
+            onShowMonth = 12
+            onShowYear -= 1
         }
 
         showDateView()
@@ -219,21 +237,25 @@ class TimePickerView: UIView {
 
     func onSelect(dayView: UILabel) {
         let day = dayView.tag
-        if let curDate = curSelectedDayView {
-            setDayViewUI(curDate, checked: false)
-        }
+        print("onSelect", day)
 
         setDayViewUI(dayView, checked: true)
-        curSelectedDate = dayDateMap[day]
-        curSelectedDayView = dayView
+        sYear = onShowYear
+        sMonth = onShowMonth
+        sDay = day
     }
 
     private func setDayViewUI(_ l: UILabel, checked: Bool) {
         if checked {
             l.textColor = UIColor.white
             l.backgroundColor = BaseColor
+
+            if let curDate = curSelectedDayView {
+                setDayViewUI(curDate, checked: false)
+            }
+            curSelectedDayView = l
         } else {
-            l.textColor = UIColor(white: 0.75, alpha: 1.0)
+            l.textColor = UIColor(white: 0.17, alpha: 1.0)
             l.backgroundColor = UIColor.clear
         }
 
@@ -242,7 +264,8 @@ class TimePickerView: UIView {
     }
 
     func onConfirm() {
-        confirmCallback(curSelectedDate)
+        let selectedCom = DateComponents(year: sYear, month: sMonth, day: sDay)
+        confirmCallback(selectedCom.date!)
     }
 }
 
