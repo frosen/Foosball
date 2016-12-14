@@ -36,19 +36,12 @@ struct Time {
 
     //获取当前时间的Time
     static var now: Time {
-        return Time(t: getCurrentTime())
-    }
-
-    static private func getCurrentTime() -> Date {
-        let zone: TimeZone = TimeZone.current // 设置系统时区为本地时区
-        let second: Int = zone.secondsFromGMT() // 计算本地时区与 GMT 时区的时间差
-        return Date(timeIntervalSinceNow: TimeInterval(second)) // 在 GMT 时间基础上追加时间差值，得到本地时间
+        return Time(t: Date())
     }
 
     //根据当前时间获取不同的时间文本
     func toString() -> String {
-        let now = Time.getCurrentTime()
-
+        let now = Date()
         let interval: TimeInterval = now.timeIntervalSince(time)
 
         var timeStr: String
@@ -57,30 +50,26 @@ struct Time {
         } else if interval < 3600 {
             let min = floor(interval / 60)
             timeStr = String(Int(min)) + "分钟前"
-        } else if interval < 3600 * 24 {
-            let formatter: DateFormatter = DateFormatter()
-            formatter.dateFormat = "HH:mm"
-            timeStr = formatter.string(from: time)
         } else {
-            let formatter: DateFormatter = DateFormatter()
-            formatter.dateFormat = "MM月dd日"
-            timeStr = formatter.string(from: time)
+            let calendar = Calendar.current
+            let dateCom = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: time)
+            let nowCom = calendar.dateComponents([.year, .month, .day], from: time)
+
+            if dateCom.year! * 10000 + dateCom.month! * 100 + dateCom.day! < nowCom.year! * 10000 + nowCom.month! * 100 + nowCom.day! {
+                timeStr = String(dateCom.month!) + "月" + String(dateCom.day!) + "日"
+            } else {
+                timeStr = String(dateCom.hour!) + ":" + String(dateCom.minute!)
+            }
         }
+
         print(timeStr)
 
         return timeStr
     }
 
     func toWholeString() -> String {
-        let formatter: DateFormatter = DateFormatter()
-        formatter.dateFormat = "MM月dd日 HH:mm"
-        return formatter.string(from: time)
-    }
-
-    func toNumber() -> Int {
-        let t = time.timeIntervalSince1970
-        print("time", t)
-        return Int(t * 1000)
+        let com = Calendar.current.dateComponents([.month, .day, .hour, .minute], from: time)
+        return String(com.month!) + "月" + String(com.day!) + "日 " + String(com.hour!) + ":" + String(com.minute!)
     }
 }
 

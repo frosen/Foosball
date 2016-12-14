@@ -80,6 +80,9 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         contentBGView.center = CGPoint(x: frame.width / 2, y: frame.height / 2)
         contentBGView.backgroundColor = UIColor.white
 
+        contentBGView.layer.cornerRadius = 5
+        contentBGView.layer.masksToBounds = true
+
         // 翻月箭头
         let arrowEdge: CGFloat = 30
         let left = UIImageView(image: UIImage(named: "arrows_right"))
@@ -145,11 +148,11 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         colon.textAlignment = .center
         colon.textColor = UIColor.black
         colon.font = UIFont.boldSystemFont(ofSize: 18)
-        colon.text = ""
+        colon.text = ":"
         colon.sizeToFit()
         colon.center = CGPoint(
             x: contentBGView.frame.width * 0.5,
-            y: contentBGView.frame.height - tailHeight - pickerHeight / 2
+            y: contentBGView.frame.height - tailHeight - pickerHeight / 2 - 2
         )
 
         // 下方按钮
@@ -164,7 +167,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         confirmBtn.titleLabel!.font = UIFont.systemFont(ofSize: 14)
 
         confirmBtn.backgroundColor = BaseColor
-        confirmBtn.layer.cornerRadius = 3
+        confirmBtn.layer.cornerRadius = 5
         confirmBtn.layer.masksToBounds = true
 
         confirmBtn.addTarget(self, action: #selector(TimePickerView.onConfirm), for: .touchUpInside)
@@ -232,7 +235,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
             // 1号下面加月份
             if dayIndex == 1 {
-                let monthLabH: CGFloat = 7
+                let monthLabH: CGFloat = 11
                 let monthLab = UILabel(frame: CGRect(x: 0, y: tableHeight - monthLabH, width: tableWidth, height: monthLabH))
                 dayView.addSubview(monthLab)
                 monthLab.textAlignment = .center
@@ -305,10 +308,10 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
     func onConfirm() {
-        let hour = timePicker.selectedRow(inComponent: 0) + 1
-        let min = timePicker.selectedRow(inComponent: 1) + 1
+        let hour = timePicker.selectedRow(inComponent: 0) % 24 + 1
+        let min = timePicker.selectedRow(inComponent: 1) % 60 + 1
         let selectedCom = DateComponents(year: sYear, month: sMonth, day: sDay, hour: hour, minute: min)
-        confirmCallback(selectedCom.date!)
+        confirmCallback(Calendar.current.date(from: selectedCom)!)
     }
 
     // UIPickerViewDelegate, UIPickerViewDataSource ------------------------------------
