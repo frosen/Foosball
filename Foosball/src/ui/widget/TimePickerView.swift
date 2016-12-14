@@ -8,12 +8,13 @@
 
 import UIKit
 
-class TimePickerView: UIView {
+class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     private let tableWidth: CGFloat = 42
     private let tableHeight: CGFloat = 33
     private let rowNum: Int = 7 //行数
     private let colNum: Int = 7 //列数
     private let headHeight: CGFloat = 35
+    private let pickerHeight: CGFloat = 100
     private let tailHeight: CGFloat = 40
 
     private var title: UILabel! = nil
@@ -29,6 +30,8 @@ class TimePickerView: UIView {
     private var sYear: Int = 0
     private var sMonth: Int = 0
     private var sDay: Int = 0
+    private var sHour: Int = 0
+    private var sMinute: Int = 0
 
     private weak var curSelectedDayView: UILabel? = nil
 
@@ -44,10 +47,12 @@ class TimePickerView: UIView {
         confirmCallback = callback
 
         let calendar = Calendar.current
-        let dateCom = calendar.dateComponents([.year, .month, .day], from: date)
+        let dateCom = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
         sYear = dateCom.year!
         sMonth = dateCom.month!
         sDay = dateCom.day!
+        sHour = dateCom.hour!
+        sMinute = dateCom.minute!
 
         onShowYear = sYear
         onShowMonth = sMonth
@@ -66,7 +71,11 @@ class TimePickerView: UIView {
         // 内容区域
         let contentBGView = UIView()
         addSubview(contentBGView)
-        contentBGView.bounds = CGRect(x: 0, y: 0, width: tableWidth * CGFloat(colNum), height: headHeight + tableHeight * CGFloat(rowNum) + tailHeight)
+        contentBGView.bounds = CGRect(
+            x: 0, y: 0,
+            width: tableWidth * CGFloat(colNum),
+            height: headHeight + tableHeight * CGFloat(rowNum) + pickerHeight + tailHeight
+        )
         contentBGView.center = CGPoint(x: frame.width / 2, y: frame.height / 2)
         contentBGView.backgroundColor = UIColor.white
 
@@ -108,8 +117,40 @@ class TimePickerView: UIView {
             lab.text = weekStrs[i]
         }
 
-        calendarView = UIView(frame: CGRect(x: 0, y: headHeight + tableHeight, width: contentBGView.frame.width, height: tableHeight * (CGFloat(rowNum) - 1)))
+        calendarView = UIView(frame: CGRect(
+            x: 0, y: headHeight + tableHeight,
+            width: contentBGView.frame.width,
+            height: tableHeight * (CGFloat(rowNum) - 1)))
         contentBGView.addSubview(calendarView)
+
+        // 时间选则
+        let timePicker = UIPickerView(frame: CGRect(
+            x: contentBGView.frame.width * 0.25,
+            y: contentBGView.frame.height - tailHeight - pickerHeight,
+            width: contentBGView.frame.width * 0.5,
+            height: pickerHeight
+        ))
+        contentBGView.addSubview(timePicker)
+        timePicker.delegate = self
+        timePicker.dataSource = self
+
+        // 初始位置，10 * 24 是为了循环滚动设置的，-1是把值和row匹配
+        print(sHour, sMinute)
+        timePicker.selectRow(10 * 24 + sHour - 1, inComponent: 0, animated: false)
+        timePicker.selectRow(10 * 60 + sMinute - 1, inComponent: 1, animated: false)
+
+        // 中间的冒号
+        let colon = UILabel()
+        contentBGView.addSubview(colon)
+        colon.textAlignment = .center
+        colon.textColor = UIColor.black
+        colon.font = UIFont.boldSystemFont(ofSize: 18)
+        colon.text = ""
+        colon.sizeToFit()
+        colon.center = CGPoint(
+            x: contentBGView.frame.width * 0.5,
+            y: contentBGView.frame.height - tailHeight - pickerHeight / 2
+        )
 
         // 下方按钮
         let confirmBtn = UIButton(type: .custom)
@@ -266,6 +307,41 @@ class TimePickerView: UIView {
     func onConfirm() {
         let selectedCom = DateComponents(year: sYear, month: sMonth, day: sDay)
         confirmCallback(selectedCom.date!)
+    }
+
+    // UIPickerViewDelegate, UIPickerViewDataSource ------------------------------------
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 2
+    }
+
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if component == 0 {
+            return 24 * 20 // 小时 *10为了循环滚动
+        } else {
+            return 60 * 20// 分钟
+        }
+    }
+
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        print("did s", row, component)
+    }
+
+    final public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+
+        let label = UILabel()
+        label.textAlignment = .center
+        label.adjustsFontSizeToFitWidth = true
+        label.textColor = UIColor.black
+        label.backgroundColor = UIColor.clear
+
+        let timeNum = (row + 1) % (component == 0 ? 24 : 60)
+        if timeNum >= 10 {
+            label.text = String(timeNum)
+        } else {
+            label.text = "0" + String(timeNum)
+        }
+
+        return label
     }
 }
 
