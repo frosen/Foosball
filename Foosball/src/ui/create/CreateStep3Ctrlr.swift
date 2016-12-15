@@ -57,21 +57,21 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
                 case 0:
                     return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
                 default:
-                    return BaseCell.CInfo(id: "CS3MapCId", c: CreateStep3MapCell.self)
+                    return BaseCell.CInfo(id: "CS3LocCId", c: CreateStep3LocationCell.self)
                 }
             case 1:
                 switch indexPath.row {
                 case 0:
-                    return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
+                    return BaseCell.CInfo(id: "CS3WagerHCId", c: CreateStep3WagerHeadCell.self)
                 default:
-                    return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
+                    return BaseCell.CInfo(id: "CS3WagerCId", c: CreateStep3WagerCell.self)
                 }
             default:
                 switch indexPath.row {
                 case 0:
-                    return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
+                    return BaseCell.CInfo(id: "CS3DetailHCId", c: CreateStep3DetailHeadCell.self)
                 default:
-                    return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
+                    return BaseCell.CInfo(id: "CS3DetailCId", c: CreateStep3DetailCell.self)
                 }
             }
         }

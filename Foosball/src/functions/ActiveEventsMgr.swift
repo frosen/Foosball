@@ -88,6 +88,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         e.operationTimeList.append(ot)
 
         e.location = Location()
+        e.time = Time(t: Date(timeIntervalSinceNow: -36000))
 
         data = []
 

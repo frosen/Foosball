@@ -58,7 +58,7 @@ class CreateStep3TimeCell: StaticCell {
     }
 }
 
-class CreateStep3MapCell: StaticCell {
+class CreateStep3LocationCell: StaticCell {
     override class func new(cls: BaseCell.Type, id: String) -> BaseCell {
         return cls.init(id: id, s: .value1, t: .disclosureIndicator)
     }
@@ -75,10 +75,6 @@ class CreateStep3WagerHeadCell: StaticCell {
 }
 
 class CreateStep3WagerCell: StaticCell {
-
-}
-
-class CreateStep3WagerTailCell: StaticCell {
 
 }
 

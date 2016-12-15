@@ -119,8 +119,8 @@ class DetailStringCell: StaticCell {
         lbl.font = TextFont
     }
 
-    func setLblData(contentView: UIView, str: String) {
-        let height = DetailG.calculateLblHeight(str, w: DetailG.widthWithoutMargin)
+    func setLblData(contentView: UIView, str: String, w: CGFloat = DetailG.widthWithoutMargin) {
+        let height = DetailG.calculateLblHeight(str, w: w)
         lbl.frame = CGRect(x: DetailG.headMargin, y: DetailG.subTitleHeight, width: DetailG.widthWithoutMargin, height: height)
         let attri: [String : Any] = [NSParagraphStyleAttributeName: DetailG.paragraphStyle]
         let attriStr = NSAttributedString(string: str, attributes: attri)
@@ -159,6 +159,48 @@ class DetailWagerCell: DetailStringCell {
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
         setLblData(contentView: contentView, str: e.award)
+    }
+}
+
+class DetailTimeCell: DetailStringCell {
+
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+        let str = getTimeString(e: d as! Event)
+        return DetailG.calculateLblHeight(str, w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight
+    }
+
+    override func initData(_ d: BaseData?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
+        initLblData(contentView: contentView, titleStr: "活动时间：")
+    }
+
+    override func setData(_ d: BaseData?, index: IndexPath?) {
+        let e = d as! Event
+        setLblData(contentView: contentView, str: DetailTimeCell.getTimeString(e: e))
+    }
+
+    class func getTimeString(e: Event) -> String {
+        var showString = "~ " + e.time.toWholeString()
+        let intervalTime = ceil(e.time.time.timeIntervalSinceNow / 60)
+        showString += " (剩余大约\(intervalTime))"
+        return showString
+    }
+}
+
+class DetailLocationCell: DetailStringCell {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+        let e = d as! Event
+        return DetailG.calculateLblHeight("呵呵呵呵", w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight
+    }
+
+    override func initData(_ d: BaseData?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
+        initLblData(contentView: contentView, titleStr: "活动地点：")
+    }
+
+    override func setData(_ d: BaseData?, index: IndexPath?) {
+        let e = d as! Event
+        setLblData(contentView: contentView, str: "呵呵呵呵")
     }
 }
 

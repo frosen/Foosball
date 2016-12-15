@@ -172,7 +172,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 3 //title + detail + wager
+            return 5 //title + detail + wager + time + location
         case 1:
             //head 友 敌 2. 如果是乱斗应该是不分敌友的所以是2行，但暂时不考虑；3. 以后也可能加入观众，暂不考虑
             return 3 //友一定有自己，敌如果没有也有个标题表示没有的状态
@@ -203,6 +203,10 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
                 return DetailContentCell.getCellHeight(curEvent, index: indexPath)
             case 2:
                 return DetailWagerCell.getCellHeight(curEvent, index: indexPath)
+            case 3:
+                return DetailTimeCell.getCellHeight(curEvent, index: indexPath)
+            case 4:
+                return DetailLocationCell.getCellHeight(curEvent, index: indexPath)
             default:
                 return 0
             }
@@ -241,8 +245,12 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
                     return BaseCell.CInfo(id: "TitCId", c: DetailTitleCell.self)
                 case 1:
                     return BaseCell.CInfo(id: "ConCId", c: DetailContentCell.self)
+                case 2:
+                    return BaseCell.CInfo(id: "HonCId", c: DetailWagerCell.self)
+                case 3:
+                    return BaseCell.CInfo(id: "TimCId", c: DetailTimeCell.self)
                 default:
-                    return BaseCell.CInfo(id: "CasCId", c: DetailWagerCell.self)
+                    return BaseCell.CInfo(id: "LocCId", c: DetailLocationCell.self)
                 }
             case 1:
                 switch indexPath.row {
