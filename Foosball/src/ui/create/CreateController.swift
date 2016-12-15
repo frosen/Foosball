@@ -24,7 +24,8 @@ class CreateController: BaseController, UIScrollViewDelegate {
 
         // 初始化数据
         createEvent = Event(ID: DataID(ID: -1))
-        createEvent.time = Time.now
+
+        createEvent.time = Time(t: Date(timeIntervalSinceNow: 1800)) // 往后30分钟
 
         // 位置初始化 自定义的转景，系统不会重置view的位置，所以自己来
         view.frame.origin.y += 64

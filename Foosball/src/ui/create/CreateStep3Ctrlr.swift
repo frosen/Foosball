@@ -10,13 +10,13 @@ import UIKit
 
 class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDataSource {
 
-    private var tableview: UITableView! = nil
+    private var tableView: UITableView! = nil
     
     override func setUI() {
-        tableview = UITableView(frame: CGRect(x: 0, y: 64, width: pageSize.width, height: pageSize.height - 64 - 49)) // 要减去底部按钮层的高度
-        view.addSubview(tableview)
-        tableview.delegate = self
-        tableview.dataSource = self
+        tableView = UITableView(frame: CGRect(x: 0, y: 64, width: pageSize.width, height: pageSize.height - 64 - 49)) // 要减去底部按钮层的高度
+        view.addSubview(tableView)
+        tableView.delegate = self
+        tableView.dataSource = self
 
         //底部的按钮层 直接发布、邀请朋友
     }
@@ -78,6 +78,7 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let cell = tableView.cellForRow(at: indexPath) as! BaseCell
         cell.onSelected()
     }
