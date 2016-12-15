@@ -51,7 +51,6 @@ class DetailG {
 
 class DetailTitleCell: StaticCell {
     var eventBoard: EventBoard! = nil
-    var position: UILabel! = nil
     var createTime: UILabel! = nil
 
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
@@ -66,17 +65,11 @@ class DetailTitleCell: StaticCell {
         contentView.addSubview(eventBoard)
         
         let eventConV = eventBoard.contentView!
-        let halfEventConVWidth = eventConV.frame.width / 2
+        let EventConVWidth = eventConV.frame.width
         let eventConVHeight = eventConV.frame.height
 
         // 位置和时间显示
-        position = UILabel(frame: CGRect(x: 0, y: 0, width: halfEventConVWidth, height: eventConVHeight))
-        eventConV.addSubview(position)
-
-        position.font = TextFont
-        position.textColor = TextColor
-
-        createTime = UILabel(frame: CGRect(x: halfEventConVWidth, y: 0, width: halfEventConVWidth, height: eventConVHeight))
+        createTime = UILabel(frame: CGRect(x: 0, y: 0, width: EventConVWidth, height: eventConVHeight))
         eventConV.addSubview(createTime)
 
         createTime.font = TextFont
@@ -86,10 +79,7 @@ class DetailTitleCell: StaticCell {
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
         eventBoard.setData(e)
-
-        let locationStr = e.location.toString
-        position.text = "位置：" + locationStr
-        createTime.text = "时间：" + e.operationTimeList[0].time.toString()
+        createTime.text = "发布时间：" + e.operationTimeList[0].time.toString()
     }
 }
 
@@ -121,7 +111,7 @@ class DetailStringCell: StaticCell {
 
     func setLblData(contentView: UIView, str: String, w: CGFloat = DetailG.widthWithoutMargin) {
         let height = DetailG.calculateLblHeight(str, w: w)
-        lbl.frame = CGRect(x: DetailG.headMargin, y: DetailG.subTitleHeight, width: DetailG.widthWithoutMargin, height: height)
+        lbl.frame = CGRect(x: DetailG.headMargin, y: DetailG.subTitleHeight, width: w, height: height)
         let attri: [String : Any] = [NSParagraphStyleAttributeName: DetailG.paragraphStyle]
         let attriStr = NSAttributedString(string: str, attributes: attri)
         lbl.attributedText = attriStr
@@ -188,9 +178,10 @@ class DetailTimeCell: DetailStringCell {
 }
 
 class DetailLocationCell: DetailStringCell {
+    private static let widthMinusMapBtn: CGFloat = DetailG.widthWithoutMargin - 80
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
-        return DetailG.calculateLblHeight("呵呵呵呵", w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight
+        return DetailG.calculateLblHeight("呵呵呵呵呵呵呵呵呵呵呵呵", w: DetailLocationCell.widthMinusMapBtn) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
@@ -200,7 +191,7 @@ class DetailLocationCell: DetailStringCell {
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
-        setLblData(contentView: contentView, str: "呵呵呵呵")
+        setLblData(contentView: contentView, str: "呵呵呵呵呵呵呵呵呵呵呵呵", w: DetailLocationCell.widthMinusMapBtn)
     }
 }
 
