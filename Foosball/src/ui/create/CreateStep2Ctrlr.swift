@@ -10,7 +10,7 @@ import UIKit
 
 class CreateStep2Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDataSource {
 
-    var tableview: UITableView! = nil
+    private var tableview: UITableView! = nil
 
     override func setUI() {
         tableview = UITableView(frame: CGRect(x: 0, y: 64, width: pageSize.width, height: pageSize.height - 64))

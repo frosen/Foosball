@@ -10,8 +10,8 @@ import UIKit
 
 class CreateStep3TimeCell: StaticCell {
 
-    var createEvent: Event! = nil
-    var tpv: TimePickerView? = nil
+    private var createEvent: Event! = nil
+    private var tpv: TimePickerView? = nil
 
     override class func new(cls: BaseCell.Type, id: String) -> BaseCell {
         return cls.init(id: id, s: .value1, t: .disclosureIndicator)
@@ -63,3 +63,24 @@ class CreateStep3MapCell: StaticCell {
         textLabel?.text = "地点"
     }
 }
+
+class CreateStep3WagerHeadCell: StaticCell {
+
+}
+
+class CreateStep3WagerCell: StaticCell {
+
+}
+
+class CreateStep3WagerTailCell: StaticCell {
+
+}
+
+class CreateStep3DetailHeadCell: StaticCell {
+
+}
+
+class CreateStep3DetailCell: StaticCell {
+    
+}
+

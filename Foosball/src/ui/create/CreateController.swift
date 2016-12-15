@@ -12,10 +12,10 @@ class CreateController: BaseController, UIScrollViewDelegate {
 
     var createEvent: Event! = nil
 
-    var pageView: UIScrollView! = nil
-    var subviews: [CreatePageBaseCtrlr]! = nil
+    private var pageView: UIScrollView! = nil
+    private var subviews: [CreatePageBaseCtrlr]! = nil
 
-    var page: Int = 0
+    private var page: Int = 0
 
     override func viewDidLoad() {
         navTabType = [.HideTab, .TransparentNav]
@@ -79,8 +79,8 @@ class CreateController: BaseController, UIScrollViewDelegate {
     }
 
     // 设置步骤
-    var stepLabel: UIBarButtonItem! = nil // 用于记录步骤
-    func setStepLebel() {
+    private var stepLabel: UIBarButtonItem! = nil // 用于记录步骤
+    private func setStepLebel() {
         if stepLabel == nil {
             stepLabel = UIBarButtonItem(title: "1/3", style: .done, target: nil, action: nil)
             stepLabel.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: .normal)

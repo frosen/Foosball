@@ -145,7 +145,7 @@ class DetailContentCell: DetailStringCell {
     }
 }
 
-class DetailCashCell: DetailStringCell {
+class DetailWagerCell: DetailStringCell {
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
         return DetailG.calculateLblHeight(e.award, w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight

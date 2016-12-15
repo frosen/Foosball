@@ -30,9 +30,7 @@ class User: BaseData {
     var activeEId: Int = 0 //活动事件列表
     var eventsId: Int = 0 //全部事件列表
     var firendsId: Int = 0 //好友概要列表
-}
 
-extension User {
     func getBrief() -> UserBrief {
         let br = UserBrief(ID: ID)
         br.name = name

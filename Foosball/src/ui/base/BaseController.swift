@@ -26,7 +26,7 @@ class BaseController: UIViewController {
     var navTabType: NavTabType = .None
 
     var initDataOnViewAppear: Bool = false
-    var hasInitData: Bool = false
+    private var hasInitData: Bool = false
     var baseView: UIView! = nil
 
     var callbackOnFinishInit: ((Bool) -> Swift.Void)? = nil
@@ -75,7 +75,7 @@ class BaseController: UIViewController {
     }
 
     // 初始化数据相关函数 -----------------------------------------------------------------------------
-    func willInitData() {
+    private func willInitData() {
         if !hasInitData {
             initData()
             hasInitData = true
@@ -84,14 +84,14 @@ class BaseController: UIViewController {
 
     func initData() {} //需要实现
 
-    func reshowView() {
+    private func reshowView() {
         UIView.animate(withDuration: 0.2, animations: {
             self.baseView.alpha = 1
         }, completion: callbackOnFinishInit)
     }
 
     // 设置导航栏和tabbar的样式 -----------------------------------------------------------------------------
-    func handleNavTabState() {
+    private func handleNavTabState() {
         let transparentNav = navTabType.contains(.TransparentNav)
         let hideTab = navTabType.contains(.HideTab)
 

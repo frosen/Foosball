@@ -10,7 +10,7 @@ import UIKit
 
 class StateView: UIView {
 
-    static private let h: CGFloat = 16
+    private static let h: CGFloat = 16
     private var lbl: UILabel! = nil
 
     private var small: Bool = false
@@ -57,7 +57,7 @@ class StateView: UIView {
         case .lose:
             string = "失败"
             bgColor = UIColor.brown
-        case .cashed:
+        case .honoured:
             string = "兑现"
             bgColor = UIColor.orange
         case .finish:

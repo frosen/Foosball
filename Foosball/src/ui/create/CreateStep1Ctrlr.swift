@@ -21,12 +21,12 @@ class CreateStep1Ctrlr: CreatePageBaseCtrlr {
         }
     }
 
-    var typeBtnAttriList: [TypeBtnAttri] = []
+    private var typeBtnAttriList: [TypeBtnAttri] = []
 
     // 各种控件
-    var step: Int = 1
-    var stepView: UIView! = nil
-    var typeBtns: [UIView] = []
+    private var step: Int = 1
+    private var stepView: UIView! = nil
+    private var typeBtns: [UIView] = []
 
     override func setUI() {
         stepView = UIView(frame: CGRect(x: 0, y: 64, width: pageSize.width, height: pageSize.height - 64))

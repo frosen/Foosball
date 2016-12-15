@@ -16,7 +16,7 @@ class RinglikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning, CA
         case pop
     }
 
-    weak var transitionContext: UIViewControllerContextTransitioning?
+    private weak var transitionContext: UIViewControllerContextTransitioning?
 
     var t: TransType! = nil
     init(t: TransType) {
@@ -36,7 +36,7 @@ class RinglikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning, CA
         }
     }
 
-    func doPush(using transitionContext: UIViewControllerContextTransitioning) {
+    private func doPush(using transitionContext: UIViewControllerContextTransitioning) {
         print("do self push")
 
         self.transitionContext = transitionContext
@@ -66,7 +66,7 @@ class RinglikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning, CA
         maskLayer.add(maskLayerAnim, forKey: "path")
     }
 
-    func doPop(using transitionContext: UIViewControllerContextTransitioning) {
+    private func doPop(using transitionContext: UIViewControllerContextTransitioning) {
         print("do self pop")
 
         self.transitionContext = transitionContext
@@ -127,9 +127,9 @@ class KeynotelikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning 
     }
 
     // 记录转景信息，用于pop
-    static weak var snapshot: UIView! = nil
-    static var originPosY: CGFloat = 0
-    static var originView: UIView! = nil
+    private static weak var snapshot: UIView! = nil
+    private static var originPosY: CGFloat = 0
+    private static var originView: UIView! = nil
 
     // 在场景中调用
     class func hideSnapshot() {
@@ -156,7 +156,7 @@ class KeynotelikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning 
         }
     }
 
-    func doPush(using transitionContext: UIViewControllerContextTransitioning) {
+    private func doPush(using transitionContext: UIViewControllerContextTransitioning) {
         print("do keynote lick push")
 
         //1.获取动画的源控制器和目标控制器
@@ -194,7 +194,7 @@ class KeynotelikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning 
         })
     }
 
-    func doPop(using transitionContext: UIViewControllerContextTransitioning) {
+    private func doPop(using transitionContext: UIViewControllerContextTransitioning) {
         print("do keynote lick pop")
 
         //1.获取动画的源控制器和目标控制器

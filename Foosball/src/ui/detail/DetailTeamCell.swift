@@ -23,15 +23,15 @@ class DetailTeamHeadCell: DetailHeadCell {
 // 超过6个则换行
 // 分成友方，敌方，观众
 class DetailTeamCell: BaseCell {
-    static let memberCountIn1Line: CGFloat = 6
-    static let avatarMargin: CGFloat = 5
-    static let avatarTotalWidth: CGFloat = DetailG.widthWithoutMargin + 2 * avatarMargin
-    static let memberViewWidth: CGFloat = avatarTotalWidth / memberCountIn1Line
-    static let memberViewHeight: CGFloat = memberViewWidth + 27
-    static let teamBottomMargin: CGFloat = 4
+    private static let memberCountIn1Line: CGFloat = 6
+    private static let avatarMargin: CGFloat = 5
+    private static let avatarTotalWidth: CGFloat = DetailG.widthWithoutMargin + 2 * avatarMargin
+    private static let memberViewWidth: CGFloat = avatarTotalWidth / memberCountIn1Line
+    private static let memberViewHeight: CGFloat = memberViewWidth + 27
+    private static let teamBottomMargin: CGFloat = 4
 
-    var title: UILabel! = nil
-    var memberListView: UIView? = nil
+    private var title: UILabel! = nil
+    private var memberListView: UIView? = nil
 
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event?
@@ -116,7 +116,7 @@ class DetailTeamCell: BaseCell {
         newBtn.frame.origin.y = CGFloat(line) * DetailTeamCell.memberViewHeight
     }
 
-    func createMemberView(_ state: UserState) -> UIView {
+    private func createMemberView(_ state: UserState) -> UIView {
         let userB = state.user
         let v = UIView()
         v.bounds = CGRect(x: 0, y: 0, width: DetailTeamCell.memberViewWidth, height: DetailTeamCell.memberViewHeight)
@@ -153,7 +153,7 @@ class DetailTeamCell: BaseCell {
         return v
     }
 
-    func createNewBtn() -> UIView {
+    private func createNewBtn() -> UIView {
         let v = UIView()
         v.bounds = CGRect(x: 0, y: 0, width: DetailTeamCell.memberViewWidth, height: DetailTeamCell.memberViewHeight)
 

@@ -10,14 +10,14 @@ import UIKit
 
 class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource, DetailToolbarDelegate, InputViewDelegate {
 
-    var curEventId: DataID! = nil
-    var curEvent: Event! = nil
-    var sectionNum: Int = 0
+    private var curEventId: DataID! = nil
+    private var curEvent: Event! = nil
+    private var sectionNum: Int = 0
 
     var tableView: UITableView! = nil
-    var toolbar: DetailToolbar! = nil
-    var textInputView: InputView! = nil
-    var isShowKeyboard: Bool = false
+    private var toolbar: DetailToolbar! = nil
+    private var textInputView: InputView! = nil
+    private var isShowKeyboard: Bool = false
 
     func setDataId(_ id: DataID) {
         self.curEventId = id
@@ -148,14 +148,14 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     }
 
     // 记录最新的对话，方便更新对话列表
-    var newestMsgUserId: DataID? = nil
-    var newestMsgTime: Time? = nil
-    func saveNewestMsg(_ msg: MsgStruct) {
+    private var newestMsgUserId: DataID? = nil
+    private var newestMsgTime: Time? = nil
+    private func saveNewestMsg(_ msg: MsgStruct) {
         newestMsgUserId = msg.user.ID
         newestMsgTime = msg.time
     }
 
-    func isNewestMsg(_ msg: MsgStruct) -> Bool {
+    private func isNewestMsg(_ msg: MsgStruct) -> Bool {
         if newestMsgUserId == nil || newestMsgTime == nil {
             return true // 没有记录时，都是最新的
         } else {
@@ -172,7 +172,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 3 //title + detail + cash
+            return 3 //title + detail + wager
         case 1:
             //head 友 敌 2. 如果是乱斗应该是不分敌友的所以是2行，但暂时不考虑；3. 以后也可能加入观众，暂不考虑
             return 3 //友一定有自己，敌如果没有也有个标题表示没有的状态
@@ -195,14 +195,14 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch (indexPath as NSIndexPath).section {
-        case 0: //title + detail + cash
+        case 0: //title + detail + wager
             switch (indexPath as NSIndexPath).row {
             case 0:
                 return DetailTitleCell.getCellHeight()
             case 1:
                 return DetailContentCell.getCellHeight(curEvent, index: indexPath)
             case 2:
-                return DetailCashCell.getCellHeight(curEvent, index: indexPath)
+                return DetailWagerCell.getCellHeight(curEvent, index: indexPath)
             default:
                 return 0
             }
@@ -234,32 +234,32 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return StaticCell.create(indexPath, tableView: tableView, d: curEvent, ctrlr: self) { indexPath in
-            switch (indexPath as NSIndexPath).section {
+            switch indexPath.section {
             case 0:
-                switch (indexPath as NSIndexPath).row {
+                switch indexPath.row {
                 case 0:
                     return BaseCell.CInfo(id: "TitCId", c: DetailTitleCell.self)
                 case 1:
                     return BaseCell.CInfo(id: "ConCId", c: DetailContentCell.self)
                 default:
-                    return BaseCell.CInfo(id: "CasCId", c: DetailCashCell.self)
+                    return BaseCell.CInfo(id: "CasCId", c: DetailWagerCell.self)
                 }
             case 1:
-                switch (indexPath as NSIndexPath).row {
+                switch indexPath.row {
                 case 0:
                     return BaseCell.CInfo(id: "THCId", c: DetailTeamHeadCell.self)
                 default:
                     return BaseCell.CInfo(id: "TCId", c: DetailTeamCell.self)
                 }
             case 2:
-                switch (indexPath as NSIndexPath).row {
+                switch indexPath.row {
                 case 0:
                     return BaseCell.CInfo(id: "IHCId", c: DetailImageHeadCell.self)
                 default:
                     return BaseCell.CInfo(id: "ICId", c: DetailImageCell.self)
                 }
             default:
-                switch (indexPath as NSIndexPath).row {
+                switch indexPath.row {
                 case 0:
                     return BaseCell.CInfo(id: "MHCId", c: DetailMsgHeadCell.self)
                 default:
@@ -267,10 +267,6 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
                 }
             }
         }
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
     }
 
     // 回调 ==================================================================================================================

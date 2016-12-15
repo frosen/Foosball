@@ -11,11 +11,11 @@ import AVFoundation
 
 class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    var mask: UIView! = nil
-    var scanWindow: UIView! = nil
-    var scanNet: UIImageView! = nil
+    private var mask: UIView! = nil
+    private var scanWindow: UIView! = nil
+    private var scanNet: UIImageView! = nil
 
-    var session: AVCaptureSession! = nil
+    private var session: AVCaptureSession! = nil
 
     override func viewDidLoad() {
         navTabType = [.HideTab, .TransparentNav] // 隐藏导航栏和tabbar
@@ -35,8 +35,8 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         NotificationCenter.default.addObserver(self, selector: #selector(ScanViewController.resetScanAnim), name: NSNotification.Name(rawValue: "EnterForeground"), object: nil)
     }
 
-    let maskMargin: CGFloat = 35.0
-    func initMaskView() {
+    private let maskMargin: CGFloat = 35.0
+    private func initMaskView() {
         mask = UIView()
         baseView.addSubview(mask)
 
@@ -50,7 +50,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         mask.center = CGPoint(x: baseView.frame.width * 0.5, y: baseView.frame.height * 0.5)
     }
 
-    func initScanWindowView() {
+    private func initScanWindowView() {
         let scanWidth = baseView.frame.width - maskMargin * 2
         let scanRect = CGRect(x: mask.center.x - scanWidth / 2, y: mask.center.y - scanWidth / 2, width: scanWidth, height: scanWidth)
 
@@ -85,7 +85,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         corner4.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI * 1.5))
     }
 
-    func initBottomButton() {
+    private func initBottomButton() {
         var btns: [UIButton] = []
 
         btns.append(setBtn(#selector(ScanViewController.onOpenAlbum), imgName: "scan_btn_photo", selectImgName: nil))
@@ -99,7 +99,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         }
     }
 
-    func setBtn(_ action: Selector, imgName: String, selectImgName: String?) -> UIButton {
+    private func setBtn(_ action: Selector, imgName: String, selectImgName: String?) -> UIButton {
         let btn = UIButton(type: .custom)
         baseView.addSubview(btn)
         btn.setBackgroundImage(UIImage(named: imgName), for: UIControlState())
@@ -111,7 +111,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         return btn
     }
 
-    func initScanning() {
+    private func initScanning() {
         let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) //获取摄像设备
         let input: AVCaptureDeviceInput
         do {
@@ -144,7 +144,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
     }
 
     // 获取扫描区域的比例关系
-    func getScanCrop(_ rect: CGRect, readerViewBounds: CGRect) -> CGRect {
+    private func getScanCrop(_ rect: CGRect, readerViewBounds: CGRect) -> CGRect {
         let readerH = readerViewBounds.height
         let H = rect.height
         let readerW = readerViewBounds.width

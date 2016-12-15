@@ -9,10 +9,10 @@
 import UIKit
 
 class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource {
-    var dataPage: Int = 1
-    var tableView: UITableView! = nil
+    private var dataPage: Int = 1
+    private var tableView: UITableView! = nil
 
-    var curActiveEvents: [Event] = []
+    private var curActiveEvents: [Event] = []
 
     var selectedCell: ChallengeCell? = nil
 
@@ -85,7 +85,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let e: Event = curActiveEvents[(indexPath as NSIndexPath).section]
+        let e: Event = curActiveEvents[indexPath.section]
         return BaseCell.create(indexPath, tableView: tableView, d: e, ctrlr: self) { indexPath in
             return BaseCell.CInfo(id: "chalCellId", c: ChallengeCell.self)
         }
@@ -97,7 +97,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         let vc = DetailViewController()
         vc.rootVC = rootVC
 
-        let e: Event = curActiveEvents[(indexPath as NSIndexPath).section]
+        let e: Event = curActiveEvents[indexPath.section]
         vc.setDataId(e.ID)
         navigationController!.pushViewController(vc, animated: true)
     }

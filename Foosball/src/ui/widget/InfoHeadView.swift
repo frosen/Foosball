@@ -9,14 +9,14 @@
 import UIKit
 
 class InfoHeadView: UIView {
-    var scrollView: UIScrollView
-    var extraHeight: CGFloat = 0
+    private var scrollView: UIScrollView
+    private var extraHeight: CGFloat = 0
 
-    var bg: UIImageView! = nil
-    var viewMask: UIView! = nil
-    var avatar: Avatar! = nil
-    var title: UILabel! = nil
-    var subTitle: UILabel! = nil
+    private var bg: UIImageView! = nil
+    private var viewMask: UIView! = nil
+    private var avatar: Avatar! = nil
+    private var title: UILabel! = nil
+    private var subTitle: UILabel! = nil
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -44,9 +44,9 @@ class InfoHeadView: UIView {
         initUI()
     }
 
-    let topMargin: CGFloat = 80
-    let bottomMargin: CGFloat = 120
-    let avatarW: CGFloat = 70
+    private let topMargin: CGFloat = 80
+    private let bottomMargin: CGFloat = 120
+    private let avatarW: CGFloat = 70
     private func initUI() {
         let w: CGFloat = frame.size.width
         let h: CGFloat = frame.size.height

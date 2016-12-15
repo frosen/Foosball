@@ -10,7 +10,7 @@ import UIKit
 
 class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDataSource {
 
-    var tableview: UITableView! = nil
+    private var tableview: UITableView! = nil
     
     override func setUI() {
         tableview = UITableView(frame: CGRect(x: 0, y: 64, width: pageSize.width, height: pageSize.height - 64 - 49)) // 要减去底部按钮层的高度
@@ -51,23 +51,23 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return StaticCell.create(indexPath, tableView: tableView, d: rootCtrlr.createEvent, ctrlr: self) { indexPath in
-            switch (indexPath as NSIndexPath).section {
+            switch indexPath.section {
             case 0:
-                switch (indexPath as NSIndexPath).row {
+                switch indexPath.row {
                 case 0:
                     return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
                 default:
                     return BaseCell.CInfo(id: "CS3MapCId", c: CreateStep3MapCell.self)
                 }
             case 1:
-                switch (indexPath as NSIndexPath).row {
+                switch indexPath.row {
                 case 0:
                     return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
                 default:
                     return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
                 }
             default:
-                switch (indexPath as NSIndexPath).row {
+                switch indexPath.row {
                 case 0:
                     return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
                 default:

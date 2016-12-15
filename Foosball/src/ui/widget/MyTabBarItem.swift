@@ -10,7 +10,7 @@ import UIKit
 
 class MyTabBarItem: UIButton {
 
-    var _item: UITabBarItem? = nil
+    private var item: UITabBarItem? = nil
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,12 +34,12 @@ class MyTabBarItem: UIButton {
         }
     }
 
-    func setItem(_ item: UITabBarItem) {
-        _item = item
+    func setItem(_ it: UITabBarItem) {
+        item = it
 
-        setTitle(_item!.title, for: UIControlState())
-        setImage(_item!.image, for: UIControlState())
-        setImage(_item!.image?.withRenderingMode(.alwaysTemplate), for: .selected)
+        setTitle(item!.title, for: UIControlState())
+        setImage(item!.image, for: UIControlState())
+        setImage(item!.image?.withRenderingMode(.alwaysTemplate), for: .selected)
     }
 
     override func layoutSubviews() {

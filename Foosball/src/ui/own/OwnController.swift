@@ -21,7 +21,7 @@ struct NorCellData {
 
 class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UITableViewDataSource {
     //信息头，比赛成绩，QR，其他项目等group
-    let group = [
+    private let group = [
         //section
         [
             NorCellData(i: "share", t: "福利", st: ""),
@@ -45,11 +45,11 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
         ],
     ]
 
-    var infoHead: InfoHeadView! = nil
-    var tableView: UITableView! = nil
-    var sectionNum: Int = 0
+    private var infoHead: InfoHeadView! = nil
+    private var tableView: UITableView! = nil
+    private var sectionNum: Int = 0
 
-    var curUser: User! = nil
+    private var curUser: User! = nil
 
     override func viewDidLoad() {
         initDataOnViewAppear = true
@@ -157,7 +157,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
         }
     }
 
-    let ownNorCellId = "ONorCId"
+    private let ownNorCellId = "ONorCId"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 || indexPath.section == 1 {
             return BaseCell.create(indexPath, tableView: tableView, d: curUser, ctrlr: self) { indexPath in

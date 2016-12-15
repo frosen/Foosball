@@ -14,20 +14,20 @@ protocol InputViewDelegate {
 }
 
 class InputView: UIView, UITextViewDelegate {
-    let w: CGFloat = UIScreen.main.bounds.width
-    let h: CGFloat = 44
-    let screenH: CGFloat = UIScreen.main.bounds.height
+    private let w: CGFloat = UIScreen.main.bounds.width
+    private let h: CGFloat = 44
+    private let screenH: CGFloat = UIScreen.main.bounds.height
 
-    let margin: CGFloat = 15
-    let btnWidth: CGFloat = 50
-    let btnHeight: CGFloat = 34
-    let btnY: CGFloat = 5
-    var inputWidth: CGFloat {
+    private let margin: CGFloat = 15
+    private let btnWidth: CGFloat = 50
+    private let btnHeight: CGFloat = 34
+    private let btnY: CGFloat = 5
+    private var inputWidth: CGFloat {
         return w - margin - (margin + btnWidth + margin)
     }
 
-    static let inputFont: UIFont = UIFont.systemFont(ofSize: 18)
-    static var lblStyleAttri: [String : Any] {
+    private static let inputFont: UIFont = UIFont.systemFont(ofSize: 18)
+    private static var lblStyleAttri: [String : Any] {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineBreakMode = .byWordWrapping
 
@@ -39,10 +39,10 @@ class InputView: UIView, UITextViewDelegate {
         return attri
     }
 
-    var input: UITextView! = nil
-    var sendBtn: UIButton! = nil
-    var underLine: UIView! = nil
-    var curInputHeight: CGFloat = 0
+    private var input: UITextView! = nil
+    private var sendBtn: UIButton! = nil
+    private var underLine: UIView! = nil
+    private var curInputHeight: CGFloat = 0
     init() {
         super.init(frame: CGRect(x: 0.0, y: 0.0, width: w, height: h))
         

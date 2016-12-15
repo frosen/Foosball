@@ -18,11 +18,11 @@ class MyTabBar: UIView {
 
     static let midBtnCenterPosHeight: CGFloat = 33 //中间中心抬起的高度
 
-    weak var ctrller: UITabBarController?
-    var midButton: UIButton
+    private weak var ctrller: UITabBarController?
+    private var midButton: UIButton
 
-    var buttons: [MyTabBarItem] = []
-    weak var selectedButton: UIButton?
+    private var buttons: [MyTabBarItem] = []
+    private weak var selectedButton: UIButton?
 
     var myTabBarDelegate: MyTabBarDelegate? = nil
 
@@ -55,7 +55,7 @@ class MyTabBar: UIView {
         return tab
     }
 
-    func setBarItems(_ items: [UITabBarItem]) {
+    private func setBarItems(_ items: [UITabBarItem]) {
         //因为有中间按钮，所以items只能是两个或者4个
         assert(items.count == 2 || items.count == 4)
 
@@ -78,7 +78,7 @@ class MyTabBar: UIView {
         layoutBarItems()
     }
 
-    func layoutBarItems() {
+    private func layoutBarItems() {
         let midIndex = buttons.count == 2 ? 1 : 2
 
         let vw = bounds.size.width

@@ -26,7 +26,7 @@ class QRCodeTools: NSObject {
         return qrview
     }
 
-    class func createQRImg(_ content: String) -> CIImage {
+    private class func createQRImg(_ content: String) -> CIImage {
         let filter: CIFilter! = CIFilter(name: "CIQRCodeGenerator")
         filter.setDefaults()
 
@@ -37,7 +37,7 @@ class QRCodeTools: NSObject {
         return filter.outputImage!
     }
 
-    class func setupQRImg(_ outImg: CIImage, width: Int, color: UIColor) -> UIImage {
+    private class func setupQRImg(_ outImg: CIImage, width: Int, color: UIColor) -> UIImage {
         //size
         let extentRect = outImg.extent.integral
         let orignW = extentRect.width

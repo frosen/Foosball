@@ -11,10 +11,9 @@ import SnapKit
 import SDWebImage
 
 class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationControllerDelegate {
-    var items: [UITabBarItem] = []
-
+    private var items: [UITabBarItem] = []
+    
     var myTabBar: MyTabBar! = nil
-
     var currentCtrlr: BaseController! = nil
 
     override func viewDidLoad() {
@@ -24,13 +23,13 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
         initTabBar() 
     }
 
-    func initNav() {
+    private func initNav() {
         let navBar = UINavigationBar.appearance()
         navBar.setBackgroundImage(UIImage(named: "nav_color"), for: .default)
         navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
     }
 
-    func initSubVc() {
+    private func initSubVc() {
         //挑战
         let challengeVc = ChallengeController()
         addVc(challengeVc, title: "挑战", image: "home2")
@@ -46,7 +45,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
         addVc(ownVc, title: "个人", image: "my2")
     }
 
-    func addVc(_ vc: BaseTabController, title t: String, image img: String) {
+    private func addVc(_ vc: BaseTabController, title t: String, image img: String) {
         vc.tabBarItem.title = t
 
         // 设置子控制器的图片
@@ -66,7 +65,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
         vc.rootVC = self
     }
 
-    func initTabBar() {
+    private func initTabBar() {
         let midBtn = UIButton(type: .custom)
         midBtn.setImage(UIImage(named: "mid_btn"), for: UIControlState())
         midBtn.setImage(UIImage(named: "mid_btn_press"), for: .highlighted)

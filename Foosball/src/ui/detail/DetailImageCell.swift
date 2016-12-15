@@ -21,15 +21,15 @@ class DetailImageHeadCell: DetailHeadCell {
 }
 
 class DetailImageCell: BaseCell, SKPhotoBrowserDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    static let imageCountIn1Line: CGFloat = 4
-    static let imgMargin: CGFloat = 2
-    static let imageViewWidth: CGFloat = (DetailG.widthWithoutMargin + 2 * imgMargin) / imageCountIn1Line
-    static let imgTopMargin: CGFloat = 4
-    static let imgBottomMargin: CGFloat = 4
+    private static let imageCountIn1Line: CGFloat = 4
+    private static let imgMargin: CGFloat = 2
+    private static let imageViewWidth: CGFloat = (DetailG.widthWithoutMargin + 2 * imgMargin) / imageCountIn1Line
+    private static let imgTopMargin: CGFloat = 4
+    private static let imgBottomMargin: CGFloat = 4
 
-    var imgListView: UIView? = nil
-    var imgViewArray: [UIImageView] = []
-    var imgUrlList: [Int: String] = [:]
+    private var imgListView: UIView? = nil
+    private var imgViewArray: [UIImageView] = []
+    private var imgUrlList: [Int: String] = [:]
 
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
@@ -79,7 +79,7 @@ class DetailImageCell: BaseCell, SKPhotoBrowserDelegate, UIImagePickerController
         )
     }
 
-    func createImageView(url: String, index: Int) -> UIView {
+    private func createImageView(url: String, index: Int) -> UIView {
         let v = UIView()
         v.bounds = CGRect(x: 0, y: 0, width: DetailImageCell.imageViewWidth, height: DetailImageCell.imageViewWidth)
 
@@ -108,7 +108,7 @@ class DetailImageCell: BaseCell, SKPhotoBrowserDelegate, UIImagePickerController
         return v
     }
 
-    func createNewBtn() -> UIView {
+    private func createNewBtn() -> UIView {
         let v = UIView()
         v.bounds = CGRect(x: 0, y: 0, width: DetailImageCell.imageViewWidth, height: DetailImageCell.imageViewWidth)
 

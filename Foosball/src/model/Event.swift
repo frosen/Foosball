@@ -23,7 +23,7 @@ enum EventState {
     case waiting //你确认成败后，别人没确认前，要等待，最多24小时，到时没确认的自动根据你的确认而确认
     case win //胜利，确认对方是否兑现
     case lose //失败，确认是否自己已经完成了承诺的兑现
-    case cashed //已兑现，选择评价，或直接完成
+    case honoured //已兑现，选择评价，或直接完成
     case finish //确认后完成，不再提示
     case impeach //当确认成败时，如果有人已经确定并与你不符时，会提示，如果你确认则进入存疑状态，保持或重选
     case keepImpeach //保持存疑状态，不再提示

@@ -83,7 +83,7 @@ class ChallengeCell: BaseCell {
         }
     }
 
-    func createMemberView(_ user: UserState, avatarWidth: CGFloat) -> UIView {
+    private func createMemberView(_ user: UserState, avatarWidth: CGFloat) -> UIView {
         let avatar =  Avatar.create(
             rect: CGRect(x: 0, y: 0, width: avatarWidth, height: avatarWidth),
             name: user.user.name,

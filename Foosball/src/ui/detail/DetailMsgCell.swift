@@ -9,7 +9,7 @@
 import UIKit
 
 class DetailMsgHeadCell: DetailHeadCell {
-    var isShowKeyboard: Bool = false
+    private var isShowKeyboard: Bool = false
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         return 44
     }
@@ -54,14 +54,14 @@ class DetailMsgHeadCell: DetailHeadCell {
 }
 
 class DetailMsgCell: BaseCell {
-    static let msgAvatarWidth: CGFloat = 40
-    static let msgStrWidth: CGFloat = DetailG.widthWithoutMargin - msgAvatarWidth - DetailG.headMargin //这里的headMargin表示头像右边的空
-    static let msgStrPosX: CGFloat = DetailG.headMargin * 2 + msgAvatarWidth
+    private static let msgAvatarWidth: CGFloat = 40
+    private static let msgStrWidth: CGFloat = DetailG.widthWithoutMargin - msgAvatarWidth - DetailG.headMargin //这里的headMargin表示头像右边的空
+    private static let msgStrPosX: CGFloat = DetailG.headMargin * 2 + msgAvatarWidth
 
-    var img: Avatar? = nil
-    var nameLbl: UILabel! = nil
-    var timeLbl: UILabel! = nil
-    var txtLbl: UILabel! = nil
+    private var img: Avatar? = nil
+    private var nameLbl: UILabel! = nil
+    private var timeLbl: UILabel! = nil
+    private var txtLbl: UILabel! = nil
 
     static var lblStyleAttri: [String : Any] {
         let paragraphStyle = NSMutableParagraphStyle()
