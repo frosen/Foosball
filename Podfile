@@ -9,5 +9,9 @@ pod 'SDWebImage'
 pod 'SnapKit'
 pod 'SKPhotoBrowser', :git => 'https://github.com/suzuki-0000/SKPhotoBrowser.git', :branch => 'swift3'
 
+pod 'AMap2DMap'
+pod 'AMapSearch'
+pod 'AMapLocation'
+
 end
 
