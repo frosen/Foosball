@@ -244,6 +244,10 @@ class DetailLocationCell: DetailStringBtnCell {
 
     func onClickEnterMapBtn() {
         print("onClickEnterMapBtn")
+
+        let mapVC = MapController()
+        mapVC.rootVC = (ctrlr as! DetailViewController).rootVC
+        ctrlr.navigationController!.pushViewController(mapVC, animated: true)
     }
 }
 

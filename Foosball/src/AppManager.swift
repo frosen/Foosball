@@ -24,6 +24,8 @@ class AppManager: NSObject {
         activeEventsMgr = ActiveEventsMgr()
 
         super.init()
+
+        AMapServices.shared().enableHTTPS = true
     }
 }
 

@@ -68,6 +68,13 @@ class CreateStep3LocationCell: StaticCell {
         detailTextLabel?.font = UIFont.systemFont(ofSize: 13)
         textLabel?.text = "地点"
     }
+
+    override func onSelected() {
+        let mapVC = MapController()
+        let createVC = (ctrlr as! CreatePageBaseCtrlr).rootCtrlr!
+        mapVC.rootVC = createVC.rootVC
+        createVC.navigationController!.pushViewController(mapVC, animated: true)
+    }
 }
 
 class CreateStep3WagerHeadCell: StaticCell {
