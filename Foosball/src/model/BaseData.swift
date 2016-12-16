@@ -58,7 +58,7 @@ struct Time {
             if dateCom.year! * 10000 + dateCom.month! * 100 + dateCom.day! < nowCom.year! * 10000 + nowCom.month! * 100 + nowCom.day! {
                 timeStr = String(dateCom.month!) + "月" + String(dateCom.day!) + "日"
             } else {
-                timeStr = String(dateCom.hour!) + ":" + String(dateCom.minute!)
+                timeStr = String(dateCom.hour!) + ":" + String(format: "%02d", dateCom.minute!)
             }
         }
 
@@ -69,7 +69,8 @@ struct Time {
 
     func toWholeString() -> String {
         let com = Calendar.current.dateComponents([.month, .day, .hour, .minute], from: time)
-        return String(com.month!) + "月" + String(com.day!) + "日 " + String(com.hour!) + ":" + String(com.minute!)
+        return String(com.month!) + "月" + String(com.day!) + "日 " +
+            String(com.hour!) + ":" + String(format: "%02d", com.minute!)
     }
 }
 

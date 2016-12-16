@@ -221,7 +221,9 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
             }
 
             // 今天以前禁用
-            if dayCom.year! * 10000 + dayCom.month! * 100 + dayCom.day! < nowCom.year! * 10000 + nowCom.month! * 100 + nowCom.day! {
+            let dayNum = dayCom.year! * 10000 + dayCom.month! * 100 + dayCom.day!
+            let nowNum = nowCom.year! * 10000 + nowCom.month! * 100 + nowCom.day!
+            if dayNum < nowNum {
                 dayView.textColor = UIColor(white: 0.75, alpha: 1.0)
             } else {
                 let isSelectedDay = (dayCom.year! == sYear && dayCom.month! == sMonth && dayCom.day! == sDay)
@@ -230,7 +232,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
                 dayView.isUserInteractionEnabled = true
                 let dayTap = UITapGestureRecognizer(target: self, action: #selector(TimePickerView.tapToTurnDay(ges:)))
                 dayView.addGestureRecognizer(dayTap)
-                dayView.tag = dayIndex
+                dayView.tag = dayNum
             }
 
             // 1号下面加月份
@@ -284,9 +286,9 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         print("onSelect", day)
 
         setDayViewUI(dayView, checked: true)
-        sYear = onShowYear
-        sMonth = onShowMonth
-        sDay = day
+        sYear = day / 10000
+        sMonth = day / 100 % 100
+        sDay = day % 100
     }
 
     private func setDayViewUI(_ l: UILabel, checked: Bool) {
@@ -308,13 +310,15 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
     func onConfirm() {
-        let hour = timePicker.selectedRow(inComponent: 0) % 24 + 1
-        let min = timePicker.selectedRow(inComponent: 1) % 60 + 1
+        let hour = (timePicker.selectedRow(inComponent: 0) + 1) % 24
+        let min = (timePicker.selectedRow(inComponent: 1) + 1) % 60
+
         let selectedCom = DateComponents(year: sYear, month: sMonth, day: sDay, hour: hour, minute: min)
         confirmCallback(Calendar.current.date(from: selectedCom)!)
     }
 
     // UIPickerViewDelegate, UIPickerViewDataSource ------------------------------------
+    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 2
     }
@@ -336,11 +340,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         label.backgroundColor = UIColor.clear
 
         let timeNum = (row + 1) % (component == 0 ? 24 : 60)
-        if timeNum >= 10 {
-            label.text = String(timeNum)
-        } else {
-            label.text = "0" + String(timeNum)
-        }
+        label.text = String(format: "%02d", timeNum)
 
         return label
     }
