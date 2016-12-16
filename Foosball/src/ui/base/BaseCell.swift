@@ -82,6 +82,8 @@ class StaticCell: BaseCell {
             cell = cls.new(cls: cls, id: info.id)
 
             let staticCell = cell as! StaticCell
+            staticCell.w = UIScreen.main.bounds.width
+            staticCell.h = type(of: staticCell).getCellHeight(d, index: index) //dynamicType可以获取对象的类，然后就能使用类函数了
             staticCell.ctrlr = ctrlr
             staticCell.initData(d, index: index)
             staticCell.setData(d, index: index)

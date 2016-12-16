@@ -25,12 +25,12 @@ class CreateStep3TimeCell: StaticCell {
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
-        detailTextLabel!.text = createEvent.time.toWholeString()
+        detailTextLabel!.text = createEvent.time.toWholeString
     }
 
     override func onSelected() {
         if tpv == nil {
-            tpv = TimePickerView(date: createEvent.time.time) { date in
+            tpv = TimePickerView(date: createEvent.time.time, parents: ctrlr.view) { date in
 
                 if date < Date(timeIntervalSinceNow: 900) { // 比当前往后15分钟以内
                     UITools.showAlert(self.ctrlr, title: "时间的选择感觉不太好", msg: "请指定的时间在至少15分钟之后吧", type: 1, callback: nil)

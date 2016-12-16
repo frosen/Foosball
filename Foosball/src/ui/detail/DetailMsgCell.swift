@@ -130,7 +130,7 @@ class DetailMsgCell: BaseCell {
         //名字和时间
         nameLbl.text = user.name
         nameLbl.sizeToFit()
-        timeLbl.text = msgStru.time.toString()
+        timeLbl.text = msgStru.time.toString
         timeLbl.sizeToFit()
 
         //文本

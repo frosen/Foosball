@@ -79,7 +79,7 @@ class DetailTitleCell: StaticCell {
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
         eventBoard.setData(e)
-        createTime.text = "发布时间：" + e.operationTimeList[0].time.toString()
+        createTime.text = "发布时间：" + e.operationTimeList[0].time.toString
     }
 }
 
@@ -152,11 +152,29 @@ class DetailWagerCell: DetailStringCell {
     }
 }
 
-class DetailTimeCell: DetailStringCell {
+class DetailStringBtnCell: DetailStringCell {
+    fileprivate static let widthMinusMapBtn: CGFloat = DetailG.widthWithoutMargin - 80
 
+    fileprivate func setBtn(name: String, action: Selector) {
+        let enterMapBtn = UIButton(type: .custom)
+        contentView.addSubview(enterMapBtn)
+        enterMapBtn.setImage(UIImage(named: name)!.withRenderingMode(.alwaysTemplate), for: .normal)
+        enterMapBtn.tintColor = BaseColor
+        enterMapBtn.sizeToFit()
+        enterMapBtn.center = CGPoint(
+            x: w - DetailG.headMargin - enterMapBtn.frame.width / 2 - 15,
+            y: h / 2
+        )
+        enterMapBtn.addTarget(self, action: action, for: .touchUpInside)
+    }
+}
+
+class DetailTimeCell: DetailStringBtnCell {
+    private weak var curEvent: Event! = nil
+    private var tpv: TimePickerView? = nil
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let str = getTimeString(e: d as! Event)
-        return DetailG.calculateLblHeight(str, w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight
+        return DetailG.calculateLblHeight(str, w: widthMinusMapBtn) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
@@ -166,32 +184,66 @@ class DetailTimeCell: DetailStringCell {
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
-        setLblData(contentView: contentView, str: DetailTimeCell.getTimeString(e: e))
+        curEvent = e
+        setLblData(contentView: contentView, str: DetailTimeCell.getTimeString(e: e), w: DetailLocationCell.widthMinusMapBtn)
+        setBtn(name: "enter_calendar", action: #selector(DetailTimeCell.onClickEnterCalendarBtn)) // 进入日历按钮
     }
 
-    class func getTimeString(e: Event) -> String {
-        var showString = "~ " + e.time.toWholeString()
-        let intervalTime = ceil(e.time.time.timeIntervalSinceNow / 60)
-        showString += " (剩余大约\(intervalTime))"
+    private class func getTimeString(e: Event) -> String {
+        var showString = "~ " + e.time.toWholeString
+        let intervalTime: Int = Int(floor(e.time.time.timeIntervalSinceNow / 3600))
+        showString += " (剩余大约\(intervalTime)小时)"
         return showString
+    }
+
+    func onClickEnterCalendarBtn() {
+        print("onClickEnterCalendarBtn")
+
+        if tpv == nil {
+            tpv = TimePickerView(date: curEvent.time.time, parents: ctrlr.view) { date in
+                // 动画消失
+                self.tpv!.isUserInteractionEnabled = false
+                UIView.animate(withDuration: 0.3) {
+                    self.tpv!.alpha = 0
+                }
+            }
+            ctrlr.view.addSubview(tpv!)
+            tpv!.setChangeDate(enable: false)
+            tpv!.alpha = 0
+        }
+
+        // 动画出现
+        self.tpv!.isUserInteractionEnabled = true
+        UIView.animate(withDuration: 0.3) {
+            self.tpv!.alpha = 1
+        }
     }
 }
 
-class DetailLocationCell: DetailStringCell {
-    private static let widthMinusMapBtn: CGFloat = DetailG.widthWithoutMargin - 80
+class DetailLocationCell: DetailStringBtnCell {
+
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
-        let e = d as! Event
-        return DetailG.calculateLblHeight("呵呵呵呵呵呵呵呵呵呵呵呵", w: DetailLocationCell.widthMinusMapBtn) + DetailG.subTitleHeight + DetailG.contentBottomHeight
+        return DetailG.calculateLblHeight(getLocString(e: d as! Event), w: widthMinusMapBtn) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
         initLblData(contentView: contentView, titleStr: "活动地点：")
+        setBtn(name: "enter_map", action: #selector(DetailLocationCell.onClickEnterMapBtn)) // 进入地图按钮
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
-        let e = d as! Event
-        setLblData(contentView: contentView, str: "呵呵呵呵呵呵呵呵呵呵呵呵", w: DetailLocationCell.widthMinusMapBtn)
+        let str = DetailLocationCell.getLocString(e: d as! Event)
+        setLblData(contentView: contentView, str: str, w: DetailLocationCell.widthMinusMapBtn)
+    }
+
+    private class func getLocString(e: Event) -> String {
+        let showString = "~ " + e.location.toString
+        return showString
+    }
+
+    func onClickEnterMapBtn() {
+        print("onClickEnterMapBtn")
     }
 }
 

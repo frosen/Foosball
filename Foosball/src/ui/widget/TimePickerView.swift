@@ -23,6 +23,8 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
     private var confirmCallback: ((Date) -> Void)! = nil
 
+    private var canChangeDate: Bool = true
+
     // 展示的年月
     private var onShowYear: Int = 0
     private var onShowMonth: Int = 0
@@ -40,9 +42,9 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(date: Date, callback: @escaping ((Date) -> Void)) {
-        let ww = UIScreen.main.bounds.width
-        let wh = UIScreen.main.bounds.height
+    init(date: Date, parents: UIView, callback: @escaping ((Date) -> Void)) {
+        let ww = parents.bounds.width
+        let wh = parents.bounds.height
         super.init(frame: CGRect(x: 0, y: 0, width: ww, height: wh))
 
         confirmCallback = callback
@@ -277,8 +279,10 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
     func tapToTurnDay(ges: UITapGestureRecognizer) {
-        let dayView = ges.view! as! UILabel
-        onSelect(dayView: dayView)
+        if canChangeDate == true {
+            let dayView = ges.view! as! UILabel
+            onSelect(dayView: dayView)
+        }
     }
 
     func onSelect(dayView: UILabel) {
@@ -315,6 +319,12 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
         let selectedCom = DateComponents(year: sYear, month: sMonth, day: sDay, hour: hour, minute: min)
         confirmCallback(Calendar.current.date(from: selectedCom)!)
+    }
+
+    // 是否允许调整时间，默认可以
+    func setChangeDate(enable: Bool) {
+        canChangeDate = enable
+        timePicker.isUserInteractionEnabled = enable
     }
 
     // UIPickerViewDelegate, UIPickerViewDataSource ------------------------------------

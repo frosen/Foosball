@@ -40,7 +40,7 @@ struct Time {
     }
 
     //根据当前时间获取不同的时间文本
-    func toString() -> String {
+    var toString: String {
         let now = Date()
         let interval: TimeInterval = now.timeIntervalSince(time)
 
@@ -67,7 +67,7 @@ struct Time {
         return timeStr
     }
 
-    func toWholeString() -> String {
+    var toWholeString: String {
         let com = Calendar.current.dateComponents([.month, .day, .hour, .minute], from: time)
         return String(com.month!) + "月" + String(com.day!) + "日 " +
             String(com.hour!) + ":" + String(format: "%02d", com.minute!)
@@ -81,7 +81,7 @@ func ==(lhs: Time, rhs: Time) -> Bool {
 //位置信息的封装
 struct Location {
     var toString: String {
-        return "朝阳/3km"
+        return "北京市朝阳区三里屯南里源泉花园小区15号楼8单元1415号"
     }
 }
 
