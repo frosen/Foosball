@@ -154,7 +154,7 @@ class DetailWagerCell: DetailStringCell {
 
 class DetailStringBtnCell: DetailStringCell {
     fileprivate static let widthMinusMapBtn: CGFloat = DetailG.widthWithoutMargin - 80
-
+    fileprivate weak var curEvent: Event! = nil
     fileprivate func setBtn(name: String, action: Selector) {
         let enterMapBtn = UIButton(type: .custom)
         contentView.addSubview(enterMapBtn)
@@ -170,7 +170,6 @@ class DetailStringBtnCell: DetailStringCell {
 }
 
 class DetailTimeCell: DetailStringBtnCell {
-    private weak var curEvent: Event! = nil
     private var tpv: TimePickerView? = nil
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let str = getTimeString(e: d as! Event)
@@ -233,7 +232,9 @@ class DetailLocationCell: DetailStringBtnCell {
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
-        let str = DetailLocationCell.getLocString(e: d as! Event)
+        let e = d as! Event
+        curEvent = e
+        let str = DetailLocationCell.getLocString(e: e)
         setLblData(contentView: contentView, str: str, w: DetailLocationCell.widthMinusMapBtn)
     }
 
@@ -245,8 +246,8 @@ class DetailLocationCell: DetailStringBtnCell {
     func onClickEnterMapBtn() {
         print("onClickEnterMapBtn")
 
-        let mapVC = MapController()
-        mapVC.rootVC = (ctrlr as! DetailViewController).rootVC
+        let rootVC = (ctrlr as! DetailViewController).rootVC
+        let mapVC = MapController(rootVC: rootVC, l: curEvent.location)
         ctrlr.navigationController!.pushViewController(mapVC, animated: true)
     }
 }

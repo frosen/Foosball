@@ -13,15 +13,15 @@ class CreatePageBaseCtrlr: UIViewController {
     var rootCtrlr: CreateController! = nil
     var pageSize: CGSize! = nil
 
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     // 之所以要传入size，是因为在viewDidload的时候，本身的size还没有被设置，所以view的size还是原始的
     init(rootCtrlr: CreateController, pageSize: CGSize) {
         super.init(nibName: nil, bundle: nil)
         self.rootCtrlr = rootCtrlr
         self.pageSize = pageSize
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {

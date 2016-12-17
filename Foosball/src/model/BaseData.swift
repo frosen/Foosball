@@ -80,6 +80,12 @@ func ==(lhs: Time, rhs: Time) -> Bool {
 
 //位置信息的封装
 struct Location {
+    //获取当前时间的Time
+    static var now: Location {
+        let l = Location()
+        return l
+    }
+
     var toString: String {
         return "北京市朝阳区三里屯南里源泉花园小区15号楼8单元1415号"
     }

@@ -10,6 +10,17 @@ import UIKit
 
 class MapController: BaseController {
 
+    private var curLoc: Location
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    init(rootVC: RootViewController, l: Location) {
+        curLoc = l
+        super.init(rootVC: rootVC)
+    }
+
     override func viewDidLoad() {
         navTabType = .HideTab
         super.viewDidLoad()
@@ -21,6 +32,8 @@ class MapController: BaseController {
 
         let map = MAMapView(frame: baseView.bounds)
         baseView.addSubview(map)
+        map.isShowsUserLocation = true
+        map.userTrackingMode = .follow
     }
 
     func onBack() {

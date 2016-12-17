@@ -27,8 +27,7 @@ class BaseTabController: BaseController {
     //跳转到二维码扫描页面
     func onClickScan() {
         print("scan")
-        let vc = ScanViewController()
-        vc.rootVC = rootVC
+        let vc = ScanViewController(rootVC: rootVC)
         navigationController!.pushViewController(vc, animated: true)
     }
 

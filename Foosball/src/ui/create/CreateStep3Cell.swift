@@ -10,7 +10,6 @@ import UIKit
 
 class CreateStep3TimeCell: StaticCell {
 
-    private var createEvent: Event! = nil
     private var tpv: TimePickerView? = nil
 
     override class func new(cls: BaseCell.Type, id: String) -> BaseCell {
@@ -18,18 +17,19 @@ class CreateStep3TimeCell: StaticCell {
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        createEvent = d as! Event
         textLabel?.font = UIFont.systemFont(ofSize: 13)
         detailTextLabel?.font = UIFont.systemFont(ofSize: 13)
         textLabel?.text = "时间"
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
+        let createEvent = d as! Event
         detailTextLabel!.text = createEvent.time.toWholeString
     }
 
-    override func onSelected() {
+    override func onSelected(_ d: BaseData? = nil) {
         if tpv == nil {
+            let createEvent = d as! Event
             tpv = TimePickerView(date: createEvent.time.time, parents: ctrlr.view) { date in
 
                 if date < Date(timeIntervalSinceNow: 900) { // 比当前往后15分钟以内
@@ -37,7 +37,7 @@ class CreateStep3TimeCell: StaticCell {
                     return
                 }
 
-                self.createEvent.time = Time(t: date)
+                createEvent.time = Time(t: date)
                 self.setData(nil, index: nil) // 重置cell UI
 
                 // 动画消失
@@ -69,10 +69,10 @@ class CreateStep3LocationCell: StaticCell {
         textLabel?.text = "地点"
     }
 
-    override func onSelected() {
-        let mapVC = MapController()
+    override func onSelected(_ d: BaseData? = nil) {
+        let createEvent = d as! Event
         let createVC = (ctrlr as! CreatePageBaseCtrlr).rootCtrlr!
-        mapVC.rootVC = createVC.rootVC
+        let mapVC = MapController(rootVC: createVC.rootVC, l: createEvent.location)
         createVC.navigationController!.pushViewController(mapVC, animated: true)
     }
 }

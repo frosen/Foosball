@@ -31,7 +31,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
 
     private func initSubVc() {
         //挑战
-        let challengeVc = ChallengeController()
+        let challengeVc = ChallengeController(rootVC: self)
         addVc(challengeVc, title: "挑战", image: "home2")
 
         //附近
@@ -41,7 +41,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
         //组队
 
         //个人
-        let ownVc = OwnController()
+        let ownVc = OwnController(rootVC: self)
         addVc(ownVc, title: "个人", image: "my2")
     }
 
@@ -60,9 +60,6 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
 
         //收集bar item 用于自定义的Tabbar
         items.append(vc.tabBarItem)
-
-        // 让子控制器知道根控制器
-        vc.rootVC = self
     }
 
     private func initTabBar() {
@@ -84,8 +81,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
     func tabBar(_ tabBar: MyTabBar, didClickMidButton btn: UIButton) {
         print("mid button")
 
-        let createCtrlr = CreateController()
-        createCtrlr.rootVC = self
+        let createCtrlr = CreateController(rootVC: self)
         currentCtrlr.navigationController!.pushViewController(createCtrlr, animated: true) // 没有用模态跳转，是因为模态会在最上而挡住tabbar
     }
 

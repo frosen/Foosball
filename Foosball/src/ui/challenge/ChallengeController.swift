@@ -94,9 +94,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedCell = tableView.cellForRow(at: indexPath) as? ChallengeCell
 
-        let vc = DetailViewController()
-        vc.rootVC = rootVC
-
+        let vc = DetailViewController(rootVC: rootVC)
         let e: Event = curActiveEvents[indexPath.section]
         vc.setDataId(e.ID)
         navigationController!.pushViewController(vc, animated: true)

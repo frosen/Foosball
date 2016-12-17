@@ -28,7 +28,7 @@ class BaseCell: UITableViewCell {
 
     func initData(_ d: BaseData?, index: IndexPath?) {} //需要继承的，把事件设置进去
     func setData(_ d: BaseData?, index: IndexPath?) {}
-    func onSelected() {}
+    func onSelected(_ d: BaseData? = nil) {}
 
     //非常方便的创建cell
     struct CInfo {

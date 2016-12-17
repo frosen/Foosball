@@ -22,7 +22,7 @@ struct NavTabType: OptionSet {
 
 class BaseController: UIViewController {
 
-    var rootVC: RootViewController! = nil //根控制器
+    var rootVC: RootViewController //根控制器
     var navTabType: NavTabType = .None
 
     var initDataOnViewAppear: Bool = false
@@ -30,6 +30,15 @@ class BaseController: UIViewController {
     var baseView: UIView! = nil
 
     var callbackOnFinishInit: ((Bool) -> Swift.Void)? = nil
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    init(rootVC: RootViewController) {
+        self.rootVC = rootVC
+        super.init(nibName: nil, bundle: nil)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

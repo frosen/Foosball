@@ -22,11 +22,17 @@ class CreateController: BaseController, UIScrollViewDelegate {
         super.viewDidLoad()
         print("创建事件的页面")
 
-        // 初始化数据
+        initCreateEvent() // 初始化数据
+        initUIData()
+    }
+
+    func initCreateEvent() {
         createEvent = Event(ID: DataID(ID: -1))
-
         createEvent.time = Time(t: Date(timeIntervalSinceNow: 1800)) // 往后30分钟
+        createEvent.location = Location.now
+    }
 
+    func initUIData() {
         // 位置初始化 自定义的转景，系统不会重置view的位置，所以自己来
         view.frame.origin.y += 64
         baseView.backgroundColor = UIColor(red: 0.12, green: 0.12, blue: 0.24, alpha: 1)

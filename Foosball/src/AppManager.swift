@@ -25,7 +25,19 @@ class AppManager: NSObject {
 
         super.init()
 
+        AMapServices.shared().apiKey = "04ec496139134f937690624ac77f2363"
         AMapServices.shared().enableHTTPS = true
+
+        let locMgr = AMapLocationManager()
+        locMgr.requestLocation(withReGeocode: true) { location, regeocode, error in
+            if let loc = location {
+                print(loc)
+            }
+            print("请求地理位置")
+            
+
+        }
+
     }
 }
 
