@@ -53,9 +53,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         toolbar = DetailToolbar()
         baseView.addSubview(toolbar)
         toolbar.delegate = self
-        toolbar.frame.origin.y = baseView.frame.height - toolbar.h
+        toolbar.frame.origin.y = baseView.frame.height - toolbar.frame.height
 
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: toolbar.h, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: toolbar.frame.height, right: 0)
 
         //隐藏在最下面的输入栏
         textInputView = InputView()

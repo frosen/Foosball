@@ -8,17 +8,24 @@
 
 import UIKit
 
-class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDataSource {
+class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDataSource, CreateStep3ToolbarDelegate {
 
     private var tableView: UITableView! = nil
+    private var toolbar: CreateStep3Toolbar! = nil
     
     override func setUI() {
-        tableView = UITableView(frame: CGRect(x: 0, y: 64, width: pageSize.width, height: pageSize.height - 64 - 49)) // 要减去底部按钮层的高度
+        tableView = UITableView(frame: CGRect(x: 0, y: 64, width: pageSize.width, height: pageSize.height - 64))
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
 
         //底部的按钮层 直接发布、邀请朋友
+        toolbar = CreateStep3Toolbar()
+        view.addSubview(toolbar)
+        toolbar.delegate = self
+        toolbar.frame.origin.y = view.frame.height - toolbar.frame.height
+
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: toolbar.frame.height, right: 0)
     }
 
     // tableview -----------------------------------------------------------------------

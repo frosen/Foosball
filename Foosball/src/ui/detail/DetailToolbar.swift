@@ -13,11 +13,11 @@ protocol DetailToolbarDelegate {
 }
 
 class DetailToolbar: UIView {
-    let w: CGFloat = UIScreen.main.bounds.width
-    let h: CGFloat = 49
+    private static let w: CGFloat = UIScreen.main.bounds.width
+    private static let h: CGFloat = 49
 
     init() {
-        super.init(frame: CGRect(x: 0.0, y: 0.0, width: w, height: h))
+        super.init(frame: CGRect(x: 0.0, y: 0.0, width: DetailToolbar.w, height: DetailToolbar.h))
 
         backgroundColor = UIColor(white: 0.96, alpha: 1.0)
         layer.shadowColor = UIColor.gray.cgColor
