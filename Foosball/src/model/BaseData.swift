@@ -77,6 +77,10 @@ class Time {
         return String(com.month!) + "月" + String(com.day!) + "日 " +
             String(com.hour!) + ":" + String(format: "%02d", com.minute!)
     }
+
+    var toLeftHourSineNow: Int {
+        return Int(floor(time.timeIntervalSinceNow / 3600))
+    }
 }
 
 func ==(lhs: Time, rhs: Time) -> Bool {
@@ -126,9 +130,9 @@ class LocationMgr: NSObject, CLLocationManagerDelegate {
 }
 
 class Location {
-    var loc: CLLocation
+    var loc: CLLocation? = nil
 
-    init (l: CLLocation) {
+    init (l: CLLocation? = nil) {
         self.loc = l
     }
 

@@ -19,7 +19,7 @@ class CreateStep3TimeCell: StaticCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
         textLabel!.font = UIFont.systemFont(ofSize: 13)
         detailTextLabel!.font = UIFont.systemFont(ofSize: 13)
-        textLabel!.text = "时间"
+        textLabel!.text = "活动时间"
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
@@ -66,11 +66,9 @@ class CreateStep3LocationCell: StaticCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
         textLabel!.font = UIFont.systemFont(ofSize: 13)
         detailTextLabel!.font = UIFont.systemFont(ofSize: 13)
-        textLabel!.text = "地点"
+        textLabel!.text = "活动地点"
         detailTextLabel!.text = "未知地点"
-    }
 
-    override func setData(_ d: BaseData?, index: IndexPath?) {
         let createEvent = d as! Event
         Location.getCurLoc() { loc in
             guard let l = loc else {
@@ -78,8 +76,13 @@ class CreateStep3LocationCell: StaticCell {
             }
 
             createEvent.location = l
-            self.detailTextLabel!.text = l.toString
+            self.setData(createEvent, index: nil) // 重置cell UI
         }
+    }
+
+    override func setData(_ d: BaseData?, index: IndexPath?) {
+        let createEvent = d as! Event
+        self.detailTextLabel!.text = createEvent.location.toString
     }
 
     override func onSelected(_ d: BaseData? = nil) {
@@ -105,7 +108,7 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        picker = UIPickerView(frame: CGRect(x: 0, y: 0, width: w, height: h))
+        picker = UIPickerView(frame: CGRect(x: 15, y: 0, width: w - 30, height: h))
         contentView.addSubview(picker)
 
         picker.delegate = self
@@ -132,9 +135,11 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
 
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if component == 0 {
-            return 24 * 20 // 小时 *10为了循环滚动
+            return 24
+        } else if component == 1 {
+            return 60
         } else {
-            return 60 * 20// 分钟
+            return 60
         }
     }
 

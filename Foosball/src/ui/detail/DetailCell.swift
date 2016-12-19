@@ -190,7 +190,8 @@ class DetailTimeCell: DetailStringBtnCell {
 
     private class func getTimeString(e: Event) -> String {
         var showString = "~ " + e.time.toWholeString
-        let intervalTime: Int = Int(floor(e.time.time.timeIntervalSinceNow / 3600))
+
+        let intervalTime: Int = e.time.toLeftHourSineNow
         showString += " (剩余大约\(intervalTime)小时)"
         return showString
     }

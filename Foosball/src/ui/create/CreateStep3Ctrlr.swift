@@ -53,7 +53,29 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 44
+        switch indexPath.section {
+        case 0:
+            switch indexPath.row {
+            case 0:
+                return CreateStep3TimeCell.getCellHeight()
+            default:
+                return CreateStep3LocationCell.getCellHeight()
+            }
+        case 1:
+            switch indexPath.row {
+            case 0:
+                return CreateStep3WagerHeadCell.getCellHeight()
+            default:
+                return CreateStep3WagerCell.getCellHeight()
+            }
+        default:
+            switch indexPath.row {
+            case 0:
+                return CreateStep3DetailHeadCell.getCellHeight()
+            default:
+                return CreateStep3DetailCell.getCellHeight()
+            }
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
