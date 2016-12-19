@@ -22,10 +22,8 @@ class DetailImageHeadCell: DetailHeadCell {
 
 class DetailImageCell: BaseCell, SKPhotoBrowserDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private static let imageCountIn1Line: CGFloat = 4
-    private static let imgMargin: CGFloat = 2
+    private static let imgMargin: CGFloat = 1
     private static let imageViewWidth: CGFloat = (DetailG.widthWithoutMargin + 2 * imgMargin) / imageCountIn1Line
-    private static let imgTopMargin: CGFloat = 4
-    private static let imgBottomMargin: CGFloat = 4
 
     private var imgListView: UIView? = nil
     private var imgViewArray: [UIImageView] = []
@@ -34,7 +32,7 @@ class DetailImageCell: BaseCell, SKPhotoBrowserDelegate, UIImagePickerController
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
         let lineCount = ceil(CGFloat(e.imageURLList.count + 1) / imageCountIn1Line)
-        return lineCount * imageViewWidth + imgTopMargin + imgBottomMargin
+        return lineCount * imageViewWidth
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
@@ -48,7 +46,7 @@ class DetailImageCell: BaseCell, SKPhotoBrowserDelegate, UIImagePickerController
             imgViewArray = []
         }
         let margin = DetailG.headMargin - DetailImageCell.imgMargin
-        imgListView = UIView(frame: CGRect(x: margin, y: DetailImageCell.imgTopMargin, width: 99999, height: 99999))
+        imgListView = UIView(frame: CGRect(x: margin, y: 0, width: 99999, height: 99999))
         contentView.addSubview(imgListView!)
 
         let e = d as! Event

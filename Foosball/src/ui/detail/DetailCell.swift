@@ -16,7 +16,7 @@ class DetailG {
     static let widthWithoutMargin: CGFloat = UIScreen.main.bounds.width - 2 * headMargin
 
     static let subTitleHeight: CGFloat = 35
-    static let contentBottomHeight: CGFloat = 12
+    static let contentBottomHeight: CGFloat = 15
 
     static let opt: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
     static var paragraphStyle: NSMutableParagraphStyle {
