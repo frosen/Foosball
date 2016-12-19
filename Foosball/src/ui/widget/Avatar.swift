@@ -58,9 +58,7 @@ class Avatar: UIView {
 
             avatar.layer.cornerRadius = rect.width / 2 //圆形
             avatar.layer.masksToBounds = true //剪切掉边缘以外
-
         }
-
         avatarBG.layer.cornerRadius = rect.width / 2 //圆形
         
         return avatarBG
