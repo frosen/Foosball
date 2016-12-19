@@ -8,10 +8,10 @@
 
 import UIKit
 
-class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDataSource, CreateStep3ToolbarDelegate {
+class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDataSource {
 
     private var tableView: UITableView! = nil
-    private var toolbar: CreateStep3Toolbar! = nil
+    private var toolbar: Toolbar! = nil
     
     override func setUI() {
         tableView = UITableView(frame: CGRect(x: 0, y: 64, width: pageSize.width, height: pageSize.height - 64))
@@ -20,11 +20,13 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         tableView.dataSource = self
 
         //底部的按钮层 直接发布、邀请朋友
-        toolbar = CreateStep3Toolbar()
+        toolbar = Toolbar()
         view.addSubview(toolbar)
-        toolbar.delegate = self
-        toolbar.frame.origin.y = view.frame.height - toolbar.frame.height
 
+        toolbar.btn1.setTitle("ppp", for: .normal)
+        toolbar.btn2.setTitle("ggg", for: .normal)
+
+        toolbar.frame.origin.y = view.frame.height - toolbar.frame.height
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: toolbar.frame.height, right: 0)
     }
 

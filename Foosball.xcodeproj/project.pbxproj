@@ -24,7 +24,6 @@
 		658CC7671DD0C8940085DCFD /* DataMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658CC7661DD0C8940085DCFD /* DataMgr.swift */; };
 		658E06741D56C7C8008D94FC /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E06731D56C7C8008D94FC /* Event.swift */; };
 		6593C0BD1DCDD65D00589943 /* UserMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6593C0BC1DCDD65D00589943 /* UserMgr.swift */; };
-		65A5DBFA1DBC6ACD001F5A05 /* DetailToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A5DBF91DBC6ACD001F5A05 /* DetailToolbar.swift */; };
 		65A66D221E03C63800FF9589 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A66D211E03C63800FF9589 /* MapController.swift */; };
 		65AA3A6D1DFD714D0021406E /* CreateStep3Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA3A6C1DFD714D0021406E /* CreateStep3Cell.swift */; };
 		65AB52451D3291E6005E7D4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AB52371D3291E6005E7D4C /* AppDelegate.swift */; };
@@ -37,7 +36,7 @@
 		65AD17421D7EB126008AEE3C /* DetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AD17411D7EB126008AEE3C /* DetailCell.swift */; };
 		65AD17441D7EC89A008AEE3C /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AD17431D7EC89A008AEE3C /* BaseCell.swift */; };
 		65B364B21DFE841900AA1C69 /* TimePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B364B11DFE841900AA1C69 /* TimePickerView.swift */; };
-		65B401481E06C73E00BA3CD5 /* CreateStep3Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B401471E06C73E00BA3CD5 /* CreateStep3Toolbar.swift */; };
+		65B4014C1E0759F500BA3CD5 /* Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B4014B1E0759F500BA3CD5 /* Toolbar.swift */; };
 		65B4F2F31D67011A00F8E961 /* BaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B4F2F21D67011A00F8E961 /* BaseController.swift */; };
 		65B775471D3228710040716C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65B775461D3228710040716C /* Assets.xcassets */; };
 		65B7754A1D3228710040716C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65B775481D3228710040716C /* LaunchScreen.storyboard */; };
@@ -74,7 +73,6 @@
 		658CC7661DD0C8940085DCFD /* DataMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataMgr.swift; sourceTree = "<group>"; };
 		658E06731D56C7C8008D94FC /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = model/Event.swift; sourceTree = "<group>"; };
 		6593C0BC1DCDD65D00589943 /* UserMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserMgr.swift; path = functions/UserMgr.swift; sourceTree = "<group>"; };
-		65A5DBF91DBC6ACD001F5A05 /* DetailToolbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailToolbar.swift; path = detail/DetailToolbar.swift; sourceTree = "<group>"; };
 		65A66D211E03C63800FF9589 /* MapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapController.swift; path = map/MapController.swift; sourceTree = "<group>"; };
 		65AA3A6C1DFD714D0021406E /* CreateStep3Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateStep3Cell.swift; path = create/CreateStep3Cell.swift; sourceTree = "<group>"; };
 		65AB52371D3291E6005E7D4C /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -88,7 +86,7 @@
 		65AD17411D7EB126008AEE3C /* DetailCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailCell.swift; path = detail/DetailCell.swift; sourceTree = "<group>"; };
 		65AD17431D7EC89A008AEE3C /* BaseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
 		65B364B11DFE841900AA1C69 /* TimePickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimePickerView.swift; path = widget/TimePickerView.swift; sourceTree = "<group>"; };
-		65B401471E06C73E00BA3CD5 /* CreateStep3Toolbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateStep3Toolbar.swift; path = create/CreateStep3Toolbar.swift; sourceTree = "<group>"; };
+		65B4014B1E0759F500BA3CD5 /* Toolbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Toolbar.swift; path = widget/Toolbar.swift; sourceTree = "<group>"; };
 		65B4F2F21D67011A00F8E961 /* BaseController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseController.swift; sourceTree = "<group>"; };
 		65B7753A1D3228710040716C /* Foosball.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Foosball.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65B775461D3228710040716C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -162,7 +160,6 @@
 				6508C28F1DDD992B00E3D7C2 /* CreateStep2Ctrlr.swift */,
 				6508C2921DDD994500E3D7C2 /* CreateStep3Ctrlr.swift */,
 				65AA3A6C1DFD714D0021406E /* CreateStep3Cell.swift */,
-				65B401471E06C73E00BA3CD5 /* CreateStep3Toolbar.swift */,
 				6526CBA01DF56FE700DB9015 /* CreateStep4Ctrlr.swift */,
 			);
 			name = create;
@@ -185,7 +182,6 @@
 				65EEB75D1DAE393000BB767D /* DetailTeamCell.swift */,
 				65EEB75F1DAE398D00BB767D /* DetailImageCell.swift */,
 				65EEB7611DAE3A0500BB767D /* DetailMsgCell.swift */,
-				65A5DBF91DBC6ACD001F5A05 /* DetailToolbar.swift */,
 				650151A41DB4D6F9009D8ABC /* InputView.swift */,
 			);
 			name = detail;
@@ -316,6 +312,7 @@
 				65F14B841D68439D0073D547 /* MyTabBar.swift */,
 				65F14B851D68439D0073D547 /* MyTabBarItem.swift */,
 				65B364B11DFE841900AA1C69 /* TimePickerView.swift */,
+				65B4014B1E0759F500BA3CD5 /* Toolbar.swift */,
 			);
 			name = widget;
 			sourceTree = "<group>";
@@ -350,7 +347,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "卢乐颜";
 				TargetAttributes = {
 					65B775391D3228710040716C = {
@@ -460,7 +457,6 @@
 				65AD17421D7EB126008AEE3C /* DetailCell.swift in Sources */,
 				65BD74931D9F8E00000BDA57 /* StateView.swift in Sources */,
 				65D61CFD1DBF70900032C2E7 /* Network.swift in Sources */,
-				65A5DBFA1DBC6ACD001F5A05 /* DetailToolbar.swift in Sources */,
 				65D427FC1D6073D700994EA8 /* User.swift in Sources */,
 				65F14B881D68439D0073D547 /* MyTabBar.swift in Sources */,
 				6508C2971DDEB0A400E3D7C2 /* Transitioning.swift in Sources */,
@@ -475,8 +471,8 @@
 				65AB524D1D3291E6005E7D4C /* RootViewController.swift in Sources */,
 				6526CBA11DF56FE700DB9015 /* CreateStep4Ctrlr.swift in Sources */,
 				65D61D101DC0602D0032C2E7 /* ActiveEventsMgr.swift in Sources */,
+				65B4014C1E0759F500BA3CD5 /* Toolbar.swift in Sources */,
 				658E06741D56C7C8008D94FC /* Event.swift in Sources */,
-				65B401481E06C73E00BA3CD5 /* CreateStep3Toolbar.swift in Sources */,
 				65AB524B1D3291E6005E7D4C /* OwnCells.swift in Sources */,
 				65EEB75E1DAE393000BB767D /* DetailTeamCell.swift in Sources */,
 				65AB52471D3291E6005E7D4C /* BaseTabController.swift in Sources */,

@@ -38,7 +38,7 @@ class CreateStep3TimeCell: StaticCell {
                 }
 
                 createEvent.time = Time(t: date)
-                self.setData(nil, index: nil) // 重置cell UI
+                self.setData(createEvent, index: nil) // 重置cell UI
 
                 // 动画消失
                 self.tpv!.isUserInteractionEnabled = false
