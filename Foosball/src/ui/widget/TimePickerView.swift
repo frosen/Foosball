@@ -21,7 +21,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     private var calendarView: UIView! = nil
     private var timePicker: UIPickerView! = nil
 
-    private var confirmCallback: ((Date) -> Void)! = nil
+    private var confirmCallback: ((Time) -> Void)! = nil
 
     private var canChangeDate: Bool = true
 
@@ -42,7 +42,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(date: Date, parents: UIView, callback: @escaping ((Date) -> Void)) {
+    init(t: Time, parents: UIView, callback: @escaping ((Time) -> Void)) {
         let ww = parents.bounds.width
         let wh = parents.bounds.height
         super.init(frame: CGRect(x: 0, y: 0, width: ww, height: wh))
@@ -50,7 +50,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         confirmCallback = callback
 
         let calendar = Calendar.current
-        let dateCom = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+        let dateCom = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: t.time)
         sYear = dateCom.year!
         sMonth = dateCom.month!
         sDay = dateCom.day!
@@ -318,7 +318,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         let min = (timePicker.selectedRow(inComponent: 1) + 1) % 60
 
         let selectedCom = DateComponents(year: sYear, month: sMonth, day: sDay, hour: hour, minute: min)
-        confirmCallback(Calendar.current.date(from: selectedCom)!)
+        confirmCallback(Time(t: Calendar.current.date(from: selectedCom)!))
     }
 
     // 是否允许调整时间，默认可以

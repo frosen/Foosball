@@ -199,7 +199,7 @@ class DetailTimeCell: DetailStringBtnCell {
         print("onClickEnterCalendarBtn")
 
         if tpv == nil {
-            tpv = TimePickerView(date: curEvent.time.time, parents: ctrlr.view) { date in
+            tpv = TimePickerView(t: curEvent.time, parents: ctrlr.view) { _ in
                 // 动画消失
                 self.tpv!.isUserInteractionEnabled = false
                 UIView.animate(withDuration: 0.3) {

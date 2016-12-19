@@ -25,13 +25,18 @@ func ==(lhs: DataID, rhs: DataID) -> Bool {
     return lhs.ID == rhs.ID
 }
 
-//对时间表示的封装
-struct Time {
+//对时间表示的封装 ----------------------------------------------------------------------------
+
+class Time {
     let time: Date
 
     //以当前时间初始化
     init(t: Date) {
         self.time = t
+    }
+
+    init(timeIntervalSinceNow: TimeInterval) {
+        self.time = Date(timeIntervalSinceNow: timeIntervalSinceNow)
     }
 
     //获取当前时间的Time
@@ -78,12 +83,59 @@ func ==(lhs: Time, rhs: Time) -> Bool {
     return lhs.time == rhs.time
 }
 
-//位置信息的封装
-struct Location {
-    //获取当前时间的Time
-    static var now: Location {
-        let l = Location()
-        return l
+func <(lhs: Time, rhs: Time) -> Bool {
+    return lhs.time < rhs.time
+}
+
+
+//位置信息的封装 ----------------------------------------------------------------------------
+
+// 用于获取当前位置
+class LocationMgr: NSObject, CLLocationManagerDelegate {
+
+    fileprivate static let shareInstance = LocationMgr()
+    var call: ((CLLocation?) -> Void)? = nil
+
+    private var mgr: CLLocationManager {
+        let m = CLLocationManager()
+        m.delegate = self
+        return m
+    }
+
+    func getCurLoc(callback: @escaping (CLLocation?) -> Void) {
+        guard CLLocationManager.locationServicesEnabled() else {
+            callback(nil)
+            return
+        }
+
+        call = callback
+        mgr.startUpdatingLocation()
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let callback = call {
+            callback(locations[0])
+        }
+        manager.stopUpdatingLocation()
+        call = nil
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
+    }
+}
+
+class Location {
+    var loc: CLLocation
+
+    init (l: CLLocation) {
+        self.loc = l
+    }
+
+    class func getCurLoc(callback: @escaping (Location?) -> Void) {
+        LocationMgr.shareInstance.getCurLoc() { loc in
+            callback(loc != nil ? Location(l: loc!) : nil)
+        }
     }
 
     var toString: String {
@@ -91,7 +143,8 @@ struct Location {
     }
 }
 
-//基础数据
+//基础数据 ----------------------------------------------------------------------------
+
 class BaseData: NSObject {
     let ID: DataID //本结构体的id
     init(ID: DataID) {

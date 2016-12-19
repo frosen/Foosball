@@ -87,8 +87,8 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         let ot = OperationTime(userId: DataID(ID: 123), time: Time.now, toState: .honoured)
         e.operationTimeList.append(ot)
 
-        e.location = Location()
-        e.time = Time(t: Date(timeIntervalSinceNow: 136000))
+        e.location = Location(l: CLLocation(latitude: 100, longitude: 100))
+        e.time = Time(timeIntervalSinceNow: 136000)
 
         data = []
 

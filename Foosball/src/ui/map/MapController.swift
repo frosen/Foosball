@@ -10,13 +10,15 @@ import UIKit
 
 class MapController: BaseController {
 
-    private var curLoc: Location
+    private var map: MAMapView! = nil
+
+    private var curLoc: Location? = nil
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(rootVC: RootViewController, l: Location) {
+    init(rootVC: RootViewController, l: Location? = nil) {
         curLoc = l
         super.init(rootVC: rootVC)
     }
@@ -30,13 +32,18 @@ class MapController: BaseController {
         title = "地图"
         navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ScanViewController.onBack), image: "go_back")
 
-        let map = MAMapView(frame: baseView.bounds)
+        map = MAMapView(frame: baseView.bounds)
         baseView.addSubview(map)
+        map.setZoomLevel(15, animated: false)
         map.isShowsUserLocation = true
         map.userTrackingMode = .follow
     }
 
     func onBack() {
         let _ = navigationController?.popViewController(animated: true)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
 }
