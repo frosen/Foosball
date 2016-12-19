@@ -30,7 +30,8 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         tableView.delegate = self
         tableView.dataSource = self
 
-        tableView.separatorStyle = .none //不用他的分割线，自己画
+        tableView.separatorStyle = .none //极简风
+        tableView.backgroundColor = UIColor.white
 
         tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -3) //否则滚动条和屏幕边会有一段间隔
     }
@@ -77,7 +78,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 5 //数据行之间的留白
+        return 20 //数据行之间的留白
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
