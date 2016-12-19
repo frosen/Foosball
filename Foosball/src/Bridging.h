@@ -13,6 +13,5 @@
 
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <MAMapKit/MAMapKit.h>
-#import <AMapLocationKit/AMapLocationKit.h>
 
 #endif /* Bridging_h */

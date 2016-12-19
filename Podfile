@@ -11,7 +11,6 @@ pod 'SKPhotoBrowser', :git => 'https://github.com/suzuki-0000/SKPhotoBrowser.git
 
 pod 'AMap2DMap'
 pod 'AMapSearch'
-pod 'AMapLocation'
 
 end
 
