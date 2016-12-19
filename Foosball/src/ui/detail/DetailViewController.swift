@@ -8,14 +8,14 @@
 
 import UIKit
 
-class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource, InputViewDelegate {
+class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource, DetailToolbarDelegate, InputViewDelegate {
 
     private var curEventId: DataID! = nil
     private var curEvent: Event! = nil
     private var sectionNum: Int = 0
 
     var tableView: UITableView! = nil
-    private var toolbar: Toolbar! = nil
+    private var toolbar: DetailToolbar! = nil
     private var textInputView: InputView! = nil
     private var isShowKeyboard: Bool = false
 
@@ -50,13 +50,11 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 //        tableView.backgroundColor = UIColor.white //最后再让背景变成白色，否则现在不易设计
 
         //按钮栏
-        toolbar = Toolbar()
+        toolbar = DetailToolbar()
         baseView.addSubview(toolbar)
-
-        toolbar.btn1.setTitle("ppp", for: .normal)
-        toolbar.btn2.setTitle("ggg", for: .normal)
-
+        toolbar.delegate = self
         toolbar.frame.origin.y = baseView.frame.height - toolbar.frame.height
+
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: toolbar.frame.height, right: 0)
 
         //隐藏在最下面的输入栏
