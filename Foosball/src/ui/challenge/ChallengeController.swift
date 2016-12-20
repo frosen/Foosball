@@ -22,7 +22,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         print("挑战页面")
 
         //标题
-        title = "兑现"
+        title = "测试"
         
         //创建tableView
         tableView = UITableView(frame: baseView.bounds, style: .grouped)

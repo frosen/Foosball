@@ -89,19 +89,18 @@ class DetailMsgCell: BaseCell {
         contentView.addSubview(nameLbl)
         nameLbl.font = TextFont
         nameLbl.textColor = SubTitleColor
-        nameLbl.snp.makeConstraints{ make in
-            make.top.equalTo(contentView.snp.top).offset(11)
-            make.left.equalTo(contentView.snp.left).offset(DetailMsgCell.msgStrPosX)
-        }
+        nameLbl.frame = CGRect(x: DetailMsgCell.msgStrPosX, y: 11, width: 150, height: 17)
+        nameLbl.textAlignment = .left
+
+        nameLbl.numberOfLines = 1
+        nameLbl.lineBreakMode = .byTruncatingTail // 行尾有超出用...
 
         timeLbl = UILabel()
         contentView.addSubview(timeLbl)
         timeLbl.font = TextFont
         timeLbl.textColor = SubTitleColor
-        timeLbl.snp.makeConstraints{ make in
-            make.top.equalTo(contentView.snp.top).offset(11)
-            make.right.equalTo(contentView.snp.right).inset(DetailG.headMargin)
-        }
+        timeLbl.frame = CGRect(x: w - DetailG.headMargin - 100, y: 11, width: 100, height: 17)
+        timeLbl.textAlignment = .right
 
         //创建文本
         txtLbl = UILabel()
@@ -129,12 +128,10 @@ class DetailMsgCell: BaseCell {
 
         //名字和时间
         nameLbl.text = user.name
-        nameLbl.sizeToFit()
         timeLbl.text = msgStru.time.toString
-        timeLbl.sizeToFit()
 
         //文本
-        let height = DetailG.calculateLblHeight(msgStru.msg, w: DetailMsgCell.msgStrWidth, style: DetailMsgCell.lblStyleAttri)
+        let height = h - (DetailG.subTitleHeight + DetailG.contentBottomHeight) 
         txtLbl.frame = CGRect(x: DetailMsgCell.msgStrPosX, y: DetailG.subTitleHeight, width: DetailMsgCell.msgStrWidth, height: height)
 
         let attriStr = NSAttributedString(string: msgStru.msg, attributes: DetailMsgCell.lblStyleAttri)
