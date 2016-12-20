@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource {
+class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource, BaseCellDelegate {
     private var dataPage: Int = 1
     private var tableView: UITableView! = nil
 
@@ -87,9 +87,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let e: Event = curActiveEvents[indexPath.section]
-        return BaseCell.create(indexPath, tableView: tableView, d: e, ctrlr: self) { indexPath in
-            return BaseCell.CInfo(id: "chalCellId", c: ChallengeCell.self)
-        }
+        return BaseCell.create(indexPath, tableView: tableView, d: e, ctrlr: self, delegate: self)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -99,5 +97,11 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         let e: Event = curActiveEvents[indexPath.section]
         vc.setDataId(e.ID)
         navigationController!.pushViewController(vc, animated: true)
+    }
+
+    // BaseCellDelegate --------------------------------------------------------------
+
+    func getCInfo(_ indexPath: IndexPath) -> BaseCell.CInfo {
+        return BaseCell.CInfo(id: "chalCellId", c: ChallengeCell.self)
     }
 }

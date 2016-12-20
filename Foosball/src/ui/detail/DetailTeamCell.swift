@@ -22,7 +22,7 @@ class DetailTeamHeadCell: DetailHeadCell {
 // 一行6个头像，头像下面有状态
 // 超过6个则换行
 // 分成友方，敌方，观众
-class DetailTeamCell: BaseCell {
+class DetailTeamCell: StaticCell {
     private static let memberCountIn1Line: CGFloat = 6
     private static let avatarMargin: CGFloat = 5
     private static let avatarTotalWidth: CGFloat = DetailG.widthWithoutMargin + 2 * avatarMargin

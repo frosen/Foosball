@@ -20,7 +20,7 @@ class DetailImageHeadCell: DetailHeadCell {
     }
 }
 
-class DetailImageCell: BaseCell, SKPhotoBrowserDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private static let imageCountIn1Line: CGFloat = 4
     private static let imgMargin: CGFloat = 1
     private static let imageViewWidth: CGFloat = (DetailG.widthWithoutMargin + 2 * imgMargin) / imageCountIn1Line

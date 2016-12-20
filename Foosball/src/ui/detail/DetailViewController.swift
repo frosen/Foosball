@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource, DetailToolbarDelegate, InputViewDelegate {
+class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource, StaticCellDelegate, DetailToolbarDelegate, InputViewDelegate {
 
     private var curEventId: DataID! = nil
     private var curEvent: Event! = nil
@@ -72,13 +72,11 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(DetailViewController.endInput(ges:)))
         baseView.addGestureRecognizer(tap)
-        
     }
 
     private let DataObKey = "DetailViewController"
     override func initData() {
         APP.activeEventsMgr.register(observer: self, key: DataObKey)
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -91,11 +89,24 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         APP.activeEventsMgr.set(hide: true, key: DataObKey)
     }
 
+    // cell 滑动优化相关 ==============================================================================
+    private let staticVarCellIndexList = [
+        IndexPath(row: 1, section: 1),
+        IndexPath(row: 2, section: 1),
+        IndexPath(row: 1, section: 2)
+    ] // 静态cell，但是又需要通过setData变化的
+
     // 优化高度获取，避免每次都进行计算
     private var cellHeightDict: [Int: CGFloat] = [:]
     private func getCellHeightDictIndex(section: Int, row: Int) -> Int {
         return section * 1000 + row
     }
+
+    // 优化cell的获取，配合StaticCell的needUpdate属性，只有需要更新的时候再调用，可以大幅度优化性能
+    private var cellNeedUpdate: [IndexPath: Bool] = [:]
+
+    // 在初始化的时候直接生成的cell，先放到这里
+    private var holdCellDict: [IndexPath: UITableViewCell] = [:]
 
     // ActiveEventsMgrObserver ==============================================================================
 
@@ -104,6 +115,13 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             sectionNum = 4
             curEvent = e
             cellHeightDict.removeAll()
+
+            // 预生成这些static cell，避免第一次滑动造成的卡顿
+            for indexPath in staticVarCellIndexList {
+                let c = StaticCell.create(indexPath, tableView: tableView, d: curEvent, ctrlr: self, delegate: self)
+                holdCellDict[indexPath] = c
+            }
+            
             tableView.reloadData()
             saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
         }
@@ -116,15 +134,11 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             tableView.beginUpdates()
 
             // team和瞬间的更新
-            let indexList = [
-                IndexPath(row: 1, section: 1),
-                IndexPath(row: 2, section: 1),
-                IndexPath(row: 1, section: 2)
-            ]
-            for indexPath in indexList {
+            for indexPath in staticVarCellIndexList {
                 cellHeightDict.removeValue(forKey: getCellHeightDictIndex(section: indexPath.section, row: indexPath.row))
+                cellNeedUpdate[indexPath] = true
             }
-            tableView.reloadRows(at: indexList, with: .none)
+            tableView.reloadRows(at: staticVarCellIndexList, with: .none)
 
             // 前几个不是上次记录的最新的对话，展示在ui上
             var i = e.msgList.count - 1
@@ -284,44 +298,67 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return StaticCell.create(indexPath, tableView: tableView, d: curEvent, ctrlr: self) { indexPath in
-            switch indexPath.section {
+        if let c = holdCellDict[indexPath] {
+            holdCellDict.removeValue(forKey: indexPath)
+            return c
+        } else {
+            return StaticCell.create(indexPath, tableView: tableView, d: curEvent, ctrlr: self, delegate: self)
+        }
+    }
+
+    // BaseCellDelegate --------------------------------------------------------------
+
+    func getCInfo(_ indexPath: IndexPath) -> BaseCell.CInfo {
+        switch indexPath.section {
+        case 0:
+            switch indexPath.row {
             case 0:
-                switch indexPath.row {
-                case 0:
-                    return BaseCell.CInfo(id: "TitCId", c: DetailTitleCell.self)
-                case 1:
-                    return BaseCell.CInfo(id: "ConCId", c: DetailContentCell.self)
-                case 2:
-                    return BaseCell.CInfo(id: "HonCId", c: DetailWagerCell.self)
-                case 3:
-                    return BaseCell.CInfo(id: "TimCId", c: DetailTimeCell.self)
-                default:
-                    return BaseCell.CInfo(id: "LocCId", c: DetailLocationCell.self)
-                }
+                return BaseCell.CInfo(id: "TitCId", c: DetailTitleCell.self)
             case 1:
-                switch indexPath.row {
-                case 0:
-                    return BaseCell.CInfo(id: "THCId", c: DetailTeamHeadCell.self)
-                default:
-                    return BaseCell.CInfo(id: "TCId", c: DetailTeamCell.self)
-                }
+                return BaseCell.CInfo(id: "ConCId", c: DetailContentCell.self)
             case 2:
-                switch indexPath.row {
-                case 0:
-                    return BaseCell.CInfo(id: "IHCId", c: DetailImageHeadCell.self)
-                default:
-                    return BaseCell.CInfo(id: "ICId", c: DetailImageCell.self)
-                }
+                return BaseCell.CInfo(id: "HonCId", c: DetailWagerCell.self)
+            case 3:
+                return BaseCell.CInfo(id: "TimCId", c: DetailTimeCell.self)
             default:
-                switch indexPath.row {
-                case 0:
-                    return BaseCell.CInfo(id: "MHCId", c: DetailMsgHeadCell.self)
-                default:
-                    return BaseCell.CInfo(id: "MCId", c: DetailMsgCell.self)
-                }
+                return BaseCell.CInfo(id: "LocCId", c: DetailLocationCell.self)
+            }
+        case 1:
+            switch indexPath.row {
+            case 0:
+                return BaseCell.CInfo(id: "THCId", c: DetailTeamHeadCell.self)
+            case 1: // 因为是静态cell，需要保证每个对应唯一的id
+                return BaseCell.CInfo(id: "THCId-self", c: DetailTeamCell.self)
+            case 2:
+                return BaseCell.CInfo(id: "THCId-op", c: DetailTeamCell.self)
+            default:
+                return BaseCell.CInfo(id: "TCId-other", c: DetailTeamCell.self)
+            }
+        case 2:
+            switch indexPath.row {
+            case 0:
+                return BaseCell.CInfo(id: "IHCId", c: DetailImageHeadCell.self)
+            default:
+                return BaseCell.CInfo(id: "ICId", c: DetailImageCell.self)
+            }
+        default:
+            switch indexPath.row {
+            case 0:
+                return BaseCell.CInfo(id: "MHCId", c: DetailMsgHeadCell.self)
+            default:
+                return BaseCell.CInfo(id: "MCId", c: DetailMsgCell.self)
             }
         }
+    }
+
+    func getIfUpdate(_ indexPath: IndexPath) -> Bool {
+        if let need = cellNeedUpdate[indexPath] {
+            if need == true {
+                cellNeedUpdate[indexPath] = false
+                return true
+            }
+        }
+        return false
     }
 
     // 回调 ==================================================================================================================

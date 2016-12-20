@@ -95,17 +95,48 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         e.msgList = [m1, m2, m3, m4, m5]
         data.append(e)
         e = Event(ID: DataID(ID: 50001))
+        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        e.opponentStateList = [pk1, pk2, pk3]
         data.append(e)
 
         e = Event(ID: DataID(ID: 50001))
+        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        e.opponentStateList = [pk1, pk2, pk3]
         data.append(e)
+
         e = Event(ID: DataID(ID: 50001))
+        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        e.opponentStateList = [pk1, pk2, pk3]
         data.append(e)
+
         e = Event(ID: DataID(ID: 50001))
+        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        e.opponentStateList = [pk1, pk2, pk3]
         data.append(e)
+
         e = Event(ID: DataID(ID: 50001))
+        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        e.opponentStateList = [pk1, pk2, pk3]
         data.append(e)
+
         e = Event(ID: DataID(ID: 50001))
+        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        e.opponentStateList = [pk1, pk2, pk3]
+        data.append(e)
+
+        e = Event(ID: DataID(ID: 50001))
+        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        e.opponentStateList = [pk1, pk2, pk3]
+        data.append(e)
+
+        e = Event(ID: DataID(ID: 50001))
+        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        e.opponentStateList = [pk1, pk2, pk3]
+        data.append(e)
+
+        e = Event(ID: DataID(ID: 50001))
+        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        e.opponentStateList = [pk1, pk2, pk3]
         data.append(e)
 
         // 初始化时候直接启动轮询

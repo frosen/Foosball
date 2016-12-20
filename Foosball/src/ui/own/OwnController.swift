@@ -19,7 +19,7 @@ struct NorCellData {
     }
 }
 
-class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UITableViewDataSource {
+class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UITableViewDataSource, BaseCellDelegate {
     //信息头，比赛成绩，QR，其他项目等group
     private let group = [
         //section
@@ -160,19 +160,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
     private let ownNorCellId = "ONorCId"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 || indexPath.section == 1 {
-            return BaseCell.create(indexPath, tableView: tableView, d: curUser, ctrlr: self) { indexPath in
-                switch indexPath.section {
-                case 0:
-                    switch indexPath.row {
-                    case 0:
-                        return BaseCell.CInfo(id: "OScoCId", c: OwnScoreCell.self)
-                    default:
-                        return BaseCell.CInfo(id: "ORankCId", c: OwnRankCell.self)
-                    }
-                default:
-                    return BaseCell.CInfo(id: "OQRCId", c: OwnQRCell.self)
-                }
-            }
+            return BaseCell.create(indexPath, tableView: tableView, d: curUser, ctrlr: self, delegate: self)
         } else {
             var cell: UITableViewCell?
             cell = tableView.dequeueReusableCell(withIdentifier: ownNorCellId)
@@ -189,10 +177,21 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     }
 
-    //scroll view
-//    override func scrollViewDidScroll(scrollView: UIScrollView) {
-//        print(scrollView.contentOffset.y)
-//    }
+    // BaseCellDelegate --------------------------------------------------------------
+
+    func getCInfo(_ indexPath: IndexPath) -> BaseCell.CInfo {
+        switch indexPath.section {
+        case 0:
+            switch indexPath.row {
+            case 0:
+                return BaseCell.CInfo(id: "OScoCId", c: OwnScoreCell.self)
+            default:
+                return BaseCell.CInfo(id: "ORankCId", c: OwnRankCell.self)
+            }
+        default:
+            return BaseCell.CInfo(id: "OQRCId", c: OwnQRCell.self)
+        }
+    }
 }
 
 

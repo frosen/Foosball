@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDataSource, CreateStep3ToolbarDelegate {
+class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDataSource, StaticCellDelegate, CreateStep3ToolbarDelegate {
 
     private var tableView: UITableView! = nil
     private var toolbar: CreateStep3Toolbar! = nil
@@ -79,36 +79,44 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return StaticCell.create(indexPath, tableView: tableView, d: rootCtrlr.createEvent, ctrlr: self) { indexPath in
-            switch indexPath.section {
-            case 0:
-                switch indexPath.row {
-                case 0:
-                    return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
-                default:
-                    return BaseCell.CInfo(id: "CS3LocCId", c: CreateStep3LocationCell.self)
-                }
-            case 1:
-                switch indexPath.row {
-                case 0:
-                    return BaseCell.CInfo(id: "CS3WagerHCId", c: CreateStep3WagerHeadCell.self)
-                default:
-                    return BaseCell.CInfo(id: "CS3WagerCId", c: CreateStep3WagerCell.self)
-                }
-            default:
-                switch indexPath.row {
-                case 0:
-                    return BaseCell.CInfo(id: "CS3DetailHCId", c: CreateStep3DetailHeadCell.self)
-                default:
-                    return BaseCell.CInfo(id: "CS3DetailCId", c: CreateStep3DetailCell.self)
-                }
-            }
-        }
+        return StaticCell.create(indexPath, tableView: tableView, d: rootCtrlr.createEvent, ctrlr: self, delegate: self)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let cell = tableView.cellForRow(at: indexPath) as! BaseCell
         cell.onSelected(rootCtrlr.createEvent)
+    }
+
+    // BaseCellDelegate --------------------------------------------------------------
+
+    func getCInfo(_ indexPath: IndexPath) -> BaseCell.CInfo {
+        switch indexPath.section {
+        case 0:
+            switch indexPath.row {
+            case 0:
+                return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
+            default:
+                return BaseCell.CInfo(id: "CS3LocCId", c: CreateStep3LocationCell.self)
+            }
+        case 1:
+            switch indexPath.row {
+            case 0:
+                return BaseCell.CInfo(id: "CS3WagerHCId", c: CreateStep3WagerHeadCell.self)
+            default:
+                return BaseCell.CInfo(id: "CS3WagerCId", c: CreateStep3WagerCell.self)
+            }
+        default:
+            switch indexPath.row {
+            case 0:
+                return BaseCell.CInfo(id: "CS3DetailHCId", c: CreateStep3DetailHeadCell.self)
+            default:
+                return BaseCell.CInfo(id: "CS3DetailCId", c: CreateStep3DetailCell.self)
+            }
+        }
+    }
+
+    func getIfUpdate(_ indexPath: IndexPath) -> Bool {
+        return false
     }
 }

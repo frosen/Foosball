@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol BaseCellDelegate {
+    func getCInfo(_ indexPath: IndexPath) -> BaseCell.CInfo
+}
+
 class BaseCell: UITableViewCell {
     var w: CGFloat = 0
     var h: CGFloat = 0
@@ -45,8 +49,8 @@ class BaseCell: UITableViewCell {
     }
 
     // 利用swift的动态语言机制，根据配置表创建cell
-    class func create(_ index: IndexPath, tableView: UITableView, d: BaseData, ctrlr: UIViewController,  getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
-        let info: CInfo! = getInfoCallback(index)
+    class func create(_ index: IndexPath, tableView: UITableView, d: BaseData, ctrlr: UIViewController, delegate: BaseCellDelegate) -> UITableViewCell {
+        let info: CInfo! = delegate.getCInfo(index)
 
         var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: info.id)
         if cell == nil {
@@ -67,13 +71,17 @@ class BaseCell: UITableViewCell {
     }
 }
 
+protocol StaticCellDelegate: BaseCellDelegate {
+    func getIfUpdate(_ indexPath: IndexPath) -> Bool
+}
+
 // 静态cell，不会进行重用，如果要重置，要通过reset方法
 class StaticCell: BaseCell {
-    override class func create(_ index: IndexPath, tableView: UITableView, d: BaseData, ctrlr: UIViewController,  getInfoCallback: (IndexPath) -> CInfo) -> UITableViewCell {
-        let info: CInfo! = getInfoCallback(index)
+    class func create(_ index: IndexPath, tableView: UITableView, d: BaseData, ctrlr: UIViewController, delegate: StaticCellDelegate) -> UITableViewCell {
+        let info: CInfo! = delegate.getCInfo(index)
 
         if !(info.cls is StaticCell.Type) { //如果不是静态cell，还是用basecell的创建
-            return BaseCell.create(index, tableView: tableView, d: d, ctrlr: ctrlr, getInfoCallback: getInfoCallback)
+            return BaseCell.create(index, tableView: tableView, d: d, ctrlr: ctrlr, delegate: delegate)
         }
 
         var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: info.id)
@@ -86,6 +94,9 @@ class StaticCell: BaseCell {
             staticCell.h = type(of: staticCell).getCellHeight(d, index: index) //dynamicType可以获取对象的类，然后就能使用类函数了
             staticCell.ctrlr = ctrlr
             staticCell.initData(d, index: index)
+            staticCell.setData(d, index: index)
+        } else if delegate.getIfUpdate(index) == true {
+            let staticCell = cell as! StaticCell
             staticCell.setData(d, index: index)
         }
         
