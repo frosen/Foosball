@@ -91,12 +91,19 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         APP.activeEventsMgr.set(hide: true, key: DataObKey)
     }
 
+    // 优化高度获取，避免每次都进行计算
+    private var cellHeightDict: [Int: CGFloat] = [:]
+    private func getCellHeightDictIndex(section: Int, row: Int) -> Int {
+        return section * 1000 + row
+    }
+
     // ActiveEventsMgrObserver ==============================================================================
 
     func onInit(activeEvents: [Event]) {
         if let e = getCurEvent(activeEvents) {
             sectionNum = 4
             curEvent = e
+            cellHeightDict.removeAll()
             tableView.reloadData()
             saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
         }
@@ -114,15 +121,19 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
                 IndexPath(row: 2, section: 1),
                 IndexPath(row: 1, section: 2)
             ]
+            for indexPath in indexList {
+                cellHeightDict.removeValue(forKey: getCellHeightDictIndex(section: indexPath.section, row: indexPath.row))
+            }
             tableView.reloadRows(at: indexList, with: .none)
 
             // 前几个不是上次记录的最新的对话，展示在ui上
             var i = e.msgList.count - 1
             var resetRow: Int = 1
+            var resetRowList: [IndexPath] = []
             while true {
                 let msg = e.msgList[i]
                 if !isNewestMsg(msg) {
-                    tableView.insertRows(at: [IndexPath(row: resetRow, section: 3)], with: .fade)
+                    resetRowList.append(IndexPath(row: resetRow, section: 3))
                     resetRow += 1
                 } else {
                     break
@@ -132,6 +143,31 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
                 if i < 0 {
                     break
                 }
+            }
+
+            let addRowCount = resetRowList.count
+            if addRowCount > 0 {
+                // 把cellHeightDict里面的数据往后移
+                var i = 1
+                var indexList: [(Int, CGFloat)] = []
+                while true {
+                    let index = getCellHeightDictIndex(section: 3, row: i)
+                    guard let h = cellHeightDict[index] else {
+                        break
+                    }
+
+                    let tup: (Int, CGFloat) = (index + addRowCount, h)
+                    indexList.append(tup)
+                    cellHeightDict.removeValue(forKey: index)
+
+                    i += 1
+                }
+                for tup in indexList {
+                    cellHeightDict[tup.0] = tup.1
+                }
+
+                // 插入新cell
+                tableView.insertRows(at: resetRowList, with: .fade)
             }
             tableView.endUpdates()
 
@@ -195,46 +231,56 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch (indexPath as NSIndexPath).section {
+        let s = indexPath.section
+        let r = indexPath.row
+        if let h = cellHeightDict[getCellHeightDictIndex(section: s, row: r)] {
+            return h
+        }
+
+        var height: CGFloat
+
+        switch s {
         case 0: //title + detail + wager
-            switch (indexPath as NSIndexPath).row {
+            switch r {
             case 0:
-                return DetailTitleCell.getCellHeight()
+                height = DetailTitleCell.getCellHeight()
             case 1:
-                return DetailContentCell.getCellHeight(curEvent, index: indexPath)
+                height = DetailContentCell.getCellHeight(curEvent, index: indexPath)
             case 2:
-                return DetailWagerCell.getCellHeight(curEvent, index: indexPath)
+                height = DetailWagerCell.getCellHeight(curEvent, index: indexPath)
             case 3:
-                return DetailTimeCell.getCellHeight(curEvent, index: indexPath)
+                height = DetailTimeCell.getCellHeight(curEvent, index: indexPath)
             case 4:
-                return DetailLocationCell.getCellHeight(curEvent, index: indexPath)
+                height = DetailLocationCell.getCellHeight(curEvent, index: indexPath)
             default:
-                return 0
+                height = 0
             }
         case 1: //person(s) + head
-            switch (indexPath as NSIndexPath).row {
+            switch r {
             case 0:
-                return DetailTeamHeadCell.getCellHeight()
+                height = DetailTeamHeadCell.getCellHeight()
             default:
-                return DetailTeamCell.getCellHeight(curEvent, index: indexPath)
+                height = DetailTeamCell.getCellHeight(curEvent, index: indexPath)
             }
         case 2: //比分(s) + head
-            switch (indexPath as NSIndexPath).row {
+            switch r {
             case 0:
-                return DetailImageHeadCell.getCellHeight()
+                height = DetailImageHeadCell.getCellHeight()
             default:
-                return DetailImageCell.getCellHeight(curEvent, index: indexPath)
+                height = DetailImageCell.getCellHeight(curEvent, index: indexPath)
             }
         case 3: //对话(s) + head
-            switch (indexPath as NSIndexPath).row {
+            switch r {
             case 0:
-                return DetailMsgHeadCell.getCellHeight()
+                height = DetailMsgHeadCell.getCellHeight()
             default:
-                return DetailMsgCell.getCellHeight(curEvent, index: indexPath)
+                height = DetailMsgCell.getCellHeight(curEvent, index: indexPath)
             }
         default:
-            return 0
+            height = 0
         }
+        cellHeightDict[getCellHeightDictIndex(section: s, row: r)] = height
+        return height
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
