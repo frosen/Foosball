@@ -340,7 +340,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
     final public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-
+        
         let label = UILabel()
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true

@@ -113,6 +113,8 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
 
         picker.delegate = self
         picker.dataSource = self
+
+        picker.selectRow(1, inComponent: 0, animated: false)
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
@@ -135,11 +137,14 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
 
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if component == 0 {
-            return 24
+            return WagerList.count
         } else if component == 1 {
-            return 60
+            let r0 = pickerView.selectedRow(inComponent: 0)
+            return WagerList[r0].1.count
         } else {
-            return 60
+            let r0 = pickerView.selectedRow(inComponent: 0)
+            let r1 = pickerView.selectedRow(inComponent: 1)
+            return (WagerList[r0].1)[r1].1.count
         }
     }
 
@@ -151,10 +156,28 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
         label.textColor = UIColor.black
         label.backgroundColor = UIColor.clear
 
-        let timeNum = (row + 1) % (component == 0 ? 24 : 60)
-        label.text = String(format: "%02d", timeNum)
+        switch component {
+        case 0:
+            label.text = WagerList[row].0
+        case 1:
+            let r0 = pickerView.selectedRow(inComponent: 0)
+            label.text = (WagerList[r0].1)[row].0
+        default:
+            let r0 = pickerView.selectedRow(inComponent: 0)
+            let r1 = pickerView.selectedRow(inComponent: 1)
+            label.text = ((WagerList[r0].1)[r1].1)[row]
+        }
 
         return label
+    }
+
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if component == 0 {
+            pickerView.reloadComponent(1)
+            pickerView.reloadComponent(2)
+        } else if component == 1 {
+            pickerView.reloadComponent(2)
+        }
     }
 }
 

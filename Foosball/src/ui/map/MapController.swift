@@ -31,10 +31,14 @@ class MapController: BaseController, MAMapViewDelegate {
 
         //标题
         title = "地图"
-        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ScanViewController.onBack), image: "go_back")
+
+        navigationItem.hidesBackButton = true
+        let item = UIBarButtonItem(title: "确定", style: .done, target: self, action: #selector(MapController.onConfirm))
+        item.tintColor = UIColor.white
+        navigationItem.rightBarButtonItem = item
     }
 
-    func onBack() {
+    func onConfirm() {
         let _ = navigationController?.popViewController(animated: true)
     }
 
@@ -47,7 +51,10 @@ class MapController: BaseController, MAMapViewDelegate {
         map.userTrackingMode = .follow
 
         map.setZoomLevel(16, animated: false)
-        map.setCenter(curLoc!.loc!.coordinate, animated: false)
+
+        if let loc2d = curLoc?.loc?.coordinate {
+            map.setCenter(loc2d, animated: false)
+        }
 
         let mapFlag = UIImageView(image: UIImage(named: "map_flag"))
         baseView.addSubview(mapFlag)
