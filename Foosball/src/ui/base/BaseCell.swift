@@ -76,7 +76,7 @@ class StaticCell: BaseCell {
             return BaseCell.create(index, tableView: tableView, d: d, ctrlr: ctrlr, getInfoCallback: getInfoCallback)
         }
 
-        var cell: UITableViewCell? = tableView.cellForRow(at: index)
+        var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: info.id)
         if cell == nil {
             let cls = info.cls as! StaticCell.Type
             cell = cls.new(cls: cls, id: info.id)

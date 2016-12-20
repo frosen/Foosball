@@ -83,7 +83,6 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         contentBGView.backgroundColor = UIColor.white
 
         contentBGView.layer.cornerRadius = 5
-        contentBGView.layer.masksToBounds = true
 
         // 翻月箭头
         let arrowEdge: CGFloat = 30
@@ -170,7 +169,6 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
         confirmBtn.backgroundColor = BaseColor
         confirmBtn.layer.cornerRadius = 5
-        confirmBtn.layer.masksToBounds = true
 
         confirmBtn.addTarget(self, action: #selector(TimePickerView.onConfirm), for: .touchUpInside)
     }

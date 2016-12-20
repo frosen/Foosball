@@ -56,7 +56,6 @@ class CreateStep3Toolbar: BaseToolbar {
         btn2.titleLabel!.font = UIFont.systemFont(ofSize: 14)
         btn2.backgroundColor = BaseColor
         btn2.layer.cornerRadius = 3
-        btn2.layer.masksToBounds = true
     }
 
     var delegate: CreateStep3ToolbarDelegate? = nil
