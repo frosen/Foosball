@@ -66,9 +66,9 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
             case 0:
                 return CreateStep3TimeHeadCell.getCellHeight()
             case 1:
-                return CreateStep3TimeCell.getCellHeight()
+                return CreateStep3TimeCell.getCellHeight(rootCtrlr.createEvent)
             default:
-                return CreateStep3LocationCell.getCellHeight()
+                return CreateStep3LocationCell.getCellHeight(rootCtrlr.createEvent)
             }
         case 1:
             switch indexPath.row {
@@ -92,9 +92,7 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let cell = tableView.cellForRow(at: indexPath) as! BaseCell
-        cell.onSelected(rootCtrlr.createEvent)
+        
     }
 
     // BaseCellDelegate --------------------------------------------------------------
@@ -104,6 +102,8 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         case 0:
             switch indexPath.row {
             case 0:
+                return BaseCell.CInfo(id: "CS3TimeHCId", c: CreateStep3TimeHeadCell.self)
+            case 1:
                 return BaseCell.CInfo(id: "CS3TimeCId", c: CreateStep3TimeCell.self)
             default:
                 return BaseCell.CInfo(id: "CS3LocCId", c: CreateStep3LocationCell.self)

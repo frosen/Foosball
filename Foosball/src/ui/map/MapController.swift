@@ -13,13 +13,15 @@ class MapController: BaseController, MAMapViewDelegate {
     private var map: MAMapView! = nil
 
     private var curLoc: Location? = nil
+    private var callback: ((Location) -> Bool)? = nil // 获取当前中心位置的回调
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(rootVC: RootViewController, l: Location? = nil) {
+    init(rootVC: RootViewController, l: Location? = nil, call: ((Location) -> Bool)? = nil) {
         curLoc = l
+        callback = call
         super.init(rootVC: rootVC)
     }
 
@@ -32,14 +34,22 @@ class MapController: BaseController, MAMapViewDelegate {
         //标题
         title = "地图"
 
-        navigationItem.hidesBackButton = true
-        let item = UIBarButtonItem(title: "确定", style: .done, target: self, action: #selector(MapController.onConfirm))
-        item.tintColor = UIColor.white
-        navigationItem.rightBarButtonItem = item
+        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(MapController.onBack), image: "go_back")
+        if callback != nil {
+            let item = UIBarButtonItem(title: "确定", style: .done, target: self, action: #selector(MapController.onConfirm))
+            item.tintColor = UIColor.white
+            navigationItem.rightBarButtonItem = item
+        }
+    }
+
+    func onBack() {
+        let _ = navigationController?.popViewController(animated: true)
     }
 
     func onConfirm() {
-        let _ = navigationController?.popViewController(animated: true)
+        if callback == nil || callback!(Location()) == true {
+            let _ = navigationController?.popViewController(animated: true)
+        }
     }
 
     override func initData() {

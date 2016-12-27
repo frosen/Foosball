@@ -200,15 +200,18 @@ class DetailTimeCell: DetailStringBtnCell {
         print("onClickEnterCalendarBtn")
 
         if tpv == nil {
-            tpv = TimePickerView(t: curEvent.time, parents: ctrlr.view) { _ in
-                // 动画消失
-                self.tpv!.isUserInteractionEnabled = false
-                UIView.animate(withDuration: 0.3) {
-                    self.tpv!.alpha = 0
+            tpv = TimePickerView(t: curEvent.time, parents: ctrlr.view) { t in
+                if self.onGetTimeFromPicker(t, e: self.curEvent) {
+                    // 动画消失
+                    self.tpv!.isUserInteractionEnabled = false
+                    UIView.animate(withDuration: 0.3) {
+                        self.tpv!.alpha = 0
+                    }
                 }
+
             }
             ctrlr.view.addSubview(tpv!)
-            tpv!.setChangeDate(enable: false)
+            setTimePickerAttri(tpv!)
             tpv!.alpha = 0
         }
 
@@ -217,6 +220,14 @@ class DetailTimeCell: DetailStringBtnCell {
         UIView.animate(withDuration: 0.3) {
             self.tpv!.alpha = 1
         }
+    }
+
+    func setTimePickerAttri(_ tpv: TimePickerView) {
+        tpv.setChangeDate(enable: false)
+    }
+
+    func onGetTimeFromPicker(_ t: Time, e: Event) -> Bool {
+        return true
     }
 }
 
@@ -246,7 +257,10 @@ class DetailLocationCell: DetailStringBtnCell {
 
     func onClickEnterMapBtn() {
         print("onClickEnterMapBtn")
+        createMapVC(e: curEvent)
+    }
 
+    func createMapVC(e: Event) {
         let rootVC = (ctrlr as! DetailViewController).rootVC
         let mapVC = MapController(rootVC: rootVC, l: curEvent.location)
         ctrlr.navigationController!.pushViewController(mapVC, animated: true)
