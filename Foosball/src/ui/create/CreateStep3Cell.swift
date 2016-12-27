@@ -1,12 +1,19 @@
 //
 //  CreateStep3Cell.swift
 //  Foosball
-//
+//  下面很多的cell样式和detail中的类似
 //  Created by 卢乐颜 on 2016/12/11.
 //  Copyright © 2016年 卢乐颜. All rights reserved.
 //
 
 import UIKit
+
+class CreateStep3TimeHeadCell: DetailHeadCell {
+    override func initData(_ d: BaseData?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
+        createHead("基本信息")
+    }
+}
 
 class CreateStep3TimeCell: StaticCell {
 
@@ -93,10 +100,10 @@ class CreateStep3LocationCell: StaticCell {
     }
 }
 
-class CreateStep3WagerHeadCell: StaticCell {
+class CreateStep3WagerHeadCell: DetailHeadCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        textLabel!.font = UIFont.systemFont(ofSize: 13)
-        textLabel!.text = "奖杯"
+        self.selectionStyle = .none //使选中后没有反应
+        createHead("奖杯")
     }
 }
 

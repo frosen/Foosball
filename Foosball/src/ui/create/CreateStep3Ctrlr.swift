@@ -14,10 +14,16 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     private var toolbar: CreateStep3Toolbar! = nil
     
     override func setUI() {
+
+        // tableView的样子和detail类似
         tableView = UITableView(frame: CGRect(x: 0, y: 64, width: pageSize.width, height: pageSize.height - 64))
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
+
+        tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false //隐藏滑动条
+        tableView.backgroundColor = UIColor.white
 
         //底部的按钮层 直接发布、邀请朋友
         toolbar = CreateStep3Toolbar()
@@ -29,6 +35,7 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     }
 
     // tableview -----------------------------------------------------------------------
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
@@ -36,7 +43,7 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 2 // 时间 + 地点
+            return 3 // head + 时间 + 地点
         case 1:
             return 2 // 标题 + 默认的一个
         default:
@@ -45,11 +52,11 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0.1
+        return section == 0 ? 0.1 : 25
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 5
+        return 1
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -57,6 +64,8 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         case 0:
             switch indexPath.row {
             case 0:
+                return CreateStep3TimeHeadCell.getCellHeight()
+            case 1:
                 return CreateStep3TimeCell.getCellHeight()
             default:
                 return CreateStep3LocationCell.getCellHeight()

@@ -10,9 +10,6 @@ import UIKit
 
 class DetailMsgHeadCell: DetailHeadCell {
     private var isShowKeyboard: Bool = false
-    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
-        return 44
-    }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应

@@ -256,8 +256,6 @@ class DetailLocationCell: DetailStringBtnCell {
 // =============================================================================================================
 
 class DetailHeadCell: StaticCell {
-    var lbl: UILabel! = nil
-
     func createHead(_ s: String) {
         let vw: CGFloat = 5
         let vh: CGFloat = 15
@@ -266,7 +264,7 @@ class DetailHeadCell: StaticCell {
         contentView.addSubview(icon)
         icon.backgroundColor = BaseColor
 
-        lbl = UILabel()
+        let lbl = UILabel()
         contentView.addSubview(lbl)
         lbl.snp.makeConstraints{ make in
             make.left.equalTo(icon.snp.right).offset(DetailG.headMargin)
