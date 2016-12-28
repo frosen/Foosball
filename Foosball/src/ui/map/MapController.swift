@@ -47,7 +47,7 @@ class MapController: BaseController, MAMapViewDelegate {
     }
 
     func onConfirm() {
-        if callback == nil || callback!(Location()) == true {
+        if callback!(curLoc!) == true {
             let _ = navigationController?.popViewController(animated: true)
         }
     }
@@ -64,6 +64,12 @@ class MapController: BaseController, MAMapViewDelegate {
 
         if let loc2d = curLoc?.loc?.coordinate {
             map.setCenter(loc2d, animated: false)
+        } else {
+            if curLoc == nil {
+                curLoc = Location()
+            }
+            let userLoc = map.userLocation.coordinate
+            curLoc!.loc = CLLocation(latitude: userLoc.latitude, longitude: userLoc.longitude)
         }
 
         let mapFlag = UIImageView(image: UIImage(named: "map_flag"))
@@ -74,6 +80,8 @@ class MapController: BaseController, MAMapViewDelegate {
     // MAMapViewDelegate ---------------------------------------------
     
     func mapView(_ mapView: MAMapView!, mapDidMoveByUser wasUserAction: Bool) {
-        print(mapView.centerCoordinate)
+        let loc = mapView.centerCoordinate
+        print(loc)
+        curLoc!.loc = CLLocation(latitude: loc.latitude, longitude: loc.longitude)
     }
 }

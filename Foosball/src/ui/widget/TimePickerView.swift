@@ -20,10 +20,9 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     private var title: UILabel! = nil
     private var calendarView: UIView! = nil
     private var timePicker: UIPickerView! = nil
+    private var confirmBtn: UIButton! = nil
 
-    private var confirmCallback: ((Time) -> Void)! = nil
-
-    private var canChangeDate: Bool = true
+    private var confirmCallback: ((Time?) -> Void)! = nil
 
     // 展示的年月
     private var onShowYear: Int = 0
@@ -42,7 +41,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(t: Time, parents: UIView, callback: @escaping ((Time) -> Void)) {
+    init(t: Time, parents: UIView, callback: @escaping ((Time?) -> Void)) {
         let ww = parents.bounds.width
         let wh = parents.bounds.height
         super.init(frame: CGRect(x: 0, y: 0, width: ww, height: wh))
@@ -157,11 +156,13 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         )
 
         // 下方按钮
-        let confirmBtn = UIButton(type: .custom)
+        let btnSize = CGSize(width: 108, height: 28)
+
+        confirmBtn = UIButton(type: .custom)
         contentBGView.addSubview(confirmBtn)
 
-        confirmBtn.bounds = CGRect(x: 0, y: 0, width: 108, height: 28)
-        confirmBtn.center = CGPoint(x: contentBGView.frame.width / 2, y: contentBGView.frame.height - tailHeight / 2)
+        confirmBtn.bounds = CGRect(x: 0, y: 0, width: btnSize.width, height: btnSize.height)
+        confirmBtn.center = CGPoint(x: contentBGView.frame.width / 2 + btnSize.width / 2 + 12, y: contentBGView.frame.height - tailHeight / 2)
 
         confirmBtn.setTitle("确  定", for: .normal)
         confirmBtn.setTitleColor(UIColor.white, for: .normal)
@@ -171,6 +172,23 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         confirmBtn.layer.cornerRadius = 5
 
         confirmBtn.addTarget(self, action: #selector(TimePickerView.onConfirm), for: .touchUpInside)
+
+        let cancelBtn = UIButton(type: .custom)
+        contentBGView.addSubview(cancelBtn)
+
+        cancelBtn.bounds = CGRect(x: 0, y: 0, width: btnSize.width, height: btnSize.height)
+        cancelBtn.center = CGPoint(x: contentBGView.frame.width / 2 - btnSize.width / 2 - 12, y: contentBGView.frame.height - tailHeight / 2)
+
+        cancelBtn.setTitle("取  消", for: .normal)
+        cancelBtn.setTitleColor(BaseColor, for: .normal)
+        cancelBtn.titleLabel!.font = UIFont.systemFont(ofSize: 14)
+
+        cancelBtn.backgroundColor = UIColor.clear
+        cancelBtn.layer.borderColor = BaseColor.cgColor
+        cancelBtn.layer.borderWidth = 1
+        cancelBtn.layer.cornerRadius = 5
+
+        cancelBtn.addTarget(self, action: #selector(TimePickerView.onCancel), for: .touchUpInside)
     }
 
     func showDateView() {
@@ -277,10 +295,8 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
     func tapToTurnDay(ges: UITapGestureRecognizer) {
-        if canChangeDate == true {
-            let dayView = ges.view! as! UILabel
-            onSelect(dayView: dayView)
-        }
+        let dayView = ges.view! as! UILabel
+        onSelect(dayView: dayView)
     }
 
     func onSelect(dayView: UILabel) {
@@ -311,6 +327,10 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         monthLab?.textColor = l.textColor
     }
 
+    func onCancel() {
+        confirmCallback(nil)
+    }
+
     func onConfirm() {
         let hour = (timePicker.selectedRow(inComponent: 0) + 1) % 24
         let min = (timePicker.selectedRow(inComponent: 1) + 1) % 60
@@ -321,8 +341,8 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
     // 是否允许调整时间，默认可以
     func setChangeDate(enable: Bool) {
-        canChangeDate = enable
-        timePicker.isUserInteractionEnabled = enable
+        confirmBtn.isUserInteractionEnabled = enable
+        confirmBtn.backgroundColor = enable ? BaseColor : UIColor.gray
     }
 
     // UIPickerViewDelegate, UIPickerViewDataSource ------------------------------------

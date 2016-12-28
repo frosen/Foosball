@@ -201,7 +201,7 @@ class DetailTimeCell: DetailStringBtnCell {
 
         if tpv == nil {
             tpv = TimePickerView(t: curEvent.time, parents: ctrlr.view) { t in
-                if self.onGetTimeFromPicker(t, e: self.curEvent) {
+                if t == nil || self.onGetTimeFromPicker(t!, e: self.curEvent) {
                     // 动画消失
                     self.tpv!.isUserInteractionEnabled = false
                     UIView.animate(withDuration: 0.3) {
