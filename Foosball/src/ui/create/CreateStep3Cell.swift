@@ -83,19 +83,31 @@ class CreateStep3WagerHeadCell: DetailHeadCell {
 }
 
 class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSource {
+    private static let pickerHeight: CGFloat = 130
+    private static let textHeight: CGFloat = 30
+
     private var picker: UIPickerView! = nil
     private var curIndex: Int = 0
 
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
-        return 150
+        return pickerHeight + textHeight
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        picker = UIPickerView(frame: CGRect(x: 30, y: 0, width: w - 60, height: h))
+        picker = UIPickerView(frame: CGRect(x: 30, y: 0, width: w - 60, height: CreateStep3WagerCell.pickerHeight))
         contentView.addSubview(picker)
 
         picker.delegate = self
         picker.dataSource = self
+
+        // 描述文字或者自定义输入框
+        let lbl = UILabel(frame: CGRect(x: 30, y: CreateStep3WagerCell.pickerHeight, width: w - 60, height: CreateStep3WagerCell.textHeight))
+        contentView.addSubview(lbl)
+        lbl.text = "哈哈哈哈哈"
+        lbl.font = UIFont.systemFont(ofSize: 14)
+        lbl.textColor = BaseColor
+        lbl.textAlignment = .center
+
 
         // 下面的线
         let line = UIView(frame: CGRect(x: 0, y: h - 1, width: w, height: 1))

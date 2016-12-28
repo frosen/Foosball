@@ -21,10 +21,10 @@ class EventIcon {
 
         icon.layer.borderWidth = 3
         icon.layer.borderColor = UIColor.white.cgColor
-        icon.layer.shadowColor = UIColor.gray.cgColor
-        icon.layer.shadowOffset = CGSize(width: 1, height: 1)
-        icon.layer.shadowOpacity = 0.9
-        icon.layer.shadowRadius = 3
+//        icon.layer.shadowColor = UIColor.gray.cgColor
+//        icon.layer.shadowOffset = CGSize(width: 1, height: 1)
+//        icon.layer.shadowOpacity = 0.9
+//        icon.layer.shadowRadius = 3
 
         icon.backgroundColor = BaseColor
 
