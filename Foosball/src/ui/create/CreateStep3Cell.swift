@@ -131,16 +131,25 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
             return WagerList.count
         } else if component == 1 {
             let r0 = pickerView.selectedRow(inComponent: 0)
+            if WagerList.count <= r0 { // 滑动时，其他组的联动有滞后，不加判断会去获取超过界限的数据而崩溃
+                return 0
+            }
             return WagerList[r0].1.count
         } else {
             let r0 = pickerView.selectedRow(inComponent: 0)
             let r1 = pickerView.selectedRow(inComponent: 1)
-            return (WagerList[r0].1)[r1].1.count
+            if WagerList.count <= r0 { // 滑动时，其他组的联动有滞后，不加判断会去获取超过界限的数据而崩溃
+                return 0
+            }
+            let wl1 = WagerList[r0].1
+            if wl1.count <= r1 {
+                return 0
+            }
+            return wl1[r1].1.count
         }
     }
 
     final public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-
         let label = UILabel()
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
@@ -152,11 +161,30 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
             label.text = WagerList[row].0
         case 1:
             let r0 = pickerView.selectedRow(inComponent: 0)
-            label.text = (WagerList[r0].1)[row].0
+            if WagerList.count <= r0 { // 滑动时，其他组的联动有滞后，不加判断会去获取超过界限的数据而崩溃
+                break
+            }
+            let wl = WagerList[r0].1
+            if wl.count <= row {
+                break
+            }
+            label.text = wl[row].0
         default:
             let r0 = pickerView.selectedRow(inComponent: 0)
             let r1 = pickerView.selectedRow(inComponent: 1)
-            label.text = ((WagerList[r0].1)[r1].1)[row]
+
+            if WagerList.count <= r0 { // 滑动时，其他组的联动有滞后，不加判断会去获取超过界限的数据而崩溃
+                break
+            }
+            let wl1 = WagerList[r0].1
+            if wl1.count <= r1 {
+                break
+            }
+            let wl2 = wl1[r1].1
+            if wl2.count <= row {
+                break
+            }
+            label.text = wl2[row]
         }
 
         return label
