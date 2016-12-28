@@ -364,6 +364,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
     func onBack() {
         APP.activeEventsMgr.unregister(key: "DetailViewController")
+        NotificationCenter.default.removeObserver(self)
         let _ = navigationController?.popViewController(animated: true)
     }
 

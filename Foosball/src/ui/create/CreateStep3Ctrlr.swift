@@ -37,11 +37,18 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: toolbar.frame.height, right: 0)
 
         //输入相关
+        let tap = UITapGestureRecognizer(target: self, action: #selector(CreateStep3Ctrlr.endInput))
+        view.addGestureRecognizer(tap)
+    }
+
+    override func gotoAppear() {
         NotificationCenter.default.addObserver(self, selector: #selector(CreateStep3Ctrlr.keyboardWillShow), name: NSNotification.Name(rawValue: "UIKeyboardWillShowNotification"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(CreateStep3Ctrlr.keyBoardWillHide), name: NSNotification.Name(rawValue: "UIKeyboardWillHideNotification"), object: nil)
+    }
 
-        let tap = UITapGestureRecognizer(target: self, action: #selector(CreateStep3Ctrlr.endInput(ges:)))
-        view.addGestureRecognizer(tap)
+    override func gotoDisappear() {
+        endInput()
+        NotificationCenter.default.removeObserver(self)
     }
 
     // tableview -----------------------------------------------------------------------
@@ -168,7 +175,8 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         toolbar.isHidden = true
 
         let animations: (() -> Void) = {
-            self.view.transform = CGAffineTransform(translationX: 0, y: -keyBoardBounds.size.height + self.toolbar.frame.height)
+            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyBoardBounds.size.height, right: 0)
+            self.tableView.contentOffset.y += (keyBoardBounds.size.height - self.toolbar.frame.height)
         }
 
         if duration > 0 {
@@ -187,7 +195,7 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         toolbar.isHidden = false
 
         let animations:(() -> Void) = {
-            self.view.transform = CGAffineTransform.identity
+            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: self.toolbar.frame.height, right: 0)
         }
 
         if duration > 0 {
@@ -198,7 +206,7 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         }
     }
 
-    func endInput(ges: UITapGestureRecognizer) {
+    func endInput() {
         let c = tableView.cellForRow(at: IndexPath(row: 1, section: 2))
         if c == nil {
             return

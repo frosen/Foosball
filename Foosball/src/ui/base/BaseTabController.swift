@@ -34,5 +34,7 @@ class BaseTabController: BaseController {
     //跳转到搜索页面
     func onClickSearch() {
         print("search")
+        let vc = SearchController(rootVC: rootVC)
+        navigationController!.pushViewController(vc, animated: true)
     }
 }

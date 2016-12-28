@@ -79,10 +79,12 @@ class CreateController: BaseController, UIScrollViewDelegate {
 
     // 移动到另一页，参数true向右
     func movePage(gotoRight: Bool) {
+        subviews[page].gotoDisappear()
         page += ( gotoRight ? 1 : -1)
         setStepLebel()
         let nextX = CGFloat(page) * pageView.frame.size.width
         pageView.setContentOffset(CGPoint(x: nextX, y: 0), animated: true)
+        subviews[page].gotoAppear()
     }
 
     // 设置步骤
