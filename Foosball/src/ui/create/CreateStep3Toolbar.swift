@@ -9,7 +9,8 @@
 import UIKit
 
 protocol CreateStep3ToolbarDelegate {
-
+    func onPublish()
+    func onGoon()
 }
 
 class CreateStep3Toolbar: BaseToolbar {
@@ -42,6 +43,7 @@ class CreateStep3Toolbar: BaseToolbar {
         btn1.layer.cornerRadius = 3
         btn1.layer.borderColor = BaseColor.cgColor
         btn1.layer.borderWidth = 1
+        btn1.addTarget(self, action: #selector(CreateStep3Toolbar.onPublish), for: .touchUpInside)
 
         let btn2 = UIButton(type: .custom)
         addSubview(btn2)
@@ -56,7 +58,16 @@ class CreateStep3Toolbar: BaseToolbar {
         btn2.titleLabel!.font = UIFont.systemFont(ofSize: 14)
         btn2.backgroundColor = BaseColor
         btn2.layer.cornerRadius = 3
+        btn1.addTarget(self, action: #selector(CreateStep3Toolbar.onGoon), for: .touchUpInside)
     }
 
     var delegate: CreateStep3ToolbarDelegate? = nil
+
+    func onPublish() {
+        delegate?.onPublish()
+    }
+
+    func onGoon() {
+        delegate?.onGoon()
+    }
 }

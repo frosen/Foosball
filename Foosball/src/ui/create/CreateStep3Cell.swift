@@ -43,38 +43,80 @@ class CreateStep3LocationCell: DetailLocationCell {
 }
 
 class CreateStep3WagerHeadCell: DetailHeadCell {
+    var curCount: Double = 1.0
+
     override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
         createHead("奖杯")
+
+        let stepper = UIStepper()
+        contentView.addSubview(stepper)
+        stepper.center = CGPoint(x: w - DetailG.headMargin - stepper.frame.width / 2, y: h / 2)
+        stepper.tintColor = BaseColor
+
+        let createCtrlr = ctrlr as! CreateStep3Ctrlr
+        stepper.value = Double(createCtrlr.wagerCount)
+        curCount = Double(createCtrlr.wagerCount)
+
+        stepper.isContinuous = false
+        stepper.autorepeat = false
+        stepper.addTarget(self, action: #selector(CreateStep3WagerHeadCell.onPressStepper(_:)), for: .touchUpInside)
+
+        stepper.minimumValue = 1.0
+        stepper.maximumValue = 9.0
+
+        // 下面的线
+        let line = UIView(frame: CGRect(x: 0, y: h - 1, width: w, height: 1))
+        contentView.addSubview(line)
+        line.backgroundColor = UIColor.lightGray
+    }
+
+    func onPressStepper(_ st: UIStepper) {
+        if st.value == curCount {
+            return
+        }
+
+        let createCtrlr = ctrlr as! CreateStep3Ctrlr
+        createCtrlr.modifyWagerCount(add: st.value > curCount)
+        curCount = st.value
     }
 }
 
 class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSource {
     private var picker: UIPickerView! = nil
+    private var curIndex: Int = 0
 
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         return 150
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        picker = UIPickerView(frame: CGRect(x: 15, y: 0, width: w - 30, height: h))
+        picker = UIPickerView(frame: CGRect(x: 30, y: 0, width: w - 60, height: h))
         contentView.addSubview(picker)
 
         picker.delegate = self
         picker.dataSource = self
 
-        picker.selectRow(1, inComponent: 0, animated: false)
+        // 下面的线
+        let line = UIView(frame: CGRect(x: 0, y: h - 1, width: w, height: 1))
+        contentView.addSubview(line)
+        line.backgroundColor = UIColor.lightGray
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
-        let createEvent = d as! Event
-        Location.getCurLoc() { loc in
-            guard let l = loc else {
-                return
-            }
-
-            createEvent.location = l
-            self.detailTextLabel!.text = l.toString
+        let createCtrlr = ctrlr as! CreateStep3Ctrlr
+        curIndex = createCtrlr.wagerCount - index!.row // 顺序反过来的
+        if let select = createCtrlr.wagerSelect[curIndex] {
+            // 存在数据，则使用
+            picker.selectRow(select.0, inComponent: 0, animated: false)
+            picker.selectRow(select.1, inComponent: 1, animated: false)
+            picker.selectRow(select.2, inComponent: 2, animated: false)
+            print(curIndex, select)
+        } else {
+            // 没有说明是新建的，则创建一组数据
+            picker.selectRow(1, inComponent: 0, animated: false)
+            createCtrlr.wagerSelect[curIndex] = (1, 0, 0)
+            print(curIndex, createCtrlr.wagerSelect[curIndex]!, "n")
         }
     }
 
@@ -121,20 +163,85 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        // 多项目联动
         if component == 0 {
             pickerView.reloadComponent(1)
             pickerView.reloadComponent(2)
         } else if component == 1 {
             pickerView.reloadComponent(2)
         }
+
+        // 选择状态发送给控制器
+        let createCtrlr = ctrlr as! CreateStep3Ctrlr
+        let c0 = pickerView.selectedRow(inComponent: 0)
+        let c1 = pickerView.selectedRow(inComponent: 1)
+        let c2 = pickerView.selectedRow(inComponent: 2)
+        createCtrlr.wagerSelect[curIndex] = (c0, c1, c2)
+        print(curIndex, (c0, c1, c2), "change")
     }
 }
 
-class CreateStep3DetailHeadCell: StaticCell {
+class CreateStep3DetailHeadCell: DetailHeadCell {
+    override func initData(_ d: BaseData?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
+        createHead("自定义规则")
 
+        let switcher = UISwitch()
+        contentView.addSubview(switcher)
+        switcher.center = CGPoint(x: w - DetailG.headMargin - switcher.frame.width / 2, y: h / 2)
+        switcher.tintColor = BaseColor
+
+        let createCtrlr = ctrlr as! CreateStep3Ctrlr
+        switcher.isOn = createCtrlr.isEnableInputDetail
+
+        switcher.addTarget(self, action: #selector(CreateStep3DetailHeadCell.onPressSwitcher(_:)), for: .touchUpInside)
+    }
+
+    func onPressSwitcher(_ switcher: UISwitch) {
+        let createCtrlr = ctrlr as! CreateStep3Ctrlr
+        createCtrlr.setDetailInputEnable(switcher.isOn)
+    }
 }
 
-class CreateStep3DetailCell: StaticCell {
+class CreateStep3DetailCell: StaticCell, UITextViewDelegate {
+    private let topMargin: CGFloat = 10
+    private var input: UITextView! = nil
+    private var placeholder: UITextView! = nil
+
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+        return 200
+    }
     
+    override func initData(_ d: BaseData?, index: IndexPath?) {
+        self.selectionStyle = .none //使选中后没有反应
+
+        input = UITextView(frame: CGRect(x: DetailG.headMargin, y: topMargin, width: w - DetailG.headMargin * 2, height: h - topMargin * 2))
+        addSubview(input)
+        input.delegate = self
+        input.isScrollEnabled = true
+        input.font = UIFont.systemFont(ofSize: 18)
+        input.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+
+        placeholder = UITextView(frame: input.frame)
+        addSubview(placeholder)
+        placeholder.font = input.font!
+        placeholder.isEditable = false
+        placeholder.isUserInteractionEnabled = false
+        placeholder.text = "请输入自定义的活动规则..."
+        placeholder.textColor = UIColor.lightGray
+        placeholder.backgroundColor = UIColor.clear
+    }
+
+    func textViewDidChange(_ textView: UITextView) {
+        placeholder.isHidden = textView.hasText
+    }
+
+    func beginInput() {
+        input.becomeFirstResponder()
+    }
+
+    func endInput() {
+        input.resignFirstResponder()
+    }
 }
 

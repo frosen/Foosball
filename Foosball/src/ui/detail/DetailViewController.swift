@@ -361,12 +361,14 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     }
 
     // 回调 ==================================================================================================================
+
     func onBack() {
         APP.activeEventsMgr.unregister(key: "DetailViewController")
         let _ = navigationController?.popViewController(animated: true)
     }
 
-    // 虚拟键盘和输入相关
+    // 虚拟键盘和输入相关 =============================================================
+    
     func keyboardWillShow(note: Notification) {
         print("keyboardWillShow")
         let userInfo = (note as NSNotification).userInfo!
@@ -377,7 +379,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         textInputView.isHidden = false
         self.toolbar.isHidden = true
 
-        let animations:(() -> Void) = {
+        let animations: (() -> Void) = {
             print(UIScreen.main.bounds.height - self.textInputView.frame.height, UIScreen.main.bounds.height, self.textInputView.frame.height)
             self.baseView.transform = CGAffineTransform(translationX: 0, y: -keyBoardBounds.size.height)
             self.textInputView.frame.origin.y = self.baseView.frame.height - self.textInputView.frame.height
