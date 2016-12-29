@@ -31,7 +31,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         tableView.dataSource = self
 
         tableView.separatorStyle = .none //极简风
-        tableView.backgroundColor = UIColor.white
+//        tableView.backgroundColor = UIColor.white
 
         tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -3) //否则滚动条和屏幕边会有一段间隔
     }

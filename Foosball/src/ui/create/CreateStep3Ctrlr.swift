@@ -19,7 +19,9 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     
     override func setUI() {
         // tableView的样子和detail类似
-        tableView = UITableView(frame: CGRect(x: 0, y: 64, width: pageSize.width, height: pageSize.height - 64))
+        // 用grouped，header和footer没有颜色，设置了背景后header和footer和背景色一直，
+        // 不用grouped, header和footer会变暗，要在willDisplayHeaderView中设置其tint color才行
+        tableView = UITableView(frame: CGRect(x: 0, y: 64, width: pageSize.width, height: pageSize.height - 64), style: .grouped)
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
@@ -110,14 +112,6 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-    }
-
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        view.tintColor = UIColor.white // 如果不加上这一句，则table cell的header会为灰色
-    }
-
-    func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-        view.tintColor = UIColor.white // 如果不加上这一句，则table cell的footer会为灰色
     }
 
     // BaseCellDelegate --------------------------------------------------------------

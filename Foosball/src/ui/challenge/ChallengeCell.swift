@@ -10,6 +10,7 @@ import UIKit
 
 class ChallengeCell: BaseCell {
     var eventBoard: EventBoard! = nil
+    var actionBtnBoard: ActionBtnBoard! = nil
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         return 108
     }
@@ -23,6 +24,11 @@ class ChallengeCell: BaseCell {
         //事件板
         eventBoard = EventBoard()
         contentView.addSubview(eventBoard)
+
+        // 底部按钮
+        actionBtnBoard = ActionBtnBoard()
+        contentView.addSubview(actionBtnBoard)
+        actionBtnBoard.frame.origin.y = 72
     }
 
     let maxMemberCount: Int = 6
@@ -83,16 +89,25 @@ class ChallengeCell: BaseCell {
         }
     }
 
+    private let avatarMargin: CGFloat = 3
     private func createMemberView(_ user: UserState, avatarWidth: CGFloat) -> UIView {
+        let w = avatarWidth - 2 * avatarMargin
         let avatar =  Avatar.create(
-            rect: CGRect(x: 0, y: 0, width: avatarWidth, height: avatarWidth),
+            rect: CGRect(x: 0, y: 0, width: w, height: w),
             name: user.user.name,
             url: user.user.avatarURL)
 
-        avatar.layer.borderColor = UIColor.white.cgColor
-        avatar.layer.borderWidth = 3
+        // 这是一个白边，防止头像之间连在一起
+        let avatarBG = UIView(frame: CGRect(x: 0, y: 0, width: avatarWidth, height: avatarWidth))
+        avatarBG.backgroundColor = UIColor.white
 
-        return avatar
+        avatarBG.layer.cornerRadius = avatarWidth / 2
+        avatarBG.layer.shouldRasterize = true
+
+        avatarBG.addSubview(avatar)
+        avatar.center = avatarBG.center
+
+        return avatarBG
     }
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {

@@ -30,7 +30,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         bb1.name = "小明1"
         let p1 = UserState(user: bb1, state: .invite)
 
-        let bb2 = UserBrief(ID: DataID(ID: 1232))
+        let bb2 = UserBrief(ID: DataID(ID: 123))
         bb2.name = "小明2"
         let p2 = UserState(user: bb2, state: .ongoing)
 
@@ -76,7 +76,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
         e.detail = "~ 这是一首简单的小情歌；\n~ 这是一首简单的小情歌；\n~ 这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；\n~ 这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；"
 
-        e.award = "~ 红牛杯----胜者每人获得一瓶红牛饮料。\n以上费用败者承担，必须兑现！！"
+        e.wager = [(1, 0, 0)] 
 
         let m1 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么1")
         let m2 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么2")

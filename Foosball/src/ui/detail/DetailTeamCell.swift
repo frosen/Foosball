@@ -48,15 +48,12 @@ class DetailTeamCell: StaticCell {
         self.selectionStyle = .none //使选中后没有反应
 
         //图标题
-        title = UILabel()
+        title = UILabel(frame: CGRect(x: DetailG.headMargin, y: 11, width: 300, height: 13))
         contentView.addSubview(title)
 
-        title.snp.makeConstraints{ make in
-            make.top.equalTo(contentView.snp.top).offset(11)
-            make.left.equalTo(contentView.snp.left).offset(DetailG.headMargin)
-        }
         title.font = TextFont
         title.textColor = SubTitleColor
+        title.textAlignment = .left
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
@@ -80,7 +77,6 @@ class DetailTeamCell: StaticCell {
         let memberCount = memberList.count
         let countStr = " (" + String(memberCount) + ")"
         title.text = titleStr + countStr
-        title.sizeToFit()
 
         // 如果变了，就要清理掉原来的内容，并重建 todo 根据data是否变化而重新设置
         if memberListView != nil {

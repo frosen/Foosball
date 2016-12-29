@@ -30,6 +30,8 @@ class EventIcon {
 
         return (iconView, icon)
     }
+
+    static let spaceHolder: UIImage = UIImage(named: "event_bg")!
 }
 
 class EventBoard: UIView {
@@ -87,17 +89,40 @@ class EventBoard: UIView {
     }
 
     func setData(_ event: Event) {
-        //临时的文字---------------------------
-        for v in icon.subviews { v.removeFromSuperview() }
-        let nameTmp = UILabel()
-        icon.addSubview(nameTmp)
-        nameTmp.text = "XXX杯"
-        nameTmp.textColor = UIColor.white
-        nameTmp.font = UIFont.boldSystemFont(ofSize: 15)
-        nameTmp.sizeToFit()
-        nameTmp.center = CGPoint(x: icon.frame.width / 2, y: icon.frame.height / 2)
+        // 图片
+        let imgUrl = getURLFromItemType(event.item)
+        icon.sd_setImage(with: imgUrl, placeholderImage: EventIcon.spaceHolder)
 
-        title.text = "这是一个很有意思的测试"
-        stateView.setState(.invite)
+        // 根据类型和奖杯组织一个题目
+        title.text = createTitle(et: event.type, it: event.item, wager: event.wager)
+
+        // 查找自己的状态
+        stateView.setState(getSelfState(from: event))
+    }
+
+    private func getURLFromItemType(_ t: ItemType) -> URL {
+        let s = "http://img02.tooopen.com/images/20131214/sy_51922633352.jpg"
+        return URL(string: s)!
+    }
+
+    private func createTitle(et: EventType, it: ItemType, wager: [(Int, Int, Int)]) -> String {
+        return "这是一个很有意思的测试"
+    }
+
+    private func getSelfState(from event: Event) -> EventState {
+        let selfID = APP.userMgr.data.ID
+        for us in event.ourSideStateList {
+            if us.user.ID == selfID {
+                return us.state
+            }
+        }
+        for us in event.opponentStateList {
+            if us.user.ID == selfID {
+                return us.state
+            }
+        }
+
+        print("wrong in getSelfState")
+        return .finish
     }
 }

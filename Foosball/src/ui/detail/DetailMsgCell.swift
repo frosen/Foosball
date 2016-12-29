@@ -24,12 +24,8 @@ class DetailMsgHeadCell: DetailHeadCell {
         contentView.addSubview(btn)
 
         let btnWidth: CGFloat = 15.0 * CGFloat(txt.characters.count) + 20.0
-
-        btn.snp.makeConstraints{ make in
-            make.centerY.equalTo(contentView.snp.centerY)
-            make.right.equalTo(contentView.snp.right).inset(DetailG.headMargin + fromPosX)
-            make.size.equalTo(CGSize(width: btnWidth, height: 25))
-        }
+        btn.bounds = CGRect(x: 0, y: 0, width: btnWidth, height: 25)
+        btn.center = CGPoint(x: w - DetailG.headMargin - fromPosX - btnWidth / 2, y: h / 2)
 
         btn.setTitle(txt, for: .normal)
         btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)

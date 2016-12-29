@@ -87,13 +87,13 @@ class DetailStringCell: StaticCell {
     var lbl: UILabel! = nil
     func initLblData(contentView: UIView, titleStr: String) {
         //标题
-        let title = UILabel()
+        let title = UILabel(frame: CGRect(
+            x: DetailG.headMargin, y: 11,
+            width: w - DetailG.headMargin * 2,
+            height: 13
+        ))
         contentView.addSubview(title)
 
-        title.snp.makeConstraints{ make in
-            make.top.equalTo(contentView.snp.top).offset(11)
-            make.left.equalTo(contentView.snp.left).offset(DetailG.headMargin)
-        }
         title.font = TextFont
         title.textColor = SubTitleColor
 
@@ -136,9 +136,21 @@ class DetailContentCell: DetailStringCell {
 }
 
 class DetailWagerCell: DetailStringCell {
+    class func createText(from wager: [(Int, Int, Int)]) -> String {
+        var t = ""
+        for i in 0..<wager.count {
+            t += "~ "
+            t += "红牛杯----胜者每人获得一瓶红牛饮料。"
+            t += "\n"
+        }
+        t += "以上费用败者承担，必须兑现！！"
+        return t
+    }
+
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
-        return DetailG.calculateLblHeight(e.award, w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight
+        let wagerText: String = createText(from: e.wager)
+        return DetailG.calculateLblHeight(wagerText, w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
@@ -148,7 +160,7 @@ class DetailWagerCell: DetailStringCell {
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
-        setLblData(contentView: contentView, str: e.award)
+        setLblData(contentView: contentView, str: DetailWagerCell.createText(from: e.wager))
     }
 }
 
@@ -278,16 +290,14 @@ class DetailHeadCell: StaticCell {
         contentView.addSubview(icon)
         icon.backgroundColor = BaseColor
 
-        let lbl = UILabel()
+        let lbl = UILabel(frame: CGRect(
+            x: DetailG.headMargin + icon.frame.width + icon.frame.origin.x,
+            y: 0, width: 300, height: h))
         contentView.addSubview(lbl)
-        lbl.snp.makeConstraints{ make in
-            make.left.equalTo(icon.snp.right).offset(DetailG.headMargin)
-            make.centerY.equalTo(contentView.snp.centerY)
-        }
 
         lbl.text = s
-        lbl.sizeToFit()
 
+        lbl.textAlignment = .left
         lbl.font = TitleFont
         lbl.textColor = TitleColor
     }

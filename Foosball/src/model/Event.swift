@@ -18,9 +18,9 @@ enum EventType: Int {
 
 enum EventState {
     case invite //接收到邀请，可以同意，或拒绝（会让发送拒绝消息）
-    case ready //生成后在到达比赛时间前的状态
+    case ready //生成后在到达比赛时间前的状态，可邀请，或取消
     case ongoing //比赛开始后，可确认胜利还是失败
-    case waiting //你确认成败后，别人没确认前，要等待，最多24小时，到时没确认的自动根据你的确认而确认
+    case waiting //你确认成败后，别人没确认前，要等待，最多24小时，到时没确认的自动根据你的确认而确认，1小时后可催对方
     case win //胜利，确认对方是否兑现
     case lose //失败，确认是否自己已经完成了承诺的兑现
     case honoured //已兑现，选择评价，或直接完成
@@ -85,14 +85,14 @@ class Event: BaseData {
     //是否发布到了地图上，也就是别人任意人可以加入
     var isPublishToMap: Bool = false
 
-    //奖杯（兑现物）用文本记录就好，多个奖杯的文本中间以\n连接
-    var award: String = ""
+    //奖杯（兑现物）, 根据序号，在WagerList查询
+    var wager: [(Int, Int, Int)] = []
 
     //详情
     var detail: String = ""
 
     //生成后可以继续修改的数据 ---------------------------------
-    //自己方以及状态，第一个肯定是自己
+    //自己方以及状态
     var ourSideStateList: [UserState] = []
 
     //对方以及状态
