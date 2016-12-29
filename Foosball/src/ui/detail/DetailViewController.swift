@@ -8,18 +8,24 @@
 
 import UIKit
 
-class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource, StaticCellDelegate, DetailToolbarDelegate, InputViewDelegate {
+class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource, StaticCellDelegate, InputViewDelegate {
 
     private var curEventId: DataID! = nil
     private var curEvent: Event! = nil
     private var sectionNum: Int = 0
 
     var tableView: UITableView! = nil
-    private var toolbar: DetailToolbar! = nil
+    private var toolbar: BaseToolbar! = nil
+    private var actBtnBoard: ActionBtnBoard! = nil
     private var textInputView: InputView! = nil
     private var isShowKeyboard: Bool = false
 
-    func setDataId(_ id: DataID) {
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    init(rootVC: RootViewController, id: DataID) {
+        super.init(rootVC: rootVC)
         self.curEventId = id
     }
     
@@ -50,12 +56,14 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         tableView.backgroundColor = UIColor.white
 
         //按钮栏
-        toolbar = DetailToolbar()
+        toolbar = BaseToolbar()
         baseView.addSubview(toolbar)
-        toolbar.delegate = self
         toolbar.frame.origin.y = baseView.frame.height - toolbar.frame.height
 
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: toolbar.frame.height, right: 0)
+
+        actBtnBoard = ActionBtnBoard(frame: CGRect(x: 0, y: 0, width: toolbar.frame.width, height: toolbar.frame.height))
+        toolbar.addSubview(actBtnBoard)
 
         //隐藏在最下面的输入栏
         textInputView = InputView()
@@ -123,6 +131,10 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             
             tableView.reloadData()
             saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
+
+            // toolbar
+            let st = APP.userMgr.searchState(from: e, by: APP.userMgr.data.ID)
+            actBtnBoard.setState(st)
         }
     }
 
@@ -185,6 +197,12 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             tableView.endUpdates()
 
             saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
+
+            // 状态
+            let st = APP.userMgr.searchState(from: e, by: APP.userMgr.data.ID)
+            actBtnBoard.setState(st)
+            let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! DetailTitleCell
+            titleCell.set(state: st)
         }
     }
 

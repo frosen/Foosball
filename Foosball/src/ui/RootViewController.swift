@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SnapKit
 import SDWebImage
 
 class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationControllerDelegate {

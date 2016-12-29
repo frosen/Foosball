@@ -35,4 +35,20 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
     override func modifyObserver(_ ob: UserMgrObserver) {
         ob.onModify(user: data)
     }
+
+    func searchState(from event: Event, by id: DataID) -> EventState {
+        for us in event.ourSideStateList {
+            if us.user.ID == id {
+                return us.state
+            }
+        }
+        for us in event.opponentStateList {
+            if us.user.ID == id {
+                return us.state
+            }
+        }
+
+        print("wrong in searchState")
+        return .finish
+    }
 }

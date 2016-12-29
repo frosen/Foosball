@@ -26,15 +26,17 @@ class ChallengeCell: BaseCell {
         contentView.addSubview(eventBoard)
 
         // 底部按钮
-        actionBtnBoard = ActionBtnBoard()
+        actionBtnBoard = ActionBtnBoard(frame: CGRect(x: 0, y: 72, width: UIScreen.main.bounds.width, height: 36))
         contentView.addSubview(actionBtnBoard)
-        actionBtnBoard.frame.origin.y = 72
     }
 
     let maxMemberCount: Int = 6
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
-        eventBoard.setData(e)
+        eventBoard.setData(et: e.type, it: e.item, wager: e.wager)
+
+        let st = APP.userMgr.searchState(from: e, by: APP.userMgr.data.ID)
+        eventBoard.set(state: st)
 
         // 加载team数据
         let teamView = eventBoard.contentView!
@@ -87,6 +89,9 @@ class ChallengeCell: BaseCell {
                 break
             }
         }
+
+        // 按钮
+        actionBtnBoard.setState(st)
     }
 
     private let avatarMargin: CGFloat = 3

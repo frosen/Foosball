@@ -11,7 +11,7 @@ import UIKit
 class BaseToolbar: UIView {
 
     static let w: CGFloat = UIScreen.main.bounds.width
-    static let h: CGFloat = 49
+    static let h: CGFloat = 40
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

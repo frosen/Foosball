@@ -88,16 +88,17 @@ class EventBoard: UIView {
         contentView.center.y = h * 0.7
     }
 
-    func setData(_ event: Event) {
+    func setData(et: EventType, it: ItemType, wager: [(Int, Int, Int)]) {
         // 图片
-        let imgUrl = getURLFromItemType(event.item)
+        let imgUrl = getURLFromItemType(it)
         icon.sd_setImage(with: imgUrl, placeholderImage: EventIcon.spaceHolder)
 
         // 根据类型和奖杯组织一个题目
-        title.text = createTitle(et: event.type, it: event.item, wager: event.wager)
+        title.text = createTitle(et: et, it: it, wager: wager)
+    }
 
-        // 查找自己的状态
-        stateView.setState(getSelfState(from: event))
+    func set(state: EventState) {
+        stateView.setState(state)
     }
 
     private func getURLFromItemType(_ t: ItemType) -> URL {
@@ -107,22 +108,5 @@ class EventBoard: UIView {
 
     private func createTitle(et: EventType, it: ItemType, wager: [(Int, Int, Int)]) -> String {
         return "这是一个很有意思的测试"
-    }
-
-    private func getSelfState(from event: Event) -> EventState {
-        let selfID = APP.userMgr.data.ID
-        for us in event.ourSideStateList {
-            if us.user.ID == selfID {
-                return us.state
-            }
-        }
-        for us in event.opponentStateList {
-            if us.user.ID == selfID {
-                return us.state
-            }
-        }
-
-        print("wrong in getSelfState")
-        return .finish
     }
 }

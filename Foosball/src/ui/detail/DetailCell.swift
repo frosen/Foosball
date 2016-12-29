@@ -78,8 +78,16 @@ class DetailTitleCell: StaticCell {
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
-        eventBoard.setData(e)
+        eventBoard.setData(et: e.type, it: e.item, wager: e.wager)
+
+        let st = APP.userMgr.searchState(from: e, by: APP.userMgr.data.ID)
+        set(state: st)
+        
         createTime.text = "发布时间：" + e.operationTimeList[0].time.toString
+    }
+
+    func set(state: EventState) {
+        eventBoard.set(state: state)
     }
 }
 

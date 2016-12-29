@@ -24,7 +24,6 @@
 		657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657219201D5EFA2A007DCE6A /* DetailViewController.swift */; };
 		658E06741D56C7C8008D94FC /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E06731D56C7C8008D94FC /* Event.swift */; };
 		6593C0BD1DCDD65D00589943 /* UserMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6593C0BC1DCDD65D00589943 /* UserMgr.swift */; };
-		65A5DBFA1DBC6ACD001F5A05 /* DetailToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A5DBF91DBC6ACD001F5A05 /* DetailToolbar.swift */; };
 		65A66D221E03C63800FF9589 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A66D211E03C63800FF9589 /* MapController.swift */; };
 		65A66D301E07AE0E00FF9589 /* DataMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A66D2F1E07AE0E00FF9589 /* DataMgr.swift */; };
 		65A66D341E07CB8300FF9589 /* BaseToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A66D331E07CB8300FF9589 /* BaseToolbar.swift */; };
@@ -77,7 +76,6 @@
 		657219201D5EFA2A007DCE6A /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailViewController.swift; path = detail/DetailViewController.swift; sourceTree = "<group>"; };
 		658E06731D56C7C8008D94FC /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = model/Event.swift; sourceTree = "<group>"; };
 		6593C0BC1DCDD65D00589943 /* UserMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserMgr.swift; path = functions/UserMgr.swift; sourceTree = "<group>"; };
-		65A5DBF91DBC6ACD001F5A05 /* DetailToolbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailToolbar.swift; path = detail/DetailToolbar.swift; sourceTree = "<group>"; };
 		65A66D211E03C63800FF9589 /* MapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapController.swift; path = map/MapController.swift; sourceTree = "<group>"; };
 		65A66D2F1E07AE0E00FF9589 /* DataMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataMgr.swift; path = functions/DataMgr.swift; sourceTree = "<group>"; };
 		65A66D331E07CB8300FF9589 /* BaseToolbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseToolbar.swift; sourceTree = "<group>"; };
@@ -199,7 +197,6 @@
 				65EEB75D1DAE393000BB767D /* DetailTeamCell.swift */,
 				65EEB75F1DAE398D00BB767D /* DetailImageCell.swift */,
 				65EEB7611DAE3A0500BB767D /* DetailMsgCell.swift */,
-				65A5DBF91DBC6ACD001F5A05 /* DetailToolbar.swift */,
 				650151A41DB4D6F9009D8ABC /* InputView.swift */,
 			);
 			name = detail;
@@ -481,7 +478,6 @@
 				65AD17421D7EB126008AEE3C /* DetailCell.swift in Sources */,
 				65BD74931D9F8E00000BDA57 /* StateView.swift in Sources */,
 				65D61CFD1DBF70900032C2E7 /* Network.swift in Sources */,
-				65A5DBFA1DBC6ACD001F5A05 /* DetailToolbar.swift in Sources */,
 				65D427FC1D6073D700994EA8 /* User.swift in Sources */,
 				65F14B881D68439D0073D547 /* MyTabBar.swift in Sources */,
 				6508C2971DDEB0A400E3D7C2 /* Transitioning.swift in Sources */,
