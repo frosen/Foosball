@@ -35,7 +35,7 @@ class ChallengeCell: BaseCell {
         let e = d as! Event
         eventBoard.setData(et: e.type, it: e.item, wager: e.wager)
 
-        let st = APP.userMgr.searchState(from: e, by: APP.userMgr.data.ID)
+        let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
         eventBoard.set(state: st)
 
         // 加载team数据

@@ -20,13 +20,17 @@ enum EventState {
     case invite //接收到邀请，可以同意，或拒绝（会让发送拒绝消息）
     case ready //生成后在到达比赛时间前的状态，可邀请，或取消
     case ongoing //比赛开始后，可确认胜利还是失败
-    case waiting //你确认成败后，别人没确认前，要等待，最多24小时，到时没确认的自动根据你的确认而确认，1小时后可催对方
+
     case win //胜利，确认对方是否兑现
     case lose //失败，确认是否自己已经完成了承诺的兑现
+    case waiting //你确认成败后，别人没确认前，要等待，最多24小时，到时没确认的自动根据你的确认而确认，1小时后可催对方，此时你的数值还是保持win，lose
+
     case honoured //已兑现，选择评价，或直接完成
     case finish //确认后完成，不再提示
-    case impeach //当确认成败时，如果有人已经确定并与你不符时，会提示，如果你确认则进入存疑状态，保持或重选
-    case keepImpeach //保持存疑状态，不再提示
+
+    case impeach //当确认成败时，如果有人已经确定并与你不符时，会提示，如果你确认则进入存疑状态，保持或重选，此时你的数值还是保持win，lose
+    case keepImpeach_win //保持存疑状态，不再提示
+    case keepImpeach_lose //保持存疑状态，不再提示
 }
 
 class UserState {

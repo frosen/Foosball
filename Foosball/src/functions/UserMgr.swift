@@ -36,7 +36,15 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         ob.onModify(user: data)
     }
 
-    func searchState(from event: Event, by id: DataID) -> EventState {
+    func getState(from event: Event, by id: DataID) -> EventState {
+        var s = searchSelfState(from: event, by: id)
+
+        // todo 如果是胜利和失败，根据其他人的状态，自己显示不同的状态
+
+        return s
+    }
+
+    private func searchSelfState(from event: Event, by id: DataID) -> EventState {
         for us in event.ourSideStateList {
             if us.user.ID == id {
                 return us.state
@@ -51,4 +59,5 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         print("wrong in searchState")
         return .finish
     }
+
 }

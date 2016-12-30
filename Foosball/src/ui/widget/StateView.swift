@@ -66,7 +66,8 @@ class StateView: UIView {
         case .impeach:
             string = "质疑"
             bgColor = UIColor.purple
-        case .keepImpeach:
+        case .keepImpeach_win: fallthrough
+        case .keepImpeach_lose:
             string = "存疑"
             bgColor = UIColor.purple
         }

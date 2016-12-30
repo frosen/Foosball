@@ -18,9 +18,9 @@ class AcBtn {
 }
 
 class StateAction {
-    let lbtn: AcBtn
+    var lbtn: AcBtn? = nil
     var rbtn: AcBtn? = nil
-    init(l: AcBtn, r: AcBtn?) {
+    init(l: AcBtn? = nil, r: AcBtn? = nil) {
         lbtn = l
         rbtn = r
     }
@@ -56,18 +56,13 @@ class ActionBtnBoard: UIView {
             l: AcBtn(t: ""),
             r: AcBtn(t: "")
         ),
-        .finish: StateAction(
-            l: AcBtn(t: ""),
-            r: AcBtn(t: "")
-        ),
+        .finish: StateAction(),
         .impeach: StateAction(
             l: AcBtn(t: ""),
             r: AcBtn(t: "")
         ),
-        .keepImpeach: StateAction(
-            l: AcBtn(t: ""),
-            r: AcBtn(t: "")
-        ),
+        .keepImpeach_win: StateAction(),
+        .keepImpeach_lose: StateAction(),
     ]
 
     private let margin: CGFloat = 15
@@ -113,9 +108,15 @@ class ActionBtnBoard: UIView {
         btnWidth = frame.width - ((msgBtn != nil) ? msgBtn!.frame.width : CGFloat(0))
         btnWidth = btnWidth / ((stateAct.rbtn != nil) ? 2 : 1)
 
-        lBtn.frame.size.width = btnWidth
-        lBtn.setImage(stateAct.lbtn.img, for: .normal)
-        lBtn.setTitle(stateAct.lbtn.text, for: .normal)
+        if stateAct.lbtn == nil {
+            lBtn.isHidden = true
+        } else {
+            lBtn.isHidden = false
+
+            lBtn.frame.size.width = btnWidth
+            lBtn.setImage(stateAct.lbtn!.img, for: .normal)
+            lBtn.setTitle(stateAct.lbtn!.text, for: .normal)
+        }
 
         if stateAct.rbtn == nil {
             rBtn.isHidden = true

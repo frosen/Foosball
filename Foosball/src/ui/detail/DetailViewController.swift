@@ -136,7 +136,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
 
         // toolbar
-        let st = APP.userMgr.searchState(from: e, by: APP.userMgr.data.ID)
+        let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
         actBtnBoard.setState(st)
 
         // 刚进来时，让更新提示消失
@@ -207,7 +207,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
 
         // 状态
-        let st = APP.userMgr.searchState(from: e, by: APP.userMgr.data.ID)
+        let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
         actBtnBoard.setState(st)
         let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! DetailTitleCell
         titleCell.set(state: st)

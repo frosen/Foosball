@@ -52,7 +52,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
         let bb321 = UserBrief(ID: DataID(ID: 1232))
         bb321.name = "明4"
-        let p321 = UserState(user: bb321, state: .keepImpeach)
+        let p321 = UserState(user: bb321, state: .finish)
 
         e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 
