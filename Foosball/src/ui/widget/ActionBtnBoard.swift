@@ -93,6 +93,7 @@ class ActionBtnBoard: UIView {
 
         lBtn.frame = CGRect(x: 0, y: 0, width: 0, height: frame.height)
         lBtn.setTitleColor(UIColor.gray, for: .normal)
+        lBtn.setTitleColor(UIColor.lightGray, for: .highlighted)
         lBtn.titleLabel!.font = font
 
         rBtn = UIButton(type: .custom)
@@ -100,6 +101,7 @@ class ActionBtnBoard: UIView {
 
         rBtn.frame = CGRect(x: 0, y: 0, width: 0, height: frame.height)
         rBtn.setTitleColor(UIColor.gray, for: .normal)
+        rBtn.setTitleColor(UIColor.lightGray, for: .highlighted)
         rBtn.titleLabel!.font = font
     }
 

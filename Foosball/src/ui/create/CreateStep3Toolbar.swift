@@ -18,7 +18,7 @@ class CreateStep3Toolbar: BaseToolbar {
     private static let m: CGFloat = 15
     private static let midm: CGFloat = 8
     private static let hm: CGFloat = 5
-    private static let btnWidth: CGFloat = (BaseToolbar.w - 2 * m - midm) / 2
+    private static let btnWidth: CGFloat = BaseToolbar.w / 2
     private static let btnHeight: CGFloat = BaseToolbar.h - 2 * hm
 
     required init?(coder aDecoder: NSCoder) {
@@ -28,37 +28,30 @@ class CreateStep3Toolbar: BaseToolbar {
     override init() {
         super.init()
 
+        let font = UIFont.systemFont(ofSize: 12)
+
         // 按钮
         let btn1 = UIButton(type: .custom)
         addSubview(btn1)
-        btn1.frame = CGRect(
-            x: CreateStep3Toolbar.m,
-            y: CreateStep3Toolbar.hm,
-            width: CreateStep3Toolbar.btnWidth,
-            height: CreateStep3Toolbar.btnHeight
-        )
+        btn1.frame = CGRect(x: 0, y: 0, width: BaseToolbar.w / 2, height: BaseToolbar.h)
+        btn1.setTitleColor(UIColor.gray, for: .normal)
+        btn1.setTitleColor(UIColor.lightGray, for: .highlighted)
+        btn1.titleLabel!.font = font
+
         btn1.setTitle("直接发布", for: .normal)
-        btn1.setTitleColor(BaseColor, for: .normal)
-        btn1.titleLabel!.font = UIFont.systemFont(ofSize: 14)
-        btn1.layer.cornerRadius = 3
-        btn1.layer.borderColor = BaseColor.cgColor
-        btn1.layer.borderWidth = 1
+        btn1.setImage(UIImage(named: "act_btn_confirm"), for: .normal)
         btn1.addTarget(self, action: #selector(CreateStep3Toolbar.onPublish), for: .touchUpInside)
 
         let btn2 = UIButton(type: .custom)
         addSubview(btn2)
-        btn2.frame = CGRect(
-            x: CreateStep3Toolbar.m + CreateStep3Toolbar.midm + CreateStep3Toolbar.btnWidth,
-            y: CreateStep3Toolbar.hm,
-            width: CreateStep3Toolbar.btnWidth,
-            height: CreateStep3Toolbar.btnHeight
-        )
+        btn2.frame = CGRect(x: BaseToolbar.w / 2, y: 0, width: BaseToolbar.w / 2, height: BaseToolbar.h)
+        btn2.setTitleColor(UIColor.gray, for: .normal)
+        btn2.setTitleColor(UIColor.lightGray, for: .highlighted)
+        btn2.titleLabel!.font = font
+
         btn2.setTitle("继续", for: .normal)
-        btn2.setTitleColor(UIColor.white, for: .normal)
-        btn2.titleLabel!.font = UIFont.systemFont(ofSize: 14)
-        btn2.backgroundColor = BaseColor
-        btn2.layer.cornerRadius = 3
-        btn1.addTarget(self, action: #selector(CreateStep3Toolbar.onGoon), for: .touchUpInside)
+        btn2.setImage(UIImage(named: "act_btn_confirm"), for: .normal)
+        btn2.addTarget(self, action: #selector(CreateStep3Toolbar.onGoon), for: .touchUpInside)
     }
 
     var delegate: CreateStep3ToolbarDelegate? = nil
