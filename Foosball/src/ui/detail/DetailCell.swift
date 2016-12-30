@@ -146,12 +146,12 @@ class DetailContentCell: DetailStringCell {
 class DetailWagerCell: DetailStringCell {
     class func createText(from wager: [(Int, Int, Int)]) -> String {
         var t = ""
-        for i in 0..<wager.count {
+        for i in 0 ..< wager.count {
             t += "~ "
-            t += "红牛杯----胜者每人获得一瓶红牛饮料。"
+            t += "啦啦啦----你问我从哪里来。"
             t += "\n"
         }
-        t += "以上费用败者承担，必须兑现！！"
+        t += "以上！！"
         return t
     }
 

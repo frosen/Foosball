@@ -38,7 +38,7 @@ class CreateStep3Toolbar: BaseToolbar {
         btn1.setTitleColor(UIColor.lightGray, for: .highlighted)
         btn1.titleLabel!.font = font
 
-        btn1.setTitle("直接发布", for: .normal)
+        btn1.setTitle(" 直接发布 ", for: .normal)
         btn1.setImage(UIImage(named: "act_btn_confirm"), for: .normal)
         btn1.addTarget(self, action: #selector(CreateStep3Toolbar.onPublish), for: .touchUpInside)
 
@@ -49,7 +49,7 @@ class CreateStep3Toolbar: BaseToolbar {
         btn2.setTitleColor(UIColor.lightGray, for: .highlighted)
         btn2.titleLabel!.font = font
 
-        btn2.setTitle("继续", for: .normal)
+        btn2.setTitle(" 继续 ", for: .normal)
         btn2.setImage(UIImage(named: "act_btn_confirm"), for: .normal)
         btn2.addTarget(self, action: #selector(CreateStep3Toolbar.onGoon), for: .touchUpInside)
     }

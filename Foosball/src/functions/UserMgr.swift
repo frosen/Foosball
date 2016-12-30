@@ -40,6 +40,9 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         var s = searchSelfState(from: event, by: id)
 
         // todo 如果是胜利和失败，根据其他人的状态，自己显示不同的状态
+        if s == .win || s == .lose {
+            
+        }
 
         return s
     }
