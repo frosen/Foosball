@@ -92,6 +92,11 @@ class ChallengeCell: BaseCell {
 
         // 按钮
         actionBtnBoard.setState(st)
+
+        if let changeTup: (Bool, Int) = APP.activeEventsMgr.eventChangeMap[e] {
+            actionBtnBoard.setStateTip(changeTup.0)
+            actionBtnBoard.setMsgTip(changeTup.1)
+        }
     }
 
     private let avatarMargin: CGFloat = 3

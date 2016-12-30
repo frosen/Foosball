@@ -118,91 +118,104 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     // ActiveEventsMgrObserver ==============================================================================
 
     func onInit(activeEvents: [Event]) {
-        if let e = getCurEvent(activeEvents) {
-            sectionNum = 4
-            curEvent = e
-            cellHeightDict.removeAll()
-
-            // 预生成这些static cell，避免第一次滑动造成的卡顿
-            for indexPath in staticVarCellIndexList {
-                let c = StaticCell.create(indexPath, tableView: tableView, d: curEvent, ctrlr: self, delegate: self)
-                holdCellDict[indexPath] = c
-            }
-            
-            tableView.reloadData()
-            saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
-
-            // toolbar
-            let st = APP.userMgr.searchState(from: e, by: APP.userMgr.data.ID)
-            actBtnBoard.setState(st)
+        guard let e = getCurEvent(activeEvents) else {
+            return
         }
+
+        sectionNum = 4
+        curEvent = e
+        cellHeightDict.removeAll()
+
+        // 预生成这些static cell，避免第一次滑动造成的卡顿
+        for indexPath in staticVarCellIndexList {
+            let c = StaticCell.create(indexPath, tableView: tableView, d: curEvent, ctrlr: self, delegate: self)
+            holdCellDict[indexPath] = c
+        }
+
+        tableView.reloadData()
+        saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
+
+        // toolbar
+        let st = APP.userMgr.searchState(from: e, by: APP.userMgr.data.ID)
+        actBtnBoard.setState(st)
+
+        // 刚进来时，让更新提示消失
+        APP.activeEventsMgr.clearEventChange(e)
     }
 
     func onModify(activeEvents: [Event]) {
-        if let e = getCurEvent(activeEvents) {
-            curEvent = e
+        guard let e = getCurEvent(activeEvents) else {
+            return
+        }
 
-            tableView.beginUpdates()
+        curEvent = e
 
-            // team和瞬间的更新
-            for indexPath in staticVarCellIndexList {
-                cellHeightDict.removeValue(forKey: getCellHeightDictIndex(section: indexPath.section, row: indexPath.row))
-                cellNeedUpdate[indexPath] = true
+        tableView.beginUpdates()
+
+        // team和瞬间的更新
+        for indexPath in staticVarCellIndexList {
+            cellHeightDict.removeValue(forKey: getCellHeightDictIndex(section: indexPath.section, row: indexPath.row))
+            cellNeedUpdate[indexPath] = true
+        }
+        tableView.reloadRows(at: staticVarCellIndexList, with: .none)
+
+        // 前几个不是上次记录的最新的对话，展示在ui上
+        var i = e.msgList.count - 1
+        var resetRow: Int = 1
+        var resetRowList: [IndexPath] = []
+        while true {
+            let msg = e.msgList[i]
+            if !isNewestMsg(msg) {
+                resetRowList.append(IndexPath(row: resetRow, section: 3))
+                resetRow += 1
+            } else {
+                break
             }
-            tableView.reloadRows(at: staticVarCellIndexList, with: .none)
 
-            // 前几个不是上次记录的最新的对话，展示在ui上
-            var i = e.msgList.count - 1
-            var resetRow: Int = 1
-            var resetRowList: [IndexPath] = []
+            i -= 1
+            if i < 0 {
+                break
+            }
+        }
+
+        let addRowCount = resetRowList.count
+        if addRowCount > 0 {
+            // 把cellHeightDict里面的数据往后移
+            var i = 1
+            var indexList: [(Int, CGFloat)] = []
             while true {
-                let msg = e.msgList[i]
-                if !isNewestMsg(msg) {
-                    resetRowList.append(IndexPath(row: resetRow, section: 3))
-                    resetRow += 1
-                } else {
+                let index = getCellHeightDictIndex(section: 3, row: i)
+                guard let h = cellHeightDict[index] else {
                     break
                 }
 
-                i -= 1
-                if i < 0 {
-                    break
-                }
+                let tup: (Int, CGFloat) = (index + addRowCount, h)
+                indexList.append(tup)
+                cellHeightDict.removeValue(forKey: index)
+
+                i += 1
+            }
+            for tup in indexList {
+                cellHeightDict[tup.0] = tup.1
             }
 
-            let addRowCount = resetRowList.count
-            if addRowCount > 0 {
-                // 把cellHeightDict里面的数据往后移
-                var i = 1
-                var indexList: [(Int, CGFloat)] = []
-                while true {
-                    let index = getCellHeightDictIndex(section: 3, row: i)
-                    guard let h = cellHeightDict[index] else {
-                        break
-                    }
+            // 插入新cell
+            tableView.insertRows(at: resetRowList, with: .fade)
+        }
+        tableView.endUpdates()
 
-                    let tup: (Int, CGFloat) = (index + addRowCount, h)
-                    indexList.append(tup)
-                    cellHeightDict.removeValue(forKey: index)
+        saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
 
-                    i += 1
-                }
-                for tup in indexList {
-                    cellHeightDict[tup.0] = tup.1
-                }
+        // 状态
+        let st = APP.userMgr.searchState(from: e, by: APP.userMgr.data.ID)
+        actBtnBoard.setState(st)
+        let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! DetailTitleCell
+        titleCell.set(state: st)
 
-                // 插入新cell
-                tableView.insertRows(at: resetRowList, with: .fade)
-            }
-            tableView.endUpdates()
-
-            saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
-
-            // 状态
-            let st = APP.userMgr.searchState(from: e, by: APP.userMgr.data.ID)
-            actBtnBoard.setState(st)
-            let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! DetailTitleCell
-            titleCell.set(state: st)
+        // 在显示着这个event的细节时更新，显示更新并结束提示
+        if let changeTup: (Bool, Int) = APP.activeEventsMgr.eventChangeMap[e] {
+            print(changeTup)
+            APP.activeEventsMgr.clearEventChange(e)
         }
     }
 
@@ -463,11 +476,13 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         APP.activeEventsMgr.changeData(changeFunc: { activeEvents in
             let e = getCurEvent(activeEvents)
             if e == nil {
-                return
+                return nil
             }
             let meBrief = APP.userMgr.data.getBrief()
             let mS = MsgStruct(user: meBrief, time: Time.now, msg: text)
             e!.msgList.append(mS)
+
+            return nil
         }, needUpload: true)
     }
 }

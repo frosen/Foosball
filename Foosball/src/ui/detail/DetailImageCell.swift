@@ -156,7 +156,7 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
             APP.activeEventsMgr.changeData(changeFunc: { activeEvents in
                 let e = detailCtrlr.getCurEvent(activeEvents)
                 if e == nil {
-                    return
+                    return nil
                 }
 
                 // 之所以要重新搜索一遍，是因为过程中有可能更新了
@@ -167,6 +167,8 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
                         break
                     }
                 }
+
+                return nil
             }, needUpload: true)
         }
     }
@@ -217,9 +219,11 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         APP.activeEventsMgr.changeData(changeFunc: { activeEvents in
             let e = detailCtrlr.getCurEvent(activeEvents)
             if e == nil {
-                return
+                return nil
             }
             e!.imageURLList.append("http://up.qqjia.com/z/25/tu32700_3.png")
+
+            return nil
         }, needUpload: true)
 
         //切换场景后更新cell

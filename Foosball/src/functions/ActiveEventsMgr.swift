@@ -142,6 +142,22 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         // 初始化时候直接启动轮询
     }
 
+    // 记录每个事件更新时，状态和对话数的变化
+    private(set) var eventChangeMap: [Event: (Bool, Int)] = [:]
+    func clearEventChange(_ e: Event) {
+        eventChangeMap.removeValue(forKey: e)
+    }
+
+    override func changeData(changeFunc: (([Event]) -> AnyObject?), needUpload: Bool) {
+        // 接受新变化，并获取那个event更新了状态和对话数
+        if let change = changeFunc(data) as? [Event: (Bool, Int)] {
+            eventChangeMap = change
+        }
+
+        updateObserver()
+        saveData(needUpload: needUpload)
+    }
+
     override func initObserver(_ ob: ActiveEventsMgrObserver) {
         ob.onInit(activeEvents: data)
     }

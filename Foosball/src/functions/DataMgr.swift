@@ -38,10 +38,15 @@ class DataMgr<DATA, OB>: NSObject {
         }
     }
 
-    func changeData(changeFunc: ((DATA) -> Void), needUpload: Bool = false) {
+    func changeData(changeFunc: ((DATA) -> AnyObject?), needUpload: Bool = false) {
         // 接受新变化
-        changeFunc(data)
+        let _ = changeFunc(data)
 
+        updateObserver()
+        saveData(needUpload: needUpload)
+    }
+
+    func updateObserver() {
         // 在每个观察者中进行对比
         for obTupTup in obDict {
             let obKey = obTupTup.key
@@ -52,7 +57,9 @@ class DataMgr<DATA, OB>: NSObject {
                 modifyObserver(obTup.0)
             }
         }
+    }
 
+    func saveData(needUpload: Bool = false) {
         //保存本地
 
         if needUpload { //上传网络

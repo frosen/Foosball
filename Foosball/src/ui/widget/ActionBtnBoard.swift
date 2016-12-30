@@ -131,6 +131,10 @@ class ActionBtnBoard: UIView {
 
     }
 
+    func setStateTip(_ b: Bool) {
+        
+    }
+
     // 设置后会在右边出现聊天提示，并有气泡提示有多少条，如果小于等于0则消失
     func setMsgTip(_ num: Int) {
 
