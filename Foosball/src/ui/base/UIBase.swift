@@ -6,7 +6,31 @@
 //  Copyright © 2016年 卢乐颜. All rights reserved.
 //
 
-let BaseColor: UIColor = UIColor(hue: 17 / 360, saturation: 0.78, brightness: 0.94, alpha: 1.0)
+let hue: CGFloat = 18
+let saturation: CGFloat = 0.76
+let brightness: CGFloat = 0.91
+
+let BaseColor: UIColor = UIColor(
+    hue: hue / 360,
+    saturation: saturation,
+    brightness: brightness,
+    alpha: 1.0
+)
+
+let DarkColor: UIColor = UIColor(
+    hue: (hue + 360 - 16).truncatingRemainder(dividingBy: 360.0) / 360,
+    saturation: saturation + 0.1,
+    brightness: brightness - 0.05,
+    alpha: 1.0
+)
+
+let LightColor: UIColor = UIColor(
+    hue: (hue + 360 + 16).truncatingRemainder(dividingBy: 360.0) / 360,
+    saturation: saturation,
+    brightness: brightness,
+    alpha: 1.0
+)
+
 
 let TitleColor: UIColor = UIColor.black
 let SubTitleColor: UIColor = UIColor(white: 0.5, alpha: 1)

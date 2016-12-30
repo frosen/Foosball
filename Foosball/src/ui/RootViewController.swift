@@ -22,9 +22,55 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
         initTabBar() 
     }
 
+    // 自己生成变色的UIImage
+    // 可以参考 http://www.genshuixue.com/i-cxy/p/15153808
+    // 也可以用 CAGradientLayer 但是这个会左右nav对整体size的改变，所以选择直接生成一个UIImage
+    private var navBGImg: UIImage {
+        let gSize: CGSize = CGSize(width: 3, height: 64)
+
+        //创建CGContextRef
+        UIGraphicsBeginImageContext(gSize)
+        let context = UIGraphicsGetCurrentContext()!
+
+        //创建CGMutablePathRef
+        let path = CGMutablePath()
+
+        // 绘制Path
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: gSize.width, y: 0))
+        path.addLine(to: CGPoint(x: gSize.width, y: gSize.height))
+        path.addLine(to: CGPoint(x: 0, y: gSize.height))
+        path.addLine(to: CGPoint(x: 0, y: 0))
+        path.closeSubpath()
+
+        // 颜色和方向
+        let colors: NSArray = [DarkColor.cgColor, LightColor.cgColor]
+        let colorArray: CFArray = colors as CFArray
+        let location: UnsafePointer<CGFloat> = UnsafePointer<CGFloat>([0.0, 1.0])
+
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let gradient = CGGradient(colorsSpace: colorSpace, colors: colorArray, locations: location)!
+
+        let startPoint = CGPoint(x: 0, y: 0)
+        let endPoint = CGPoint(x: 0, y: gSize.height)
+        context.saveGState()
+        context.addPath(path)
+        context.clip()
+        context.drawLinearGradient(gradient, start: startPoint, end: endPoint, options: CGGradientDrawingOptions(rawValue: 0))
+        context.restoreGState()
+
+        // 获取图像
+        let img = UIGraphicsGetImageFromCurrentImageContext()!
+
+        // 结束
+        UIGraphicsEndImageContext()
+
+        return img
+    }
+
     private func initNav() {
         let navBar = UINavigationBar.appearance()
-        navBar.setBackgroundImage(UIImage(named: "nav_color"), for: .default)
+        navBar.setBackgroundImage(navBGImg, for: .default)
         navBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
     }
 
