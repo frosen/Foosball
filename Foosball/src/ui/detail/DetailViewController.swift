@@ -14,6 +14,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     private var curEvent: Event! = nil
     private var sectionNum: Int = 0
 
+    private var isShowMsg: Bool = false
+
     var tableView: UITableView! = nil
     private var toolbar: BaseToolbar! = nil
     private var actBtnBoard: ActionBtnBoard! = nil
@@ -24,9 +26,10 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(rootVC: RootViewController, id: DataID) {
+    init(rootVC: RootViewController, id: DataID, showMsg: Bool) {
         super.init(rootVC: rootVC)
         self.curEventId = id
+        isShowMsg = showMsg
     }
     
     override func viewDidLoad() {
@@ -89,6 +92,13 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         APP.activeEventsMgr.set(hide: false, key: DataObKey)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if isShowMsg {
+            tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .top, animated: true)
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {

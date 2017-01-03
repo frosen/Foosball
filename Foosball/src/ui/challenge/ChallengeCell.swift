@@ -8,9 +8,12 @@
 
 import UIKit
 
-class ChallengeCell: BaseCell {
+class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
     var eventBoard: EventBoard! = nil
-    var actionBtnBoard: ActionBtnBoard! = nil
+    private var actionBtnBoard: ActionBtnBoard! = nil
+
+    private var curEvent: Event! = nil
+
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         return 108
     }
@@ -28,11 +31,14 @@ class ChallengeCell: BaseCell {
         // 底部按钮
         actionBtnBoard = ActionBtnBoard(frame: CGRect(x: 0, y: 72, width: UIScreen.main.bounds.width, height: 36))
         contentView.addSubview(actionBtnBoard)
+        actionBtnBoard.delegate = self
     }
 
     let maxMemberCount: Int = 6
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
+        curEvent = e
+
         eventBoard.setData(et: e.type, it: e.item, wager: e.wager)
 
         let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
@@ -127,5 +133,12 @@ class ChallengeCell: BaseCell {
         } else {
             backgroundColor = UIColor.white
         }
+    }
+
+    // ActionBtnBoardDelegate --------------------------------------------------------------
+
+    func onPressMsg() {
+        let vc = ctrlr as! ChallengeController
+        vc.enterDetail(cell: self, id: curEvent.ID, showMsg: true)
     }
 }

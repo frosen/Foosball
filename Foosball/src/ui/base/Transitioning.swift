@@ -183,10 +183,13 @@ class KeynotelikeTransitioning: NSObject, UIViewControllerAnimatedTransitioning 
         KeynotelikeTransitioning.originPosY = snapshotView.frame.origin.y
         KeynotelikeTransitioning.originView = selectedView
 
+        //** ChallengeController的特殊属性可以控制snapshotView向上的位置是到最上端，还是超过最上端消失
+        let showMsg = fromVC.isShowMsg
+
         //6.执行动画
         let t = transitionDuration(using: transitionContext)
         UIView.animate(withDuration: t, delay: 0, options: UIViewAnimationOptions.curveEaseInOut, animations: { _ in
-            snapshotView.frame.origin.y = 64
+            snapshotView.frame.origin.y = showMsg ? -50 : 64
             toVC.view.alpha = 1
         }, completion: { _ in
             //一定要记得动画完成后执行此方法，让系统管理 navigation

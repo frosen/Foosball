@@ -26,6 +26,10 @@ class StateAction {
     }
 }
 
+protocol ActionBtnBoardDelegate {
+    func onPressMsg()
+}
+
 class ActionBtnBoard: UIView {
 
     private static let stateActionList: [EventState: StateAction] = [
@@ -73,6 +77,9 @@ class ActionBtnBoard: UIView {
     private var lBtn: UIButton! = nil
     private var rBtn: UIButton! = nil
     private var msgBtn: UIButton? = nil
+
+    // 代理
+    var delegate: ActionBtnBoardDelegate? = nil
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

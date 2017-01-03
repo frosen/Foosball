@@ -16,6 +16,9 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
 
     var selectedCell: ChallengeCell? = nil
 
+    // 是否是在进入细节页面时，直接显示到msg处
+    private(set) var isShowMsg: Bool = true
+
     override func viewDidLoad() {
         initDataOnViewAppear = true
         super.viewDidLoad()
@@ -91,17 +94,24 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedCell = tableView.cellForRow(at: indexPath) as? ChallengeCell
-
+        let c = tableView.cellForRow(at: indexPath) as! ChallengeCell
         let e: Event = curActiveEvents[indexPath.section]
-        let vc = DetailViewController(rootVC: rootVC, id: e.ID)
-
-        navigationController!.pushViewController(vc, animated: true)
+        enterDetail(cell: c, id: e.ID)
     }
 
     // BaseCellDelegate --------------------------------------------------------------
 
     func getCInfo(_ indexPath: IndexPath) -> BaseCell.CInfo {
         return BaseCell.CInfo(id: "chalCellId", c: ChallengeCell.self)
+    }
+
+    // function --------------------------------------------------------------
+
+    func enterDetail(cell: ChallengeCell, id: DataID, showMsg: Bool = false) {
+        selectedCell = cell
+        isShowMsg = showMsg
+
+        let vc = DetailViewController(rootVC: rootVC, id: id, showMsg: isShowMsg)
+        navigationController!.pushViewController(vc, animated: true)
     }
 }
