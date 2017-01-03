@@ -71,6 +71,11 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
             x: CGFloat(pos) * DetailImageCell.imageViewWidth,
             y: CGFloat(line) * DetailImageCell.imageViewWidth
         )
+
+        // 提示 todo
+        if e.imageURLList.count == 0 {
+
+        }
     }
 
     private func createImageView(url: String, index: Int) -> UIView {
@@ -176,7 +181,7 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
     // 获取图片 ---------------------------------------------------------------------
 
     func onClickNew() {
-        
+        // todo
     }
 
     // 拍照

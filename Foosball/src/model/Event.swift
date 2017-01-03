@@ -16,6 +16,8 @@ enum EventType: Int {
     case beApprentice //拜师
 }
 
+// 差异
+
 enum EventState {
     case invite //接收到邀请，可以同意，或拒绝（会让发送拒绝消息）
     case ready //生成后在到达比赛时间前的状态，可邀请，或取消

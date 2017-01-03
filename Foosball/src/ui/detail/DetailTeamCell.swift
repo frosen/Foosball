@@ -29,6 +29,9 @@ class DetailTeamCell: StaticCell {
     private var title: UILabel! = nil
     private var memberListView: UIView? = nil
 
+    private var curEvent: Event! = nil
+    private var curIndex: Int = 1 // 记录索引值，就可以知道是哪个team
+
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event?
         var avatarRowCount_float: CGFloat
@@ -59,9 +62,12 @@ class DetailTeamCell: StaticCell {
     override func setData(_ d: BaseData?, index: IndexPath?) {
         // 读取数据
         let e: Event = d as! Event
+        curEvent = e
+        curIndex = index!.row
+
         let memberList: [UserState]
         var titleStr: String
-        switch index!.row {
+        switch curIndex {
         case 1:
             memberList = e.ourSideStateList
             titleStr = "友方人员"
@@ -106,6 +112,7 @@ class DetailTeamCell: StaticCell {
         memberListView!.addSubview(newBtn)
         newBtn.frame.origin.x = CGFloat(pos) * DetailTeamCell.memberViewWidth
         newBtn.frame.origin.y = CGFloat(line) * DetailTeamCell.memberViewHeight
+
     }
 
     private func createMemberView(_ state: UserState) -> UIView {
@@ -120,6 +127,9 @@ class DetailTeamCell: StaticCell {
             name: userB.name,
             url: userB.avatarURL)
         v.addSubview(avatar)
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(DetailTeamCell.tapAvatar(ges:)))
+        avatar.addGestureRecognizer(tap)
 
         // 状态
         let stateView = StateView(small: true)
@@ -173,8 +183,18 @@ class DetailTeamCell: StaticCell {
         return v
     }
 
+    func tapAvatar(ges: UITapGestureRecognizer) {
+        // todo
+    }
+
     // 邀请
     func onClickInvite() {
         print("invite")
+
+        // 判断是否可以邀请 todo
+        if (curEvent.operationTimeList[0]).userId != APP.userMgr.data.ID && curEvent.canInvite == false && curIndex != 3 {
+            
+        }
+    
     }
 }

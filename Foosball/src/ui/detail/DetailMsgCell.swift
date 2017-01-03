@@ -42,7 +42,7 @@ class DetailMsgHeadCell: DetailHeadCell {
     }
 
     func onClickScore() {
-        
+        // todo
     }
 }
 
@@ -55,6 +55,9 @@ class DetailMsgCell: BaseCell {
     private var nameLbl: UILabel! = nil
     private var timeLbl: UILabel! = nil
     private var txtLbl: UILabel! = nil
+
+    private var curEvent: Event! = nil
+    private var curIndex: Int = 1
 
     static var lblStyleAttri: [String : Any] {
         let paragraphStyle = NSMutableParagraphStyle()
@@ -77,7 +80,7 @@ class DetailMsgCell: BaseCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
 
-        //创建名字和时间的文本
+        // 创建名字和时间的文本
         nameLbl = UILabel()
         contentView.addSubview(nameLbl)
         nameLbl.font = TextFont
@@ -95,20 +98,25 @@ class DetailMsgCell: BaseCell {
         timeLbl.frame = CGRect(x: w - DetailG.headMargin - 100, y: 11, width: 100, height: 17)
         timeLbl.textAlignment = .right
 
-        //创建文本
+        // 创建文本
         txtLbl = UILabel()
         contentView.addSubview(txtLbl)
 
         txtLbl.numberOfLines = 0
         txtLbl.lineBreakMode = .byCharWrapping
         txtLbl.font = TextFont
+
+        // 长按效果
+        let longP = UILongPressGestureRecognizer(target: self, action: #selector(DetailMsgCell.longPressCell(ges:)))
+        contentView.addGestureRecognizer(longP)
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
-        let curRow = index!.row
-
         let e = d as! Event
-        let msgStru: MsgStruct = e.msgList[e.msgList.count - curRow] // 这里的减法是为了倒过来显示，时间靠后的放上面
+        curEvent = e
+        curIndex = index!.row
+
+        let msgStru: MsgStruct = e.msgList[e.msgList.count - curIndex] // 这里的减法是为了倒过来显示，时间靠后的放上面
         let user: UserBrief = msgStru.user
 
         if img != nil {
@@ -118,6 +126,9 @@ class DetailMsgCell: BaseCell {
             rect: CGRect(x: DetailG.headMargin, y: DetailG.headMargin, width: DetailMsgCell.msgAvatarWidth, height: DetailMsgCell.msgAvatarWidth),
             name: user.name, url: user.avatarURL)
         contentView.addSubview(img!)
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(DetailMsgCell.tapAvatar(ges:)))
+        img!.addGestureRecognizer(tap)
 
         //名字和时间
         nameLbl.text = user.name
@@ -129,5 +140,19 @@ class DetailMsgCell: BaseCell {
 
         let attriStr = NSAttributedString(string: msgStru.msg, attributes: DetailMsgCell.lblStyleAttri)
         txtLbl.attributedText = attriStr
+    }
+
+    func longPressCell(ges: UILongPressGestureRecognizer) {
+        if ges.state != .began {
+            return
+        }
+
+        print("long press detail msg cell")
+
+        // todo
+    }
+
+    func tapAvatar(ges: UITapGestureRecognizer) {
+        // todo
     }
 }
