@@ -118,7 +118,6 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
         avatarBG.backgroundColor = UIColor.white
 
         avatarBG.layer.cornerRadius = avatarWidth / 2
-        avatarBG.layer.shouldRasterize = true
 
         avatarBG.addSubview(avatar)
         avatar.center = avatarBG.center

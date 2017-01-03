@@ -108,7 +108,6 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
         lbl.textColor = BaseColor
         lbl.textAlignment = .center
 
-
         // 下面的线
         let line = UIView(frame: CGRect(x: 0, y: h - 1, width: w, height: 1))
         contentView.addSubview(line)

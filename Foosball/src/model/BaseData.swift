@@ -130,15 +130,16 @@ class LocationMgr: NSObject, CLLocationManagerDelegate {
 }
 
 class Location {
+    // 可空，空就是位置待定
     var loc: CLLocation? = nil
 
     init (l: CLLocation? = nil) {
         self.loc = l
     }
 
-    class func getCurLoc(callback: @escaping (Location?) -> Void) {
+    func getCurLoc() {
         LocationMgr.shareInstance.getCurLoc() { loc in
-            callback(loc != nil ? Location(l: loc!) : nil)
+            self.loc = loc
         }
     }
 

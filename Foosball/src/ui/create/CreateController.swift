@@ -29,7 +29,9 @@ class CreateController: BaseController, UIScrollViewDelegate {
     func initCreateEvent() {
         createEvent = Event(ID: DataID(ID: -1))
         createEvent.time = Time(timeIntervalSinceNow: 1800) // 往后30分钟
+
         createEvent.location = Location()
+        createEvent.location.getCurLoc()
     }
 
     func initUIData() {

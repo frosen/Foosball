@@ -28,7 +28,7 @@ class StateView: UIView {
         addSubview(lbl)
 
         lbl.textAlignment = .center
-        lbl.font = UIFont.boldSystemFont(ofSize: 12)
+        lbl.font = UIFont.boldSystemFont(ofSize: 10)
         lbl.textColor = UIColor.white
 
         layer.cornerRadius = StateView.h / 2
