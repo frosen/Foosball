@@ -34,7 +34,7 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
         actionBtnBoard.delegate = self
     }
 
-    let maxMemberCount: Int = 6
+    private let maxMemberCount: Int = 6
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
         curEvent = e

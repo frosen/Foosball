@@ -92,7 +92,18 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
         data = []
 
-        e.msgList = [m1, m2, m3, m4, m5]
+        e.msgList = [m1, m2, m3, m4, m5,
+            MsgStruct(user: bk3, time: Time.now, msg: "你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
+            MsgStruct(user: bk3, time: Time.now, msg: "你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
+            MsgStruct(user: bk3, time: Time.now, msg: "你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
+            MsgStruct(user: bk3, time: Time.now, msg: "你说什么1"),
+            MsgStruct(user: bk3, time: Time.now, msg: "你说什么1"),
+            MsgStruct(user: bk3, time: Time.now, msg: "你说什么1说什么5 你说什么5 你说什么5 你说什么5 你说"),
+            MsgStruct(user: bk3, time: Time.now, msg: "你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
+            MsgStruct(user: bk3, time: Time.now, msg: "你说什么1"),
+            MsgStruct(user: bk3, time: Time.now, msg: "你说什么1说什么5 你说什么5 你说什么5 你说什么5 你说 zv说什么5 你说什么5 你说什么5 你说什么5 你说"),
+            MsgStruct(user: bk3, time: Time.now, msg: "你说什么1"),
+        ]
         data.append(e)
         e = Event(ID: DataID(ID: 50001))
         e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]

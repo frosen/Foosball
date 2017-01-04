@@ -12,17 +12,6 @@ class Avatar: UIView {
     class func create(rect: CGRect, name: String, url: String) -> Avatar {
         let avatarBG = Avatar(frame: rect)
 
-        let nameLbl = UILabel(frame: CGRect(x: 0, y: 0, width: rect.width, height: rect.height))
-        avatarBG.addSubview(nameLbl)
-
-        // 只获取一个字
-        let index = name.index(name.startIndex, offsetBy: 1)
-        let subString = name.substring(to: index)
-        nameLbl.text = subString
-
-        nameLbl.textAlignment = NSTextAlignment.center
-        nameLbl.textColor = UIColor.white
-
         // 名字不同底色也不同
         var asciiTab: [Int] = [0, 0, 0]
         var i = 0
@@ -45,12 +34,25 @@ class Avatar: UIView {
 
         avatarBG.backgroundColor = UIColor(red: r, green: g, blue: b, alpha: 1.0)
 
-        // 根据第一个字是中英文，计算font
-        let rate: CGFloat = rect.width / 70
-        let nameFont: CGFloat = firstAscii < 128 ? 50 : 35
-        nameLbl.font = UIFont.boldSystemFont(ofSize: nameFont * rate)
+        if url == "" {
+            let nameLbl = UILabel(frame: CGRect(x: 0, y: 0, width: rect.width, height: rect.height))
+            avatarBG.addSubview(nameLbl)
 
-        if url != "" {
+            // 只获取一个字
+            let index = name.index(name.startIndex, offsetBy: 1)
+            let subString = name.substring(to: index)
+
+            nameLbl.text = subString
+
+            nameLbl.textAlignment = NSTextAlignment.center
+            nameLbl.textColor = UIColor.white
+
+            // 根据第一个字是中英文，计算font
+            let rate: CGFloat = rect.width / 70
+            let nameFont: CGFloat = firstAscii < 128 ? 50 : 35
+            nameLbl.font = UIFont.boldSystemFont(ofSize: nameFont * rate)
+
+        } else {
             let avatar = UIImageView(frame: CGRect(x: 0, y: 0, width: rect.width, height: rect.height))
             avatarBG.addSubview(avatar)
 
