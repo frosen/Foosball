@@ -78,6 +78,8 @@ class ActionBtnBoard: UIView {
     private var rBtn: UIButton! = nil
     private var msgBtn: UIButton? = nil
 
+    private var curMsgNum: Int = 0
+
     // 代理
     var delegate: ActionBtnBoardDelegate? = nil
 
@@ -105,10 +107,6 @@ class ActionBtnBoard: UIView {
         rBtn.setTitleColor(UIColor.gray, for: .normal)
         rBtn.setTitleColor(UIColor.lightGray, for: .highlighted)
         rBtn.titleLabel!.font = font
-
-        // msg按钮
-        msgBtn = UIButton(type: .custom)
-        msgBtn?.setImage(#imageLiteral(resourceName: "goto_msg").withRenderingMode(.alwaysTemplate), for: .normal)
     }
 
     // 根据不同的状态产生不同的按钮
@@ -116,7 +114,8 @@ class ActionBtnBoard: UIView {
         let stateAct: StateAction = ActionBtnBoard.stateActionList[st]!
 
         // 计算按钮宽度
-        btnWidth = frame.width - ((msgBtn != nil) ? msgBtn!.frame.width : CGFloat(0))
+        let msgBtnWidth = ((curMsgNum > 0) ? msgBtn!.frame.width : CGFloat(0))
+        btnWidth = frame.width - msgBtnWidth
         btnWidth = btnWidth / ((stateAct.rbtn != nil) ? 2 : 1)
 
         if stateAct.lbtn == nil {
@@ -125,6 +124,7 @@ class ActionBtnBoard: UIView {
             lBtn.isHidden = false
 
             lBtn.frame.size.width = btnWidth
+            lBtn.frame.origin.x = msgBtnWidth
             lBtn.setImage(stateAct.lbtn!.img, for: .normal)
             lBtn.setTitle(stateAct.lbtn!.text, for: .normal)
         }
@@ -148,6 +148,38 @@ class ActionBtnBoard: UIView {
 
     // 设置后会在右边出现聊天提示，并有气泡提示有多少条，如果小于等于0则消失
     func setMsgTip(_ num: Int) {
+        if msgBtn == nil {
+            msgBtn = UIButton(type: .custom)
+            addSubview(msgBtn!)
+            msgBtn!.frame = CGRect(x: 15, y: 0, width: frame.height, height: frame.height)
+            msgBtn!.tintColor = BaseColor
+            msgBtn!.setImage(#imageLiteral(resourceName: "goto_msg").withRenderingMode(.alwaysTemplate), for: .normal)
+            msgBtn!.addTarget(self, action: #selector(ActionBtnBoard.onClickGotoMsg), for: .touchUpInside)
+        }
 
+        if curMsgNum == 0 && num == 0 {
+            return
+        } else if curMsgNum > 0 && num > 0 { // 只更新数字
+
+        } else if curMsgNum == 0 && num > 0 { // 进来
+
+        } else { // 出去
+
+        }
+
+        curMsgNum = num
+    }
+
+    func onClickGotoMsg() {
+        delegate?.onPressMsg()
     }
 }
+
+
+
+
+
+
+
+
+
