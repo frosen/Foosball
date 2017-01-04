@@ -77,7 +77,7 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
     private func initSubVc() {
         //挑战
         let challengeVc = ChallengeController(rootVC: self)
-        addVc(challengeVc, title: "挑战", image: "home2")
+        addVc(challengeVc, title: "挑战", image: #imageLiteral(resourceName: "home2"))
 
         //附近
 
@@ -87,14 +87,14 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
 
         //个人
         let ownVc = OwnController(rootVC: self)
-        addVc(ownVc, title: "个人", image: "my2")
+        addVc(ownVc, title: "个人", image: #imageLiteral(resourceName: "my2"))
     }
 
-    private func addVc(_ vc: BaseTabController, title t: String, image img: String) {
+    private func addVc(_ vc: BaseTabController, title t: String, image img: UIImage) {
         vc.tabBarItem.title = t
 
         // 设置子控制器的图片
-        vc.tabBarItem.image = UIImage(named: img)
+        vc.tabBarItem.image = img
 
         // 先给外面传进来的小控制器 包装 一个导航控制器
         let nav = UINavigationController(rootViewController: vc)
@@ -109,8 +109,8 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
 
     private func initTabBar() {
         let midBtn = UIButton(type: .custom)
-        midBtn.setImage(UIImage(named: "mid_btn"), for: UIControlState())
-        midBtn.setImage(UIImage(named: "mid_btn_press"), for: .highlighted)
+        midBtn.setImage(#imageLiteral(resourceName: "mid_btn"), for: UIControlState())
+        midBtn.setImage(#imageLiteral(resourceName: "mid_btn_press"), for: .highlighted)
         midBtn.sizeToFit()
 
         myTabBar = MyTabBar.replaceOldTabBar(self, midButton: midBtn, btnItems: items)

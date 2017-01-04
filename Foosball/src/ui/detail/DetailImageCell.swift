@@ -92,7 +92,7 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         ))
         v.addSubview(img)
 
-        img.sd_setImage(with: URL(string: url), placeholderImage: UIImage(named: "img_default"))
+        img.sd_setImage(with: URL(string: url), placeholderImage: #imageLiteral(resourceName: "img_default"))
 
         v.tag = index
         let tap = UITapGestureRecognizer(target: self, action: #selector(DetailImageCell.tapImageView(ges:)))
@@ -120,7 +120,7 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
             width: imgWidth,
             height: imgWidth
         )
-        btn.setImage(UIImage(named: "plus"), for: .normal)
+        btn.setImage(#imageLiteral(resourceName: "plus"), for: .normal)
         btn.backgroundColor = UIColor(white: 0.91, alpha: 1.0)
         btn.addTarget(self, action: #selector(DetailImageCell.onClickNew), for: .touchUpInside)
 

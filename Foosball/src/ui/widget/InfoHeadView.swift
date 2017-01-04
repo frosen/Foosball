@@ -99,7 +99,7 @@ class InfoHeadView: UIView {
         subTitle.shadowOffset = CGSize(width: 0, height: 1)
     }
 
-    func resetData(bgImgName bgName: String, avatarURL: String, titleStr: String, subTitleStr: String) {
+    func resetData(bgImg bgimg: UIImage, avatarURL: String, titleStr: String, subTitleStr: String) {
         let w: CGFloat = frame.size.width
         let h: CGFloat = frame.size.height
 
@@ -123,7 +123,7 @@ class InfoHeadView: UIView {
         avatar.layer.borderWidth = 2
 
         //其他属性
-        bg.image = UIImage(named: bgName)
+        bg.image = bgimg
         title.text = titleStr
         subTitle.text = subTitleStr
     }

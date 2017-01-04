@@ -16,7 +16,7 @@ class SearchController: BaseController, UISearchBarDelegate {
         navTabType = .HideTab
         super.viewDidLoad()
 
-        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(SearchController.onBack), image: "go_back")
+        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(SearchController.onBack), image: #imageLiteral(resourceName: "go_back"))
 
         search = UISearchBar()
         navigationItem.titleView = search

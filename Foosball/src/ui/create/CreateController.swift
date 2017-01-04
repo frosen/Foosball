@@ -67,7 +67,7 @@ class CreateController: BaseController, UIScrollViewDelegate {
         }
 
         // 导航栏
-        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(CreateController.onBack), image: "go_back")
+        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(CreateController.onBack), image: #imageLiteral(resourceName: "go_back"))
         setStepLebel()
     }
 

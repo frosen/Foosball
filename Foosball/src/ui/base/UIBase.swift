@@ -40,10 +40,10 @@ let TitleFont: UIFont = UIFont.boldSystemFont(ofSize: 15)
 let TextFont: UIFont = UIFont.systemFont(ofSize: 13)
 
 class UITools {
-    class func createBarBtnItem(_ target: AnyObject, action: Selector, image img: String) -> UIBarButtonItem {
+    class func createBarBtnItem(_ target: AnyObject, action: Selector, image img: UIImage) -> UIBarButtonItem {
         let btn = UIButton(type: .custom)
         btn.addTarget(target, action: action, for: .touchUpInside)
-        btn.setBackgroundImage(UIImage(named: img), for: UIControlState())
+        btn.setBackgroundImage(img, for: UIControlState())
         let bSize = btn.currentBackgroundImage!.size
         btn.bounds = CGRect(x: 0, y: 0, width: bSize.width, height: bSize.height)
         return UIBarButtonItem(customView: btn)

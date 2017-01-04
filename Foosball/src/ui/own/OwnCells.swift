@@ -82,8 +82,8 @@ class OwnNormalCell: UITableViewCell {
         return 44
     }
 
-    func setUIData(image imgName: String, title: String, subTitle: String) {
-        imageView!.image = UIImage(named: imgName)
+    func setUIData(image img: UIImage, title: String, subTitle: String) {
+        imageView!.image = img
         textLabel!.text = title
         detailTextLabel!.text = subTitle
         accessoryType = .disclosureIndicator

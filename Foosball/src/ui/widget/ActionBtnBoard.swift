@@ -11,9 +11,9 @@ import UIKit
 class AcBtn {
     let text: String
     let img: UIImage
-    init(t: String, imgStr: String = "act_btn_confirm") {
+    init(t: String, img: UIImage = #imageLiteral(resourceName: "act_btn_confirm")) {
         text = " " + t + " " // 与图标空开一点
-        img = UIImage(named: imgStr)!
+        self.img = img
     }
 }
 
@@ -105,6 +105,10 @@ class ActionBtnBoard: UIView {
         rBtn.setTitleColor(UIColor.gray, for: .normal)
         rBtn.setTitleColor(UIColor.lightGray, for: .highlighted)
         rBtn.titleLabel!.font = font
+
+        // msg按钮
+        msgBtn = UIButton(type: .custom)
+        msgBtn?.setImage(#imageLiteral(resourceName: "goto_msg").withRenderingMode(.alwaysTemplate), for: .normal)
     }
 
     // 根据不同的状态产生不同的按钮
@@ -136,7 +140,6 @@ class ActionBtnBoard: UIView {
             rBtn.setImage(stateAct.rbtn!.img, for: .normal)
             rBtn.setTitle(stateAct.rbtn!.text, for: .normal)
         }
-
     }
 
     func setStateTip(_ b: Bool) {

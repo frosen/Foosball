@@ -85,12 +85,12 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
 
         // 翻月箭头
         let arrowEdge: CGFloat = 30
-        let left = UIImageView(image: UIImage(named: "arrows_right"))
+        let left = UIImageView(image: #imageLiteral(resourceName: "arrows_right"))
         contentBGView.addSubview(left)
         left.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
         left.center = CGPoint(x: arrowEdge, y: headHeight / 2)
 
-        let right = UIImageView(image: UIImage(named: "arrows_right"))
+        let right = UIImageView(image: #imageLiteral(resourceName: "arrows_right"))
         contentBGView.addSubview(right)
         right.center = CGPoint(x: contentBGView.frame.width - arrowEdge, y: headHeight / 2)
 

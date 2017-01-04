@@ -164,7 +164,7 @@ class DetailTeamCell: StaticCell {
         let btn = UIButton(type: .custom)
         v.addSubview(btn)
         btn.frame = CGRect(x: DetailTeamCell.avatarMargin, y: DetailTeamCell.avatarMargin, width: avatarWidth, height: avatarWidth)
-        btn.setImage(UIImage(named: "plus"), for: .normal)
+        btn.setImage(#imageLiteral(resourceName: "plus"), for: .normal)
         btn.backgroundColor = UIColor(white: 0.91, alpha: 1.0)
         btn.layer.cornerRadius =  avatarWidth / 2
         btn.layer.masksToBounds = true

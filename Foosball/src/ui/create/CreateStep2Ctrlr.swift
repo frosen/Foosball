@@ -48,7 +48,7 @@ class CreateStep2Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
             cell = UITableViewCell(style: .value1, reuseIdentifier: step2CellId)
         }
         print(ItemType.list[indexPath.row].name)
-        cell!.imageView!.image = UIImage(named: "setting")
+        cell!.imageView!.image = #imageLiteral(resourceName: "setting")
         cell!.textLabel!.text = ItemType.list[indexPath.row].name
 
         return cell!

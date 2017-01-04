@@ -9,10 +9,10 @@
 import UIKit
 
 struct NorCellData {
-    let img: String
+    let img: UIImage
     let title: String
     let subTitle: String
-    init(i: String, t: String, st: String) {
+    init(i: UIImage, t: String, st: String) {
         img = i
         title = t
         subTitle = st
@@ -24,24 +24,24 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
     private let group = [
         //section
         [
-            NorCellData(i: "share", t: "福利", st: ""),
+            NorCellData(i: #imageLiteral(resourceName: "share"), t: "福利", st: ""),
         ],
         [
-            NorCellData(i: "share", t: "分享", st: "分享"),
-            NorCellData(i: "feedback", t: "反馈", st: ""),
+            NorCellData(i: #imageLiteral(resourceName: "share"), t: "分享", st: "分享"),
+            NorCellData(i: #imageLiteral(resourceName: "feedback"), t: "反馈", st: ""),
         ],
         [
-            NorCellData(i: "setting", t: "账号", st: ""),
-            NorCellData(i: "setting", t: "隐私", st: ""),
-            NorCellData(i: "setting", t: "消息提醒", st: ""),
-            NorCellData(i: "setting", t: "其他设置", st: ""),
+            NorCellData(i: #imageLiteral(resourceName: "setting"), t: "账号", st: ""),
+            NorCellData(i: #imageLiteral(resourceName: "setting"), t: "隐私", st: ""),
+            NorCellData(i: #imageLiteral(resourceName: "setting"), t: "消息提醒", st: ""),
+            NorCellData(i: #imageLiteral(resourceName: "setting"), t: "其他设置", st: ""),
         ],
         [
-            NorCellData(i: "setting", t: "关于", st: ""),
-            NorCellData(i: "setting", t: "版本信息", st: ""),
+            NorCellData(i: #imageLiteral(resourceName: "setting"), t: "关于", st: ""),
+            NorCellData(i: #imageLiteral(resourceName: "setting"), t: "版本信息", st: ""),
         ],
         [
-            NorCellData(i: "share", t: "退出", st: ""),
+            NorCellData(i: #imageLiteral(resourceName: "share"), t: "退出", st: ""),
         ],
     ]
 
@@ -95,7 +95,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
         curUser = user
 
         infoHead.resetData(
-            bgImgName: "selfbg",
+            bgImg: #imageLiteral(resourceName: "selfbg"),
             avatarURL: user.avatarURL,
             titleStr: user.name,
             subTitleStr: "个性签名，啦啦啦"
@@ -109,7 +109,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
         curUser = user
 
         infoHead.resetData(
-            bgImgName: "selfbg",
+            bgImg: #imageLiteral(resourceName: "selfbg"),
             avatarURL: user.avatarURL,
             titleStr: user.name,
             subTitleStr: "个性签名，啦啦啦"

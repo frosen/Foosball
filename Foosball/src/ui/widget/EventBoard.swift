@@ -31,7 +31,7 @@ class EventIcon {
         return (iconView, icon)
     }
 
-    static let spaceHolder: UIImage = UIImage(named: "event_bg")!
+    static let spaceHolder: UIImage = #imageLiteral(resourceName: "event_bg")
 }
 
 class EventBoard: UIView {

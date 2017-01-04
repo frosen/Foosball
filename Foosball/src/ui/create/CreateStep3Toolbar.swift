@@ -39,7 +39,7 @@ class CreateStep3Toolbar: BaseToolbar {
         btn1.titleLabel!.font = font
 
         btn1.setTitle(" 直接发布 ", for: .normal)
-        btn1.setImage(UIImage(named: "act_btn_confirm"), for: .normal)
+        btn1.setImage(#imageLiteral(resourceName: "act_btn_confirm"), for: .normal)
         btn1.addTarget(self, action: #selector(CreateStep3Toolbar.onPublish), for: .touchUpInside)
 
         let btn2 = UIButton(type: .custom)
@@ -50,7 +50,7 @@ class CreateStep3Toolbar: BaseToolbar {
         btn2.titleLabel!.font = font
 
         btn2.setTitle(" 继续 ", for: .normal)
-        btn2.setImage(UIImage(named: "act_btn_confirm"), for: .normal)
+        btn2.setImage(#imageLiteral(resourceName: "act_btn_confirm"), for: .normal)
         btn2.addTarget(self, action: #selector(CreateStep3Toolbar.onGoon), for: .touchUpInside)
     }
 

@@ -175,10 +175,10 @@ class DetailWagerCell: DetailStringCell {
 class DetailStringBtnCell: DetailStringCell {
     fileprivate static let widthMinusMapBtn: CGFloat = DetailG.widthWithoutMargin - 80
     fileprivate weak var curEvent: Event! = nil
-    fileprivate func setBtn(name: String, action: Selector) {
+    fileprivate func setBtn(img: UIImage, action: Selector) {
         let enterMapBtn = UIButton(type: .custom)
         contentView.addSubview(enterMapBtn)
-        enterMapBtn.setImage(UIImage(named: name)!.withRenderingMode(.alwaysTemplate), for: .normal)
+        enterMapBtn.setImage(img.withRenderingMode(.alwaysTemplate), for: .normal)
         enterMapBtn.tintColor = BaseColor
         enterMapBtn.sizeToFit()
         enterMapBtn.center = CGPoint(
@@ -205,7 +205,7 @@ class DetailTimeCell: DetailStringBtnCell {
         let e = d as! Event
         curEvent = e
         setLblData(contentView: contentView, str: DetailTimeCell.getTimeString(e: e), w: DetailLocationCell.widthMinusMapBtn)
-        setBtn(name: "enter_calendar", action: #selector(DetailTimeCell.onClickEnterCalendarBtn)) // 进入日历按钮
+        setBtn(img: #imageLiteral(resourceName: "enter_calendar"), action: #selector(DetailTimeCell.onClickEnterCalendarBtn)) // 进入日历按钮
     }
 
     private class func getTimeString(e: Event) -> String {
@@ -260,7 +260,7 @@ class DetailLocationCell: DetailStringBtnCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
         self.selectionStyle = .none //使选中后没有反应
         initLblData(contentView: contentView, titleStr: "活动地点：")
-        setBtn(name: "enter_map", action: #selector(DetailLocationCell.onClickEnterMapBtn)) // 进入地图按钮
+        setBtn(img: #imageLiteral(resourceName: "enter_map"), action: #selector(DetailLocationCell.onClickEnterMapBtn)) // 进入地图按钮
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {

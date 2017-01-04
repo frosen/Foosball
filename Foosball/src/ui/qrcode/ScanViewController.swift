@@ -21,7 +21,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         navTabType = [.HideTab, .TransparentNav] // 隐藏导航栏和tabbar
         super.viewDidLoad()
 
-        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ScanViewController.onBack), image: "go_back")
+        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ScanViewController.onBack), image: #imageLiteral(resourceName: "go_back"))
 
         baseView.clipsToBounds = true //这个属性必须打开否则返回的时候会出现黑边
 
@@ -59,7 +59,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         scanWindow.clipsToBounds = true
 
         //角上的图
-        let cornerImage = UIImage(named: "scan_corner")
+        let cornerImage = #imageLiteral(resourceName: "scan_corner")
 
         let corner1 = UIImageView(image: cornerImage)
         scanWindow.addSubview(corner1)
@@ -88,8 +88,8 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
     private func initBottomButton() {
         var btns: [UIButton] = []
 
-        btns.append(setBtn(#selector(ScanViewController.onOpenAlbum), imgName: "scan_btn_photo", selectImgName: nil))
-        btns.append(setBtn(#selector(ScanViewController.onPressFlash(_:)), imgName: "scan_btn_flash", selectImgName: nil))
+        btns.append(setBtn(#selector(ScanViewController.onOpenAlbum), img: #imageLiteral(resourceName: "scan_btn_photo"), selectedImg: nil))
+        btns.append(setBtn(#selector(ScanViewController.onPressFlash(_:)), img: #imageLiteral(resourceName: "scan_btn_flash"), selectedImg: nil))
 
         let btnDis = baseView.bounds.width / CGFloat(btns.count + 1)
         for i in 0..<btns.count {
@@ -99,13 +99,13 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         }
     }
 
-    private func setBtn(_ action: Selector, imgName: String, selectImgName: String?) -> UIButton {
+    private func setBtn(_ action: Selector, img: UIImage, selectedImg: UIImage?) -> UIButton {
         let btn = UIButton(type: .custom)
         baseView.addSubview(btn)
-        btn.setBackgroundImage(UIImage(named: imgName), for: UIControlState())
+        btn.setBackgroundImage(img, for: UIControlState())
         btn.sizeToFit()
-        if selectImgName != nil {
-            btn.setBackgroundImage(UIImage(named: selectImgName!), for: .selected)
+        if selectedImg != nil {
+            btn.setBackgroundImage(selectedImg, for: .selected)
         }
         btn.addTarget(self, action: action, for: .touchUpInside)
         return btn
@@ -176,7 +176,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
 
     func resetScanAnim() {
         if scanNet == nil {
-            scanNet = UIImageView(image: UIImage(named: "scan_net"))
+            scanNet = UIImageView(image: #imageLiteral(resourceName: "scan_net"))
             scanWindow.addSubview(scanNet)
         } else {
             scanNet.layer.removeAllAnimations()

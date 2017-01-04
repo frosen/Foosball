@@ -18,10 +18,10 @@ class BaseTabController: BaseController {
     //设置导航栏控件，如果检测未登陆则使用登陆注册，如果未调用此接口则不设置-----------------------------------------------------
     func initNavBar() {
         //左
-        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(BaseTabController.onClickScan), image: "scan")
+        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(BaseTabController.onClickScan), image: #imageLiteral(resourceName: "scan"))
 
         //右
-        navigationItem.rightBarButtonItem = UITools.createBarBtnItem(self, action: #selector(BaseTabController.onClickSearch), image: "search")
+        navigationItem.rightBarButtonItem = UITools.createBarBtnItem(self, action: #selector(BaseTabController.onClickSearch), image: #imageLiteral(resourceName: "search"))
     }
 
     //跳转到二维码扫描页面

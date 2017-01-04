@@ -34,7 +34,7 @@ class MapController: BaseController, MAMapViewDelegate {
         //标题
         title = "地图"
 
-        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(MapController.onBack), image: "go_back")
+        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(MapController.onBack), image: #imageLiteral(resourceName: "go_back"))
         if callback != nil {
             let item = UIBarButtonItem(title: "确定", style: .done, target: self, action: #selector(MapController.onConfirm))
             item.tintColor = UIColor.white
@@ -72,7 +72,7 @@ class MapController: BaseController, MAMapViewDelegate {
             curLoc!.loc = CLLocation(latitude: userLoc.latitude, longitude: userLoc.longitude)
         }
 
-        let mapFlag = UIImageView(image: UIImage(named: "map_flag"))
+        let mapFlag = UIImageView(image: #imageLiteral(resourceName: "map_flag"))
         baseView.addSubview(mapFlag)
         mapFlag.center = map.center
     }
