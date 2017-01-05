@@ -106,6 +106,7 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
     }
 
     private let avatarMargin: CGFloat = 3
+    private var avatarBGImg: UIImage? = nil
     private func createMemberView(_ user: UserState, avatarWidth: CGFloat) -> UIView {
         let w = avatarWidth - 2 * avatarMargin
         let avatar =  Avatar.create(
@@ -113,16 +114,20 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
             name: user.user.name,
             url: user.user.avatarURL)
 
-        // 这是一个白边，防止头像之间连在一起
-        let avatarBG = UIView(frame: CGRect(x: 0, y: 0, width: avatarWidth, height: avatarWidth))
-        avatarBG.backgroundColor = UIColor.white
+        if avatarBGImg == nil {
+            // 这是一个白边，防止头像之间连在一起
+            let avatarBGV = UIView(frame: CGRect(x: 0, y: 0, width: avatarWidth, height: avatarWidth))
+            avatarBGV.backgroundColor = UIColor.white
+            avatarBGV.layer.cornerRadius = avatarWidth / 2
+            avatarBGImg = UITools.turnViewToImage(avatarBGV)
+        }
 
-        avatarBG.layer.cornerRadius = avatarWidth / 2
+        let bg = UIImageView(frame: CGRect(x: 0, y: 0, width: avatarWidth, height: avatarWidth))
+        bg.image = avatarBGImg
+        bg.addSubview(avatar)
+        avatar.center = bg.center
 
-        avatarBG.addSubview(avatar)
-        avatar.center = avatarBG.center
-
-        return avatarBG
+        return bg
     }
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {

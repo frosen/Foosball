@@ -59,5 +59,15 @@ class UITools {
         }
         target.present(alert, animated: true, completion: nil)
     }
+
+    class func turnViewToImage(_ v: UIView) -> UIImage {
+        // http://www.cocoachina.com/bbs/read.php?tid=144770
+        let s = v.frame.size
+        UIGraphicsBeginImageContextWithOptions(s, false, UIScreen.main.scale)
+        v.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return img!
+    }
 }
 
