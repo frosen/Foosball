@@ -119,16 +119,17 @@ class DetailMsgCell: BaseCell {
         let msgStru: MsgStruct = e.msgList[e.msgList.count - curIndex] // 这里的减法是为了倒过来显示，时间靠后的放上面
         let user: UserBrief = msgStru.user
 
-        if img != nil {
-            img!.removeFromSuperview()
-        }
-        img = Avatar.create(
-            rect: CGRect(x: DetailG.headMargin, y: DetailG.headMargin, width: DetailMsgCell.msgAvatarWidth, height: DetailMsgCell.msgAvatarWidth),
-            name: user.name, url: user.avatarURL)
-        contentView.addSubview(img!)
+        if img == nil {
+            img = Avatar.create(
+                rect: CGRect(x: DetailG.headMargin, y: DetailG.headMargin, width: DetailMsgCell.msgAvatarWidth, height: DetailMsgCell.msgAvatarWidth),
+                name: user.name, url: user.avatarURL)
+            contentView.addSubview(img!)
 
-        let tap = UITapGestureRecognizer(target: self, action: #selector(DetailMsgCell.tapAvatar(ges:)))
-        img!.addGestureRecognizer(tap)
+            let tap = UITapGestureRecognizer(target: self, action: #selector(DetailMsgCell.tapAvatar(ges:)))
+            img!.addGestureRecognizer(tap)
+        } else {
+            img!.set(name: user.name, url: user.avatarURL)
+        }
 
         //名字和时间
         nameLbl.text = user.name

@@ -10,6 +10,7 @@ import UIKit
 
 class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
     var eventBoard: EventBoard! = nil
+    private var VS: UILabel! = nil
     private var actionBtnBoard: ActionBtnBoard! = nil
 
     private var curEvent: Event! = nil
@@ -27,6 +28,19 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
         //事件板
         eventBoard = EventBoard()
         contentView.addSubview(eventBoard)
+
+        // 事件板中内容
+        let teamView = eventBoard.contentView!
+
+        VS = UILabel()
+        teamView.addSubview(VS)
+
+        VS.font = UIFont.boldSystemFont(ofSize: 15)
+        VS.textColor = UIColor.black
+        VS.textAlignment = .center
+        VS.text = "VS"
+        VS.sizeToFit()
+        VS.center.y = teamView.frame.height / 2
 
         // 底部按钮
         actionBtnBoard = ActionBtnBoard(frame: CGRect(x: 0, y: 72, width: UIScreen.main.bounds.width, height: 36))
@@ -46,20 +60,6 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
 
         // 加载team数据
         let teamView = eventBoard.contentView!
-        for item in teamView.subviews {
-            item.removeFromSuperview()
-        }
-
-        // 中间的vs字样
-        let VS = UILabel()
-        teamView.addSubview(VS)
-
-        VS.font = UIFont.boldSystemFont(ofSize: 15)
-        VS.textColor = UIColor.black
-        VS.textAlignment = .center
-        VS.text = "VS"
-        VS.sizeToFit()
-
         let teamWidth = teamView.frame.height
         let interval: CGFloat = 18
 
@@ -68,8 +68,9 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
         var c: Int // 这个值来计算头像数量，一旦超过最大限度，就跳出
         c = 0
         for m in e.ourSideStateList {
-            let v = createMemberView(m, avatarWidth: teamWidth)
+            let v = createMemberView(m, avatarWidth: teamWidth, index: c)
             teamView.addSubview(v)
+
             v.frame.origin.x = memberPosX
             memberPosX += interval
 
@@ -79,14 +80,15 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
             }
         }
 
-        VS.center.y = teamView.frame.height / 2
         VS.frame.origin.x = memberPosX + (teamWidth - interval) + 5 // 5是留白
         memberPosX = VS.frame.origin.x + VS.frame.width + 5
 
+        let index = c // 保存上组的索引位置
         c = 0
         for m in e.opponentStateList {
-            let v = createMemberView(m, avatarWidth: teamWidth)
+            let v = createMemberView(m, avatarWidth: teamWidth, index: c + index)
             teamView.addSubview(v)
+
             v.frame.origin.x = memberPosX
             memberPosX += interval
 
@@ -95,6 +97,8 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
                 break
             }
         }
+
+        handleUnusedAvatar(index + c)
 
         // 按钮
         actionBtnBoard.setState(st)
@@ -106,28 +110,46 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
     }
 
     private let avatarMargin: CGFloat = 3
-    private var avatarBGImg: UIImage? = nil
-    private func createMemberView(_ user: UserState, avatarWidth: CGFloat) -> UIView {
-        let w = avatarWidth - 2 * avatarMargin
-        let avatar =  Avatar.create(
-            rect: CGRect(x: 0, y: 0, width: w, height: w),
-            name: user.user.name,
-            url: user.user.avatarURL)
+    static private var avatarBGImg: UIImage? = nil
+    private var avatarList: [UIView] = []
+    private func createMemberView(_ user: UserState, avatarWidth: CGFloat, index: Int) -> UIView {
+        if index >= avatarList.count {
+            let w = avatarWidth - 2 * avatarMargin
+            let avatar =  Avatar.create(
+                rect: CGRect(x: 0, y: 0, width: w, height: w),
+                name: user.user.name,
+                url: user.user.avatarURL)
 
-        if avatarBGImg == nil {
-            // 这是一个白边，防止头像之间连在一起
-            let avatarBGV = UIView(frame: CGRect(x: 0, y: 0, width: avatarWidth, height: avatarWidth))
-            avatarBGV.backgroundColor = UIColor.white
-            avatarBGV.layer.cornerRadius = avatarWidth / 2
-            avatarBGImg = UITools.turnViewToImage(avatarBGV)
+            if ChallengeCell.avatarBGImg == nil {
+                // 这是一个白边，防止头像之间连在一起
+                let avatarBGV = UIView(frame: CGRect(x: 0, y: 0, width: avatarWidth, height: avatarWidth))
+                avatarBGV.backgroundColor = UIColor.white
+                avatarBGV.layer.cornerRadius = avatarWidth / 2
+                ChallengeCell.avatarBGImg = UITools.turnViewToImage(avatarBGV)
+            }
+
+            let bg = UIImageView(frame: CGRect(x: 0, y: 0, width: avatarWidth, height: avatarWidth))
+            bg.image = ChallengeCell.avatarBGImg
+            bg.addSubview(avatar)
+            avatar.center = bg.center
+
+            avatarList.append(bg)
+            
+            return bg
+        } else {
+            let bg = avatarList[index]
+            let avatar = bg.subviews[0] as! Avatar
+            avatar.set(name: user.user.name, url: user.user.avatarURL)
+
+            return bg
         }
+    }
 
-        let bg = UIImageView(frame: CGRect(x: 0, y: 0, width: avatarWidth, height: avatarWidth))
-        bg.image = avatarBGImg
-        bg.addSubview(avatar)
-        avatar.center = bg.center
-
-        return bg
+    private func handleUnusedAvatar(_ index: Int) {
+        // 把没有用到的avatar，移到屏幕外
+        for i in index ..< avatarList.count {
+            avatarList[i].frame.origin.x = 99999
+        }
     }
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
