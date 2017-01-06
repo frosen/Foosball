@@ -95,10 +95,9 @@ func <(lhs: Time, rhs: Time) -> Bool {
 //位置信息的封装 ----------------------------------------------------------------------------
 
 // 用于获取当前位置
-class LocationMgr: NSObject, CLLocationManagerDelegate {
+class LocationMgr: NSObject, CLLocationManagerDelegate, AMapSearchDelegate {
 
     fileprivate static let shareInstance = LocationMgr()
-    var call: ((CLLocation?) -> Void)? = nil
 
     private var mgr: CLLocationManager {
         let m = CLLocationManager()
@@ -106,32 +105,69 @@ class LocationMgr: NSObject, CLLocationManagerDelegate {
         return m
     }
 
+    // loc ------------------------------------------------------------------------------
+
+    var callForLoc: ((CLLocation?) -> Void)? = nil
     func getCurLoc(callback: @escaping (CLLocation?) -> Void) {
         guard CLLocationManager.locationServicesEnabled() else {
             callback(nil)
             return
         }
 
-        call = callback
+        callForLoc = callback
         mgr.startUpdatingLocation()
     }
 
+    // CLLocationManagerDelegate
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let callback = call {
+        if let callback = callForLoc {
             callback(locations[0])
         }
         manager.stopUpdatingLocation()
-        call = nil
+        callForLoc = nil
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(error)
+        print("ERROR: locationManager", error)
     }
+
+    // regeo ------------------------------------------------------------------------------
+
+    var searchAPI: AMapSearchAPI {
+        let search = AMapSearchAPI()!
+        search.delegate = self
+        return search
+    }
+    var callForRegeo: ((String) -> Void)? = nil
+
+    func getDressString(from loc: CLLocationCoordinate2D, callback: @escaping ((String) -> Void)) {
+        callForRegeo = callback
+
+        let reqRegeo = AMapReGeocodeSearchRequest()
+        reqRegeo.location = AMapGeoPoint.location(withLatitude: CGFloat(loc.latitude), longitude: CGFloat(loc.longitude))
+
+        searchAPI.aMapReGoecodeSearch(reqRegeo)
+    }
+
+    // AMapSearchDelegate ---------------------------------------
+
+    func onReGeocodeSearchDone(_ request: AMapReGeocodeSearchRequest!, response: AMapReGeocodeSearchResponse!) {
+        if let regeo = response.regeocode {
+            callForRegeo!(regeo.formattedAddress)
+        }
+    }
+
+    func aMapSearchRequest(_ request: Any!, didFailWithError error: Error!) {
+        print("ERROR: aMapSearchRequest", error)
+    }
+
 }
 
-class Location {
+class Location: NSObject, AMapSearchDelegate {
     // 可空，空就是位置待定
     var loc: CLLocation? = nil
+    var address: String? = nil
 
     init (l: CLLocation? = nil) {
         self.loc = l
@@ -140,11 +176,17 @@ class Location {
     func getCurLoc() {
         LocationMgr.shareInstance.getCurLoc() { loc in
             self.loc = loc
+
+            if loc != nil {
+                LocationMgr.shareInstance.getDressString(from: loc!.coordinate) { str in
+                    self.address = str
+                }
+            }
         }
     }
 
     var toString: String {
-        return "北京市朝阳区三里屯南里源泉花园小区15号楼8单元1415号"
+        return address ?? "未指定"
     }
 }
 
