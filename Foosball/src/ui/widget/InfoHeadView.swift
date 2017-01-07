@@ -75,7 +75,7 @@ class InfoHeadView: UIView {
         title.center.x = 0.5 * w
         title.center.y = 0.42 * h + extraHeight + bottomMargin + 55
 
-        title.textAlignment = NSTextAlignment.center
+        title.textAlignment = .center
         title.font = UIFont.systemFont(ofSize: 14.0)
 
         title.textColor = UIColor.white
@@ -121,6 +121,7 @@ class InfoHeadView: UIView {
 
         avatar.layer.borderColor = UIColor.white.cgColor
         avatar.layer.borderWidth = 2
+        avatar.layer.cornerRadius = avatarW / 2
 
         //其他属性
         bg.image = bgimg

@@ -98,14 +98,10 @@ func <(lhs: Time, rhs: Time) -> Bool {
 class LocationMgr: NSObject, CLLocationManagerDelegate, AMapSearchDelegate {
 
     fileprivate static let shareInstance = LocationMgr()
-
-    private var mgr: CLLocationManager {
-        let m = CLLocationManager()
-        m.delegate = self
-        return m
-    }
+    private var isSearching: Bool = false
 
     // loc ------------------------------------------------------------------------------
+    private var mgr: CLLocationManager? = nil
 
     var callForLoc: ((CLLocation?) -> Void)? = nil
     func getCurLoc(callback: @escaping (CLLocation?) -> Void) {
@@ -115,12 +111,26 @@ class LocationMgr: NSObject, CLLocationManagerDelegate, AMapSearchDelegate {
         }
 
         callForLoc = callback
-        mgr.startUpdatingLocation()
+
+        if isSearching == true {
+            print("isSearching")
+            return
+        }
+        isSearching = true
+
+        if mgr == nil {
+            mgr = CLLocationManager()
+            mgr!.delegate = self
+        }
+        mgr!.startUpdatingLocation()
     }
 
     // CLLocationManagerDelegate
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("didUpdateLocations", locations[0].coordinate)
+        isSearching = false
+
         if let callback = callForLoc {
             callback(locations[0])
         }
@@ -130,36 +140,67 @@ class LocationMgr: NSObject, CLLocationManagerDelegate, AMapSearchDelegate {
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("ERROR: locationManager", error)
+        isSearching = false
+        if let callback = callForLoc {
+            callback(nil)
+        }
     }
 
     // regeo ------------------------------------------------------------------------------
 
-    var searchAPI: AMapSearchAPI {
-        let search = AMapSearchAPI()!
-        search.delegate = self
-        return search
-    }
-    var callForRegeo: ((String) -> Void)? = nil
+    var searchAPI: AMapSearchAPI? = nil
+    var callForRegeo: ((String?) -> Void)? = nil
 
-    func getDressString(from loc: CLLocationCoordinate2D, callback: @escaping ((String) -> Void)) {
+    func getDressString(from loc: CLLocationCoordinate2D, callback: @escaping ((String?) -> Void)) {
         callForRegeo = callback
+
+        if isSearching == true {
+            print("isSearching")
+            return
+        }
+        isSearching = true
 
         let reqRegeo = AMapReGeocodeSearchRequest()
         reqRegeo.location = AMapGeoPoint.location(withLatitude: CGFloat(loc.latitude), longitude: CGFloat(loc.longitude))
 
-        searchAPI.aMapReGoecodeSearch(reqRegeo)
+        if searchAPI == nil {
+            searchAPI = AMapSearchAPI()!
+            searchAPI!.delegate = self
+        }
+        searchAPI!.aMapReGoecodeSearch(reqRegeo)
     }
 
     // AMapSearchDelegate ---------------------------------------
 
     func onReGeocodeSearchDone(_ request: AMapReGeocodeSearchRequest!, response: AMapReGeocodeSearchResponse!) {
+        print("onReGeocodeSearchDone")
+        isSearching = false
+
         if let regeo = response.regeocode {
-            callForRegeo!(regeo.formattedAddress)
+            print(regeo.formattedAddress)
+            print("--", regeo.addressComponent.province)
+            print("--", regeo.addressComponent.city)
+            print("--", regeo.addressComponent.citycode)
+            print("--", regeo.addressComponent.district)
+            print("--", regeo.addressComponent.adcode)
+            print("--", regeo.addressComponent.township)
+            print("--", regeo.addressComponent.towncode)
+            print("--", regeo.addressComponent.neighborhood)
+            print("--", regeo.addressComponent.building)
+            print("--", regeo.addressComponent.streetNumber.street)
+            print("--", regeo.addressComponent.streetNumber.number)
+            if let call = callForRegeo {
+                call(regeo.formattedAddress)
+            }
         }
     }
 
     func aMapSearchRequest(_ request: Any!, didFailWithError error: Error!) {
         print("ERROR: aMapSearchRequest", error)
+        isSearching = false
+        if let call = callForRegeo {
+            call(nil)
+        }
     }
 
 }
@@ -167,26 +208,41 @@ class LocationMgr: NSObject, CLLocationManagerDelegate, AMapSearchDelegate {
 class Location: NSObject, AMapSearchDelegate {
     // 可空，空就是位置待定
     var loc: CLLocation? = nil
-    var address: String? = nil
+    var locString: String? = nil
 
     init (l: CLLocation? = nil) {
         self.loc = l
     }
 
-    func getCurLoc() {
+    // 回调：位置，位置文本，是否成功
+    func fetchCurLoc(callback: @escaping ((CLLocation?, String?, Bool) -> Void)) {
         LocationMgr.shareInstance.getCurLoc() { loc in
             self.loc = loc
+            callback(loc, nil, (loc != nil))
 
             if loc != nil {
                 LocationMgr.shareInstance.getDressString(from: loc!.coordinate) { str in
-                    self.address = str
+                    self.locString = str
+                    callback(loc, str, (str != nil))
                 }
             }
         }
     }
 
-    var toString: String {
-        return address ?? "未指定"
+    func getAddress(callback: @escaping ((String?) -> Void)) {
+        if let ad = locString {
+            callback(ad)
+        } else {
+            fetchCurLoc { loc, str, suc in
+                if suc == false {
+                    callback(nil)
+                } else {
+                    if let s = str {
+                        callback(s)
+                    }
+                }
+            }
+        }
     }
 }
 

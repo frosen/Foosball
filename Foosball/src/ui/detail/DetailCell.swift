@@ -117,7 +117,7 @@ class DetailStringCell: StaticCell {
         lbl.font = TextFont
     }
 
-    func setLblData(contentView: UIView, str: String, w: CGFloat = DetailG.widthWithoutMargin) {
+    func setLblData(str: String, w: CGFloat = DetailG.widthWithoutMargin) {
         let height = DetailG.calculateLblHeight(str, w: w)
         lbl.frame = CGRect(x: DetailG.headMargin, y: DetailG.subTitleHeight, width: w, height: height)
         let attri: [String : Any] = [NSParagraphStyleAttributeName: DetailG.paragraphStyle]
@@ -139,7 +139,7 @@ class DetailContentCell: DetailStringCell {
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
-        setLblData(contentView: contentView, str: e.detail)
+        setLblData(str: e.detail)
     }
 }
 
@@ -168,12 +168,12 @@ class DetailWagerCell: DetailStringCell {
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
-        setLblData(contentView: contentView, str: DetailWagerCell.createText(from: e.wager))
+        setLblData(str: DetailWagerCell.createText(from: e.wager))
     }
 }
 
 class DetailStringBtnCell: DetailStringCell {
-    fileprivate static let widthMinusMapBtn: CGFloat = DetailG.widthWithoutMargin - 80
+    fileprivate static let widthMinusMapBtn: CGFloat = DetailG.widthWithoutMargin - 50
     fileprivate weak var curEvent: Event! = nil
     fileprivate func setBtn(img: UIImage, action: Selector) {
         let enterMapBtn = UIButton(type: .custom)
@@ -187,13 +187,24 @@ class DetailStringBtnCell: DetailStringCell {
         )
         enterMapBtn.addTarget(self, action: action, for: .touchUpInside)
     }
+
+    override func initLblData(contentView: UIView, titleStr: String) {
+        super.initLblData(contentView: contentView, titleStr: titleStr)
+
+        lbl.frame = CGRect(x: DetailG.headMargin, y: DetailG.subTitleHeight, width: DetailStringBtnCell.widthMinusMapBtn, height: TextFont.lineHeight)
+        lbl.numberOfLines = 1
+        lbl.lineBreakMode = .byTruncatingTail
+    }
+
+    override func setLblData(str: String, w: CGFloat) {
+        lbl.text = str
+    }
 }
 
 class DetailTimeCell: DetailStringBtnCell {
     private var tpv: TimePickerView? = nil
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
-        let str = getTimeString(e: d as! Event)
-        return DetailG.calculateLblHeight(str, w: widthMinusMapBtn) + DetailG.subTitleHeight + DetailG.contentBottomHeight
+        return TextFont.lineHeight + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
@@ -204,11 +215,11 @@ class DetailTimeCell: DetailStringBtnCell {
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
         curEvent = e
-        setLblData(contentView: contentView, str: DetailTimeCell.getTimeString(e: e), w: DetailLocationCell.widthMinusMapBtn)
+        setLblData(str: getTimeString(e: e), w: -1)
         setBtn(img: #imageLiteral(resourceName: "enter_calendar"), action: #selector(DetailTimeCell.onClickEnterCalendarBtn)) // 进入日历按钮
     }
 
-    private class func getTimeString(e: Event) -> String {
+    private func getTimeString(e: Event) -> String {
         var showString = "~ " + e.time.toWholeString
 
         let intervalTime: Int = e.time.toLeftHourSineNow
@@ -254,7 +265,7 @@ class DetailTimeCell: DetailStringBtnCell {
 class DetailLocationCell: DetailStringBtnCell {
 
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
-        return DetailG.calculateLblHeight(getLocString(e: d as! Event), w: widthMinusMapBtn) + DetailG.subTitleHeight + DetailG.contentBottomHeight
+        return TextFont.lineHeight + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
@@ -266,13 +277,26 @@ class DetailLocationCell: DetailStringBtnCell {
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
         curEvent = e
-        let str = DetailLocationCell.getLocString(e: e)
-        setLblData(contentView: contentView, str: str, w: DetailLocationCell.widthMinusMapBtn)
+
+        if let adStr = e.location.locString {
+            self.setLblData(str: adStr, w: -1)
+        } else {
+            self.setLblData(str: "位置搜索中", w: -1)
+
+            e.location.getAddress { adStr in
+                if adStr != nil {
+                    self.setLblData(str: adStr!, w: -1)
+                } else {
+                    self.setLblData(str: "位置获取有误", w: -1)
+                }
+            }
+        }
+
     }
 
-    private class func getLocString(e: Event) -> String {
-        let showString = "~ " + e.location.toString
-        return showString
+    override func setLblData(str: String, w: CGFloat) {
+        let newStr = "~ " + str
+        super.setLblData(str: newStr, w: w)
     }
 
     func onClickEnterMapBtn() {
