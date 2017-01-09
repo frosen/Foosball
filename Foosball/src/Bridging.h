@@ -11,8 +11,10 @@
 
 #import <AVOSCloud/AVOSCloud.h>
 
+// 高德地图
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <MAMapKit/MAMapKit.h>
 #import <AMapSearchKit/AMapSearchKit.h>
+#import <AMapLocationKit/AMapLocationKit.h>
 
 #endif /* Bridging_h */

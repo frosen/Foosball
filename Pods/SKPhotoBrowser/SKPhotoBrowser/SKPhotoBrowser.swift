@@ -94,10 +94,13 @@ open class SKPhotoBrowser: UIViewController {
     }
     
     func setup() {
-        guard let window = UIApplication.shared.delegate?.window else {
+        if let window = UIApplication.shared.delegate?.window {
+            applicationWindow = window
+        }else if let window = UIApplication.shared.keyWindow {
+            applicationWindow = window
+        }else {
             return
         }
-        applicationWindow = window
         
         modalPresentationCapturesStatusBarAppearance = true
         modalPresentationStyle = .custom
@@ -315,10 +318,13 @@ public extension SKPhotoBrowser {
     
     func hideControls(_ timer: Timer) {
         hideControls()
+        delegate?.controlsVisibilityToggled?(hidden: true)
     }
     
     func toggleControls() {
-        setControlsHidden(!areControlsHidden(), animated: true, permanent: false)
+        let hidden = !areControlsHidden()
+        setControlsHidden(hidden, animated: true, permanent: false)
+        delegate?.controlsVisibilityToggled?(hidden: areControlsHidden())
     }
     
     func areControlsHidden() -> Bool {

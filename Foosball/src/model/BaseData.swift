@@ -95,18 +95,18 @@ func <(lhs: Time, rhs: Time) -> Bool {
 //位置信息的封装 ----------------------------------------------------------------------------
 
 // 用于获取当前位置
-class LocationMgr: NSObject, CLLocationManagerDelegate, AMapSearchDelegate {
+class LocationMgr: NSObject, AMapLocationManagerDelegate {
 
     fileprivate static let shareInstance = LocationMgr()
     private var isSearching: Bool = false
 
     // loc ------------------------------------------------------------------------------
-    private var mgr: CLLocationManager? = nil
+    private var mgr: AMapLocationManager? = nil
 
-    var callForLoc: ((CLLocation?) -> Void)? = nil
-    func getCurLoc(callback: @escaping (CLLocation?) -> Void) {
+    var callForLoc: ((Bool, CLLocation?, String?) -> Void)? = nil
+    func getCurLoc(callback: @escaping (Bool, CLLocation?, String?) -> Void) {
         guard CLLocationManager.locationServicesEnabled() else {
-            callback(nil)
+            callback(false, nil, nil)
             return
         }
 
@@ -119,7 +119,7 @@ class LocationMgr: NSObject, CLLocationManagerDelegate, AMapSearchDelegate {
         isSearching = true
 
         if mgr == nil {
-            mgr = CLLocationManager()
+            mgr = AMapLocationManager()
             mgr!.delegate = self
         }
         mgr!.startUpdatingLocation()
@@ -127,82 +127,26 @@ class LocationMgr: NSObject, CLLocationManagerDelegate, AMapSearchDelegate {
 
     // CLLocationManagerDelegate
 
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("didUpdateLocations", locations[0].coordinate)
+    func amapLocationManager(_ manager: AMapLocationManager!, didUpdate location: CLLocation!, reGeocode: AMapLocationReGeocode!) {
+        print("didUpdateLocations", location.coordinate, reGeocode)
         isSearching = false
 
+        let str = reGeocode.formattedAddress
+
         if let callback = callForLoc {
-            callback(locations[0])
+            callback(true, location, str)
         }
         manager.stopUpdatingLocation()
         callForLoc = nil
     }
 
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    func amapLocationManager(_ manager: AMapLocationManager!, didFailWithError error: Error!) {
         print("ERROR: locationManager", error)
         isSearching = false
         if let callback = callForLoc {
-            callback(nil)
+            callback(false, nil, nil)
         }
     }
-
-    // regeo ------------------------------------------------------------------------------
-
-    var searchAPI: AMapSearchAPI? = nil
-    var callForRegeo: ((String?) -> Void)? = nil
-
-    func getDressString(from loc: CLLocationCoordinate2D, callback: @escaping ((String?) -> Void)) {
-        callForRegeo = callback
-
-        if isSearching == true {
-            print("isSearching")
-            return
-        }
-        isSearching = true
-
-        let reqRegeo = AMapReGeocodeSearchRequest()
-        reqRegeo.location = AMapGeoPoint.location(withLatitude: CGFloat(loc.latitude), longitude: CGFloat(loc.longitude))
-
-        if searchAPI == nil {
-            searchAPI = AMapSearchAPI()!
-            searchAPI!.delegate = self
-        }
-        searchAPI!.aMapReGoecodeSearch(reqRegeo)
-    }
-
-    // AMapSearchDelegate ---------------------------------------
-
-    func onReGeocodeSearchDone(_ request: AMapReGeocodeSearchRequest!, response: AMapReGeocodeSearchResponse!) {
-        print("onReGeocodeSearchDone")
-        isSearching = false
-
-        if let regeo = response.regeocode {
-            print(regeo.formattedAddress)
-            print("--", regeo.addressComponent.province)
-            print("--", regeo.addressComponent.city)
-            print("--", regeo.addressComponent.citycode)
-            print("--", regeo.addressComponent.district)
-            print("--", regeo.addressComponent.adcode)
-            print("--", regeo.addressComponent.township)
-            print("--", regeo.addressComponent.towncode)
-            print("--", regeo.addressComponent.neighborhood)
-            print("--", regeo.addressComponent.building)
-            print("--", regeo.addressComponent.streetNumber.street)
-            print("--", regeo.addressComponent.streetNumber.number)
-            if let call = callForRegeo {
-                call(regeo.formattedAddress)
-            }
-        }
-    }
-
-    func aMapSearchRequest(_ request: Any!, didFailWithError error: Error!) {
-        print("ERROR: aMapSearchRequest", error)
-        isSearching = false
-        if let call = callForRegeo {
-            call(nil)
-        }
-    }
-
 }
 
 class Location: NSObject, AMapSearchDelegate {
@@ -216,15 +160,19 @@ class Location: NSObject, AMapSearchDelegate {
 
     // 回调：位置，位置文本，是否成功
     func fetchCurLoc(callback: @escaping ((CLLocation?, String?, Bool) -> Void)) {
-        LocationMgr.shareInstance.getCurLoc() { loc in
+        LocationMgr.shareInstance.getCurLoc() { suc, loc, address in
             self.loc = loc
-            callback(loc, nil, (loc != nil))
+            self.locString = address
+            callback(loc, address, suc)
+        }
+    }
 
-            if loc != nil {
-                LocationMgr.shareInstance.getDressString(from: loc!.coordinate) { str in
-                    self.locString = str
-                    callback(loc, str, (str != nil))
-                }
+    func getLoc(callback: @escaping ((CLLocation?) -> Void)) {
+        if let l = loc {
+            callback(l)
+        } else {
+            fetchCurLoc { loc, str, suc in
+                callback(suc ? loc : nil)
             }
         }
     }
@@ -234,13 +182,7 @@ class Location: NSObject, AMapSearchDelegate {
             callback(ad)
         } else {
             fetchCurLoc { loc, str, suc in
-                if suc == false {
-                    callback(nil)
-                } else {
-                    if let s = str {
-                        callback(s)
-                    }
-                }
+                callback(suc ? str : nil)
             }
         }
     }

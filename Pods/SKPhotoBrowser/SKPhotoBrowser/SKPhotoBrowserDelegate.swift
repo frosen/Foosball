@@ -60,7 +60,7 @@ import Foundation
      - Parameter index: the index of the removed photo
      - Parameter reload: function that needs to be called after finishing syncing up
      */
-    @objc optional func removePhoto(_ browser: SKPhotoBrowser, index: Int, reload: (() -> Void))
+    @objc optional func removePhoto(_ browser: SKPhotoBrowser, index: Int, reload: @escaping (() -> Void))
     
     /**
      Asks the delegate for the view for a certain photo. Needed to detemine the animation when presenting/closing the browser.
@@ -71,5 +71,10 @@ import Foundation
      - Returns: the view to animate to
      */
     @objc optional func viewForPhoto(_ browser: SKPhotoBrowser, index: Int) -> UIView?
+    
+    /**
+     Tells the delegate that the controls view toggled visibility
+     */
+    @objc optional func controlsVisibilityToggled(hidden: Bool) -> Void
 }
 
