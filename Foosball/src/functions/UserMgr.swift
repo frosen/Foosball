@@ -62,5 +62,4 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         print("wrong in searchState")
         return .finish
     }
-
 }

@@ -44,18 +44,6 @@ class UserState {
     }
 }
 
-// 谁在什么时间转换到了什么状态
-class OperationTime {
-    var userId: DataID
-    var time: Time
-    var toState: EventState
-    init(userId: DataID, time: Time, toState: EventState) {
-        self.userId = userId
-        self.time = time
-        self.toState = toState
-    }
-}
-
 class MsgStruct {
     var user: UserBrief
     var time: Time
@@ -65,6 +53,18 @@ class MsgStruct {
         self.user = user
         self.time = time
         self.msg = msg
+    }
+}
+
+// 谁在什么时间转换到了什么状态
+class OperationTime {
+    var userId: DataID
+    var time: Time
+    var toState: EventState
+    init(userId: DataID, time: Time, toState: EventState) {
+        self.userId = userId
+        self.time = time
+        self.toState = toState
     }
 }
 
@@ -107,10 +107,13 @@ class Event: BaseData {
     //图片列表
     var imageURLList: [String] = []
 
-    //对话list
+    //对话list // 由于数据量大，先保持id，再根据id获取
+    var msgIDList: [DataID] = []
     var msgList: [MsgStruct] = []
 
-    //被动修改的数据 -------------------------------------------
-    //操作时间
-    var operationTimeList: [OperationTime] = []
+    //被动生成的数据 -------------------------------------------
+    //首次创建操作
+    var createOpTime: OperationTime! = nil
+
+    // *** 操作列表只在服务器保存 ***
 }

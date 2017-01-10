@@ -88,14 +88,18 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         return ChallengeCell.getCellHeight()
     }
 
+    private func getEvent(by indexPath: IndexPath) -> Event {
+        return curActiveEvents[curActiveEvents.count - indexPath.section - 1] // event按照时间排序，而显示要最新的再最前
+    }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let e: Event = curActiveEvents[indexPath.section]
+        let e: Event = getEvent(by: indexPath)
         return BaseCell.create(indexPath, tableView: tableView, d: e, ctrlr: self, delegate: self)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let c = tableView.cellForRow(at: indexPath) as! ChallengeCell
-        let e: Event = curActiveEvents[indexPath.section]
+        let e: Event = getEvent(by: indexPath)
         enterDetail(cell: c, id: e.ID)
     }
 

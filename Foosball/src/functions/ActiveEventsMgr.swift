@@ -85,7 +85,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         let m5 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5")
 
         let ot = OperationTime(userId: DataID(ID: 123), time: Time.now, toState: .honoured)
-        e.operationTimeList.append(ot)
+        e.createOpTime = ot
 
         e.location = Location(l: CLLocation(latitude: 39, longitude: 115))
         e.time = Time(timeIntervalSinceNow: 136000)

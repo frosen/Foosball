@@ -11,7 +11,15 @@ import UIKit
 class DataMgr<DATA, OB>: NSObject {
 
     //数据
-    var data: DATA! = nil
+    private var _data: DATA! = nil
+    var data: DATA! {
+        set {
+            _data = newValue
+        }
+        get {
+            return _data
+        }
+    }
 
     // 逻辑数据 观察者，是否隐藏，是否需要刷新
     private var obDict: [String: (OB, Bool, Bool)] = [:]
