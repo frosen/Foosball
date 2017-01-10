@@ -36,6 +36,8 @@ class CreateStep3LocationCell: DetailLocationCell {
     override func createMapVC(e: Event) {
         let createVC = (ctrlr as! CreatePageBaseCtrlr).rootCtrlr!
         let mapVC = MapController(rootVC: createVC.rootVC, l: e.location) { loc in
+            e.location = loc
+            self.setData(e, index: nil)
             return true
         }
         createVC.navigationController!.pushViewController(mapVC, animated: true)
@@ -54,9 +56,10 @@ class CreateStep3WagerHeadCell: DetailHeadCell {
         stepper.center = CGPoint(x: w - DetailG.headMargin - stepper.frame.width / 2, y: h / 2)
         stepper.tintColor = BaseColor
 
-        let createCtrlr = ctrlr as! CreateStep3Ctrlr
-        stepper.value = Double(createCtrlr.wagerCount)
-        curCount = Double(createCtrlr.wagerCount)
+        let e = d as! Event
+        stepper.value = Double(e.wager.count)
+        curCount = Double(e.wager.count)
+
 
         stepper.isContinuous = false
         stepper.autorepeat = false
@@ -115,20 +118,14 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
-        let createCtrlr = ctrlr as! CreateStep3Ctrlr
-        curIndex = createCtrlr.wagerCount - index!.row // 顺序反过来的
-        if let select = createCtrlr.wagerSelect[curIndex] {
-            // 存在数据，则使用
-            picker.selectRow(select.0, inComponent: 0, animated: false)
-            picker.selectRow(select.1, inComponent: 1, animated: false)
-            picker.selectRow(select.2, inComponent: 2, animated: false)
-            print(curIndex, select)
-        } else {
-            // 没有说明是新建的，则创建一组数据
-            picker.selectRow(1, inComponent: 0, animated: false)
-            createCtrlr.wagerSelect[curIndex] = (1, 0, 0)
-            print(curIndex, createCtrlr.wagerSelect[curIndex]!, "n")
-        }
+        let e = d as! Event
+        curIndex = e.wager.count - index!.row
+
+        let select = e.wager[curIndex]
+        picker.selectRow(select.0, inComponent: 0, animated: false)
+        picker.selectRow(select.1, inComponent: 1, animated: false)
+        picker.selectRow(select.2, inComponent: 2, animated: false)
+        print(curIndex, select)
     }
 
     // UIPickerViewDelegate, UIPickerViewDataSource ------------------------------------
@@ -211,12 +208,12 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
         }
 
         // 选择状态发送给控制器
-        let createCtrlr = ctrlr as! CreateStep3Ctrlr
         let c0 = pickerView.selectedRow(inComponent: 0)
         let c1 = pickerView.selectedRow(inComponent: 1)
         let c2 = pickerView.selectedRow(inComponent: 2)
-        createCtrlr.wagerSelect[curIndex] = (c0, c1, c2)
-        print(curIndex, (c0, c1, c2), "change")
+        let createCtrlr = ctrlr as! CreateStep3Ctrlr
+        createCtrlr.rootCtrlr.createEvent.wager[curIndex] = (c0, c1, c2)
+        print("change wager", curIndex, (c0, c1, c2))
     }
 }
 
@@ -281,6 +278,10 @@ class CreateStep3DetailCell: StaticCell, UITextViewDelegate {
 
     func endInput() {
         input.resignFirstResponder()
+    }
+
+    func getInputText() -> String {
+        return input.text
     }
 }
 

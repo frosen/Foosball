@@ -56,18 +56,6 @@ class MsgStruct {
     }
 }
 
-// 谁在什么时间转换到了什么状态
-class OperationTime {
-    var userId: DataID
-    var time: Time
-    var toState: EventState
-    init(userId: DataID, time: Time, toState: EventState) {
-        self.userId = userId
-        self.time = time
-        self.toState = toState
-    }
-}
-
 class Event: BaseData {
     //类型 对决 乱斗 挑战 求教 会友
     var type: EventType = .confrontation
@@ -80,7 +68,7 @@ class Event: BaseData {
     var memberCount2: Int = -1
 
     //其他人是否可以增加新人 对决为false，其他为true，如果为true还能设置人数上限，默认不限
-    var canInvite: Bool = false
+    var canInvite: Bool = true
 
     //比赛时间或者截止时间（对于挑战）
     var time: Time! = nil
@@ -112,8 +100,6 @@ class Event: BaseData {
     var msgList: [MsgStruct] = []
 
     //被动生成的数据 -------------------------------------------
-    //首次创建操作
-    var createOpTime: OperationTime! = nil
-
-    // *** 操作列表只在服务器保存 ***
+    var createTime: Time! = nil
+    var createUserID: DataID! = nil
 }

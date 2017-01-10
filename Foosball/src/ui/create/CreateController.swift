@@ -32,6 +32,8 @@ class CreateController: BaseController, UIScrollViewDelegate {
 
         createEvent.location = Location()
         createEvent.location.fetchCurLoc{_,_,_ in }
+
+        changeCreateEventWager(isAdd: true)
     }
 
     func initUIData() {
@@ -73,10 +75,23 @@ class CreateController: BaseController, UIScrollViewDelegate {
 
     func onBack() {
         if page == 0 {
-            let _ = navigationController?.popViewController(animated: true)
+            goBackToHome()
         } else {
             movePage(gotoRight: false)
         }
+    }
+
+    private func goBackToHome() {
+        let _ = navigationController?.popViewController(animated: true)
+    }
+
+    // 完成创建
+    func finish() {
+        // 整理并上传event数据
+
+
+        // 返回
+        goBackToHome()
     }
 
     // 移动到另一页，参数true向右
@@ -100,6 +115,15 @@ class CreateController: BaseController, UIScrollViewDelegate {
         }
         let stepStr: String = String(page + 1) + "/" + String(subviews.count)
         stepLabel.title! = stepStr
+    }
+
+    // 增减wager
+    func changeCreateEventWager(isAdd: Bool) {
+        if isAdd == true {
+            createEvent.wager.append((1, 0, 0))
+        } else {
+            createEvent.wager.remove(at: createEvent.wager.count - 1)
+        }
     }
 }
 

@@ -192,7 +192,7 @@ class DetailTeamCell: StaticCell {
         print("invite")
 
         // 判断是否可以邀请 todo
-        if curEvent.createOpTime.userId != APP.userMgr.data.ID && curEvent.canInvite == false && curIndex != 3 {
+        if curEvent.createUserID != APP.userMgr.data.ID && curEvent.canInvite == false && curIndex != 3 {
             
         }
     

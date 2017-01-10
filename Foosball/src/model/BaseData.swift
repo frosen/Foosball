@@ -128,6 +128,11 @@ class LocationMgr: NSObject, AMapLocationManagerDelegate {
     // CLLocationManagerDelegate
 
     func amapLocationManager(_ manager: AMapLocationManager!, didUpdate location: CLLocation!, reGeocode: AMapLocationReGeocode!) {
+        guard location != nil && reGeocode != nil else {
+            manager.stopUpdatingLocation()
+            return
+        }
+
         print("didUpdateLocations", location.coordinate, reGeocode)
         isSearching = false
 

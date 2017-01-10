@@ -84,8 +84,8 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         let m4 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么4")
         let m5 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5")
 
-        let ot = OperationTime(userId: DataID(ID: 123), time: Time.now, toState: .honoured)
-        e.createOpTime = ot
+        e.createTime = Time.now
+        e.createUserID = DataID(ID: 123)
 
         e.location = Location(l: CLLocation(latitude: 39, longitude: 115))
         e.time = Time(timeIntervalSinceNow: 136000)
@@ -167,6 +167,10 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
         updateObserver()
         saveData(needUpload: needUpload)
+    }
+
+    func addNewEvent(_ e: Event) {
+
     }
 
     override func initObserver(_ ob: ActiveEventsMgrObserver) {

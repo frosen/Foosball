@@ -83,7 +83,7 @@ class DetailTitleCell: StaticCell {
         let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
         set(state: st)
         
-        createTime.text = "发布时间：" + e.createOpTime.time.toString
+        createTime.text = "发布时间：" + e.createTime.toString
     }
 
     func set(state: EventState) {
