@@ -95,7 +95,7 @@ func <(lhs: Time, rhs: Time) -> Bool {
 //位置信息的封装 ----------------------------------------------------------------------------
 
 // 用于获取当前位置
-class LocationMgr: NSObject, AMapLocationManagerDelegate {
+class LocationMgr: NSObject, AMapSearchDelegate {
 
     fileprivate static let shareInstance = LocationMgr()
     private var isSearching: Bool = false
@@ -103,14 +103,11 @@ class LocationMgr: NSObject, AMapLocationManagerDelegate {
     // loc ------------------------------------------------------------------------------
     private var mgr: AMapLocationManager? = nil
 
-    var callForLoc: ((Bool, CLLocation?, String?) -> Void)? = nil
     func getCurLoc(callback: @escaping (Bool, CLLocation?, String?) -> Void) {
         guard CLLocationManager.locationServicesEnabled() else {
             callback(false, nil, nil)
             return
         }
-
-        callForLoc = callback
 
         if isSearching == true {
             print("isSearching")
@@ -120,38 +117,58 @@ class LocationMgr: NSObject, AMapLocationManagerDelegate {
 
         if mgr == nil {
             mgr = AMapLocationManager()
-            mgr!.delegate = self
+            mgr!.desiredAccuracy = kCLLocationAccuracyBest
         }
-        mgr!.startUpdatingLocation()
+        
+        mgr!.requestLocation(withReGeocode: true) { loc, regeo, error in
+            print("requestLocation callback", loc ?? "no loc", regeo ?? "no regeo", error ?? "no error")
+            self.isSearching = false
+            callback(error == nil, loc, regeo?.formattedAddress)
+        }
     }
 
-    // CLLocationManagerDelegate
+    var searchAPI: AMapSearchAPI? = nil
+    var callForRegeo: ((Bool, String?) -> Void)? = nil
+    func getCurAddress(by loc: CLLocation, callback: @escaping ((Bool, String?) -> Void)) {
+        callForRegeo = callback
 
-    func amapLocationManager(_ manager: AMapLocationManager!, didUpdate location: CLLocation!, reGeocode: AMapLocationReGeocode!) {
-        guard location != nil && reGeocode != nil else {
-            manager.stopUpdatingLocation()
+        if isSearching == true {
+            print("isSearching")
             return
         }
+        isSearching = true
 
-        print("didUpdateLocations", location.coordinate, reGeocode)
-        isSearching = false
+        let reqRegeo = AMapReGeocodeSearchRequest()
+        let l = loc.coordinate
+        reqRegeo.location = AMapGeoPoint.location(withLatitude: CGFloat(l.latitude), longitude: CGFloat(l.longitude))
 
-        let str = reGeocode.formattedAddress
-
-        if let callback = callForLoc {
-            callback(true, location, str)
+        if searchAPI == nil {
+            searchAPI = AMapSearchAPI()!
+            searchAPI!.delegate = self
         }
-        manager.stopUpdatingLocation()
-        callForLoc = nil
+        searchAPI!.aMapReGoecodeSearch(reqRegeo)
     }
 
-    func amapLocationManager(_ manager: AMapLocationManager!, didFailWithError error: Error!) {
-        print("ERROR: locationManager", error)
+    // AMapSearchDelegate ---------------------------------------
+
+    func onReGeocodeSearchDone(_ request: AMapReGeocodeSearchRequest!, response: AMapReGeocodeSearchResponse!) {
+        print("onReGeocodeSearchDone", response.regeocode)
         isSearching = false
-        if let callback = callForLoc {
-            callback(false, nil, nil)
+
+        if let call = callForRegeo {
+            call(true, response.regeocode.formattedAddress)
         }
     }
+
+    func aMapSearchRequest(_ request: Any!, didFailWithError error: Error!) {
+        print("ERROR: aMapSearchRequest", error)
+        isSearching = false
+        if let call = callForRegeo {
+            call(false, nil)
+        }
+    }
+
+
 }
 
 class Location: NSObject, AMapSearchDelegate {
@@ -172,6 +189,13 @@ class Location: NSObject, AMapSearchDelegate {
         }
     }
 
+    func fetchCurAddress(by loc: CLLocation, callback: @escaping ((String?, Bool) -> Void)) {
+        LocationMgr.shareInstance.getCurAddress(by: loc) { suc, address in
+            self.locString = address
+            callback(address, suc)
+        }
+    }
+
     func getLoc(callback: @escaping ((CLLocation?) -> Void)) {
         if let l = loc {
             callback(l)
@@ -186,8 +210,14 @@ class Location: NSObject, AMapSearchDelegate {
         if let ad = locString {
             callback(ad)
         } else {
-            fetchCurLoc { loc, str, suc in
-                callback(suc ? str : nil)
+            if let l = loc {
+                fetchCurAddress(by: l) { str, suc in
+                    callback(suc ? str : nil)
+                }
+            } else {
+                fetchCurLoc { loc, str, suc in
+                    callback(suc ? str : nil)
+                }
             }
         }
     }

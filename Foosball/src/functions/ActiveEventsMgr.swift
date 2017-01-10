@@ -87,7 +87,9 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         e.createTime = Time.now
         e.createUserID = DataID(ID: 123)
 
-        e.location = Location(l: CLLocation(latitude: 39, longitude: 115))
+        e.location = Location()
+        e.location.loc = CLLocation()
+        e.location.locString = "hehe"
         e.time = Time(timeIntervalSinceNow: 136000)
 
         data = []
@@ -105,50 +107,50 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
             MsgStruct(user: bk3, time: Time.now, msg: "你说什么1"),
         ]
         data.append(e)
-        e = Event(ID: DataID(ID: 50001))
-        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-        e.opponentStateList = [pk1, pk2, pk3]
-        data.append(e)
-
-        e = Event(ID: DataID(ID: 50001))
-        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-        e.opponentStateList = [pk1, pk2, pk3]
-        data.append(e)
-
-        e = Event(ID: DataID(ID: 50001))
-        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-        e.opponentStateList = [pk1, pk2, pk3]
-        data.append(e)
-
-        e = Event(ID: DataID(ID: 50001))
-        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-        e.opponentStateList = [pk1, pk2, pk3]
-        data.append(e)
-
-        e = Event(ID: DataID(ID: 50001))
-        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-        e.opponentStateList = [pk1, pk2, pk3]
-        data.append(e)
-
-        e = Event(ID: DataID(ID: 50001))
-        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-        e.opponentStateList = [pk1, pk2, pk3]
-        data.append(e)
-
-        e = Event(ID: DataID(ID: 50001))
-        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-        e.opponentStateList = [pk1, pk2, pk3]
-        data.append(e)
-
-        e = Event(ID: DataID(ID: 50001))
-        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-        e.opponentStateList = [pk1, pk2, pk3]
-        data.append(e)
-
-        e = Event(ID: DataID(ID: 50001))
-        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-        e.opponentStateList = [pk1, pk2, pk3]
-        data.append(e)
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
 
         // 初始化时候直接启动轮询
     }
