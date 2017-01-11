@@ -174,7 +174,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
     // ---------------------------------------------------------
 
-    func addNewEvent(_ e: Event) {
+    func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
         let attris: [(String, Any)] = [
             ("tp", e.type.rawValue),
             ("i", e.item.tag),
@@ -195,7 +195,8 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         ]
 
         Network.shareInstance.createObj(to: SAVE_NAME, attris: attris) { suc, error in
-            print("create event on net", suc, error ?? "no error")
+            print("create event on net: \(suc), ", error ?? "no error")
+            callback(suc, error)
         }
     }
 

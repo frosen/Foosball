@@ -92,10 +92,12 @@ class CreateController: BaseController, UIScrollViewDelegate {
         createEvent.createTime = Time.now
         createEvent.createUserID = APP.userMgr.data.ID
 
-        APP.activeEventsMgr.addNewEvent(createEvent)
-
-        // 返回
-        goBackToHome()
+        APP.activeEventsMgr.addNewEvent(createEvent) { suc, error in
+            if suc {
+                // 返回
+                self.goBackToHome()
+            }
+        }
     }
 
     // 移动到另一页，参数true向右

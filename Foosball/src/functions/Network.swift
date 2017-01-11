@@ -26,7 +26,7 @@ class Network: NSObject {
         let todo = AVObject(className:  list)
         for attri in attris {
             let value = checkValue(attri.1)
-            todo.add(value, forKey: attri.0)
+            todo.setObject(value, forKey: attri.0)
         }
 
         let opt = AVSaveOption()
