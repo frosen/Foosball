@@ -22,8 +22,25 @@ class CreateController: BaseController, UIScrollViewDelegate {
         super.viewDidLoad()
         print("创建事件的页面")
 
+        // 导航栏
+        UITools.createNavBackBtn(self, action: #selector(CreateController.onBack))
+        setStepLebel()
+
         initCreateEvent() // 初始化数据
         initUIData()
+    }
+
+    // 设置步骤
+    private var stepLabel: UIBarButtonItem! = nil // 用于记录步骤
+    private func setStepLebel() {
+        if stepLabel == nil {
+            stepLabel = UIBarButtonItem(title: "1/3", style: .done, target: nil, action: nil)
+            stepLabel.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: .normal)
+            stepLabel.isEnabled = false
+            navigationItem.rightBarButtonItem = stepLabel
+        }
+        let stepStr: String = String(page + 1) + "/" + String(subviews.count)
+        stepLabel.title! = stepStr
     }
 
     func initCreateEvent() {
@@ -66,10 +83,10 @@ class CreateController: BaseController, UIScrollViewDelegate {
             subviews[i].view.frame.origin.x = pageVSize.width * CGFloat(i)
             pageView.addSubview(subviews[i].view)
         }
+    }
 
-        // 导航栏
-        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(CreateController.onBack), image: #imageLiteral(resourceName: "go_back"))
-        setStepLebel()
+    private func goBackToHome() {
+        let _ = navigationController?.popViewController(animated: true)
     }
 
     func onBack() {
@@ -78,10 +95,6 @@ class CreateController: BaseController, UIScrollViewDelegate {
         } else {
             movePage(gotoRight: false)
         }
-    }
-
-    private func goBackToHome() {
-        let _ = navigationController?.popViewController(animated: true)
     }
 
     // 完成创建
@@ -108,19 +121,6 @@ class CreateController: BaseController, UIScrollViewDelegate {
         let nextX = CGFloat(page) * pageView.frame.size.width
         pageView.setContentOffset(CGPoint(x: nextX, y: 0), animated: true)
         subviews[page].gotoAppear()
-    }
-
-    // 设置步骤
-    private var stepLabel: UIBarButtonItem! = nil // 用于记录步骤
-    private func setStepLebel() {
-        if stepLabel == nil {
-            stepLabel = UIBarButtonItem(title: "1/3", style: .done, target: nil, action: nil)
-            stepLabel.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: .normal)
-            stepLabel.isEnabled = false
-            navigationItem.rightBarButtonItem = stepLabel
-        }
-        let stepStr: String = String(page + 1) + "/" + String(subviews.count)
-        stepLabel.title! = stepStr
     }
 
     // 增减wager

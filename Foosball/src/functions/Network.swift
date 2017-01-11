@@ -29,10 +29,7 @@ class Network: NSObject {
             todo.setObject(value, forKey: attri.0)
         }
 
-        let opt = AVSaveOption()
-        opt.fetchWhenSave = true
-
-        todo.saveInBackground(with: opt) { suc, error in
+        todo.saveInBackground { suc, error in
             callback(suc, error)
         }
     }

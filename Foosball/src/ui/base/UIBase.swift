@@ -49,6 +49,10 @@ class UITools {
         return UIBarButtonItem(customView: btn)
     }
 
+    class func createNavBackBtn(_ vc: UIViewController, action: Selector) {
+        vc.navigationItem.leftBarButtonItem = UITools.createBarBtnItem(vc, action: action, image: #imageLiteral(resourceName: "go_back"))
+    }
+
     class func showAlert(_ target: UIViewController, title: String, msg: String, type: Int, callback: ((UIAlertAction) -> Void)?) {
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         if type == 1 {

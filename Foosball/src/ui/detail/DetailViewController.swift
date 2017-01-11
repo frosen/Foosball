@@ -39,8 +39,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         print("详情页面")
 
         title = "详情"
-
-        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ScanViewController.onBack), image: #imageLiteral(resourceName: "go_back"))
+        UITools.createNavBackBtn(self, action: #selector(DetailViewController.onBack))
 
         baseView.isUserInteractionEnabled = false
         callbackOnFinishInit = { _ in

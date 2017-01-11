@@ -33,8 +33,8 @@ class MapController: BaseController, MAMapViewDelegate {
 
         //标题
         title = "地图"
-
-        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(MapController.onBack), image: #imageLiteral(resourceName: "go_back"))
+        UITools.createNavBackBtn(self, action: #selector(MapController.onBack))
+        
         if callback != nil {
             let item = UIBarButtonItem(title: "确定", style: .done, target: self, action: #selector(MapController.onConfirm))
             item.tintColor = UIColor.white

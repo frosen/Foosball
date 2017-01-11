@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3250913C82FFF635417020BD /* Pods_Foosball.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81C567789B96B0906D4D436 /* Pods_Foosball.framework */; };
+		65005E6D1E2644AE000AADC4 /* PersonalInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65005E6C1E2644AE000AADC4 /* PersonalInfoController.swift */; };
 		650151A51DB4D6F9009D8ABC /* InputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650151A41DB4D6F9009D8ABC /* InputView.swift */; };
 		6507AC0A1D55B7C900791FB1 /* ChallengeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6507AC091D55B7C900791FB1 /* ChallengeCell.swift */; };
 		6508C24C1DD9C95100E3D7C2 /* CreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6508C24B1DD9C95100E3D7C2 /* CreateController.swift */; };
@@ -60,6 +61,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		65005E6C1E2644AE000AADC4 /* PersonalInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonalInfoController.swift; sourceTree = "<group>"; };
 		650151A41DB4D6F9009D8ABC /* InputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputView.swift; path = widget/InputView.swift; sourceTree = "<group>"; };
 		6507AC091D55B7C900791FB1 /* ChallengeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeCell.swift; sourceTree = "<group>"; };
 		6508C24B1DD9C95100E3D7C2 /* CreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateController.swift; path = create/CreateController.swift; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 			children = (
 				65AB52431D3291E6005E7D4C /* OwnController.swift */,
 				65AB52421D3291E6005E7D4C /* OwnCells.swift */,
+				65005E6C1E2644AE000AADC4 /* PersonalInfoController.swift */,
 			);
 			path = own;
 			sourceTree = "<group>";
@@ -489,6 +492,7 @@
 				65EEB7601DAE398D00BB767D /* DetailImageCell.swift in Sources */,
 				6508C2951DDD99FB00E3D7C2 /* CreatePageBaseCtrlr.swift in Sources */,
 				65AB524D1D3291E6005E7D4C /* RootViewController.swift in Sources */,
+				65005E6D1E2644AE000AADC4 /* PersonalInfoController.swift in Sources */,
 				6526CBA11DF56FE700DB9015 /* CreateStep4Ctrlr.swift in Sources */,
 				65D61D101DC0602D0032C2E7 /* ActiveEventsMgr.swift in Sources */,
 				658E06741D56C7C8008D94FC /* Event.swift in Sources */,

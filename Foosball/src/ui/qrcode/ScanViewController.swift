@@ -21,7 +21,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         navTabType = [.HideTab, .TransparentNav] // 隐藏导航栏和tabbar
         super.viewDidLoad()
 
-        navigationItem.leftBarButtonItem = UITools.createBarBtnItem(self, action: #selector(ScanViewController.onBack), image: #imageLiteral(resourceName: "go_back"))
+        UITools.createNavBackBtn(self, action: #selector(ScanViewController.onBack))
 
         baseView.clipsToBounds = true //这个属性必须打开否则返回的时候会出现黑边
 

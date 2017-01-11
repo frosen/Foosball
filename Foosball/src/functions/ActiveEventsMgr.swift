@@ -142,8 +142,6 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         e.location.locString = "hehe"
         e.time = Time(timeIntervalSinceNow: 136000)
 
-
-
         e.msgList = [m1, m2, m3, m4, m5,
             MsgStruct(user: bk3, time: Time.now, msg: "你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
             MsgStruct(user: bk3, time: Time.now, msg: "你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
@@ -157,9 +155,6 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
             MsgStruct(user: bk3, time: Time.now, msg: "你说什么1"),
         ]
         data.append(e)
-
-
-        // 初始化时候直接启动轮询
     }
 
     // 记录每个事件更新时，状态和对话数的变化
