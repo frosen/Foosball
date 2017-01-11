@@ -181,7 +181,17 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
     // 获取图片 ---------------------------------------------------------------------
 
     func onClickNew() {
-        // todo
+        let alert = UIAlertController(title: "请选择照片来源", message: nil, preferredStyle: .actionSheet)
+
+        let fromPhoto = UIAlertAction(title: "拍照", style: .default) { _ in self.onClickPhoto() }
+        let fromAlbum = UIAlertAction(title: "从相册获取", style: .default) { _ in self.onClickAlbum() }
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel)
+
+        alert.addAction(fromPhoto)
+        alert.addAction(fromAlbum)
+        alert.addAction(cancelAction)
+
+        ctrlr.present(alert, animated: true, completion: nil)
     }
 
     // 拍照

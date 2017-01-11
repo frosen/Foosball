@@ -88,7 +88,7 @@ class CreateController: BaseController, UIScrollViewDelegate {
     // 完成创建
     func finish() {
         // 整理并上传event数据
-
+        let a = createEvent
 
         // 返回
         goBackToHome()

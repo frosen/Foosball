@@ -15,7 +15,6 @@ protocol UserMgrObserver {
 
 class UserMgr: DataMgr<User, UserMgrObserver> {
 
-
     override init() {
         super.init()
         print("初始化 UserMgr")
