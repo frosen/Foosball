@@ -219,8 +219,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         // 状态
         let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
         actBtnBoard.setState(st)
-        let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! DetailTitleCell
-        titleCell.set(state: st)
+        if let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? DetailTitleCell {
+            titleCell.set(state: st)
+        }
 
         // 在显示着这个event的细节时更新，显示更新并结束提示
         if let changeTup: (Bool, Int) = APP.activeEventsMgr.eventChangeMap[e] {

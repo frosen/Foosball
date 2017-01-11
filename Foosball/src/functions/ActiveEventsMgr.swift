@@ -22,9 +22,6 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
         // 读取本地数据
 
-        var e: Event! = nil
-        e = Event(ID: DataID(ID: 50001))
-
         //自己方
         let bb1 = UserBrief(ID: DataID(ID: 1232))
         bb1.name = "小明1"
@@ -54,7 +51,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         bb321.name = "明4"
         let p321 = UserState(user: bb321, state: .finish)
 
-        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+
 
         // 对方
         let bk1 = UserBrief(ID: DataID(ID: 1232))
@@ -69,8 +66,59 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         bk3.name = "大王c"
         let pk3 = UserState(user: bk3, state: .invite)
 
-        e.opponentStateList = [pk1, pk2, pk3]
+        data = []
+        var e: Event! = nil
 
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+
+        // -----------------
+        e = Event(ID: DataID(ID: 50001))
+
+        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        e.opponentStateList = [pk1, pk2, pk3]
 
         e.imageURLList = ["http://up.qqjia.com/z/25/tu32700_3.png", "http://up.qqjia.com/z/25/tu32718_6.png", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg"]
 
@@ -92,7 +140,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         e.location.locString = "hehe"
         e.time = Time(timeIntervalSinceNow: 136000)
 
-        data = []
+
 
         e.msgList = [m1, m2, m3, m4, m5,
             MsgStruct(user: bk3, time: Time.now, msg: "你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
@@ -107,50 +155,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
             MsgStruct(user: bk3, time: Time.now, msg: "你说什么1"),
         ]
         data.append(e)
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
+
 
         // 初始化时候直接启动轮询
     }
@@ -161,19 +166,17 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         eventChangeMap.removeValue(forKey: e)
     }
 
-    override func changeData(changeFunc: (([Event]) -> AnyObject?), needUpload: Bool) {
-        // 接受新变化，并获取那个event更新了状态和对话数
-        if let change = changeFunc(data) as? [Event: (Bool, Int)] {
-            eventChangeMap = change
-        }
-
-        updateObserver()
-        saveData(needUpload: needUpload)
+    override func handleChangeResult(_ res: AnyObject) {
+        eventChangeMap = res as! [Event: (Bool, Int)]
     }
+
+    // ---------------------------------------------------------
 
     func addNewEvent(_ e: Event) {
 
     }
+
+    // set ob --------------------------------------------------
 
     override func initObserver(_ ob: ActiveEventsMgrObserver) {
         ob.onInit(activeEvents: data)

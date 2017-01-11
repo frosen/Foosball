@@ -48,11 +48,15 @@ class DataMgr<DATA, OB>: NSObject {
 
     func changeData(changeFunc: ((DATA) -> AnyObject?), needUpload: Bool = false) {
         // 接受新变化
-        let _ = changeFunc(data)
+        if let res = changeFunc(data) {
+            handleChangeResult(res)
+        }
 
         updateObserver()
         saveData(needUpload: needUpload)
     }
+
+    func handleChangeResult(_ res: AnyObject) {}
 
     func updateObserver() {
         // 在每个观察者中进行对比
