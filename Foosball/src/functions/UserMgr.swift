@@ -20,7 +20,7 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         print("初始化 UserMgr")
 
         // 读取本地数据
-        data = User(ID: DataID(ID: 123))
+        data = User(ID: DataID(ID: "123"))
         data.name = "聂小倩"
         data.avatarURL = ""
 

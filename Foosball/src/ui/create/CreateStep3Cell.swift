@@ -268,10 +268,6 @@ class CreateStep3DetailCell: StaticCell, UITextViewDelegate {
         placeholder.backgroundColor = UIColor.clear
     }
 
-    func textViewDidChange(_ textView: UITextView) {
-        placeholder.isHidden = textView.hasText
-    }
-
     func beginInput() {
         input.becomeFirstResponder()
     }
@@ -282,6 +278,17 @@ class CreateStep3DetailCell: StaticCell, UITextViewDelegate {
 
     func getInputText() -> String {
         return input.text
+    }
+
+    // delegate --------------------------
+
+    func textViewDidChange(_ textView: UITextView) {
+        // 隐藏holder
+        placeholder.isHidden = textView.hasText
+
+        // 记录输入
+        let cvc = ctrlr as! CreateStep3Ctrlr
+        cvc.rootCtrlr.createEvent.detail = textView.text
     }
 }
 

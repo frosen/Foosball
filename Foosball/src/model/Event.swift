@@ -18,7 +18,7 @@ enum EventType: Int {
 
 // 差异
 
-enum EventState {
+enum EventState: Int {
     case invite //接收到邀请，可以同意，或拒绝（会让发送拒绝消息）
     case ready //生成后在到达比赛时间前的状态，可邀请，或取消
     case ongoing //比赛开始后，可确认胜利还是失败
@@ -74,7 +74,7 @@ class Event: BaseData {
     var time: Time! = nil
 
     //位置信息
-    var location: Location! = nil
+    var location: Location = Location()
 
     //是否发布到了地图上，也就是别人任意人可以加入
     var isPublishToMap: Bool = false

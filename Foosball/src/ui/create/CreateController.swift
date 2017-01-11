@@ -27,10 +27,9 @@ class CreateController: BaseController, UIScrollViewDelegate {
     }
 
     func initCreateEvent() {
-        createEvent = Event(ID: DataID(ID: -1))
+        createEvent = Event(ID: DataID(ID: "-1"))
         createEvent.time = Time(timeIntervalSinceNow: 1800) // 往后30分钟
 
-        createEvent.location = Location()
         createEvent.location.fetchCurLoc{_,_,_ in }
 
         changeCreateEventWager(isAdd: true)
@@ -88,7 +87,12 @@ class CreateController: BaseController, UIScrollViewDelegate {
     // 完成创建
     func finish() {
         // 整理并上传event数据
-        let a = createEvent
+        let userState = UserState(user: APP.userMgr.data.getBrief(), state: .ready)
+        createEvent.ourSideStateList.append(userState)
+        createEvent.createTime = Time.now
+        createEvent.createUserID = APP.userMgr.data.ID
+
+        APP.activeEventsMgr.addNewEvent(createEvent)
 
         // 返回
         goBackToHome()

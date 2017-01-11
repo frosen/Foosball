@@ -12,14 +12,14 @@ class MapController: BaseController, MAMapViewDelegate {
 
     private var map: MAMapView! = nil
 
-    private var curLoc: Location? = nil
+    private var curLoc: Location
     private var callback: ((Location) -> Bool)? = nil // 获取当前中心位置的回调
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(rootVC: RootViewController, l: Location? = nil, call: ((Location) -> Bool)? = nil) {
+    init(rootVC: RootViewController, l: Location, call: ((Location) -> Bool)? = nil) {
         curLoc = l
         callback = call
         super.init(rootVC: rootVC)
@@ -47,7 +47,7 @@ class MapController: BaseController, MAMapViewDelegate {
     }
 
     func onConfirm() {
-        if callback!(curLoc!) == true {
+        if callback!(curLoc) == true {
             let _ = navigationController?.popViewController(animated: true)
         }
     }
@@ -62,14 +62,11 @@ class MapController: BaseController, MAMapViewDelegate {
 
         map.setZoomLevel(16, animated: false)
 
-        if let loc2d = curLoc?.loc?.coordinate {
-            map.setCenter(loc2d, animated: false)
+        if curLoc.isLocValid() {
+            map.setCenter(curLoc.loc.coordinate, animated: false)
         } else {
-            if curLoc == nil {
-                curLoc = Location()
-            }
             let userLoc = map.userLocation.coordinate
-            curLoc!.loc = CLLocation(latitude: userLoc.latitude, longitude: userLoc.longitude)
+            curLoc.loc = CLLocation(latitude: userLoc.latitude, longitude: userLoc.longitude)
         }
 
         let mapFlag = UIImageView(image: #imageLiteral(resourceName: "map_flag"))
@@ -81,7 +78,7 @@ class MapController: BaseController, MAMapViewDelegate {
     
     func mapView(_ mapView: MAMapView!, mapDidMoveByUser wasUserAction: Bool) {
         let loc = mapView.centerCoordinate
-        print(loc)
-        curLoc!.loc = CLLocation(latitude: loc.latitude, longitude: loc.longitude)
+        print("mapView move", loc)
+        curLoc.loc = CLLocation(latitude: loc.latitude, longitude: loc.longitude)
     }
 }

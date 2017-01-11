@@ -10,14 +10,19 @@ import UIKit
 
 //辨识所有结构体的标志，由服务器产生，可轻松从服务器中查找
 class DataID: Hashable {
-    let ID: Int //这个值用于在服务器快速查找该数据的位置
+    typealias IDType = String
+    let ID: IDType //这个值用于在服务器快速查找该数据的位置
 
-    init(ID: Int) {
+    init(ID: IDType) {
         self.ID = ID
     }
 
-    var hashValue: Int {
+    var rawValue: IDType {
         return ID
+    }
+
+    var hashValue: Int {
+        return ID.hashValue
     }
 }
 
@@ -173,17 +178,17 @@ class LocationMgr: NSObject, AMapSearchDelegate {
 
 class Location: NSObject, AMapSearchDelegate {
     // 可空，空就是位置待定
-    var loc: CLLocation? = nil
+    var loc: CLLocation
     var locString: String? = nil
 
     init (l: CLLocation? = nil) {
-        self.loc = l
+        self.loc = l ?? CLLocation(latitude: 0, longitude: 0)
     }
 
     // 回调：位置，位置文本，是否成功
     func fetchCurLoc(callback: @escaping ((CLLocation?, String?, Bool) -> Void)) {
         LocationMgr.shareInstance.getCurLoc() { suc, loc, address in
-            self.loc = loc
+            self.loc = loc ?? CLLocation(latitude: 0, longitude: 0)
             self.locString = address
             callback(loc, address, suc)
         }
@@ -196,9 +201,18 @@ class Location: NSObject, AMapSearchDelegate {
         }
     }
 
+    func isLocValid() -> Bool {
+        let la = loc.coordinate.latitude
+        let lo = loc.coordinate.longitude
+        let laV: Bool = (la < -0.01) || (0.01 < la)
+        let loV: Bool = (lo < -0.01) || (0.01 < lo)
+
+        return laV && loV // 经纬度都不在0点视为合理
+    }
+
     func getLoc(callback: @escaping ((CLLocation?) -> Void)) {
-        if let l = loc {
-            callback(l)
+        if isLocValid() {
+            callback(loc)
         } else {
             fetchCurLoc { loc, str, suc in
                 callback(suc ? loc : nil)
@@ -210,8 +224,8 @@ class Location: NSObject, AMapSearchDelegate {
         if let ad = locString {
             callback(ad)
         } else {
-            if let l = loc {
-                fetchCurAddress(by: l) { str, suc in
+            if isLocValid() {
+                fetchCurAddress(by: loc) { str, suc in
                     callback(suc ? str : nil)
                 }
             } else {

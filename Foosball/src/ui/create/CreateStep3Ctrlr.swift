@@ -148,21 +148,15 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
 
     // CreateStep3ToolbarDelegate ================================================================================================
 
-    private func saveEvent() {
-        let detailCell = tableView.cellForRow(at: IndexPath(row: 1, section: 2)) as! CreateStep3DetailCell
-        rootCtrlr.createEvent.detail = detailCell.getInputText()
-    }
-
     func onPublish() {
         UITools.showAlert(rootCtrlr, title: "确认发布", msg: "是否确认直接发布?", type: 2) { act in
-            self.saveEvent()
             self.rootCtrlr.createEvent.isPublishToMap = true
             self.rootCtrlr.finish()
         }
     }
 
     func onGoon() {
-        saveEvent()
+        
     }
 
     // 输入文字相关方法 =================================================================================================

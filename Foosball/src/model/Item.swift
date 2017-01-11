@@ -30,6 +30,7 @@ class ItemType {
 
     var itemTypeType: ItemTypeType! = nil
     var name: String = ""
+    var tag: Int = -1 // 等于在列表中的位置，用于保存
 
     static func new(itemTypeType: ItemTypeType, name: String) {
         let t = ItemType()
@@ -40,6 +41,7 @@ class ItemType {
         ItemType.count += 1
         itemTypeType.subcount += 1
 
+        t.tag = ItemType.list.count
         ItemType.list.append(t)
     }
 

@@ -15,16 +15,34 @@ import AVOSCloud
 
 class Network: NSObject {
 
-    let OBJ_NAME = "match_list"
-
     //单例
     static let shareInstance = Network()
     private override init() {
-        print("init network")
+        AVOSCloud.setApplicationId("o5nq2XE8H5XUlo9S94F9tioJ-gzGzoHsz", clientKey: "vJrjiBn25QQ4FmvIKhVx8bQ2")
     }
 
-    func onStart() {
-        AVOSCloud.setApplicationId("o5nq2XE8H5XUlo9S94F9tioJ-gzGzoHsz", clientKey: "vJrjiBn25QQ4FmvIKhVx8bQ2")
+    // 创建对象
+    func createObj(to list: String, attris: [(String, Any)], callback: @escaping ((Bool, Error?) -> Void)) {
+        let todo = AVObject(className:  list)
+        for attri in attris {
+            let value = checkValue(attri.1)
+            todo.add(value, forKey: attri.0)
+        }
+
+        let opt = AVSaveOption()
+        opt.fetchWhenSave = true
+
+        todo.saveInBackground(with: opt) { suc, error in
+            callback(suc, error)
+        }
+    }
+
+    private func checkValue(_ v: Any) -> Any {
+        if v is CLLocation {
+            return AVGeoPoint(location: v as! CLLocation)
+        }
+
+        return v
     }
 
 //    //创建或者更新一场比赛

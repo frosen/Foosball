@@ -16,6 +16,8 @@ protocol ActiveEventsMgrObserver {
 
 class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
+    let SAVE_NAME: String = "event"
+
     override init() {
         super.init()
         print("初始化 ActiveEventsMgr")
@@ -23,46 +25,46 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         // 读取本地数据
 
         //自己方
-        let bb1 = UserBrief(ID: DataID(ID: 1232))
+        let bb1 = UserBrief(ID: DataID(ID: "1232"))
         bb1.name = "小明1"
         let p1 = UserState(user: bb1, state: .invite)
 
-        let bb2 = UserBrief(ID: DataID(ID: 123))
+        let bb2 = UserBrief(ID: DataID(ID: "123"))
         bb2.name = "小明2"
         let p2 = UserState(user: bb2, state: .ongoing)
 
-        let bb3 = UserBrief(ID: DataID(ID: 1232))
+        let bb3 = UserBrief(ID: DataID(ID: "1232"))
         bb3.name = "小明3"
         let p3 = UserState(user: bb3, state: .waiting)
 
-        let bb12 = UserBrief(ID: DataID(ID: 1232))
+        let bb12 = UserBrief(ID: DataID(ID: "1232"))
         bb12.name = "明a"
         let p12 = UserState(user: bb12, state: .win)
 
-        let bb22 = UserBrief(ID: DataID(ID: 1232))
+        let bb22 = UserBrief(ID: DataID(ID: "1232"))
         bb22.name = "明b"
         let p22 = UserState(user: bb22, state: .lose)
 
-        let bb32 = UserBrief(ID: DataID(ID: 1232))
+        let bb32 = UserBrief(ID: DataID(ID: "1232"))
         bb32.name = "明3"
         let p32 = UserState(user: bb32, state: .finish)
 
-        let bb321 = UserBrief(ID: DataID(ID: 1232))
+        let bb321 = UserBrief(ID: DataID(ID: "1232"))
         bb321.name = "明4"
         let p321 = UserState(user: bb321, state: .finish)
 
 
 
         // 对方
-        let bk1 = UserBrief(ID: DataID(ID: 1232))
+        let bk1 = UserBrief(ID: DataID(ID: "1232"))
         bk1.name = "小王a"
         let pk1 = UserState(user: bk1, state: .invite)
 
-        let bk2 = UserBrief(ID: DataID(ID: 1232))
+        let bk2 = UserBrief(ID: DataID(ID: "1232"))
         bk2.name = "小王b"
         let pk2 = UserState(user: bk2, state: .invite)
 
-        let bk3 = UserBrief(ID: DataID(ID: 1232))
+        let bk3 = UserBrief(ID: DataID(ID: "1232"))
         bk3.name = "大王c"
         let pk3 = UserState(user: bk3, state: .invite)
 
@@ -115,7 +117,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 //        data.append(e)
 
         // -----------------
-        e = Event(ID: DataID(ID: 50001))
+        e = Event(ID: DataID(ID: "50001"))
 
         e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
         e.opponentStateList = [pk1, pk2, pk3]
@@ -133,7 +135,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         let m5 = MsgStruct(user: bk3, time: Time.now, msg: "你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5")
 
         e.createTime = Time.now
-        e.createUserID = DataID(ID: 123)
+        e.createUserID = DataID(ID: "123")
 
         e.location = Location()
         e.location.loc = CLLocation()
@@ -173,7 +175,28 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
     // ---------------------------------------------------------
 
     func addNewEvent(_ e: Event) {
+        let attris: [(String, Any)] = [
+            ("tp", e.type.rawValue),
+            ("i", e.item.tag),
+            ("mc1", e.memberCount),
+            ("mc2", e.memberCount2),
+            ("ivt", e.canInvite),
+            ("tm", e.time.time),
+            ("loc", e.location.loc),
+            ("p2m", e.isPublishToMap),
+            ("wg", Serializer.wagersToList(e.wager)),
+            ("dtl", e.detail),
+            ("our", Serializer.userStatesToList(e.ourSideStateList)),
+            ("opp", Serializer.userStatesToList(e.opponentStateList)),
+            ("img", e.imageURLList),
+            ("msg", []),
+            ("ctm", e.createTime.time),
+            ("cid", e.createUserID.rawValue)
+        ]
 
+        Network.shareInstance.createObj(to: SAVE_NAME, attris: attris) { suc, error in
+            print("create event on net", suc, error ?? "no error")
+        }
     }
 
     // set ob --------------------------------------------------
@@ -187,3 +210,45 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
     }
 
 }
+
+class Serializer: NSObject {
+    class func wagersToList(_ wagers: [(Int, Int, Int)]) -> [Int] {
+        var list: [Int] = []
+        for wager in wagers {
+            list.append(wager.0)
+            list.append(wager.1)
+            list.append(wager.2)
+        }
+        return list
+    }
+
+    class func wager(from list: [Int]) -> [(Int, Int, Int)] {
+        return []
+    }
+
+    // -------------------------------------------------------
+
+    class func userStatesToList(_ userStates: [UserState]) -> [[String: Any]] {
+        var list: [[String: Any]] = []
+        for userState in userStates {
+            list.append([
+                "id": userState.user.ID.rawValue,
+                "st": userState.state.rawValue
+            ])
+        }
+
+        return list
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
