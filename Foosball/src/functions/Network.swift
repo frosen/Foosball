@@ -42,6 +42,26 @@ class Network: NSObject {
         return v
     }
 
+    // 用户相关 --------------------------------------------------------------------
+
+    // 是否已经在本地保存了用户信息
+    func hasCurUser() -> Bool {
+        let curUser = AVUser.current()
+        return curUser != nil
+    }
+
+    func registeUser(id: String, attris: [(String, Any)]) {
+        let user = AVUser()
+
+        user.username = id
+        user.password = "pw"
+
+        for attri in attris {
+            user.setObject(attri.1, forKey: attri.0)
+        }
+
+
+    }
 //    //创建或者更新一场比赛
 //    func updateMatch(match: MatchInfo, callback: (_ suc: Bool, _ e: NSError?) -> Void) {
 //        print("create match")

@@ -25,11 +25,9 @@ class User: BaseData {
     //状态数据
 
     //登录信息，不可以又用户改变
-    var token: String = ""
+    var loginName = ""
+    var password = ""
 
-    var activeEId: Int = 0 //活动事件列表
-    var eventsId: Int = 0 //全部事件列表
-    var firendsId: Int = 0 //好友概要列表
 
     func getBrief() -> UserBrief {
         let br = UserBrief(ID: ID)

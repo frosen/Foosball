@@ -15,17 +15,57 @@ protocol UserMgrObserver {
 
 class UserMgr: DataMgr<User, UserMgrObserver> {
 
+    enum LoginState: Int {
+        case no
+        case device
+        case user
+    }
+
     override init() {
         super.init()
         print("初始化 UserMgr")
 
-        // 读取本地数据
-        data = User(ID: DataID(ID: "123"))
-        data.name = "聂小倩"
+        // 读取本地登录数据
+        if getLoginState() == .no {
+            registeDeviceLogin()
+
+        } else {
+            // 读取本地用户信息
+
+            data = User(ID: DataID(ID: "123"))
+            data.name = "聂小倩"
+            data.avatarURL = ""
+
+            // 初始化时候直接启动轮询
+        }
+    }
+
+    func getLoginState() -> LoginState {
+        let hasCurUser = Network.shareInstance.hasCurUser()
+        if !hasCurUser {
+            return .no
+        }
+        return .device
+    }
+
+    // 用户未登录前，直接用设备id注册一个用户
+    func registeDeviceLogin() {
+        data = User(ID: DataID(ID: "no registe"))
+
+        var randomStr: String = ""
+        for _ in 0 ..< 32 {
+            randomStr += String(format: "%c", arc4random_uniform(90 - 65) + 65)
+        }
+
+        let index = randomStr.index(randomStr.startIndex, offsetBy: 4)
+        let subStr = randomStr.substring(to: index)
+
+        data.name = "苹果玩家" + subStr
         data.avatarURL = ""
 
-        // 初始化时候直接启动轮询
     }
+
+    // ---------------------------------------------------------------------------
 
     override func initObserver(_ ob: UserMgrObserver) {
         ob.onInit(user: data)
@@ -34,6 +74,8 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
     override func modifyObserver(_ ob: UserMgrObserver) {
         ob.onModify(user: data)
     }
+
+    // ---------------------------------------------------------------------------
 
     func getState(from event: Event, by id: DataID) -> EventState {
         var s = searchSelfState(from: event, by: id)
@@ -61,4 +103,16 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         print("wrong in searchState")
         return .finish
     }
+
+    
 }
+
+
+
+
+
+
+
+
+
+

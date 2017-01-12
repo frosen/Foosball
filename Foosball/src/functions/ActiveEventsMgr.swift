@@ -167,6 +167,16 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         eventChangeMap = res as! [Event: (Bool, Int)]
     }
 
+    // set ob --------------------------------------------------
+
+    override func initObserver(_ ob: ActiveEventsMgrObserver) {
+        ob.onInit(activeEvents: data)
+    }
+
+    override func modifyObserver(_ ob: ActiveEventsMgrObserver) {
+        ob.onModify(activeEvents: data)
+    }
+
     // ---------------------------------------------------------
 
     func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
@@ -194,17 +204,6 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
             callback(suc, error)
         }
     }
-
-    // set ob --------------------------------------------------
-
-    override func initObserver(_ ob: ActiveEventsMgrObserver) {
-        ob.onInit(activeEvents: data)
-    }
-
-    override func modifyObserver(_ ob: ActiveEventsMgrObserver) {
-        ob.onModify(activeEvents: data)
-    }
-
 }
 
 class Serializer: NSObject {

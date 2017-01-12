@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol InfoHeadViewDelegate {
+    func onClickInfoHeadViewAvatar()
+}
+
 class InfoHeadView: UIView {
     private var scrollView: UIScrollView
     private var extraHeight: CGFloat = 0
@@ -17,6 +21,8 @@ class InfoHeadView: UIView {
     private var avatar: Avatar! = nil
     private var title: UILabel! = nil
     private var subTitle: UILabel! = nil
+
+    var delegate: InfoHeadViewDelegate? = nil
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -123,10 +129,17 @@ class InfoHeadView: UIView {
         avatar.layer.borderWidth = 2
         avatar.layer.cornerRadius = avatarW / 2
 
+        let tap = UITapGestureRecognizer(target: self, action: #selector(InfoHeadView.tapAvatar(ges:)))
+        avatar.addGestureRecognizer(tap)
+
         //其他属性
         bg.image = bgimg
         title.text = titleStr
         subTitle.text = subTitleStr
+    }
+
+    func tapAvatar(ges: UITapGestureRecognizer) {
+        delegate?.onClickInfoHeadViewAvatar()
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
