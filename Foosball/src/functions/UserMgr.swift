@@ -27,16 +27,11 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
 
         // 读取本地登录数据
         if getLoginState() == .no {
-            registeDeviceLogin()
+            registerDeviceLogin()
 
         } else {
-            // 读取本地用户信息
-
-            data = User(ID: DataID(ID: "123"))
-            data.name = "聂小倩"
-            data.avatarURL = ""
-
-            // 初始化时候直接启动轮询
+            readLocalUserData()
+            gotoScanServerData()
         }
     }
 
@@ -49,20 +44,54 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
     }
 
     // 用户未登录前，直接用设备id注册一个用户
-    func registeDeviceLogin() {
-        data = User(ID: DataID(ID: "no registe"))
-
-        var randomStr: String = ""
-        for _ in 0 ..< 32 {
-            randomStr += String(format: "%c", arc4random_uniform(90 - 65) + 65)
+    func registerDeviceLogin() {
+        var loginName: String = ""
+        for _ in 0 ..< 5 { // 前5位可能会显示到昵称里，所以都是大写英文
+            loginName += String(format: "%c", arc4random_uniform(91 - 65) + 65)
+        }
+        for _ in 0 ..< 15 {
+            loginName += String(format: "%c", arc4random_uniform(123 - 48) + 48)
         }
 
-        let index = randomStr.index(randomStr.startIndex, offsetBy: 4)
-        let subStr = randomStr.substring(to: index)
+        // 截出前几位，用于昵称中
+        let index = loginName.index(loginName.startIndex, offsetBy: 4)
+        let subStr = loginName.substring(to: index)
 
+        var password: String = ""
+        for _ in 0 ..< 8 { // 前5位可能会显示到昵称里，所以都是大写英文
+            password += String(format: "%c", arc4random_uniform(123 - 48) + 48)
+        }
+
+        data = User(ID: DataID(ID: "no register"))
         data.name = "苹果玩家" + subStr
         data.avatarURL = ""
 
+        let attris: [(String, Any)] = [
+            ("nick", data.name),
+            ("url", data.avatarURL),
+            ("isR", data.isRegistered),
+        ]
+
+        Network.shareInstance.registerUser(id: loginName, pw: password, attris: attris) { suc, error, newID in
+            guard suc else {
+                return
+            }
+
+            self.data.ID = DataID(ID: newID)
+
+            self.gotoScanServerData()
+        }
+    }
+
+    func readLocalUserData() {
+        data = User(ID: DataID(ID: "123"))
+        data.name = "聂小倩"
+        data.avatarURL = ""
+    }
+
+    // 开启轮询
+    func gotoScanServerData() {
+//        Network.shareInstance.updateUser()
     }
 
     // ---------------------------------------------------------------------------
@@ -77,6 +106,13 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
 
     // ---------------------------------------------------------------------------
 
+    // 同时给活动事件和所有事件
+    func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
+        Network.shareInstance.addEventToUser(e, listName: "active", needUploadAndCallback: nil)
+        Network.shareInstance.addEventToUser(e, listName: "events", needUploadAndCallback: callback)
+    }
+
+    // 工具 -----------------------------------------------------------------------
     func getState(from event: Event, by id: DataID) -> EventState {
         var s = searchSelfState(from: event, by: id)
 
@@ -103,15 +139,7 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         print("wrong in searchState")
         return .finish
     }
-
-    
 }
-
-
-
-
-
-
 
 
 

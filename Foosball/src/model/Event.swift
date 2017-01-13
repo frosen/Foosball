@@ -57,6 +57,8 @@ class MsgStruct {
 }
 
 class Event: BaseData {
+    static let classname = "event"
+
     //类型 对决 乱斗 挑战 求教 会友
     var type: EventType = .confrontation
 

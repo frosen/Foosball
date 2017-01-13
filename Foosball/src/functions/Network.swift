@@ -21,110 +21,120 @@ class Network: NSObject {
         AVOSCloud.setApplicationId("o5nq2XE8H5XUlo9S94F9tioJ-gzGzoHsz", clientKey: "vJrjiBn25QQ4FmvIKhVx8bQ2")
     }
 
-    // 创建对象
-    func createObj(to list: String, attris: [(String, Any)], callback: @escaping ((Bool, Error?) -> Void)) {
-        let todo = AVObject(className:  list)
-        for attri in attris {
-            let value = checkValue(attri.1)
-            todo.setObject(value, forKey: attri.0)
-        }
-
-        todo.saveInBackground { suc, error in
-            callback(suc, error)
-        }
-    }
-
-    private func checkValue(_ v: Any) -> Any {
-        if v is CLLocation {
-            return AVGeoPoint(location: v as! CLLocation)
-        }
-
-        return v
-    }
-
     // 用户相关 --------------------------------------------------------------------
 
     // 是否已经在本地保存了用户信息
     func hasCurUser() -> Bool {
+//        AVUser.logOut()
         let curUser = AVUser.current()
-        return curUser != nil
+        return curUser?.sessionToken != nil
     }
 
-    func registeUser(id: String, attris: [(String, Any)]) {
+    func registerUser(id: String, pw: String, attris: [(String, Any)], callback: @escaping ((Bool, Error?, String) -> Void)) {
         let user = AVUser()
 
         user.username = id
-        user.password = "pw"
+        user.password = pw
 
         for attri in attris {
             user.setObject(attri.1, forKey: attri.0)
         }
 
-
+        user.signUpInBackground { suc, error in
+            let id = user.objectId
+            callback(suc, error, id!)
+        }
     }
-//    //创建或者更新一场比赛
-//    func updateMatch(match: MatchInfo, callback: (_ suc: Bool, _ e: NSError?) -> Void) {
-//        print("create match")
+
+    // 把事件添加到user上
+    func addEventToUser(_ e: Event, listName: String, needUploadAndCallback: ((Bool, Error?) -> Void)?) {
+        guard let user = AVUser.current() else {
+            return
+        }
+
+        let value = DataTools.checkValue(e)
+        user.add(value, forKey: listName)
+
+        if needUploadAndCallback == nil {
+            return
+        }
+
+        let opt = AVSaveOption()
+        opt.fetchWhenSave = true
+        user.saveInBackground(with: opt, block: { suc, error in
+            needUploadAndCallback!(suc, error)
+        })
+    }
+
+//    func updateUser() {
 //
-//        let obj = AVObject(className: OBJ_NAME)
-//
-//        if match.id != "" {
-//            obj.objectId = match.id
+//        guard let user = AVUser.current() else {
+//            return
 //        }
 //
-//        obj.setObject(match.matchName, forKey: "matchName")
-//        obj.setObject(match.teamNameArray, forKey: "teamNameArray")
-//        obj.setObject(match.remarks, forKey: "remarks")
-//        obj.setObject(match.inningNum, forKey: "inningNum")
-//        obj.setObject(match.scoreList, forKey: "scoreList")
-//        obj.setObject(match.hasRewarded, forKey: "hasRewarded")
+//        let userQuery = AVQuery(className: "_User")
 //
-//        let option = AVSaveOption()
-//        option.fetchWhenSave = true
+//        userQuery.includeKey("active")
 //
-//        obj.saveInBackgroundWithOption(option, block: callback)
-//    }
-//
-//    //获取信息
-//    func getMatch(id: String) -> MatchInfo {
-//        let q = AVQuery(className: OBJ_NAME)
-//        let obj = q.getObjectWithId(id)
-//        return createMatchFromObj(obj)
-//    }
-//
-//    //获取比赛信息表
-//    func getMatchList(callback: (_ suc: Bool, _ list: [MatchInfo]) -> Void) {
-//        let q = AVQuery(className: OBJ_NAME)
-//        let objList = q.findObjects()
-//
-//        AVObject.fetchAllIfNeededInBackground(objList, block: {list, e in
-//            if list == nil {
-//                callback(suc: false, list: [])
-//                return
+//        userQuery.getObjectInBackground(withId: user.objectId!) { obj, error in
+//            let e = obj?["active"]
+//            if e is [AVObject] {
+//                let elist = (e as! [AVObject])
+//                for ee in elist {
+//                    print(ee.objectId ?? "nono")
+//                }
+//                let e1 = elist[0]
+//                let n = e1["mc1"] as? Int
+//                print(n ?? "no n")
 //            }
 //
-//            let objList = list as! [AVObject]
-//            var matchList: [MatchInfo] = []
+//            self.abc()
+//        }
+//    }
 //
-//            for obj in objList {
-//                matchList.append(self.createMatchFromObj(obj))
+//    func abc() {
+//        guard let user = AVUser.current() else {
+//            return
+//        }
+//
+//        print(user.sessionToken ?? "no")
+//
+//        let eventList = [
+//            AVObject(className: "event", objectId: "5875f4d1ac502e006c38f5b3"),
+//            AVObject(className: "event", objectId: "5875f4d1ac502e006c38f5b3"),
+//            AVObject(className: "event", objectId: "5875f4d1ac502e006c38f5b3"),
+//            AVObject(className: "event", objectId: "5875f376ac502e006c38eb42")
+//        ]
+//        user.setObject(175, forKey: "ttt")
+//        user.setObject(eventList, forKey: "active")
+//
+//        let opt = AVSaveOption()
+//        opt.fetchWhenSave = true
+//        user.saveInBackground(with: opt, block: { suc, error in
+//            print(suc, error?.localizedDescription ?? "??")
+//
+//            let e = user["active"]
+//            if e is [AVObject] {
+//                let e1 = (e as! [AVObject])[0]
+//                let n = e1["mc1"] as? Int
+//                print(n ?? "no n")
 //            }
-//
-//            callback(suc: true, list: matchList)
+//            print(user["ttt"] as! Int)
 //        })
-//
 //    }
-//
-//    private func createMatchFromObj(obj: AVObject) -> MatchInfo {
-//        let match = MatchInfo()
-//        match.id = obj.objectId as String
-//        match.matchName = obj.objectForKey("matchName") as! String
-//        match.teamNameArray = obj.objectForKey("teamNameArray") as! [String]
-//        match.remarks = obj.objectForKey("remarks") as! String
-//        match.inningNum = obj.objectForKey("inningNum") as! Int
-//        match.scoreList = obj.objectForKey("scoreList") as! [[Int]]
-//        match.hasRewarded = obj.objectForKey("hasRewarded") as! Bool
-//        match.createTime = obj.createdAt
-//        return match
-//    }
+
+    // 对象 --------------------------------------------------------------------
+
+    // 创建对象
+    func createObj(to list: String, attris: [(String, Any)], callback: @escaping ((Bool, Error?, String) -> Void)) {
+        let todo = AVObject(className:  list)
+        for attri in attris {
+            let value = DataTools.checkValue(attri.1)
+            todo.setObject(value, forKey: attri.0)
+        }
+
+        todo.saveInBackground { suc, error in
+            callback(suc, error, todo.objectId!)
+        }
+    }
 }

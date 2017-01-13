@@ -18,17 +18,16 @@ class UserBrief: BaseData {
 }
 
 class User: BaseData {
+    static let classname = "_User"
+
     //个人信息
     var name: String = "玩家"
     var avatarURL: String = ""
+    var isRegistered: Bool = false
 
     //状态数据
 
-    //登录信息，不可以又用户改变
-    var loginName = ""
-    var password = ""
-
-
+    // 获取用户信息摘要
     func getBrief() -> UserBrief {
         let br = UserBrief(ID: ID)
         br.name = name

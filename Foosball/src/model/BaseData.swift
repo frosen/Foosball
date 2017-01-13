@@ -240,7 +240,7 @@ class Location: NSObject, AMapSearchDelegate {
 //基础数据 ----------------------------------------------------------------------------
 
 class BaseData: NSObject {
-    let ID: DataID //本结构体的id
+    var ID: DataID //本结构体的id
     init(ID: DataID) {
         self.ID = ID
     }

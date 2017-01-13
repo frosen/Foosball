@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3250913C82FFF635417020BD /* Pods_Foosball.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D81C567789B96B0906D4D436 /* Pods_Foosball.framework */; };
 		65005E6D1E2644AE000AADC4 /* PersonalInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65005E6C1E2644AE000AADC4 /* PersonalInfoController.swift */; };
+		65005E7F1E28D4AA000AADC4 /* DataTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65005E7E1E28D4AA000AADC4 /* DataTools.swift */; };
 		650151A51DB4D6F9009D8ABC /* InputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650151A41DB4D6F9009D8ABC /* InputView.swift */; };
 		6507AC0A1D55B7C900791FB1 /* ChallengeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6507AC091D55B7C900791FB1 /* ChallengeCell.swift */; };
 		6508C24C1DD9C95100E3D7C2 /* CreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6508C24B1DD9C95100E3D7C2 /* CreateController.swift */; };
@@ -62,6 +63,7 @@
 
 /* Begin PBXFileReference section */
 		65005E6C1E2644AE000AADC4 /* PersonalInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonalInfoController.swift; sourceTree = "<group>"; };
+		65005E7E1E28D4AA000AADC4 /* DataTools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataTools.swift; path = functions/DataTools.swift; sourceTree = "<group>"; };
 		650151A41DB4D6F9009D8ABC /* InputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputView.swift; path = widget/InputView.swift; sourceTree = "<group>"; };
 		6507AC091D55B7C900791FB1 /* ChallengeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeCell.swift; sourceTree = "<group>"; };
 		6508C24B1DD9C95100E3D7C2 /* CreateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CreateController.swift; path = create/CreateController.swift; sourceTree = "<group>"; };
@@ -314,6 +316,7 @@
 		65D61CF11DBF360A0032C2E7 /* functions */ = {
 			isa = PBXGroup;
 			children = (
+				65005E7E1E28D4AA000AADC4 /* DataTools.swift */,
 				65A66D2F1E07AE0E00FF9589 /* DataMgr.swift */,
 				6593C0BC1DCDD65D00589943 /* UserMgr.swift */,
 				65D61D0F1DC0602D0032C2E7 /* ActiveEventsMgr.swift */,
@@ -468,6 +471,7 @@
 				65A66D341E07CB8300FF9589 /* BaseToolbar.swift in Sources */,
 				65A66D301E07AE0E00FF9589 /* DataMgr.swift in Sources */,
 				6508C2901DDD992B00E3D7C2 /* CreateStep2Ctrlr.swift in Sources */,
+				65005E7F1E28D4AA000AADC4 /* DataTools.swift in Sources */,
 				6508C2931DDD994500E3D7C2 /* CreateStep3Ctrlr.swift in Sources */,
 				65EEB7621DAE3A0500BB767D /* DetailMsgCell.swift in Sources */,
 				6554A3C31D6FE956001AB4D6 /* ScanViewController.swift in Sources */,

@@ -16,8 +16,6 @@ protocol ActiveEventsMgrObserver {
 
 class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
-    let SAVE_NAME: String = "event"
-
     override init() {
         super.init()
         print("初始化 ActiveEventsMgr")
@@ -189,50 +187,26 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
             ("tm", e.time.time),
             ("loc", e.location.loc),
             ("p2m", e.isPublishToMap),
-            ("wg", Serializer.wagersToList(e.wager)),
+            ("wg", DataTools.serialize(wagers: e.wager)),
             ("dtl", e.detail),
-            ("our", Serializer.userStatesToList(e.ourSideStateList)),
-            ("opp", Serializer.userStatesToList(e.opponentStateList)),
+            ("our", DataTools.serialize(userStates: e.ourSideStateList)),
+            ("opp", DataTools.serialize(userStates: e.opponentStateList)),
             ("img", e.imageURLList),
             ("msg", []),
             ("ctm", e.createTime.time),
             ("cid", e.createUserID.rawValue)
         ]
 
-        Network.shareInstance.createObj(to: SAVE_NAME, attris: attris) { suc, error in
+        Network.shareInstance.createObj(to: Event.classname, attris: attris) { suc, error, newID in
             print("create event on net: \(suc), ", error ?? "no error")
-            callback(suc, error)
+            if suc {
+                e.ID = DataID(ID: newID)
+                self.data.append(e)
+                APP.userMgr.addNewEvent(e, callback: callback)
+            } else {
+                callback(suc, error)
+            }
         }
-    }
-}
-
-class Serializer: NSObject {
-    class func wagersToList(_ wagers: [(Int, Int, Int)]) -> [Int] {
-        var list: [Int] = []
-        for wager in wagers {
-            list.append(wager.0)
-            list.append(wager.1)
-            list.append(wager.2)
-        }
-        return list
-    }
-
-    class func wager(from list: [Int]) -> [(Int, Int, Int)] {
-        return []
-    }
-
-    // -------------------------------------------------------
-
-    class func userStatesToList(_ userStates: [UserState]) -> [[String: Any]] {
-        var list: [[String: Any]] = []
-        for userState in userStates {
-            list.append([
-                "id": userState.user.ID.rawValue,
-                "st": userState.state.rawValue
-            ])
-        }
-
-        return list
     }
 }
 
