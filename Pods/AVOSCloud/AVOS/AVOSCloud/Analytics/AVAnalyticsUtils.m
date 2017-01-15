@@ -89,7 +89,7 @@ static NSString * identifierForVendorTag = @"identifierForVendor";
     if (!(errno == ENOENT) && cydiaInstalled) {
         isJailbroken = YES;
     }
-    fclose(f);
+    if (f) fclose(f);
     return isJailbroken;
 }
 

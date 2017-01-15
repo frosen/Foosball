@@ -66,8 +66,8 @@ open class SKZoomingScrollView: UIScrollView {
         // self
         backgroundColor = UIColor.clear
         delegate = self
-        showsHorizontalScrollIndicator = false
-        showsVerticalScrollIndicator = false
+        showsHorizontalScrollIndicator = SKPhotoBrowserOptions.displayHorizontalScrollIndicator
+        showsVerticalScrollIndicator = SKPhotoBrowserOptions.displayVerticalScrollIndicator
         decelerationRate = UIScrollViewDecelerationRateFast
         autoresizingMask = [.flexibleWidth, .flexibleTopMargin, .flexibleBottomMargin, .flexibleRightMargin, .flexibleLeftMargin]
     }

@@ -6,7 +6,7 @@ target 'Foosball' do
 
 pod 'AVOSCloud'
 pod 'SDWebImage'
-pod 'SKPhotoBrowser', :git => 'https://github.com/suzuki-0000/SKPhotoBrowser.git', :branch => 'swift3'
+pod 'SKPhotoBrowser'
 
 # 高德地图
 pod 'AMap2DMap'

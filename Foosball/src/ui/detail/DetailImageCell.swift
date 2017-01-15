@@ -136,7 +136,8 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         var skImgArray: [SKPhoto] = []
         for imgV in imgViewArray {
             if let img = imgV.image {
-                let photo = SKPhoto.photoWithImage(img)
+                let photo = SKPhoto.photoWithImageURL("http://up.qqjia.com/z/25/tu32718_6.png", holder: img)
+                photo.shouldCachePhotoURLImage = true
                 skImgArray.append(photo)
             }
         }
