@@ -59,12 +59,12 @@ class BaseCell: UITableViewCell {
 
             let baseCell = cell as! BaseCell
             baseCell.w = UIScreen.main.bounds.width
-            baseCell.h = type(of: baseCell).getCellHeight(d, index: index) //dynamicType可以获取对象的类，然后就能使用类函数了
             baseCell.ctrlr = ctrlr
             baseCell.initData(d, index: index)
         }
 
         let baseCell = cell as! BaseCell
+        baseCell.h = type(of: baseCell).getCellHeight(d, index: index) //dynamicType可以获取对象的类，然后就能使用类函数了
         baseCell.setData(d, index: index)
 
         return cell!
