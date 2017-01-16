@@ -66,6 +66,22 @@ class Network: NSObject {
         })
     }
 
+    // 因为User有特殊的list，所以单独做一个函数
+    func getUserAttris(attriNames: [String]) -> [String: Any]? {
+        guard let user = AVUser.current() else {
+            return nil
+        }
+
+        var attris: [String: Any] = [:]
+        attris["id"] = user.objectId
+        for name in attriNames {
+            let value = user[name]!
+            attris[name] = value
+        }
+
+        return attris
+    }
+
 //    func updateUser() {
 //
 //        guard let user = AVUser.current() else {
@@ -132,9 +148,14 @@ class Network: NSObject {
             let value = DataTools.checkValue(attri.1)
             todo.setObject(value, forKey: attri.0)
         }
-
+        
         todo.saveInBackground { suc, error in
             callback(suc, error, todo.objectId!)
         }
     }
 }
+
+
+
+
+

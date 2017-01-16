@@ -84,9 +84,15 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
     }
 
     func readLocalUserData() {
-        data = User(ID: DataID(ID: "123"))
-        data.name = "聂小倩"
-        data.avatarURL = ""
+        guard let attris = Network.shareInstance.getUserAttris(attriNames: ["nick", "url", "isR"]) else {
+            print("ERROR: no attris")
+            return
+        }
+        
+        data = User(ID: DataID(ID: attris["id"] as! String))
+        data.name = attris["nick"] as! String
+        data.avatarURL = attris["url"] as! String
+        data.isRegistered = attris["isR"] as! Bool
     }
 
     // 开启轮询

@@ -18,7 +18,6 @@ class UserBrief: BaseData {
 }
 
 class User: BaseData {
-    static let classname = "_User"
 
     //个人信息
     var name: String = "玩家"

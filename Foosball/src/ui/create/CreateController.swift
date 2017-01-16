@@ -24,23 +24,11 @@ class CreateController: BaseController, UIScrollViewDelegate {
 
         // 导航栏
         UITools.createNavBackBtn(self, action: #selector(CreateController.onBack))
-        setStepLebel()
 
         initCreateEvent() // 初始化数据
         initUIData()
-    }
 
-    // 设置步骤
-    private var stepLabel: UIBarButtonItem! = nil // 用于记录步骤
-    private func setStepLebel() {
-        if stepLabel == nil {
-            stepLabel = UIBarButtonItem(title: "1/3", style: .done, target: nil, action: nil)
-            stepLabel.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: .normal)
-            stepLabel.isEnabled = false
-            navigationItem.rightBarButtonItem = stepLabel
-        }
-        let stepStr: String = String(page + 1) + "/" + String(subviews.count)
-        stepLabel.title! = stepStr
+        setStepLebel()
     }
 
     func initCreateEvent() {
@@ -85,6 +73,19 @@ class CreateController: BaseController, UIScrollViewDelegate {
         }
     }
 
+    // 设置步骤
+    private var stepLabel: UIBarButtonItem! = nil // 用于记录步骤
+    private func setStepLebel() {
+        if stepLabel == nil {
+            stepLabel = UIBarButtonItem(title: "1/3", style: .done, target: nil, action: nil)
+            stepLabel.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: .normal)
+            stepLabel.isEnabled = false
+            navigationItem.rightBarButtonItem = stepLabel
+        }
+        let stepStr: String = String(page + 1) + "/" + String(subviews.count)
+        stepLabel.title! = stepStr
+    }
+
     private func goBackToHome() {
         let _ = navigationController?.popViewController(animated: true)
     }
@@ -109,6 +110,8 @@ class CreateController: BaseController, UIScrollViewDelegate {
             if suc {
                 // 返回
                 self.goBackToHome()
+            } else {
+                print("ERROR: CreateController finish", error ?? "no error")
             }
         }
     }
