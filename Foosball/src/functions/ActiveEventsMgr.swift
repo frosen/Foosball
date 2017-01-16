@@ -16,6 +16,10 @@ protocol ActiveEventsMgrObserver {
 
 class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
+    // 为了提高每次刷新的效率，复用data中的event，数量不足才新建，否则只修改已经创建好的
+    // 用eventCount记录有效event数量，超过的event不删除也没有用
+    var eventCount: Int = 0
+
     override init() {
         super.init()
         print("初始化 ActiveEventsMgr")
