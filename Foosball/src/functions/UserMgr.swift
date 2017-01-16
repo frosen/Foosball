@@ -31,6 +31,7 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
 
         } else {
             readLocalUserData()
+            updateUser() // 立即更新
             gotoScanServerData()
         }
     }
@@ -64,7 +65,6 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
 
         data = User(ID: DataID(ID: "no register"))
         data.name = "苹果玩家" + subStr
-        data.avatarURL = ""
 
         let attris: [(String, Any)] = [
             ("nick", data.name),
@@ -74,33 +74,106 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
 
         Network.shareInstance.registerUser(id: loginName, pw: password, attris: attris) { suc, error, newID in
             guard suc else {
+                print("ERROR: registerUser in registerDeviceLogin", error ?? "no error")
+                self.registerDeviceLogin() // 尝试重新注册
                 return
             }
 
             self.data.ID = DataID(ID: newID)
 
+            self.updateObserver()
+            self.saveData()
             self.gotoScanServerData()
         }
     }
 
     func readLocalUserData() {
-        guard let attris = Network.shareInstance.getUserAttris(attriNames: ["nick", "url", "isR"]) else {
-            print("ERROR: no attris")
-            return
+        var attris: [String: Any] = [
+            "id": "id",
+            "nick": "name",
+            "url": "url",
+            "isR": false,
+        ]
+
+        Network.shareInstance.getUserAttris(into: &attris) { str, attris in
+            guard str != nil else {
+                print("ERROR: no attris in readLocalUserData")
+                return
+            }
+
+            resetData(attris)
         }
-        
-        data = User(ID: DataID(ID: attris["id"] as! String))
+    }
+
+    // 开启轮询
+    func gotoScanServerData() {
+        Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(UserMgr.timer), userInfo: nil, repeats: true)
+    }
+
+    func timer(_ t: Timer) {
+        updateUser()
+    }
+
+    var attrisKeeper: [String: Any] = [
+        "id": "id",
+        "nick": "name",
+        "url": "url",
+        "isR": false,
+        "active": [["eventAttriName": "eventAttri"]]
+    ]
+
+    func updateUser() {
+        Network.shareInstance.updateUser(
+            into: &attrisKeeper,
+            with: ["avtive"]
+        ) { str, attris in
+            if str == nil {
+                print("ERROR: no attris in gotoScanServerData")
+
+            } else if str == "suc" {
+                // 成功后要刷新events表，所以先清空
+                APP.activeEventsMgr.cleanData()
+
+            } else if str == "active" {
+                APP.activeEventsMgr.addNewData(attris)
+
+            } else if str == "" {
+                self.resetData(attris)
+
+                self.updateObserver()
+                self.saveData()
+
+                APP.activeEventsMgr.updateObserver()
+                APP.activeEventsMgr.saveData()
+            }
+        }
+    }
+
+    func resetData(_ attris: [String: Any]) {
+        if data == nil {
+            data = User(ID: DataID(ID: attris["id"] as! String))
+        } else {
+            data.ID = DataID(ID: attris["id"] as! String)
+        }
+
         data.name = attris["nick"] as! String
         data.avatarURL = attris["url"] as! String
         data.isRegistered = attris["isR"] as! Bool
     }
 
-    // 开启轮询
-    func gotoScanServerData() {
-//        Network.shareInstance.updateUser()
+    func addActiveEvents(_ attris: [String: Any]) {
+
     }
 
     // ---------------------------------------------------------------------------
+
+    override func saveData(needUpload: Bool = false) {
+        // 用户数据不需要自己进行本地保存，会保存到leancloud中
+
+        if needUpload {
+            
+        }
+    }
 
     override func initObserver(_ ob: UserMgrObserver) {
         ob.onInit(user: data)

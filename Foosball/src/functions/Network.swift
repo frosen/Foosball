@@ -67,77 +67,75 @@ class Network: NSObject {
     }
 
     // 因为User有特殊的list，所以单独做一个函数
-    func getUserAttris(attriNames: [String]) -> [String: Any]? {
+    func getUserAttris(into attris: inout [String: Any], callback: ((String?, [String: Any]) -> Void)) {
         guard let user = AVUser.current() else {
-            return nil
+            callback(nil, [:])
+            return
         }
-
-        var attris: [String: Any] = [:]
-        attris["id"] = user.objectId
-        for name in attriNames {
-            let value = user[name]!
-            attris[name] = value
-        }
-
-        return attris
+        parse(obj: user, by: &attris, callback: callback, key: "")
     }
 
-//    func updateUser() {
-//
-//        guard let user = AVUser.current() else {
-//            return
-//        }
-//
-//        let userQuery = AVQuery(className: "_User")
-//
-//        userQuery.includeKey("active")
-//
-//        userQuery.getObjectInBackground(withId: user.objectId!) { obj, error in
-//            let e = obj?["active"]
-//            if e is [AVObject] {
-//                let elist = (e as! [AVObject])
-//                for ee in elist {
-//                    print(ee.objectId ?? "nono")
-//                }
-//                let e1 = elist[0]
-//                let n = e1["mc1"] as? Int
-//                print(n ?? "no n")
-//            }
-//
-//            self.abc()
-//        }
-//    }
-//
-//    func abc() {
-//        guard let user = AVUser.current() else {
-//            return
-//        }
-//
-//        print(user.sessionToken ?? "no")
-//
-//        let eventList = [
-//            AVObject(className: "event", objectId: "5875f4d1ac502e006c38f5b3"),
-//            AVObject(className: "event", objectId: "5875f4d1ac502e006c38f5b3"),
-//            AVObject(className: "event", objectId: "5875f4d1ac502e006c38f5b3"),
-//            AVObject(className: "event", objectId: "5875f376ac502e006c38eb42")
-//        ]
-//        user.setObject(175, forKey: "ttt")
-//        user.setObject(eventList, forKey: "active")
-//
-//        let opt = AVSaveOption()
-//        opt.fetchWhenSave = true
-//        user.saveInBackground(with: opt, block: { suc, error in
-//            print(suc, error?.localizedDescription ?? "??")
-//
-//            let e = user["active"]
-//            if e is [AVObject] {
-//                let e1 = (e as! [AVObject])[0]
-//                let n = e1["mc1"] as? Int
-//                print(n ?? "no n")
-//            }
-//            print(user["ttt"] as! Int)
-//        })
-//    }
+    func updateUser(into attris: inout [String: Any], with lists: [String], callback: @escaping ((String?, [String: Any]) -> Void)) {
+        guard let user = AVUser.current() else {
+            return
+        }
+
+        let userQuery = AVQuery(className: "_User")
+
+        for list in lists {
+            userQuery.includeKey(list)
+        }
+
+        var holdAttris = attris
+        userQuery.getObjectInBackground(withId: user.objectId!) { obj, error in
+            if error != nil || obj == nil {
+                callback(nil, [:])
+                return
+            }
+            callback("suc", [:])
+            self.parse(obj: obj!, by: &holdAttris, callback: callback, key: "")
+        }
+    }
+
+    // 参数必须是AVObject，为了不对外开放，所以对外为NSObject
+    // inout: 参考 http://blog.csdn.net/chenyufeng1991/article/details/48495367
+    func parse(obj: NSObject, by attris: inout [String: Any], callback: ((String?, [String: Any]) -> Void), key: String) {
+        guard let avobj = obj as? AVObject else {
+            print("ERROR: obj is not AVObj")
+            callback(nil, [:])
+            return
+        }
+
+        for attri in attris {
+            let name = attri.key
+            guard let value = avobj[name] else {
+                if name == "id" { // 特殊字段
+                    attris[name] = avobj.objectId
+                } else {
+                    print("ERROR: no name \(name) in obj")
+                }
+                continue
+            }
+
+            if value is AVObject && attri.value is [String: Any] {
+                var subAttri: [String: Any] = attri.value as! [String : Any]
+                parse(obj: value as! AVObject, by: &subAttri, callback: callback, key: name)
+
+            } else if value is [AVObject] && attri.value is [[String: Any]] {
+                let valueList = value as! [AVObject]
+                var attriDict = attri.value as! [[String: Any]]
+                var subAttri: [String: Any] = attriDict[0]
+                for v in valueList {
+                    parse(obj: v, by: &subAttri, callback: callback, key: name)
+                    attriDict.append(subAttri)
+                }
+            } else {
+                attris[name] = value
+            }
+        }
+
+        callback(key, attris)
+    }
 
     // 对象 --------------------------------------------------------------------
 

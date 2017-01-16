@@ -165,6 +165,16 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         eventChangeMap = res as! [Event: (Bool, Int)]
     }
 
+    // 刷新数据时调用 ---------------------------------------------
+
+    func cleanData() {
+        data.removeAll()
+    }
+
+    func addNewData(_ attris: [String: Any]) {
+
+    }
+
     // set ob --------------------------------------------------
 
     override func initObserver(_ ob: ActiveEventsMgrObserver) {
