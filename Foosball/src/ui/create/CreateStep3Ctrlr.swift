@@ -62,7 +62,7 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         case 0:
             return 3 // head + 时间 + 地点
         case 1:
-            return 1 + rootCtrlr.createEvent.wager.count // 标题 + 默认的一个
+            return 1 + rootCtrlr.createEvent.wagerList.count // 标题 + 默认的一个
         default:
             return 1 + (isEnableInputDetail ? 1 : 0) // 标题 + 内容
         }

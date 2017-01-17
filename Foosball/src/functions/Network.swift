@@ -30,7 +30,7 @@ class Network: NSObject {
         return curUser?.sessionToken != nil
     }
 
-    func registerUser(id: String, pw: String, attris: [(String, Any)], callback: @escaping ((Bool, Error?, String) -> Void)) {
+    func registerUser(id: String, pw: String, attris: [String: Any], callback: @escaping ((Bool, Error?, String) -> Void)) {
         let user = AVUser()
 
         user.username = id
@@ -67,15 +67,16 @@ class Network: NSObject {
     }
 
     // 因为User有特殊的list，所以单独做一个函数
-    func getUserAttris(into attris: inout [String: Any], callback: ((String?, [String: Any]) -> Void)) {
+    func getUserAttris(into attris: inout [String: Any]) -> [String: Any]? {
         guard let user = AVUser.current() else {
-            callback(nil, [:])
-            return
+            return nil
         }
-        parse(obj: user, by: &attris, callback: callback, key: "")
+        parse(obj: user, by: &attris, callback: { _, _ in }, key: "")
+        return attris
     }
 
     func updateUser(into attris: inout [String: Any], with lists: [String], callback: @escaping ((String?, [String: Any]) -> Void)) {
+        print("fetch user")
         guard let user = AVUser.current() else {
             return
         }
@@ -92,12 +93,15 @@ class Network: NSObject {
                 callback(nil, [:])
                 return
             }
+            print("fetch user suc")
             callback("suc", [:])
             self.parse(obj: obj!, by: &holdAttris, callback: callback, key: "")
         }
     }
 
-    // 参数必须是AVObject，为了不对外开放，所以对外为NSObject
+    // 对象 --------------------------------------------------------------------
+
+    // 解析：参数必须是AVObject，为了不对外开放，所以对外为NSObject
     // inout: 参考 http://blog.csdn.net/chenyufeng1991/article/details/48495367
     func parse(obj: NSObject, by attris: inout [String: Any], callback: ((String?, [String: Any]) -> Void), key: String) {
         guard let avobj = obj as? AVObject else {
@@ -112,7 +116,7 @@ class Network: NSObject {
                 if name == "id" { // 特殊字段
                     attris[name] = avobj.objectId
                 } else {
-                    print("ERROR: no name \(name) in obj")
+                    print("ERROR: no name \(name) in obj [\(key)]")
                 }
                 continue
             }
@@ -137,13 +141,11 @@ class Network: NSObject {
         callback(key, attris)
     }
 
-    // 对象 --------------------------------------------------------------------
-
     // 创建对象
-    func createObj(to list: String, attris: [(String, Any)], callback: @escaping ((Bool, Error?, String) -> Void)) {
+    func createObj(to list: String, attris: [String: Any], callback: @escaping ((Bool, Error?, String) -> Void)) {
         let todo = AVObject(className:  list)
         for attri in attris {
-            let value = DataTools.checkValue(attri.1)
+            let value = DataTools.checkValue(attri.value)
             todo.setObject(value, forKey: attri.0)
         }
         

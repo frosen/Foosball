@@ -66,11 +66,11 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         data = User(ID: DataID(ID: "no register"))
         data.name = "苹果玩家" + subStr
 
-        let attris: [(String, Any)] = [
-            ("nick", data.name),
-            ("sign", data.sign),
-            ("url", data.avatarURL),
-            ("isR", data.isRegistered),
+        let attris: [String: Any] = [
+            "nick": data.name,
+            "sign": data.sign,
+            "url": data.avatarURL,
+            "isR": data.isRegistered,
         ]
 
         Network.shareInstance.registerUser(id: loginName, pw: password, attris: attris) { suc, error, newID in
@@ -97,38 +97,44 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
             "isR": false,
         ]
 
-        Network.shareInstance.getUserAttris(into: &attris) { str, attris in
-            guard str != nil else {
-                print("ERROR: no attris in readLocalUserData")
-                return
-            }
-
-            resetData(attris)
+        // 个人信息的数据用Network储存到本地，所以从这里取
+        let res: [String: Any]? = Network.shareInstance.getUserAttris(into: &attris)
+        if res == nil {
+            print("ERROR: wrong getUserAttris in readLocalUserData")
+        } else {
+            resetData(res!)
         }
     }
 
     // 开启轮询
-    func gotoScanServerData() {
+    private func gotoScanServerData() {
         Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(UserMgr.timer), userInfo: nil, repeats: true)
     }
 
+    // 忽略下次刷新
+    private var ignoreNextUpdate: Bool = false
+
     func timer(_ t: Timer) {
+        if ignoreNextUpdate {
+            ignoreNextUpdate = false
+            return
+        }
         updateUser()
     }
 
-    var attrisKeeper: [String: Any] = [
+    static var attrisKeeper: [String: Any] = [
         "id": "id",
         "nick": "name",
         "sign": "sign",
         "url": "url",
         "isR": false,
-        "active": [["eventAttriName": "eventAttri"]]
+        "active": [ActiveEventsMgr.attrisKeeper]
     ]
 
-    func updateUser() {
+    private func updateUser() {
         Network.shareInstance.updateUser(
-            into: &attrisKeeper,
-            with: ["avtive"]
+            into: &UserMgr.attrisKeeper,
+            with: ["active"]
         ) { str, attris in
             if str == nil {
                 print("ERROR: no attris in gotoScanServerData")
@@ -164,10 +170,6 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         data.isRegistered = attris["isR"] as! Bool
     }
 
-    func addActiveEvents(_ attris: [String: Any]) {
-
-    }
-
     // ---------------------------------------------------------------------------
 
     override func saveData(needUpload: Bool = false) {
@@ -190,6 +192,7 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
 
     // 同时给活动事件和所有事件
     func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
+        ignoreNextUpdate = true
         Network.shareInstance.addEventToUser(e, listName: "active", needUploadAndCallback: nil)
         Network.shareInstance.addEventToUser(e, listName: "events", needUploadAndCallback: callback)
     }
@@ -218,8 +221,8 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
             }
         }
 
-        print("wrong in searchState")
-        return .finish
+        print("ERROR: wrong in searchState")
+        return .ready
     }
 }
 

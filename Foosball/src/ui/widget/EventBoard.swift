@@ -88,7 +88,7 @@ class EventBoard: UIView {
         contentView.center.y = h * 0.7
     }
 
-    func setData(et: EventType, it: ItemType, wager: [(Int, Int, Int)]) {
+    func setData(et: EventType, it: ItemType, wager: [Wager]) {
         // 图片
         let imgUrl = getURLFromItemType(it)
         icon.sd_setImage(with: imgUrl, placeholderImage: EventIcon.spaceHolder)
@@ -106,7 +106,7 @@ class EventBoard: UIView {
         return URL(string: s)!
     }
 
-    private func createTitle(et: EventType, it: ItemType, wager: [(Int, Int, Int)]) -> String {
+    private func createTitle(et: EventType, it: ItemType, wager: [Wager]) -> String {
         return "这是一个很有意思的测试"
     }
 }

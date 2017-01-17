@@ -129,9 +129,9 @@ class CreateController: BaseController, UIScrollViewDelegate {
     // 增减wager
     func changeCreateEventWager(isAdd: Bool) {
         if isAdd == true {
-            createEvent.wager.append((1, 0, 0))
+            createEvent.wagerList.append(Wager())
         } else {
-            createEvent.wager.remove(at: createEvent.wager.count - 1)
+            createEvent.wagerList.remove(at: createEvent.wagerList.count - 1)
         }
     }
 }

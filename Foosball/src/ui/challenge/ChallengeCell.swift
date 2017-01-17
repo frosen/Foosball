@@ -53,7 +53,7 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
         let e = d as! Event
         curEvent = e
 
-        eventBoard.setData(et: e.type, it: e.item, wager: e.wager)
+        eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList)
 
         let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
         eventBoard.set(state: st)

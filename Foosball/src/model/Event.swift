@@ -44,6 +44,50 @@ class UserState {
     }
 }
 
+class Wager {
+    var str: String
+    var data: (Int, Int, Int) = (1, 0, 0)
+
+    init(str: String? = nil) {
+        if str == nil {
+            self.str = ""
+        } else {
+            self.str = str!
+        }
+    }
+
+    var toString: String {
+        return str
+    }
+
+    static let NameList: [(String, [(String, [String])])] = [
+        ("饭", [
+            ("早餐", [
+                "中餐", "洋快餐", "烤串", "大盘鸡",
+                ]),
+            ("午餐", [
+                "中餐", "洋快餐", "烤串", "大盘鸡",
+                ]),
+            ("晚餐", [
+                "中餐", "洋快餐", "烤串", "大盘鸡",
+                ])
+            ]),
+        ("饮料", [
+            ("红牛", [
+                "一瓶", "两瓶", "三瓶", "四瓶", "五瓶",
+                ]),
+            ("红茶", [
+                "一瓶", "两瓶", "三瓶", "四瓶", "五瓶",
+                ]),
+            ("绿茶", [
+                "一瓶", "两瓶", "三瓶", "四瓶", "五瓶",
+                ]),
+            ]),
+        ("其他", [("", [""])]),
+        
+        ]
+}
+
 class MsgStruct {
     var user: UserBrief
     var time: Time
@@ -82,7 +126,7 @@ class Event: BaseData {
     var isPublishToMap: Bool = false
 
     //奖杯（兑现物）, 根据序号，在WagerList查询
-    var wager: [(Int, Int, Int)] = []
+    var wagerList: [Wager] = []
 
     //详情
     var detail: String = ""

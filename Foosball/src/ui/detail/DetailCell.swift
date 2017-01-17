@@ -78,7 +78,7 @@ class DetailTitleCell: StaticCell {
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
-        eventBoard.setData(et: e.type, it: e.item, wager: e.wager)
+        eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList)
 
         let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
         set(state: st)
@@ -144,7 +144,7 @@ class DetailContentCell: DetailStringCell {
 }
 
 class DetailWagerCell: DetailStringCell {
-    class func createText(from wager: [(Int, Int, Int)]) -> String {
+    class func createText(from wager: [Wager]) -> String {
         var t = ""
         for i in 0 ..< wager.count {
             t += "~ "
@@ -157,7 +157,7 @@ class DetailWagerCell: DetailStringCell {
 
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
-        let wagerText: String = createText(from: e.wager)
+        let wagerText: String = createText(from: e.wagerList)
         return DetailG.calculateLblHeight(wagerText, w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
@@ -168,7 +168,7 @@ class DetailWagerCell: DetailStringCell {
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
-        setLblData(str: DetailWagerCell.createText(from: e.wager))
+        setLblData(str: DetailWagerCell.createText(from: e.wagerList))
     }
 }
 

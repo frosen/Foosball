@@ -10,17 +10,17 @@ import Foundation
 import AVOSCloud
 
 class DataTools: NSObject {
-    class func serialize(wagers: [(Int, Int, Int)]) -> [Int] {
-        var list: [Int] = []
+    class func serialize(wagers: [Wager]) -> [String] {
+        var list: [String] = []
         for wager in wagers {
-            list.append(wager.0)
-            list.append(wager.1)
-            list.append(wager.2)
+            list.append(wager.toString)
+            list.append(wager.toString)
+            list.append(wager.toString)
         }
         return list
     }
 
-    class func unserialize_wagers(from list: [Int]) -> [(Int, Int, Int)] {
+    class func unserialize_wagers(from list: [String]) -> [Wager] {
         return []
     }
 

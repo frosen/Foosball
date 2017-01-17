@@ -16,6 +16,26 @@ protocol ActiveEventsMgrObserver {
 
 class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
+    static var attrisKeeper: [String: Any] = [
+        "id": "id",
+        "tp": 1,
+        "i": 1,
+        "mc1": 1,
+        "mc2": 1,
+        "ivt": false,
+        "tm": "Date",
+        "loc": "Location",
+        "p2m": false,
+        "wg": ["wg"],
+        "dtl": "detail",
+        "our": [["key": "value"]],
+        "opp": [["key": "value"]],
+        "img": ["url"],
+        "msg": ["id"],
+        "ctm": "Date",
+        "cid": "id"
+    ]
+
     // 为了提高每次刷新的效率，复用data中的event，数量不足才新建，否则只修改已经创建好的
     // 用eventCount记录有效event数量，超过的event不删除也没有用
     var eventCount: Int = 0
@@ -132,7 +152,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 
         e.detail = "~ 这是一首简单的小情歌；\n~ 这是一首简单的小情歌；\n~ 这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；\n~ 这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；"
 
-        e.wager = [(1, 0, 0)] 
+        e.wagerList = [Wager(str: "红牛")]
 
         let m1 = MsgStruct(user: bk3, time: Time.now, msg: "1你说什么1")
         let m2 = MsgStruct(user: bk2, time: Time.now, msg: "2你说什么2")
@@ -210,23 +230,23 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
     // ---------------------------------------------------------
 
     func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
-        let attris: [(String, Any)] = [
-            ("tp", e.type.rawValue),
-            ("i", e.item.tag),
-            ("mc1", e.memberCount),
-            ("mc2", e.memberCount2),
-            ("ivt", e.canInvite),
-            ("tm", e.time.getTimeData()),
-            ("loc", e.location.loc),
-            ("p2m", e.isPublishToMap),
-            ("wg", DataTools.serialize(wagers: e.wager)),
-            ("dtl", e.detail),
-            ("our", DataTools.serialize(userStates: e.ourSideStateList)),
-            ("opp", DataTools.serialize(userStates: e.opponentStateList)),
-            ("img", e.imageURLList),
-            ("msg", []),
-            ("ctm", e.createTime.getTimeData()),
-            ("cid", e.createUserID.rawValue)
+        let attris: [String: Any] = [
+            "tp": e.type.rawValue,
+            "i": e.item.tag,
+            "mc1": e.memberCount,
+            "mc2": e.memberCount2,
+            "ivt": e.canInvite,
+            "tm": e.time.getTimeData(),
+            "loc": e.location.loc,
+            "p2m": e.isPublishToMap,
+            "wg": DataTools.serialize(wagers: e.wagerList),
+            "dtl": e.detail,
+            "our": DataTools.serialize(userStates: e.ourSideStateList),
+            "opp": DataTools.serialize(userStates: e.opponentStateList),
+            "img": e.imageURLList,
+            "msg": [],
+            "ctm": e.createTime.getTimeData(),
+            "cid": e.createUserID.rawValue
         ]
 
         Network.shareInstance.createObj(to: Event.classname, attris: attris) { suc, error, newID in
@@ -234,7 +254,13 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
             if suc {
                 e.ID = DataID(ID: newID)
                 self.data.append(e)
-                APP.userMgr.addNewEvent(e, callback: callback)
+                APP.userMgr.addNewEvent(e) { suc, e in
+                    if suc {
+                        self.updateObserver()
+                        self.saveData()
+                    }
+                    callback(suc, e)
+                }
             } else {
                 callback(suc, error)
             }
