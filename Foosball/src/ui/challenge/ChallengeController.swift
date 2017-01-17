@@ -13,6 +13,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
     private var tableView: UITableView! = nil
 
     private var curActiveEvents: [Event] = []
+    private var curActiveEventsCount: Int = 0
 
     var selectedCell: ChallengeCell? = nil
 
@@ -56,20 +57,22 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
 
     // ActiveEventsMgrObserver =============================================================================================
 
-    func onInit(activeEvents: [Event]) {
-        curActiveEvents = activeEvents
+    func onInit(mgr: ActiveEventsMgr) {
+        curActiveEvents = mgr.data
+        curActiveEventsCount = mgr.eventCount
         tableView.reloadData()
     }
 
-    func onModify(activeEvents: [Event]) {
-        curActiveEvents = activeEvents
+    func onModify(mgr: ActiveEventsMgr) {
+        curActiveEvents = mgr.data
+        curActiveEventsCount = mgr.eventCount
         tableView.reloadData()
     }
 
     //table view =============================================================================================
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return curActiveEvents.count //因为要利用section的head作为留白，所以每个section就是一行数据
+        return curActiveEventsCount //因为要利用section的head作为留白，所以每个section就是一行数据
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -89,7 +92,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
     }
 
     private func getEvent(by indexPath: IndexPath) -> Event {
-        return curActiveEvents[curActiveEvents.count - indexPath.section - 1] // event按照时间排序，而显示要最新的再最前
+        return curActiveEvents[curActiveEventsCount - indexPath.section - 1] // event按照时间排序，而显示要最新的再最前
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

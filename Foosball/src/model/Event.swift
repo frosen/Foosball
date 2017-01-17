@@ -73,7 +73,7 @@ class Event: BaseData {
     var canInvite: Bool = true
 
     //比赛时间或者截止时间（对于挑战）
-    var time: Time! = nil
+    var time: Time = Time()
 
     //位置信息
     var location: Location = Location()

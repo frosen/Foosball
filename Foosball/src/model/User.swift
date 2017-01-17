@@ -21,6 +21,7 @@ class User: BaseData {
 
     //个人信息
     var name: String = "玩家"
+    var sign: String = "个性签名，啦啦啦"
     var avatarURL: String = ""
     var isRegistered: Bool = false
 

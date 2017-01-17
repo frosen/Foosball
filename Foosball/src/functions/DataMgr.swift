@@ -46,10 +46,9 @@ class DataMgr<DATA, OB>: NSObject {
         }
     }
 
-    // 注意：这个函数不可被继承！swift 的 模板函数如果函数有一个参数是function 并且这个function中的参数为模板，则不能继承这个函数，否则会报错
-    func changeData(changeFunc: ((DATA) -> AnyObject?), needUpload: Bool = false) {
+    func changeData(changeFunc: ((DataMgr) -> AnyObject?), needUpload: Bool = false) {
         // 接受新变化
-        if let res = changeFunc(data) {
+        if let res = changeFunc(self) {
             handleChangeResult(res)
         }
 

@@ -126,8 +126,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
     // ActiveEventsMgrObserver ==============================================================================
 
-    func onInit(activeEvents: [Event]) {
-        guard let e = getCurEvent(activeEvents) else {
+    func onInit(mgr: ActiveEventsMgr) {
+        guard let e = getCurEvent(events: mgr.data, count: mgr.eventCount) else {
             return
         }
 
@@ -152,8 +152,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         APP.activeEventsMgr.clearEventChange(e)
     }
 
-    func onModify(activeEvents: [Event]) {
-        guard let e = getCurEvent(activeEvents) else {
+    func onModify(mgr: ActiveEventsMgr) {
+        guard let e = getCurEvent(events: mgr.data, count: mgr.eventCount) else {
             return
         }
 
@@ -229,10 +229,10 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         }
     }
 
-    func getCurEvent(_ activeEvents: [Event]) -> Event? {
-        for e in activeEvents {
-            if e.ID == curEventId {
-                return e
+    func getCurEvent(events: [Event], count: Int) -> Event? {
+        for i in 0 ..< count {
+            if curEventId == events[i].ID {
+                return events[i]
             }
         }
         return nil
@@ -483,8 +483,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     }
 
     func sendMsg(text: String) {
-        APP.activeEventsMgr.changeData(changeFunc: { activeEvents in
-            let e = getCurEvent(activeEvents)
+        APP.activeEventsMgr.changeData(changeFunc: { mgr in
+            let actEMgr = mgr as! ActiveEventsMgr
+            let e = getCurEvent(events: actEMgr.data, count: actEMgr.eventCount)
             if e == nil {
                 return nil
             }

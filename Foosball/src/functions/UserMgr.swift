@@ -9,8 +9,8 @@
 import UIKit
 
 protocol UserMgrObserver {
-    func onInit(user: User)
-    func onModify(user: User)
+    func onInit(mgr: UserMgr)
+    func onModify(mgr: UserMgr)
 }
 
 class UserMgr: DataMgr<User, UserMgrObserver> {
@@ -68,6 +68,7 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
 
         let attris: [(String, Any)] = [
             ("nick", data.name),
+            ("sign", data.sign),
             ("url", data.avatarURL),
             ("isR", data.isRegistered),
         ]
@@ -91,6 +92,7 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         var attris: [String: Any] = [
             "id": "id",
             "nick": "name",
+            "sign": "sign",
             "url": "url",
             "isR": false,
         ]
@@ -117,6 +119,7 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
     var attrisKeeper: [String: Any] = [
         "id": "id",
         "nick": "name",
+        "sign": "sign",
         "url": "url",
         "isR": false,
         "active": [["eventAttriName": "eventAttri"]]
@@ -176,11 +179,11 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
     }
 
     override func initObserver(_ ob: UserMgrObserver) {
-        ob.onInit(user: data)
+        ob.onInit(mgr: self)
     }
 
     override func modifyObserver(_ ob: UserMgrObserver) {
-        ob.onModify(user: data)
+        ob.onModify(mgr: self)
     }
 
     // ---------------------------------------------------------------------------

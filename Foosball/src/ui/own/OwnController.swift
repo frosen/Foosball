@@ -92,28 +92,28 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
     //
     // observer ---------------------------------------------------------------------------------------------------
     //
-    func onInit(user: User) {
-        curUser = user
+    func onInit(mgr: UserMgr) {
+        curUser = mgr.data
 
         infoHead.resetData(
             bgImg: #imageLiteral(resourceName: "selfbg"),
-            avatarURL: user.avatarURL,
-            titleStr: user.name,
-            subTitleStr: "个性签名，啦啦啦"
+            avatarURL: curUser.avatarURL,
+            titleStr: curUser.name,
+            subTitleStr: curUser.sign
         )
 
         sectionNum = 2 + group.count
         tableView.reloadData()
     }
 
-    func onModify(user: User) {
-        curUser = user
+    func onModify(mgr: UserMgr) {
+        curUser = mgr.data
 
         infoHead.resetData(
             bgImg: #imageLiteral(resourceName: "selfbg"),
-            avatarURL: user.avatarURL,
-            titleStr: user.name,
-            subTitleStr: "个性签名，啦啦啦"
+            avatarURL: curUser.avatarURL,
+            titleStr: curUser.name,
+            subTitleStr: curUser.sign
         )
     }
 

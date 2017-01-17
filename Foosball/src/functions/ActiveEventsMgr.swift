@@ -10,8 +10,8 @@
 import UIKit
 
 protocol ActiveEventsMgrObserver {
-    func onInit(activeEvents: [Event])
-    func onModify(activeEvents: [Event])
+    func onInit(mgr: ActiveEventsMgr)
+    func onModify(mgr: ActiveEventsMgr)
 }
 
 class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
@@ -23,6 +23,9 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
     override init() {
         super.init()
         print("初始化 ActiveEventsMgr")
+
+        // 初始化数据结构
+        data = []
 
         // 读取本地数据
 
@@ -70,53 +73,54 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         bk3.name = "大王c"
         let pk3 = UserState(user: bk3, state: .invite)
 
-        data = []
         var e: Event! = nil
 
 //        e = Event(ID: DataID(ID: 50001))
 //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 //        e.opponentStateList = [pk1, pk2, pk3]
 //        data.append(e)
+//        eventCount += 1//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//        eventCount += 1//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//        eventCount += 1//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//        eventCount += 1//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//        eventCount += 1//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//        eventCount += 1//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//        eventCount += 1//
+//        e = Event(ID: DataID(ID: 50001))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.append(e)
+//        eventCount += 1
 //
 //        e = Event(ID: DataID(ID: 50001))
 //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 //        e.opponentStateList = [pk1, pk2, pk3]
 //        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
+//        eventCount += 1
 
         // -----------------
         e = Event(ID: DataID(ID: "50001"))
@@ -157,6 +161,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
             MsgStruct(user: bk2, time: Time.now, msg: "5你说什么1"),
         ]
         data.append(e)
+        eventCount += 1
     }
 
     // 记录每个事件更新时，状态和对话数的变化
@@ -172,21 +177,34 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
     // 刷新数据时调用 ---------------------------------------------
 
     func cleanData() {
-        data.removeAll()
+        eventCount = 0
     }
 
     func addNewData(_ attris: [String: Any]) {
+        eventCount += 1
+        if eventCount > data.count {
+            for _ in 0 ..< eventCount - data.count {
+                data.append(Event(ID: DataID(ID: "?")))
+            }
+        }
 
+        let e: Event = data[data.count - 1]
+        e.ID = DataID(ID: attris["id"] as! DataID.IDType)
+        e.type = EventType(rawValue: attris["tp"] as! Int)!
+        e.item = ItemType.list[attris["i"] as! Int]
+        e.memberCount = attris["mc1"] as! Int
+        e.memberCount2 = attris["mc2"] as! Int
+        e.time = Time(t: attris["tm"] as? Date)
     }
 
     // set ob --------------------------------------------------
 
     override func initObserver(_ ob: ActiveEventsMgrObserver) {
-        ob.onInit(activeEvents: data)
+        ob.onInit(mgr: self)
     }
 
     override func modifyObserver(_ ob: ActiveEventsMgrObserver) {
-        ob.onModify(activeEvents: data)
+        ob.onModify(mgr: self)
     }
 
     // ---------------------------------------------------------
@@ -198,7 +216,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
             ("mc1", e.memberCount),
             ("mc2", e.memberCount2),
             ("ivt", e.canInvite),
-            ("tm", e.time.time),
+            ("tm", e.time.getTimeData()),
             ("loc", e.location.loc),
             ("p2m", e.isPublishToMap),
             ("wg", DataTools.serialize(wagers: e.wager)),
@@ -207,7 +225,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
             ("opp", DataTools.serialize(userStates: e.opponentStateList)),
             ("img", e.imageURLList),
             ("msg", []),
-            ("ctm", e.createTime.time),
+            ("ctm", e.createTime.getTimeData()),
             ("cid", e.createUserID.rawValue)
         ]
 

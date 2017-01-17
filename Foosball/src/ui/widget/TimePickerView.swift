@@ -49,7 +49,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         confirmCallback = callback
 
         let calendar = Calendar.current
-        let dateCom = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: t.time)
+        let dateCom = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: t.getTimeData())
         sYear = dateCom.year!
         sMonth = dateCom.month!
         sDay = dateCom.day!
@@ -206,7 +206,7 @@ class TimePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         let date1 = calendar.date(from: dateCom)!
         let date1Week = calendar.ordinality(of: .weekday, in: .weekOfMonth, for: date1)! - 1
 
-        let nowCom = calendar.dateComponents([.year, .month, .day], from: Time.now.time)
+        let nowCom = calendar.dateComponents([.year, .month, .day], from: Time.now.getTimeData())
 
         var w: CGFloat = 0
         var h: CGFloat = 0

@@ -33,10 +33,10 @@ func ==(lhs: DataID, rhs: DataID) -> Bool {
 //对时间表示的封装 ----------------------------------------------------------------------------
 
 class Time {
-    let time: Date
+    fileprivate var time: Date? = nil
 
     //以当前时间初始化
-    init(t: Date) {
+    init(t: Date? = nil) {
         self.time = t
     }
 
@@ -49,10 +49,23 @@ class Time {
         return Time(t: Date())
     }
 
+    func getTimeData() -> Date {
+        if time == nil {
+            print("ERROR: time is nil in getTimeData")
+            return Date()
+        } else {
+            return time!
+        }
+    }
+
     //根据当前时间获取不同的时间文本
     var toString: String {
+        guard let t = time else {
+            return "暂未确定"
+        }
+
         let now = Date()
-        let interval: TimeInterval = now.timeIntervalSince(time)
+        let interval: TimeInterval = now.timeIntervalSince(t)
 
         var timeStr: String
         if interval < 60 {
@@ -62,8 +75,8 @@ class Time {
             timeStr = String(Int(min)) + "分钟前"
         } else {
             let calendar = Calendar.current
-            let dateCom = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: time)
-            let nowCom = calendar.dateComponents([.year, .month, .day], from: time)
+            let dateCom = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: t)
+            let nowCom = calendar.dateComponents([.year, .month, .day], from: t)
 
             if dateCom.year! * 10000 + dateCom.month! * 100 + dateCom.day! < nowCom.year! * 10000 + nowCom.month! * 100 + nowCom.day! {
                 timeStr = String(dateCom.month!) + "月" + String(dateCom.day!) + "日"
@@ -78,22 +91,40 @@ class Time {
     }
 
     var toWholeString: String {
-        let com = Calendar.current.dateComponents([.month, .day, .hour, .minute], from: time)
+        guard let t = time else {
+            return "暂未确定"
+        }
+
+        let com = Calendar.current.dateComponents([.month, .day, .hour, .minute], from: t)
         return String(com.month!) + "月" + String(com.day!) + "日 " +
             String(com.hour!) + ":" + String(format: "%02d", com.minute!)
     }
 
     var toLeftHourSineNow: Int {
-        return Int(floor(time.timeIntervalSinceNow / 3600))
+        guard let t = time else {
+            return 9999
+        }
+
+        return Int(floor(t.timeIntervalSinceNow / 3600))
     }
 }
 
 func ==(lhs: Time, rhs: Time) -> Bool {
-    return lhs.time == rhs.time
+    if lhs.time == nil || rhs.time == nil {
+        print("ERROR: Time is nil in func ==")
+        return false
+    } else {
+        return lhs.time == rhs.time
+    }
 }
 
 func <(lhs: Time, rhs: Time) -> Bool {
-    return lhs.time < rhs.time
+    if lhs.time == nil || rhs.time == nil {
+        print("ERROR: Time is nil in func <")
+        return false
+    } else {
+        return lhs.time! < rhs.time!
+    }
 }
 
 
