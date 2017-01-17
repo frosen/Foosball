@@ -142,7 +142,7 @@ class Event: BaseData {
     var imageURLList: [String] = []
 
     //对话list // 由于数据量大，先保持id，再根据id获取
-    var msgIDList: [DataID] = []
+    var msgIDList: [DataID.IDType] = []
     var msgList: [MsgStruct] = []
 
     //被动生成的数据 -------------------------------------------

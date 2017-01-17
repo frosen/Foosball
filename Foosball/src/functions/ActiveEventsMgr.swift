@@ -50,46 +50,45 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         // 读取本地数据
 
         //自己方
-        let bb1 = UserBrief(ID: DataID(ID: "1232"))
-        bb1.name = "小明1"
+        let bb1 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
         let p1 = UserState(user: bb1, state: .invite)
 
-        let bb2 = UserBrief(ID: DataID(ID: "123"))
+        let bb2 = UserBrief(ID: DataID(ID: "123"), name: "佐助", url: "")
         bb2.name = "小明2"
         let p2 = UserState(user: bb2, state: .ongoing)
 
-        let bb3 = UserBrief(ID: DataID(ID: "1232"))
+        let bb3 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb3.name = "小明3"
         let p3 = UserState(user: bb3, state: .waiting)
 
-        let bb12 = UserBrief(ID: DataID(ID: "1232"))
+        let bb12 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb12.name = "明a"
         let p12 = UserState(user: bb12, state: .win)
 
-        let bb22 = UserBrief(ID: DataID(ID: "1232"))
+        let bb22 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb22.name = "明b"
         let p22 = UserState(user: bb22, state: .lose)
 
-        let bb32 = UserBrief(ID: DataID(ID: "1232"))
+        let bb32 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb32.name = "明3"
         let p32 = UserState(user: bb32, state: .finish)
 
-        let bb321 = UserBrief(ID: DataID(ID: "1232"))
+        let bb321 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb321.name = "明4"
         let p321 = UserState(user: bb321, state: .finish)
 
 
 
         // 对方
-        let bk1 = UserBrief(ID: DataID(ID: "1232"))
+        let bk1 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bk1.name = "小王a"
         let pk1 = UserState(user: bk1, state: .invite)
 
-        let bk2 = UserBrief(ID: DataID(ID: "123"))
+        let bk2 = UserBrief(ID: DataID(ID: "123"), name: "佐助", url: "")
         bk2.name = "小王b"
         let pk2 = UserState(user: bk2, state: .invite)
 
-        let bk3 = UserBrief(ID: DataID(ID: "1232"))
+        let bk3 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bk3.name = "大王c"
         let pk3 = UserState(user: bk3, state: .invite)
 
@@ -196,7 +195,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
     // 刷新数据时调用 ---------------------------------------------
 
     func cleanData() {
-        eventCount = 0
+        eventCount = 0 // 不用真正的清空，用数量值表示即可，留下无用的event复用避免create时损失效率
     }
 
     func addNewData(_ attris: [String: Any]) {
@@ -222,7 +221,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [[String: Any]])
         e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [[String: Any]])
         e.imageURLList = attris["img"] as! [String]
-        e.msgIDList = DataTools.DataIDs.unserialize(attris["msg"] as! [String])
+        e.msgIDList = attris["msg"] as! [String]
     }
 
     // set ob --------------------------------------------------
@@ -252,7 +251,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
             "our": DataTools.UserStates.serialize(e.ourSideStateList),
             "opp": DataTools.UserStates.serialize(e.opponentStateList),
             "img": e.imageURLList,
-            "msg": DataTools.DataIDs.serialize(e.msgIDList),
+            "msg": [], // 新事件并没有对话
             "ctm": e.createTime.getTimeData(),
             "cid": e.createUserID.rawValue
         ]

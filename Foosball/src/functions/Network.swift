@@ -52,7 +52,7 @@ class Network: NSObject {
             return
         }
 
-        let value = DataTools.checkValue(e)
+        let value = checkValue(e)
         user.add(value, forKey: listName)
 
         if needUploadAndCallback == nil {
@@ -101,9 +101,22 @@ class Network: NSObject {
 
     // 对象 --------------------------------------------------------------------
 
+    // 创建对象
+    func createObj(to list: String, attris: [String: Any], callback: @escaping ((Bool, Error?, String) -> Void)) {
+        let todo = AVObject(className:  list)
+        for attri in attris {
+            let value = checkValue(attri.value)
+            todo.setObject(value, forKey: attri.0)
+        }
+        
+        todo.saveInBackground { suc, error in
+            callback(suc, error, todo.objectId!)
+        }
+    }
+
     // 解析：参数必须是AVObject，为了不对外开放，所以对外为NSObject
     // inout: 参考 http://blog.csdn.net/chenyufeng1991/article/details/48495367
-    func parse(obj: NSObject, by attris: inout [String: Any], callback: ((String?, [String: Any]) -> Void), key: String) {
+    private func parse(obj: NSObject, by attris: inout [String: Any], callback: ((String?, [String: Any]) -> Void), key: String) {
         guard let avobj = obj as? AVObject else {
             print("ERROR: obj is not AVObj")
             callback(nil, [:])
@@ -121,7 +134,11 @@ class Network: NSObject {
                 continue
             }
 
-            if value is AVObject && attri.value is [String: Any] {
+            if value is AVGeoPoint {
+                let geo = value as! AVGeoPoint
+                attris[name] = CLLocation(latitude: geo.latitude, longitude: geo.longitude)
+
+            } else if value is AVObject && attri.value is [String: Any] {
                 var subAttri: [String: Any] = attri.value as! [String : Any]
                 parse(obj: value as! AVObject, by: &subAttri, callback: callback, key: name)
 
@@ -137,20 +154,18 @@ class Network: NSObject {
                 attris[name] = value
             }
         }
-
+        
         callback(key, attris)
     }
 
-    // 创建对象
-    func createObj(to list: String, attris: [String: Any], callback: @escaping ((Bool, Error?, String) -> Void)) {
-        let todo = AVObject(className:  list)
-        for attri in attris {
-            let value = DataTools.checkValue(attri.value)
-            todo.setObject(value, forKey: attri.0)
-        }
-        
-        todo.saveInBackground { suc, error in
-            callback(suc, error, todo.objectId!)
+    private func checkValue(_ v: Any) -> Any {
+        switch v {
+        case is CLLocation:
+            return AVGeoPoint(location: v as! CLLocation)
+        case is Event:
+            return AVObject(className: Event.classname, objectId: (v as! Event).ID.rawValue)
+        default:
+            return v
         }
     }
 }

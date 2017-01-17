@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import AVOSCloud
 
 class DataTools: NSObject {
     class Wagers {
@@ -34,6 +33,8 @@ class DataTools: NSObject {
             for userState in userStates {
                 list.append([
                     "id": userState.user.ID.rawValue,
+                    "nick": userState.user.name,
+                    "url": userState.user.avatarURL,
                     "st": userState.state.rawValue
                     ])
             }
@@ -42,46 +43,20 @@ class DataTools: NSObject {
         }
 
         class func unserialize(_ list: [[String: Any]]) -> [UserState] {
-            return []
+            var users: [UserState] = []
+            for map in list {
+                let ubr = UserBrief(
+                    ID: DataID(ID: map["id"] as! DataID.IDType),
+                    name: map["nick"] as! String,
+                    url: map["url"] as! String
+                )
+                let st = EventState(rawValue: map["st"] as! Int)!
+                let ust = UserState(user: ubr, state: st)
+                users.append(ust)
+            }
+            return users
         }
     }
 
     // -------------------------------------------------------
-
-    class DataIDs {
-        class func serialize(_ ids: [DataID]) -> [String] {
-            var list: [String] = []
-            for id in ids {
-                list.append(id.rawValue)
-            }
-
-            return list
-        }
-
-        class func unserialize(_ list: [String]) -> [DataID] {
-            var ids: [DataID] = []
-            for str in list {
-                ids.append(DataID(ID: str))
-            }
-            return ids
-        }
-
-    }
-
-    // -------------------------------------------------------
-
-    class func checkValue(_ v: Any) -> Any {
-        if v is CLLocation {
-            return AVGeoPoint(location: v as! CLLocation)
-        }
-
-        switch v {
-        case is CLLocation:
-            return AVGeoPoint(location: v as! CLLocation)
-        case is Event:
-            return AVObject(className: Event.classname, objectId: (v as! Event).ID.rawValue)
-        default:
-            return v
-        }
-    }
 }

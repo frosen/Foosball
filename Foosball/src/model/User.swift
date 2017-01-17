@@ -10,11 +10,16 @@ import UIKit
 
 class UserBrief: BaseData {
     //名字
-    var name: String = ""
+    var name: String
 
     //头像url
-    var avatarURL: String = ""
-    
+    var avatarURL: String
+
+    init(ID: DataID, name: String, url: String) {
+        self.name = name
+        self.avatarURL = url
+        super.init(ID: ID)
+    }
 }
 
 class User: BaseData {
@@ -29,9 +34,7 @@ class User: BaseData {
 
     // 获取用户信息摘要
     func getBrief() -> UserBrief {
-        let br = UserBrief(ID: ID)
-        br.name = name
-        br.avatarURL = avatarURL
+        let br = UserBrief(ID: ID, name: name, url: avatarURL)
         return br
     }
 }
