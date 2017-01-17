@@ -10,35 +10,65 @@ import Foundation
 import AVOSCloud
 
 class DataTools: NSObject {
-    class func serialize(wagers: [Wager]) -> [String] {
-        var list: [String] = []
-        for wager in wagers {
-            list.append(wager.toString)
-            list.append(wager.toString)
-            list.append(wager.toString)
+    class Wagers {
+        class func serialize(_ wagers: [Wager]) -> [String] {
+            var list: [String] = []
+            for wager in wagers {
+                list.append(wager.toString)
+                list.append(wager.toString)
+                list.append(wager.toString)
+            }
+            return list
         }
-        return list
-    }
 
-    class func unserialize_wagers(from list: [String]) -> [Wager] {
-        return []
+        class func unserialize(_ list: [String]) -> [Wager] {
+            return []
+        }
     }
 
     // -------------------------------------------------------
 
-    class func serialize(userStates: [UserState]) -> [[String: Any]] {
-        var list: [[String: Any]] = []
-        for userState in userStates {
-            list.append([
-                "id": userState.user.ID.rawValue,
-                "st": userState.state.rawValue
-                ])
+    class UserStates {
+        class func serialize(_ userStates: [UserState]) -> [[String: Any]] {
+            var list: [[String: Any]] = []
+            for userState in userStates {
+                list.append([
+                    "id": userState.user.ID.rawValue,
+                    "st": userState.state.rawValue
+                    ])
+            }
+
+            return list
         }
 
-        return list
+        class func unserialize(_ list: [[String: Any]]) -> [UserState] {
+            return []
+        }
     }
 
-    // -----
+    // -------------------------------------------------------
+
+    class DataIDs {
+        class func serialize(_ ids: [DataID]) -> [String] {
+            var list: [String] = []
+            for id in ids {
+                list.append(id.rawValue)
+            }
+
+            return list
+        }
+
+        class func unserialize(_ list: [String]) -> [DataID] {
+            var ids: [DataID] = []
+            for str in list {
+                ids.append(DataID(ID: str))
+            }
+            return ids
+        }
+
+    }
+
+    // -------------------------------------------------------
 
     class func checkValue(_ v: Any) -> Any {
         if v is CLLocation {

@@ -164,8 +164,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         e.createUserID = DataID(ID: "123")
 
         e.location = Location()
-        e.location.loc = CLLocation()
-        e.location.locString = "hehe"
+
         e.time = Time(timeIntervalSinceNow: 136000)
 
         e.msgList = [m1, m2, m3, m4, m5,
@@ -215,6 +214,15 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         e.memberCount = attris["mc1"] as! Int
         e.memberCount2 = attris["mc2"] as! Int
         e.time = Time(t: attris["tm"] as? Date)
+        e.location.set(loc: attris["loc"] as! CLLocation)
+        e.isPublishToMap = attris["p2m"] as! Bool
+        e.wagerList = DataTools.Wagers.unserialize(attris["wg"] as! [String])
+        e.detail = attris["dtl"] as! String
+
+        e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [[String: Any]])
+        e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [[String: Any]])
+        e.imageURLList = attris["img"] as! [String]
+        e.msgIDList = DataTools.DataIDs.unserialize(attris["msg"] as! [String])
     }
 
     // set ob --------------------------------------------------
@@ -239,12 +247,12 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
             "tm": e.time.getTimeData(),
             "loc": e.location.loc,
             "p2m": e.isPublishToMap,
-            "wg": DataTools.serialize(wagers: e.wagerList),
+            "wg": DataTools.Wagers.serialize(e.wagerList),
             "dtl": e.detail,
-            "our": DataTools.serialize(userStates: e.ourSideStateList),
-            "opp": DataTools.serialize(userStates: e.opponentStateList),
+            "our": DataTools.UserStates.serialize(e.ourSideStateList),
+            "opp": DataTools.UserStates.serialize(e.opponentStateList),
             "img": e.imageURLList,
-            "msg": [],
+            "msg": DataTools.DataIDs.serialize(e.msgIDList),
             "ctm": e.createTime.getTimeData(),
             "cid": e.createUserID.rawValue
         ]

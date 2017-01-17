@@ -209,11 +209,16 @@ class LocationMgr: NSObject, AMapSearchDelegate {
 
 class Location: NSObject, AMapSearchDelegate {
     // 可空，空就是位置待定
-    var loc: CLLocation
-    var locString: String? = nil
+    private(set) var loc: CLLocation
+    private(set) var locString: String? = nil
 
     init (l: CLLocation? = nil) {
         self.loc = l ?? CLLocation(latitude: 0, longitude: 0)
+    }
+
+    func set(loc: CLLocation) {
+        self.loc = loc
+        self.locString = nil
     }
 
     // 回调：位置，位置文本，是否成功

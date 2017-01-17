@@ -66,7 +66,7 @@ class MapController: BaseController, MAMapViewDelegate {
             map.setCenter(curLoc.loc.coordinate, animated: false)
         } else {
             let userLoc = map.userLocation.coordinate
-            curLoc.loc = CLLocation(latitude: userLoc.latitude, longitude: userLoc.longitude)
+            curLoc.set(loc: CLLocation(latitude: userLoc.latitude, longitude: userLoc.longitude))
         }
 
         let mapFlag = UIImageView(image: #imageLiteral(resourceName: "map_flag"))
@@ -79,6 +79,6 @@ class MapController: BaseController, MAMapViewDelegate {
     func mapView(_ mapView: MAMapView!, mapDidMoveByUser wasUserAction: Bool) {
         let loc = mapView.centerCoordinate
         print("mapView move", loc)
-        curLoc.loc = CLLocation(latitude: loc.latitude, longitude: loc.longitude)
+        curLoc.set(loc: CLLocation(latitude: loc.latitude, longitude: loc.longitude))
     }
 }
