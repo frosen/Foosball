@@ -88,15 +88,16 @@ class Wager {
         ]
 }
 
-class MsgStruct {
+class MsgStruct: BaseData {
     var user: UserBrief
     var time: Time
-    var msg: String = ""
+    var msg: String
 
-    init(user: UserBrief, time: Time, msg: String) {
+    init(id: DataID, user: UserBrief, time: Time, msg: String) {
         self.user = user
         self.time = time
         self.msg = msg
+        super.init(ID: id)
     }
 }
 

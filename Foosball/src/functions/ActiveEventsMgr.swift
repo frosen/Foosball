@@ -185,11 +185,11 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         e.wagerList = [Wager(str: "红牛")]
 
-        let m1 = MsgStruct(user: bk3, time: Time.now, msg: "1你说什么1")
-        let m2 = MsgStruct(user: bk2, time: Time.now, msg: "2你说什么2")
-        let m3 = MsgStruct(user: bk1, time: Time.now, msg: "3你说什么3")
-        let m4 = MsgStruct(user: bk3, time: Time.now, msg: "4你说什么4")
-        let m5 = MsgStruct(user: bk2, time: Time.now, msg: "5你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么6 你说什么5 你说什么7 你说什么5 你说什么9 你说什么5 你说什么0 你说什么5 你说什么00 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5")
+        let m1 = MsgStruct(id: DataID(ID: "12345"), user: bk3, time: Time.now, msg: "1你说什么1")
+        let m2 = MsgStruct(id: DataID(ID: "123451"),user: bk2, time: Time.now, msg: "2你说什么2")
+        let m3 = MsgStruct(id: DataID(ID: "123452"),user: bk1, time: Time.now, msg: "3你说什么3")
+        let m4 = MsgStruct(id: DataID(ID: "123453"),user: bk3, time: Time.now, msg: "4你说什么4")
+        let m5 = MsgStruct(id: DataID(ID: "123454"),user: bk2, time: Time.now, msg: "5你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么6 你说什么5 你说什么7 你说什么5 你说什么9 你说什么5 你说什么0 你说什么5 你说什么00 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5")
 
         e.createTime = Time.now
         e.createUserID = DataID(ID: "123")
@@ -199,16 +199,16 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         e.time = Time(timeIntervalSinceNow: 136000)
 
         e.msgList = [m1, m2, m3, m4, m5,
-            MsgStruct(user: bk1, time: Time.now, msg: "6你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说什么"),
-            MsgStruct(user: bk3, time: Time.now, msg: "7你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
-            MsgStruct(user: bk2, time: Time.now, msg: "8你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
-            MsgStruct(user: bk1, time: Time.now, msg: "9你说什么1"),
-            MsgStruct(user: bk3, time: Time.now, msg: "10你说什么1"),
-            MsgStruct(user: bk2, time: Time.now, msg: "1你说什么1说什么5 你说什么5 你说什么5 你说什么5 你说"),
-            MsgStruct(user: bk1, time: Time.now, msg: "2你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
-            MsgStruct(user: bk3, time: Time.now, msg: "3你说什么1"),
-            MsgStruct(user: bk1, time: Time.now, msg: "4你说什么1说什么5 你说什么5 你说什么5 你说什么5 你说 zv说什么5 你说什么5 你说什么5 你说什么5 你说"),
-            MsgStruct(user: bk2, time: Time.now, msg: "5你说什么1"),
+            MsgStruct(id: DataID(ID: "123454g"), user: bk1, time: Time.now, msg: "6你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说什么"),
+            MsgStruct(id: DataID(ID: "123454f"), user: bk3, time: Time.now, msg: "7你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
+            MsgStruct(id: DataID(ID: "123454d"), user: bk2, time: Time.now, msg: "8你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
+            MsgStruct(id: DataID(ID: "123454s"), user: bk1, time: Time.now, msg: "9你说什么1"),
+            MsgStruct(id: DataID(ID: "123454a"), user: bk3, time: Time.now, msg: "10你说什么1"),
+            MsgStruct(id: DataID(ID: "1234545"), user: bk2, time: Time.now, msg: "1你说什么1说什么5 你说什么5 你说什么5 你说什么5 你说"),
+            MsgStruct(id: DataID(ID: "123454r"), user: bk1, time: Time.now, msg: "2你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
+            MsgStruct(id: DataID(ID: "123454e"), user: bk3, time: Time.now, msg: "3你说什么1"),
+            MsgStruct(id: DataID(ID: "123454w"), user: bk1, time: Time.now, msg: "4你说什么1说什么5 你说什么5 你说什么5 你说什么5 你说 zv说什么5 你说什么5 你说什么5 你说什么5 你说"),
+            MsgStruct(id: DataID(ID: "123454q"), user: bk2, time: Time.now, msg: "5你说什么1"),
         ]
         data.add(e: e)
     }

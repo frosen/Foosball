@@ -31,7 +31,7 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
 
         } else {
             readLocalUserData()
-            updateUser() // 立即更新
+            perform(#selector(UserMgr.updateUser), with: nil, afterDelay: 1.0) // 1秒后立即更新
             gotoScanServerData()
         }
     }
@@ -131,7 +131,7 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         "active": [ActiveEventsMgr.attrisKeeper]
     ]
 
-    private func updateUser() {
+    func updateUser() {
         Network.shareInstance.updateUser(
             into: &UserMgr.attrisKeeper,
             with: ["active"]
@@ -172,12 +172,11 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
 
     // ---------------------------------------------------------------------------
 
-    override func saveData(needUpload: Bool = false) {
+    override func saveData(needUpload: [String: String]? = nil) {
         // 用户数据不需要自己进行本地保存，会保存到leancloud中
-
-        if needUpload {
-            
-        }
+        
+        //上传网络
+        saveToServer(needUpload)
     }
 
     override func initObserver(_ ob: UserMgrObserver) {

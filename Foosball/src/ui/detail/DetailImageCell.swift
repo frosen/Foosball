@@ -161,22 +161,22 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
             let detailCtrlr = self.ctrlr as! DetailViewController
             APP.activeEventsMgr.changeData(changeFunc: { data in
 
-                let e = detailCtrlr.getCurEvent(events: data.eList, count: data.count)
-                if e == nil {
+                guard let e = detailCtrlr.getCurEvent(events: data.eList, totalEventsCount: data.count) else {
+                    print("ERROR: no event in removePhoto changeData")
                     return nil
                 }
 
                 // 之所以要重新搜索一遍，是因为过程中有可能更新了
                 let removeUrl: String = self.imgUrlList[index]!
-                for i in 0..<e!.imageURLList.count {
-                    if removeUrl == e!.imageURLList[i] {
-                        e!.imageURLList.remove(at: i)
+                for i in 0 ..< e.imageURLList.count {
+                    if removeUrl == e.imageURLList[i] {
+                        e.imageURLList.remove(at: i)
                         break
                     }
                 }
 
                 return nil
-            }, needUpload: true)
+            }, needUpload: ["img": "rm"])
         }
     }
 
@@ -234,14 +234,14 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         //更新event，并上传，然后更新cell
         let detailCtrlr = self.ctrlr as! DetailViewController
         APP.activeEventsMgr.changeData(changeFunc: { data in
-            let e = detailCtrlr.getCurEvent(events: data.eList, count: data.count)
-            if e == nil {
+            guard let e = detailCtrlr.getCurEvent(events: data.eList, totalEventsCount: data.count) else {
+                print("ERROR: no event in imagePickerController changeData")
                 return nil
             }
-            e!.imageURLList.append("http://up.qqjia.com/z/25/tu32700_3.png")
+            e.imageURLList.append("http://up.qqjia.com/z/25/tu32700_3.png")
 
             return nil
-        }, needUpload: true)
+        }, needUpload: ["img": "add"])
 
         //切换场景后更新cell
         picker.dismiss(animated: true)

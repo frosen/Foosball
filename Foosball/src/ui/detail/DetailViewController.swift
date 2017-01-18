@@ -127,7 +127,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     // ActiveEventsMgrObserver ==============================================================================
 
     func onInit(actE: ActEvents) {
-        guard let e = getCurEvent(events: actE.eList, count: actE.count) else {
+        guard let e = getCurEvent(events: actE.eList, totalEventsCount: actE.count) else {
             return
         }
 
@@ -142,7 +142,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         }
 
         tableView.reloadData()
-        saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
+
+        saveNewestMsg(e.msgList)
 
         // toolbar
         let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
@@ -153,7 +154,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     }
 
     func onModify(actE: ActEvents) {
-        guard let e = getCurEvent(events: actE.eList, count: actE.count) else {
+        guard let e = getCurEvent(events: actE.eList, totalEventsCount: actE.count) else {
             return
         }
 
@@ -168,25 +169,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         }
         tableView.reloadRows(at: staticVarCellIndexList, with: .none)
 
-        // 前几个不是上次记录的最新的对话，展示在ui上
-        var i = e.msgList.count - 1
-        var resetRow: Int = 1
-        var resetRowList: [IndexPath] = []
-        while true {
-            let msg = e.msgList[i]
-            if !isNewestMsg(msg) {
-                resetRowList.append(IndexPath(row: resetRow, section: 3))
-                resetRow += 1
-            } else {
-                break
-            }
-
-            i -= 1
-            if i < 0 {
-                break
-            }
-        }
-
+        let resetRowList = getNeedAddMsgCellIndex(e.msgList)
         let addRowCount = resetRowList.count
         if addRowCount > 0 {
             // 把cellHeightDict里面的数据往后移
@@ -213,7 +196,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         }
         tableView.endUpdates()
 
-        saveNewestMsg(e.msgList[e.msgList.count - 1]) // 记录最新的msg
+        saveNewestMsg(e.msgList)
 
         // 状态
         let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
@@ -229,8 +212,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         }
     }
 
-    func getCurEvent(events: [Event], count: Int) -> Event? {
-        for i in 0 ..< count {
+    func getCurEvent(events: [Event], totalEventsCount: Int) -> Event? {
+        for i in 0 ..< totalEventsCount {
             if curEventId == events[i].ID {
                 return events[i]
             }
@@ -238,20 +221,47 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         return nil
     }
 
-    // 记录最新的对话，方便更新对话列表
-    private var newestMsgUserId: DataID? = nil
-    private var newestMsgTime: Time? = nil
-    private func saveNewestMsg(_ msg: MsgStruct) {
-        newestMsgUserId = msg.user.ID
-        newestMsgTime = msg.time
+    // 记录最新的5次对话的id，从头开始查找，不属于记录的id则是新的id（考虑网络延迟问题，所以记录5次而不是最新的一次）,
+    // 5次都满足时，视为没有新增的对话了
+    private let recordMsgCount: Int = 5
+    private var recordMsgIdList: [DataID] = []
+
+    private func saveNewestMsg(_ msgList: [MsgStruct]) {
+        for i in 0 ..< recordMsgCount {
+            let index = msgList.count - i - 1
+            if index < 0 {
+                break
+            }
+
+            if recordMsgIdList.count < i + 1 {
+                recordMsgIdList.append(msgList[index].ID)
+            } else {
+                recordMsgIdList[i] = msgList[index].ID
+            }
+        }
     }
 
-    private func isNewestMsg(_ msg: MsgStruct) -> Bool {
-        if newestMsgUserId == nil || newestMsgTime == nil {
-            return true // 没有记录时，都是最新的
-        } else {
-            return msg.user.ID == newestMsgUserId! && msg.time == newestMsgTime!
+    private func getNeedAddMsgCellIndex(_ msgList: [MsgStruct]) -> [IndexPath] {
+        var resetRowList: [IndexPath] = []
+        var i = msgList.count - 1
+        var k = 0
+        while true {
+            let id = msgList[i].ID
+            if recordMsgIdList[k] != id {
+                resetRowList.append(IndexPath(row: resetRowList.count + 1, section: 3)) // resetRowList.count + 1 表示从第二个cell开始插入
+                i -= 1
+                if i < 0 {
+                    break
+                }
+            } else {
+                k += 1 // 对比下一个记录值
+                if k >= recordMsgIdList.count {
+                    break // 记录值用完，意味着不会再有没有找到的新增cell，退出
+                }
+            }
         }
+
+        return resetRowList
     }
 
     // table view delegate ==========================================================================================
@@ -484,15 +494,16 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
     func sendMsg(text: String) {
         APP.activeEventsMgr.changeData(changeFunc: { data in
-            let e = getCurEvent(events: data.eList, count: data.count)
-            if e == nil {
+            guard let e = getCurEvent(events: data.eList, totalEventsCount: data.count) else {
+                print("ERROR: no event in sendMsg changeData")
                 return nil
             }
+
             let meBrief = APP.userMgr.data.getBrief()
-            let mS = MsgStruct(user: meBrief, time: Time.now, msg: text)
-            e!.msgList.append(mS)
+            let mS = MsgStruct(id: DataID(ID: "?"), user: meBrief, time: Time.now, msg: text)
+            e.msgList.append(mS)
 
             return nil
-        }, needUpload: true)
+        }, needUpload: ["msg": "add"])
     }
 }

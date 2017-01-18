@@ -47,7 +47,7 @@ class DataMgr<DATA, OB>: NSObject {
     }
 
     // 注意：这个函数不可被继承！swift 的 模板函数如果函数有一个参数是function 并且这个function中的参数为模板，则不能继承这个函数，否则会报错
-    func changeData(changeFunc: ((DATA) -> AnyObject?), needUpload: Bool = false) {
+    func changeData(changeFunc: ((DATA) -> AnyObject?), needUpload: [String: String]? = nil) {
         // 接受新变化
         if let res = changeFunc(_data) {
             handleChangeResult(res)
@@ -56,8 +56,6 @@ class DataMgr<DATA, OB>: NSObject {
         updateObserver()
         saveData(needUpload: needUpload)
     }
-
-    func handleChangeResult(_ res: AnyObject) {}
 
     func updateObserver() {
         // 在每个观察者中进行对比
@@ -72,15 +70,25 @@ class DataMgr<DATA, OB>: NSObject {
         }
     }
 
-    func saveData(needUpload: Bool = false) {
+    func saveData(needUpload: [String: String]? = nil) {
         //保存本地
+        saveToLocal()
 
-        if needUpload { //上传网络
+        //上传网络
+        saveToServer(needUpload)
+    }
 
-        }
+    func saveToLocal() {
+
+    }
+
+    func saveToServer(_ attris: [String: String]?) {
+
     }
 
     // 需要继承
     func initObserver(_ ob: OB) {}
     func modifyObserver(_ ob: OB) {}
+
+    func handleChangeResult(_ res: AnyObject) {}
 }
