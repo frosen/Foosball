@@ -233,6 +233,27 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         let e = data.add()
 
         e.ID = DataID(ID: attris["id"] as! DataID.IDType)
+        setAttris(attris, e: e)
+    }
+
+    func updateData(_ attris: [String: Any]) {
+        let id = DataID(ID: attris["id"] as! DataID.IDType)
+        var updateE: Event? = nil
+        for e in data.eList {
+            if e.ID == id {
+                updateE = e
+                break
+            }
+        }
+
+        if updateE == nil {
+            addNewData(attris)
+        } else {
+            setAttris(attris, e: updateE!)
+        }
+    }
+
+    private func setAttris(_ attris: [String: Any], e: Event) {
         e.type = EventType(rawValue: attris["tp"] as! Int)!
         e.item = ItemType.list[attris["i"] as! Int]
         e.memberCount = attris["mc1"] as! Int
@@ -247,6 +268,9 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [[String: Any]])
         e.imageURLList = attris["img"] as! [String]
         e.msgIDList = attris["msg"] as! [String]
+
+        e.createTime = Time(t: attris["ctm"] as? Date)
+        e.createUserID = DataID(ID: attris["cid"] as! DataID.IDType)
     }
 
     // set ob --------------------------------------------------
@@ -273,7 +297,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             "p2m": e.isPublishToMap,
             "wg": DataTools.Wagers.serialize(e.wagerList),
             "dtl": e.detail,
-            "our": DataTools.UserStates.serialize(e.ourSideStateList),
+            "our": DataTools.UserStates.serialize(e.ourSideStateList), // 其实直接传id就可以了
             "opp": DataTools.UserStates.serialize(e.opponentStateList),
             "img": e.imageURLList,
             "msg": [], // 新事件并没有对话

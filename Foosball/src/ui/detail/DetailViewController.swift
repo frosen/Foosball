@@ -246,18 +246,16 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         var i = msgList.count - 1
         var k = 0
         while true {
+            if i < 0 || k >= recordMsgIdList.count {
+                break // 记录值用完，意味着不会再有没有找到的新增cell，退出
+            }
+
             let id = msgList[i].ID
             if recordMsgIdList[k] != id {
                 resetRowList.append(IndexPath(row: resetRowList.count + 1, section: 3)) // resetRowList.count + 1 表示从第二个cell开始插入
                 i -= 1
-                if i < 0 {
-                    break
-                }
             } else {
                 k += 1 // 对比下一个记录值
-                if k >= recordMsgIdList.count {
-                    break // 记录值用完，意味着不会再有没有找到的新增cell，退出
-                }
             }
         }
 
