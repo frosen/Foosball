@@ -57,15 +57,15 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
 
     // ActiveEventsMgrObserver =============================================================================================
 
-    func onInit(mgr: ActiveEventsMgr) {
-        curActiveEvents = mgr.data
-        curActiveEventsCount = mgr.eventCount
+    func onInit(actE: ActEvents) {
+        curActiveEvents = actE.eList
+        curActiveEventsCount = actE.count
         tableView.reloadData()
     }
 
-    func onModify(mgr: ActiveEventsMgr) {
-        curActiveEvents = mgr.data
-        curActiveEventsCount = mgr.eventCount
+    func onModify(actE: ActEvents) {
+        curActiveEvents = actE.eList
+        curActiveEventsCount = actE.count
         tableView.reloadData()
     }
 

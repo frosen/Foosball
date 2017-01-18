@@ -159,9 +159,9 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         UITools.showAlert(ctrlr, title: "删除图片", msg: "您确定要删除这张图片吗？", type: 2) { _ in
             print("confirm to delete")
             let detailCtrlr = self.ctrlr as! DetailViewController
-            APP.activeEventsMgr.changeData(changeFunc: { mgr in
-                let actEMgr = mgr as! ActiveEventsMgr
-                let e = detailCtrlr.getCurEvent(events: actEMgr.data, count: actEMgr.eventCount)
+            APP.activeEventsMgr.changeData(changeFunc: { data in
+
+                let e = detailCtrlr.getCurEvent(events: data.eList, count: data.count)
                 if e == nil {
                     return nil
                 }
@@ -233,9 +233,8 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
 
         //更新event，并上传，然后更新cell
         let detailCtrlr = self.ctrlr as! DetailViewController
-        APP.activeEventsMgr.changeData(changeFunc: { mgr in
-            let actEMgr = mgr as! ActiveEventsMgr
-            let e = detailCtrlr.getCurEvent(events: actEMgr.data, count: actEMgr.eventCount)
+        APP.activeEventsMgr.changeData(changeFunc: { data in
+            let e = detailCtrlr.getCurEvent(events: data.eList, count: data.count)
             if e == nil {
                 return nil
             }

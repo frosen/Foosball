@@ -9,12 +9,50 @@
 
 import UIKit
 
-protocol ActiveEventsMgrObserver {
-    func onInit(mgr: ActiveEventsMgr)
-    func onModify(mgr: ActiveEventsMgr)
+// 为了提高每次刷新的效率，复用data中的event，数量不足才新建，否则只修改已经创建好的
+// 用eventCount记录有效event数量，超过的event不删除也没有用
+class ActEvents {
+    private(set) var count: Int = 0
+    private(set) var eList: [Event] = []
+
+    func clean() {
+        count = 0 // 不用真正的清空，用数量值表示即可，留下无用的event复用避免create时损失效率
+    }
+
+    func add() -> Event {
+        count += 1
+        if count > eList.count {
+            for _ in 0 ..< count - eList.count {
+                eList.append(Event(ID: DataID(ID: "?")))
+            }
+        }
+
+        return eList[count - 1]
+    }
+
+    func add(e: Event) {
+        if eList.count > count {
+            eList[count] = e
+        } else {
+            if eList.count < count {
+                for _ in 0 ..< count - eList.count {
+                    eList.append(Event(ID: DataID(ID: "?")))
+                }
+            }
+            eList.append(e)
+        }
+
+        count += 1
+    }
 }
 
-class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
+protocol ActiveEventsMgrObserver {
+    func onInit(actE: ActEvents)
+    func onModify(actE: ActEvents)
+}
+
+
+class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
     static var attrisKeeper: [String: Any] = [
         "id": "id",
@@ -36,16 +74,12 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
         "cid": "id"
     ]
 
-    // 为了提高每次刷新的效率，复用data中的event，数量不足才新建，否则只修改已经创建好的
-    // 用eventCount记录有效event数量，超过的event不删除也没有用
-    var eventCount: Int = 0
-
     override init() {
         super.init()
         print("初始化 ActiveEventsMgr")
 
         // 初始化数据结构
-        data = []
+        data = ActEvents()
 
         // 读取本地数据
 
@@ -97,49 +131,47 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
 //        e = Event(ID: DataID(ID: 50001))
 //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 //        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//        eventCount += 1//
+//        data.add(e: e)
+
 //        e = Event(ID: DataID(ID: 50001))
 //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 //        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//        eventCount += 1//
+//        data.add(e)
+
 //        e = Event(ID: DataID(ID: 50001))
 //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 //        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//        eventCount += 1//
+//        data.add(e)
+
 //        e = Event(ID: DataID(ID: 50001))
 //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 //        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//        eventCount += 1//
+//        data.add(e)
+
 //        e = Event(ID: DataID(ID: 50001))
 //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 //        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//        eventCount += 1//
+//        data.add(e)
+
 //        e = Event(ID: DataID(ID: 50001))
 //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 //        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//        eventCount += 1//
+//        data.add(e)
+
 //        e = Event(ID: DataID(ID: 50001))
 //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 //        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//        eventCount += 1//
+//        data.add(e)
+
 //        e = Event(ID: DataID(ID: 50001))
 //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 //        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//        eventCount += 1
+//        data.add(e)
 //
 //        e = Event(ID: DataID(ID: 50001))
 //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 //        e.opponentStateList = [pk1, pk2, pk3]
-//        data.append(e)
-//        eventCount += 1
+//        data.add(e)
 
         // -----------------
         e = Event(ID: DataID(ID: "50001"))
@@ -178,8 +210,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
             MsgStruct(user: bk1, time: Time.now, msg: "4你说什么1说什么5 你说什么5 你说什么5 你说什么5 你说 zv说什么5 你说什么5 你说什么5 你说什么5 你说"),
             MsgStruct(user: bk2, time: Time.now, msg: "5你说什么1"),
         ]
-        data.append(e)
-        eventCount += 1
+        data.add(e: e)
     }
 
     // 记录每个事件更新时，状态和对话数的变化
@@ -195,18 +226,12 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
     // 刷新数据时调用 ---------------------------------------------
 
     func cleanData() {
-        eventCount = 0 // 不用真正的清空，用数量值表示即可，留下无用的event复用避免create时损失效率
+        data.clean()
     }
 
     func addNewData(_ attris: [String: Any]) {
-        eventCount += 1
-        if eventCount > data.count {
-            for _ in 0 ..< eventCount - data.count {
-                data.append(Event(ID: DataID(ID: "?")))
-            }
-        }
+        let e = data.add()
 
-        let e: Event = data[data.count - 1]
         e.ID = DataID(ID: attris["id"] as! DataID.IDType)
         e.type = EventType(rawValue: attris["tp"] as! Int)!
         e.item = ItemType.list[attris["i"] as! Int]
@@ -227,11 +252,11 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
     // set ob --------------------------------------------------
 
     override func initObserver(_ ob: ActiveEventsMgrObserver) {
-        ob.onInit(mgr: self)
+        ob.onInit(actE: data)
     }
 
     override func modifyObserver(_ ob: ActiveEventsMgrObserver) {
-        ob.onModify(mgr: self)
+        ob.onModify(actE: data)
     }
 
     // ---------------------------------------------------------
@@ -260,7 +285,7 @@ class ActiveEventsMgr: DataMgr<[Event], ActiveEventsMgrObserver> {
             print("create event on net: \(suc), ", error ?? "no error")
             if suc {
                 e.ID = DataID(ID: newID)
-                self.data.append(e)
+                self.data.add(e: e)
                 APP.userMgr.addNewEvent(e) { suc, e in
                     if suc {
                         self.updateObserver()

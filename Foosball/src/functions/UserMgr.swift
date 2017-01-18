@@ -9,8 +9,8 @@
 import UIKit
 
 protocol UserMgrObserver {
-    func onInit(mgr: UserMgr)
-    func onModify(mgr: UserMgr)
+    func onInit(user: User)
+    func onModify(user: User)
 }
 
 class UserMgr: DataMgr<User, UserMgrObserver> {
@@ -181,11 +181,11 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
     }
 
     override func initObserver(_ ob: UserMgrObserver) {
-        ob.onInit(mgr: self)
+        ob.onInit(user: data)
     }
 
     override func modifyObserver(_ ob: UserMgrObserver) {
-        ob.onModify(mgr: self)
+        ob.onModify(user: data)
     }
 
     // ---------------------------------------------------------------------------

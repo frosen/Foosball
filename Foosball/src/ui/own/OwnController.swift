@@ -92,8 +92,8 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
     //
     // observer ---------------------------------------------------------------------------------------------------
     //
-    func onInit(mgr: UserMgr) {
-        curUser = mgr.data
+    func onInit(user: User) {
+        curUser = user
 
         infoHead.resetData(
             bgImg: #imageLiteral(resourceName: "selfbg"),
@@ -106,8 +106,8 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
         tableView.reloadData()
     }
 
-    func onModify(mgr: UserMgr) {
-        curUser = mgr.data
+    func onModify(user: User) {
+        curUser = user
 
         infoHead.resetData(
             bgImg: #imageLiteral(resourceName: "selfbg"),
