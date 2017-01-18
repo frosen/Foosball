@@ -142,7 +142,7 @@ class Network: NSObject {
                 var subAttri: [String: Any] = attri.value as! [String : Any]
                 parse(obj: value as! AVObject, by: &subAttri, callback: callback, key: name)
 
-            } else if value is [AVObject] && attri.value is [[String: Any]] {
+            } else if value is [AVObject] && (value as! [AVObject]).count > 0 && attri.value is [[String: Any]] {
                 let valueList = value as! [AVObject]
                 var attriDict = attri.value as! [[String: Any]]
                 var subAttri: [String: Any] = attriDict[0]

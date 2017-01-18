@@ -286,12 +286,12 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             if suc {
                 e.ID = DataID(ID: newID)
                 self.data.add(e: e)
-                APP.userMgr.addNewEvent(e) { suc, e in
+                APP.userMgr.addNewEvent(e) { suc, error in
                     if suc {
                         self.updateObserver()
                         self.saveData()
                     }
-                    callback(suc, e)
+                    callback(suc, error)
                 }
             } else {
                 callback(suc, error)
