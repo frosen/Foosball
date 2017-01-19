@@ -117,7 +117,7 @@ class DetailMsgCell: BaseCell {
         curIndex = index!.row
 
         let msgStru: MsgStruct = e.msgList[e.msgList.count - curIndex] // 这里的减法是为了倒过来显示，时间靠后的放上面
-        let user: UserBrief = msgStru.user
+        let user: User = msgStru.user
 
         if img == nil {
             img = Avatar.create(

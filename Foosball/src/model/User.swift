@@ -8,21 +8,22 @@
 
 import UIKit
 
-class UserBrief: BaseData {
-    //名字
-    var name: String
-
-    //头像url
-    var avatarURL: String
-
-    init(ID: DataID, name: String, url: String) {
-        self.name = name
-        self.avatarURL = url
-        super.init(ID: ID)
-    }
-}
+//class UserBrief: BaseData {
+//    //名字
+//    var name: String
+//
+//    //头像url
+//    var avatarURL: String
+//
+//    init(ID: DataID, name: String, url: String) {
+//        self.name = name
+//        self.avatarURL = url
+//        super.init(ID: ID)
+//    }
+//}
 
 class User: BaseData {
+    static let classname = "_User"
 
     //个人信息
     var name: String = "玩家"
@@ -32,10 +33,14 @@ class User: BaseData {
 
     //状态数据
 
-    // 获取用户信息摘要
-    func getBrief() -> UserBrief {
-        let br = UserBrief(ID: ID, name: name, url: avatarURL)
-        return br
+    convenience init(ID: DataID, name: String, url: String) {
+        self.init(ID: ID)
+        self.name = name
+        self.avatarURL = url
+    }
+
+    override init(ID: DataID) {
+        super.init(ID: ID)
     }
 }
 

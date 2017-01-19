@@ -134,7 +134,7 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
     func updateUser() {
         Network.shareInstance.updateUser(
             into: &UserMgr.attrisKeeper,
-            with: ["active"]
+            with: ["active", "active.our", "active.opp"]
         ) { str, attris in
             if str == nil {
                 print("ERROR: no attris in gotoScanServerData")
@@ -160,11 +160,13 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
 
     func resetData(_ attris: [String: Any]) {
         if data == nil {
-            data = User(ID: DataID(ID: attris["id"] as! String))
-        } else {
-            data.ID = DataID(ID: attris["id"] as! String)
+            data = User(ID: DataID(ID: "reset"))
         }
+        reset(user: &data!, attris: attris)
+    }
 
+    func reset(user: inout User, attris: [String: Any]) {
+        data.ID = DataID(ID: attris["id"] as! String)
         data.name = attris["nick"] as! String
         data.avatarURL = attris["url"] as! String
         data.isRegistered = attris["isR"] as! Bool

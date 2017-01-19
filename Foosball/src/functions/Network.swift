@@ -22,7 +22,6 @@ class Network: NSObject {
     }
 
     // 用户相关 --------------------------------------------------------------------
-    let userclassname: String = "_User"
 
     // 是否已经在本地保存了用户信息
     func hasCurUser() -> Bool {
@@ -82,7 +81,7 @@ class Network: NSObject {
             return
         }
 
-        let userQuery = AVQuery(className: userclassname)
+        let userQuery = AVQuery(className: User.classname)
 
         for list in lists {
             userQuery.includeKey(list)
@@ -166,7 +165,7 @@ class Network: NSObject {
         case is Event:
             return AVObject(className: Event.classname, objectId: (v as! Event).ID.rawValue)
         case is User:
-            return AVObject(className: userclassname, objectId: (v as! User).ID.rawValue)
+            return AVObject(className: User.classname, objectId: (v as! User).ID.rawValue)
         default:
             return v
         }

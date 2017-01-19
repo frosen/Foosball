@@ -23,7 +23,7 @@ class ActEvents {
         count += 1
         if count > eList.count {
             for _ in 0 ..< count - eList.count {
-                eList.append(Event(ID: DataID(ID: "?")))
+                eList.append(Event(ID: DataID(ID: "add")))
             }
         }
 
@@ -36,7 +36,7 @@ class ActEvents {
         } else {
             if eList.count < count {
                 for _ in 0 ..< count - eList.count {
-                    eList.append(Event(ID: DataID(ID: "?")))
+                    eList.append(Event(ID: DataID(ID: "add")))
                 }
             }
             eList.append(e)
@@ -84,45 +84,45 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         // 读取本地数据
 
         //自己方
-        let bb1 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
+        let bb1 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         let p1 = UserState(user: bb1, state: .invite)
 
-        let bb2 = UserBrief(ID: DataID(ID: "123"), name: "佐助", url: "")
+        let bb2 = User(ID: DataID(ID: "123"), name: "佐助", url: "")
         bb2.name = "小明2"
         let p2 = UserState(user: bb2, state: .ongoing)
 
-        let bb3 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
+        let bb3 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb3.name = "小明3"
         let p3 = UserState(user: bb3, state: .waiting)
 
-        let bb12 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
+        let bb12 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb12.name = "明a"
         let p12 = UserState(user: bb12, state: .win)
 
-        let bb22 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
+        let bb22 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb22.name = "明b"
         let p22 = UserState(user: bb22, state: .lose)
 
-        let bb32 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
+        let bb32 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb32.name = "明3"
         let p32 = UserState(user: bb32, state: .finish)
 
-        let bb321 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
+        let bb321 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb321.name = "明4"
         let p321 = UserState(user: bb321, state: .finish)
 
 
 
         // 对方
-        let bk1 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
+        let bk1 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bk1.name = "小王a"
         let pk1 = UserState(user: bk1, state: .invite)
 
-        let bk2 = UserBrief(ID: DataID(ID: "123"), name: "佐助", url: "")
+        let bk2 = User(ID: DataID(ID: "123"), name: "佐助", url: "")
         bk2.name = "小王b"
         let pk2 = UserState(user: bk2, state: .invite)
 
-        let bk3 = UserBrief(ID: DataID(ID: "1232"), name: "佐助", url: "")
+        let bk3 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bk3.name = "大王c"
         let pk3 = UserState(user: bk3, state: .invite)
 
@@ -264,8 +264,9 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         e.wagerList = DataTools.Wagers.unserialize(attris["wg"] as! [String])
         e.detail = attris["dtl"] as! String
 
-        e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [[String: Any]])
-        e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [[String: Any]])
+        e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [[String: Any]], st: attris["ourst"] as! [Int])
+        e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [[String: Any]], st: attris["oppst"] as! [Int])
+        
         e.imageURLList = attris["img"] as! [String]
         e.msgIDList = attris["msg"] as! [String]
 
@@ -286,6 +287,8 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     // ---------------------------------------------------------
 
     func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
+        let (our, ourst) = DataTools.UserStates.serialize(e.ourSideStateList)
+        let (opp, oppst) = DataTools.UserStates.serialize(e.opponentStateList)
         let attris: [String: Any] = [
             "tp": e.type.rawValue,
             "i": e.item.tag,
@@ -297,8 +300,10 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             "p2m": e.isPublishToMap,
             "wg": DataTools.Wagers.serialize(e.wagerList),
             "dtl": e.detail,
-            "our": DataTools.UserStates.serialize(e.ourSideStateList), // 其实直接传id就可以了
-            "opp": DataTools.UserStates.serialize(e.opponentStateList),
+            "our": our,
+            "ourst": ourst,
+            "opp": opp,
+            "oppst": oppst,
             "img": e.imageURLList,
             "msg": [], // 新事件并没有对话
             "ctm": e.createTime.getTimeData(),

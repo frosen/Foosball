@@ -497,8 +497,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
                 return nil
             }
 
-            let meBrief = APP.userMgr.data.getBrief()
-            let mS = MsgStruct(id: DataID(ID: "?"), user: meBrief, time: Time.now, msg: text)
+            let me = APP.userMgr.data
+            let mS = MsgStruct(id: DataID(ID: "send"), user: me!, time: Time.now, msg: text)
             e.msgList.append(mS)
 
             return nil

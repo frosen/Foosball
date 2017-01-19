@@ -36,9 +36,9 @@ enum EventState: Int {
 }
 
 class UserState {
-    var user: UserBrief
+    var user: User
     var state: EventState
-    init(user: UserBrief, state: EventState) {
+    init(user: User, state: EventState) {
         self.user = user
         self.state = state
     }
@@ -89,11 +89,11 @@ class Wager {
 }
 
 class MsgStruct: BaseData {
-    var user: UserBrief
+    var user: User
     var time: Time
     var msg: String
 
-    init(id: DataID, user: UserBrief, time: Time, msg: String) {
+    init(id: DataID, user: User, time: Time, msg: String) {
         self.user = user
         self.time = time
         self.msg = msg
