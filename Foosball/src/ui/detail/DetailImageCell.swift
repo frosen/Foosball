@@ -11,8 +11,8 @@ import SKPhotoBrowser
 
 class DetailImageHeadCell: DetailHeadCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
-        createHead("瞬间")
+        selectionStyle = .none //使选中后没有反应
+        DetailHeadCell.createHead(contentView, s: "瞬间", h: h)
     }
 }
 

@@ -12,37 +12,40 @@ class DetailMsgHeadCell: DetailHeadCell {
     private var isShowKeyboard: Bool = false
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
-        createHead("消息")
+        selectionStyle = .none //使选中后没有反应
 
-        let posX = createButton("说话", fromPosX: 0, callback: #selector(DetailMsgHeadCell.onClickSaying))
-        let _ = createButton("记录比分", fromPosX: posX, callback: #selector(DetailMsgHeadCell.onClickScore))
+        DetailMsgHeadCell.createMsgHeadView(
+            contentView, s: (w, h),
+            c: [
+                (ctrlr, #selector(DetailViewController.beginInput)),
+                (ctrlr, #selector(DetailViewController.beginInputScore))
+            ]
+        )
     }
 
-    func createButton(_ txt: String, fromPosX: CGFloat, callback: Selector) -> CGFloat {
+    // 这么创建，是为了可以在外部创建统一的view
+    class func createMsgHeadView(_ v: UIView, s: (CGFloat, CGFloat), c: [(Any, Selector)]) {
+        DetailHeadCell.createHead(v, s: "消息", h: s.1)
+        let posX = DetailMsgHeadCell.createButton(v, s: s, txt: "说话", fromPosX: 0, callback: c[0])
+        let _ = DetailMsgHeadCell.createButton(v, s: s, txt: "记录比分", fromPosX: posX, callback: c[1])
+    }
+
+    class func createButton(_ v: UIView, s: (CGFloat, CGFloat), txt: String, fromPosX: CGFloat, callback: (Any, Selector)) -> CGFloat {
         let btn = UIButton(type: .system)
-        contentView.addSubview(btn)
+        v.addSubview(btn)
 
         let btnWidth: CGFloat = 15.0 * CGFloat(txt.characters.count) + 20.0
         btn.bounds = CGRect(x: 0, y: 0, width: btnWidth, height: 25)
-        btn.center = CGPoint(x: w - DetailG.headMargin - fromPosX - btnWidth / 2, y: h / 2)
+        btn.center = CGPoint(x: s.0 - DetailG.headMargin - fromPosX - btnWidth / 2, y: s.1 / 2)
 
         btn.setTitle(txt, for: .normal)
         btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 13)
         btn.setTitleColor(UIColor.white, for: .normal)
         btn.backgroundColor = BaseColor
         btn.layer.cornerRadius = 9
-        btn.addTarget(self, action: callback, for: .touchUpInside)
+        btn.addTarget(callback.0, action: callback.1, for: .touchUpInside)
 
         return btnWidth + DetailG.headMargin + fromPosX
-    }
-
-    func onClickSaying() {
-        (ctrlr as! DetailViewController).beginInput()
-    }
-
-    func onClickScore() {
-        // todo
     }
 }
 
@@ -78,7 +81,7 @@ class DetailMsgCell: BaseCell {
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
+        selectionStyle = .none //使选中后没有反应
 
         // 创建名字和时间的文本
         nameLbl = UILabel()

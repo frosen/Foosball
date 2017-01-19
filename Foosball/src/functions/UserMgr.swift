@@ -140,30 +140,30 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
     }()
 
     func updateUser() {
-        Network.shareInstance.updateUser(
-            into: &UserMgr.attrisKeeper,
-            with: ["active", "active.our"]
-        ) { str, attris in
-            if str == nil {
-                print("ERROR: no attris in gotoScanServerData")
-
-            } else if str == "suc" {
-                // 成功后要刷新events表，所以先清空
-                APP.activeEventsMgr.cleanData()
-
-            } else if str == "active" {
-                APP.activeEventsMgr.addNewData(attris)
-
-            } else if str == "" {
-                self.resetData(attris)
-
-                self.updateObserver()
-                self.saveData()
-
-                APP.activeEventsMgr.updateObserver()
-                APP.activeEventsMgr.saveData()
-            }
-        }
+//        Network.shareInstance.updateUser(
+//            into: &UserMgr.attrisKeeper,
+//            with: ["active", "active.our"]
+//        ) { str, attris in
+//            if str == nil {
+//                print("ERROR: no attris in gotoScanServerData")
+//
+//            } else if str == "suc" {
+//                // 成功后要刷新events表，所以先清空
+//                APP.activeEventsMgr.cleanData()
+//
+//            } else if str == "active" {
+//                APP.activeEventsMgr.addNewData(attris)
+//
+//            } else if str == "" {
+//                self.resetData(attris)
+//
+//                self.updateObserver()
+//                self.saveData()
+//
+//                APP.activeEventsMgr.updateObserver()
+//                APP.activeEventsMgr.saveData()
+//            }
+//        }
     }
 
     func resetData(_ attris: [String: Any]) {

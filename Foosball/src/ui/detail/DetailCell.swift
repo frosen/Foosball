@@ -58,7 +58,7 @@ class DetailTitleCell: StaticCell {
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
+        selectionStyle = .none //使选中后没有反应
 
         //事件板
         eventBoard = EventBoard()
@@ -133,7 +133,7 @@ class DetailContentCell: DetailStringCell {
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
+        selectionStyle = .none //使选中后没有反应
         initLblData(contentView: contentView, titleStr: "内容：")
     }
 
@@ -162,7 +162,7 @@ class DetailWagerCell: DetailStringCell {
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
+        selectionStyle = .none //使选中后没有反应
         initLblData(contentView: contentView, titleStr: "奖杯：")
     }
 
@@ -208,7 +208,7 @@ class DetailTimeCell: DetailStringBtnCell {
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
+        selectionStyle = .none //使选中后没有反应
         initLblData(contentView: contentView, titleStr: "活动时间：")
     }
 
@@ -269,7 +269,7 @@ class DetailLocationCell: DetailStringBtnCell {
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
+        selectionStyle = .none //使选中后没有反应
         initLblData(contentView: contentView, titleStr: "活动地点：")
         setBtn(img: #imageLiteral(resourceName: "enter_map"), action: #selector(DetailLocationCell.onClickEnterMapBtn)) // 进入地图按钮
     }
@@ -314,18 +314,18 @@ class DetailLocationCell: DetailStringBtnCell {
 // =============================================================================================================
 
 class DetailHeadCell: StaticCell {
-    func createHead(_ s: String) {
+    class func createHead(_ v: UIView, s: String, h: CGFloat) {
         let vw: CGFloat = 5
         let vh: CGFloat = 15
 
-        let icon = UIView(frame: CGRect(x: DetailG.headMargin, y: contentView.frame.height / 2 - vh / 2, width: vw, height: vh))
-        contentView.addSubview(icon)
+        let icon = UIView(frame: CGRect(x: DetailG.headMargin, y: v.frame.height / 2 - vh / 2, width: vw, height: vh))
+        v.addSubview(icon)
         icon.backgroundColor = BaseColor
 
         let lbl = UILabel(frame: CGRect(
             x: DetailG.headMargin + icon.frame.width + icon.frame.origin.x,
             y: 0, width: 300, height: h))
-        contentView.addSubview(lbl)
+        v.addSubview(lbl)
 
         lbl.text = s
 

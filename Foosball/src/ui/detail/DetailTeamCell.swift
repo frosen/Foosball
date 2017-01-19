@@ -10,8 +10,8 @@ import UIKit
 
 class DetailTeamHeadCell: DetailHeadCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
-        createHead("队伍")
+        selectionStyle = .none //使选中后没有反应
+        DetailHeadCell.createHead(contentView, s: "队伍", h: h)
     }
 }
 
@@ -48,7 +48,7 @@ class DetailTeamCell: StaticCell {
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
+        selectionStyle = .none //使选中后没有反应
 
         //图标题
         title = UILabel(frame: CGRect(x: DetailG.headMargin, y: 11, width: 300, height: 13))

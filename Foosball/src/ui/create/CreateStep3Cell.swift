@@ -10,8 +10,8 @@ import UIKit
 
 class CreateStep3TimeHeadCell: DetailHeadCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
-        createHead("基本信息")
+        selectionStyle = .none //使选中后没有反应
+        DetailHeadCell.createHead(contentView, s: "基本信息", h: h)
     }
 }
 
@@ -48,8 +48,8 @@ class CreateStep3WagerHeadCell: DetailHeadCell {
     var curCount: Double = 1.0
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
-        createHead("奖杯")
+        selectionStyle = .none //使选中后没有反应
+        DetailHeadCell.createHead(contentView, s: "奖杯", h: h)
 
         let stepper = UIStepper()
         contentView.addSubview(stepper)
@@ -219,8 +219,8 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
 
 class CreateStep3DetailHeadCell: DetailHeadCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
-        createHead("自定义规则")
+        selectionStyle = .none //使选中后没有反应
+        DetailHeadCell.createHead(contentView, s: "自定义规则", h: h)
 
         let switcher = UISwitch()
         contentView.addSubview(switcher)
@@ -249,7 +249,7 @@ class CreateStep3DetailCell: StaticCell, UITextViewDelegate {
     }
     
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.selectionStyle = .none //使选中后没有反应
+        selectionStyle = .none //使选中后没有反应
 
         input = UITextView(frame: CGRect(x: DetailG.headMargin, y: topMargin, width: w - DetailG.headMargin * 2, height: h - topMargin * 2))
         addSubview(input)

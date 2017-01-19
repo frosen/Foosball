@@ -22,6 +22,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     private var textInputView: InputView! = nil
     private var isShowKeyboard: Bool = false
 
+    private var msgHeadCellRelief: UIView! = nil // 消息头的替身，放在最上不消失
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -44,7 +46,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         baseView.isUserInteractionEnabled = false
         callbackOnFinishInit = { _ in
             self.baseView.isUserInteractionEnabled = true
-            KeynotelikeTransitioning.hideSnapshot() //这里编码十分耦合，要注意
+            KeynotelikeTransitioning.hideSnapshot() //这里编码耦合度高，要注意
         }
 
         //创建tableView
@@ -81,6 +83,26 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(DetailViewController.endInput(ges:)))
         baseView.addGestureRecognizer(tap)
+
+        // msg按钮的替身
+        msgHeadCellRelief = UIView(frame: CGRect(
+            x: 0, y: 0,
+            width: UIScreen.main.bounds.width,
+            height: DetailMsgHeadCell.getCellHeight()
+        ))
+        baseView.addSubview(msgHeadCellRelief)
+        msgHeadCellRelief.backgroundColor = UIColor.white
+        let mhcFrame = msgHeadCellRelief.frame
+        DetailMsgHeadCell.createMsgHeadView(
+            msgHeadCellRelief,
+            s: (mhcFrame.width, mhcFrame.height),
+            c: [
+                (self, #selector(DetailViewController.beginInput)),
+                (self, #selector(DetailViewController.beginInputScore))
+            ]
+        )
+        msgHeadCellRelief.isHidden = true // 先隐藏
+
     }
 
     private let DataObKey = "DetailViewController"
@@ -354,6 +376,12 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         }
     }
 
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let cellRect = tableView.rectForRow(at: IndexPath(row: 0, section: 3))
+        let cellPosForScreen = tableView.convert(cellRect.origin, to: baseView)
+        msgHeadCellRelief.isHidden = (cellPosForScreen.y > 0)
+    }
+
     // BaseCellDelegate --------------------------------------------------------------
 
     func getCInfo(_ indexPath: IndexPath) -> BaseCell.CInfo {
@@ -470,6 +498,10 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     func beginInput() {
         print("saying")
         textInputView.beginInput()
+    }
+
+    func beginInputScore() {
+        print("record score")
     }
 
     func endInput(ges: UITapGestureRecognizer) {

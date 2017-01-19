@@ -36,7 +36,7 @@ class OwnQRCell: BaseCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
         bounds = CGRect(x: 0, y: 0, width: w, height: h)
 
-        self.selectionStyle = .none //使选中后没有反应
+        selectionStyle = .none //使选中后没有反应
 
         //bg
         let qrbgW: CGFloat = 170
