@@ -135,7 +135,7 @@ class DetailMsgCell: BaseCell {
         }
 
         //名字和时间
-        nameLbl.text = (user.ID == APP.userMgr.data.ID) ? "自己" : user.name
+        nameLbl.text = (user.ID == APP.userMgr.me.ID) ? "自己" : user.name
         timeLbl.text = msgStru.time.toString
 
         //文本

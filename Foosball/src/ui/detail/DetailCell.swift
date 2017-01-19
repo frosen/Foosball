@@ -80,7 +80,7 @@ class DetailTitleCell: StaticCell {
         let e = d as! Event
         eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList)
 
-        let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
+        let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
         set(state: st)
         
         createTime.text = "发布时间：" + e.createTime.toString

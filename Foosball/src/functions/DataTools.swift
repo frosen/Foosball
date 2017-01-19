@@ -28,11 +28,11 @@ class DataTools: NSObject {
     // -------------------------------------------------------
 
     class UserStates {
-        class func serialize(_ userStates: [UserState]) -> ([User], [Int]) {
-            var listUser: [User] = []
+        class func serialize(_ userStates: [UserState]) -> ([DataID.IDType], [Int]) {
+            var listUser: [DataID.IDType] = []
             var listST: [Int] = []
             for userState in userStates {
-                listUser.append(userState.user)
+                listUser.append(userState.user.ID.rawValue)
                 listST.append(userState.state.rawValue)
             }
 

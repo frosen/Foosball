@@ -67,7 +67,7 @@ class Network: NSObject {
         })
     }
 
-    // 因为User有特殊的list，所以单独做一个函数
+    // 因为User有特殊的list，所以单独做一个函数 不用回调，以免误以为会有延迟
     func getUserAttris(into attris: inout [String: Any]) -> [String: Any]? {
         guard let user = AVUser.current() else {
             return nil

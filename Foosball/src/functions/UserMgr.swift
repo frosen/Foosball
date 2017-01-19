@@ -13,7 +13,7 @@ protocol UserMgrObserver {
     func onModify(user: User)
 }
 
-class UserMgr: DataMgr<User, UserMgrObserver> {
+class UserMgr: DataMgr<[User], UserMgrObserver> {
 
     enum LoginState: Int {
         case no
@@ -21,9 +21,28 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         case user
     }
 
+    static var baseAttriKeeper: [String: Any] = [
+        "id": "id",
+        "nick": "name",
+        "sign": "sign",
+        "url": "url",
+        "isR": false,
+        ]
+
+    static var attrisKeeper: [String: Any] = {
+        var keeper: [String: Any] = [:]
+        for attri in baseAttriKeeper {
+            keeper[attri.key] = attri.value
+        }
+        keeper["active"] = [ActiveEventsMgr.attrisKeeper]
+        return keeper
+    }()
+
     override init() {
         super.init()
         print("初始化 UserMgr")
+
+        data = []
 
         // 读取本地登录数据
         if getLoginState() == .no {
@@ -63,15 +82,16 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
             password += String(format: "%c", arc4random_uniform(123 - 48) + 48)
         }
 
-        data = User(ID: DataID(ID: "no register"))
-        data.name = "苹果玩家" + subStr
+        let me = User(ID: DataID(ID: "no register"))
+        me.name = "苹果玩家" + subStr
 
         let attris: [String: Any] = [
-            "nick": data.name,
-            "sign": data.sign,
-            "url": data.avatarURL,
-            "isR": data.isRegistered,
+            "nick": me.name,
+            "sign": me.sign,
+            "url": me.avatarURL,
+            "isR": me.isRegistered,
         ]
+        data.append(me)
 
         Network.shareInstance.registerUser(id: loginName, pw: password, attris: attris) { suc, error, newID in
             guard suc else {
@@ -80,7 +100,7 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
                 return
             }
 
-            self.data.ID = DataID(ID: newID)
+            me.ID = DataID(ID: newID)
 
             self.updateObserver()
             self.saveData()
@@ -89,16 +109,8 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
     }
 
     func readLocalUserData() {
-        var attris: [String: Any] = [
-            "id": "id",
-            "nick": "name",
-            "sign": "sign",
-            "url": "url",
-            "isR": false,
-        ]
-
         // 个人信息的数据用Network储存到本地，所以从这里取
-        let res: [String: Any]? = Network.shareInstance.getUserAttris(into: &attris)
+        let res: [String: Any]? = Network.shareInstance.getUserAttris(into: &UserMgr.baseAttriKeeper)
         if res == nil {
             print("ERROR: wrong getUserAttris in readLocalUserData")
         } else {
@@ -122,62 +134,65 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         updateUser()
     }
 
-    static var userAttriKeeper: [String: Any] = [
-        "id": "id",
-        "nick": "name",
-        "sign": "sign",
-        "url": "url",
-        "isR": false,
-    ]
-
-    static var attrisKeeper: [String: Any] = {
-        var keeper: [String: Any] = [:]
-        for attri in userAttriKeeper {
-            keeper[attri.key] = attri.value
-        }
-        keeper["active"] = [ActiveEventsMgr.attrisKeeper]
-        return keeper
-    }()
-
     func updateUser() {
-//        Network.shareInstance.updateUser(
-//            into: &UserMgr.attrisKeeper,
-//            with: ["active", "active.our"]
-//        ) { str, attris in
-//            if str == nil {
-//                print("ERROR: no attris in gotoScanServerData")
-//
-//            } else if str == "suc" {
-//                // 成功后要刷新events表，所以先清空
-//                APP.activeEventsMgr.cleanData()
-//
-//            } else if str == "active" {
-//                APP.activeEventsMgr.addNewData(attris)
-//
-//            } else if str == "" {
-//                self.resetData(attris)
-//
-//                self.updateObserver()
-//                self.saveData()
-//
-//                APP.activeEventsMgr.updateObserver()
-//                APP.activeEventsMgr.saveData()
-//            }
-//        }
+        Network.shareInstance.updateUser(
+            into: &UserMgr.attrisKeeper,
+            with: ["active"]
+        ) { str, attris in
+            if str == nil {
+                print("ERROR: no attris in gotoScanServerData")
+
+            } else if str == "suc" {
+                // 成功后要刷新events表，所以先清空
+                APP.activeEventsMgr.cleanData()
+
+            } else if str == "active" {
+                APP.activeEventsMgr.addNewData(attris)
+
+            } else if str == "" {
+                self.resetData(attris)
+
+                self.updateObserver()
+                self.saveData()
+
+                // 看有没有未获取数据的用户，没有就获取
+                if self.hasUnfetchUsers() {
+                    self.fetchUnfetchUsers { suc in
+                        APP.activeEventsMgr.updateObserver()
+                        APP.activeEventsMgr.saveData()
+                    }
+                } else {
+                    APP.activeEventsMgr.updateObserver()
+                    APP.activeEventsMgr.saveData()
+                }
+            }
+        }
     }
 
     func resetData(_ attris: [String: Any]) {
-        if data == nil {
-            data = User(ID: DataID(ID: "reset"))
+        if data.count == 0 {
+            data.append(User(ID: DataID(ID: "reset")))
         }
-        reset(user: &data!, attris: attris)
+        reset(user: &data[0], attris: attris)
     }
 
     func reset(user: inout User, attris: [String: Any]) {
-        data.ID = DataID(ID: attris["id"] as! String)
-        data.name = attris["nick"] as! String
-        data.avatarURL = attris["url"] as! String
-        data.isRegistered = attris["isR"] as! Bool
+        user.ID = DataID(ID: attris["id"] as! String)
+        user.name = attris["nick"] as! String
+        user.avatarURL = attris["url"] as! String
+        user.isRegistered = attris["isR"] as! Bool
+    }
+
+    func hasUnfetchUsers() -> Bool {
+        return false
+    }
+
+    func fetchUnfetchUsers(callback: ((Bool) -> Void)) {
+
+    }
+
+    var me: User {
+        return data[0]
     }
 
     // ---------------------------------------------------------------------------
@@ -190,11 +205,11 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
     }
 
     override func initObserver(_ ob: UserMgrObserver) {
-        ob.onInit(user: data)
+        ob.onInit(user: data[0])
     }
 
     override func modifyObserver(_ ob: UserMgrObserver) {
-        ob.onModify(user: data)
+        ob.onModify(user: data[0])
     }
 
     // ---------------------------------------------------------------------------

@@ -168,7 +168,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         saveNewestMsg(e.msgList)
 
         // toolbar
-        let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
+        let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
         actBtnBoard.setState(st)
 
         // 刚进来时，让更新提示消失
@@ -221,7 +221,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         saveNewestMsg(e.msgList)
 
         // 状态
-        let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
+        let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
         actBtnBoard.setState(st)
         if let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? DetailTitleCell {
             titleCell.set(state: st)
@@ -529,8 +529,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
                 return nil
             }
 
-            let me = APP.userMgr.data
-            let mS = MsgStruct(id: DataID(ID: "send"), user: me!, time: Time.now, msg: text)
+            let me = APP.userMgr.me
+            let mS = MsgStruct(id: DataID(ID: "send"), user: me, time: Time.now, msg: text)
             e.msgList.append(mS)
 
             return nil

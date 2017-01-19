@@ -101,11 +101,11 @@ class CreateController: BaseController, UIScrollViewDelegate {
     // 完成创建
     func finish() {
         // 整理并上传event数据
-        let me = APP.userMgr.data
-        let userState = UserState(user: me!, state: .ready)
+        let me = APP.userMgr.me
+        let userState = UserState(user: me, state: .ready)
         createEvent.ourSideStateList.append(userState)
         createEvent.createTime = Time.now
-        createEvent.createUserID = APP.userMgr.data.ID
+        createEvent.createUserID = APP.userMgr.me.ID
 
         APP.activeEventsMgr.addNewEvent(createEvent) { suc, error in
             if suc {

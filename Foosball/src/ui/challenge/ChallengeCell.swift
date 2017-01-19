@@ -55,7 +55,7 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
 
         eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList)
 
-        let st = APP.userMgr.getState(from: e, by: APP.userMgr.data.ID)
+        let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
         eventBoard.set(state: st)
 
         // 加载team数据
