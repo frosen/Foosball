@@ -66,8 +66,10 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         "p2m": false,
         "wg": ["wg"],
         "dtl": "detail",
-        "our": [["key": "value"]],
-        "opp": [["key": "value"]],
+        "our": [UserMgr.userAttriKeeper],
+        "ourst": [1],
+        "opp": [UserMgr.userAttriKeeper],
+        "oppst": [1],
         "img": ["url"],
         "msg": ["id"],
         "ctm": "Date",
@@ -289,6 +291,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
         let (our, ourst) = DataTools.UserStates.serialize(e.ourSideStateList)
         let (opp, oppst) = DataTools.UserStates.serialize(e.opponentStateList)
+
         let attris: [String: Any] = [
             "tp": e.type.rawValue,
             "i": e.item.tag,
@@ -313,7 +316,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         Network.shareInstance.createObj(to: Event.classname, attris: attris) { suc, error, newID in
             print("create event on net: \(suc), ", error ?? "no error")
             if suc {
-                e.ID = DataID(ID: newID)
+                e.ID = DataID(ID: newID!)
                 self.data.add(e: e)
                 APP.userMgr.addNewEvent(e) { suc, error in
                     if suc {

@@ -76,7 +76,7 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         Network.shareInstance.registerUser(id: loginName, pw: password, attris: attris) { suc, error, newID in
             guard suc else {
                 print("ERROR: registerUser in registerDeviceLogin", error ?? "no error")
-                self.registerDeviceLogin() // 尝试重新注册
+                self.perform(#selector(UserMgr.registerDeviceLogin), with: nil, afterDelay: 3.0) // 3秒后尝试重新注册
                 return
             }
 
@@ -122,19 +122,27 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
         updateUser()
     }
 
-    static var attrisKeeper: [String: Any] = [
+    static var userAttriKeeper: [String: Any] = [
         "id": "id",
         "nick": "name",
         "sign": "sign",
         "url": "url",
         "isR": false,
-        "active": [ActiveEventsMgr.attrisKeeper]
     ]
+
+    static var attrisKeeper: [String: Any] = {
+        var keeper: [String: Any] = [:]
+        for attri in userAttriKeeper {
+            keeper[attri.key] = attri.value
+        }
+        keeper["active"] = [ActiveEventsMgr.attrisKeeper]
+        return keeper
+    }()
 
     func updateUser() {
         Network.shareInstance.updateUser(
             into: &UserMgr.attrisKeeper,
-            with: ["active", "active.our", "active.opp"]
+            with: ["active", "active.our"]
         ) { str, attris in
             if str == nil {
                 print("ERROR: no attris in gotoScanServerData")
@@ -194,8 +202,8 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
     // 同时给活动事件和所有事件
     func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
         ignoreNextUpdate = true
-        Network.shareInstance.addEventToUser(e, listName: "active", needUploadAndCallback: nil)
-        Network.shareInstance.addEventToUser(e, listName: "events", needUploadAndCallback: callback)
+        Network.shareInstance.addDataToUser(e, listName: "active", needUploadAndCallback: nil)
+        Network.shareInstance.addDataToUser(e.ID, listName: "events", needUploadAndCallback: callback)
     }
 
     // 工具 -----------------------------------------------------------------------

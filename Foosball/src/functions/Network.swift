@@ -18,6 +18,7 @@ class Network: NSObject {
     //单例
     static let shareInstance = Network()
     private override init() {
+//        AVOSCloud.setAllLogsEnabled(false)
         AVOSCloud.setApplicationId("o5nq2XE8H5XUlo9S94F9tioJ-gzGzoHsz", clientKey: "vJrjiBn25QQ4FmvIKhVx8bQ2")
     }
 
@@ -47,12 +48,12 @@ class Network: NSObject {
     }
 
     // 把事件添加到user上
-    func addEventToUser(_ e: Event, listName: String, needUploadAndCallback: ((Bool, Error?) -> Void)?) {
+    func addDataToUser(_ data: Any, listName: String, needUploadAndCallback: ((Bool, Error?) -> Void)?) {
         guard let user = AVUser.current() else {
             return
         }
 
-        let value = checkValue(e)
+        let value = checkValue(data)
         user.add(value, forKey: listName)
 
         if needUploadAndCallback == nil {
@@ -80,7 +81,7 @@ class Network: NSObject {
         guard let user = AVUser.current() else {
             return
         }
-
+        
         let userQuery = AVQuery(className: User.classname)
 
         for list in lists {
@@ -102,7 +103,7 @@ class Network: NSObject {
     // 对象 --------------------------------------------------------------------
 
     // 创建对象
-    func createObj(to list: String, attris: [String: Any], callback: @escaping ((Bool, Error?, String) -> Void)) {
+    func createObj(to list: String, attris: [String: Any], callback: @escaping ((Bool, Error?, String?) -> Void)) {
         let todo = AVObject(className:  list)
         for attri in attris {
             let value = checkValue(attri.value)
@@ -110,7 +111,7 @@ class Network: NSObject {
         }
         
         todo.saveInBackground { suc, error in
-            callback(suc, error, todo.objectId!)
+            callback(suc, error, todo.objectId)
         }
     }
 
@@ -166,6 +167,17 @@ class Network: NSObject {
             return AVObject(className: Event.classname, objectId: (v as! Event).ID.rawValue)
         case is User:
             return AVObject(className: User.classname, objectId: (v as! User).ID.rawValue)
+        case is [BaseData]:
+            var arRes = [Any]()
+            let arv = v as! [BaseData]
+            if arv.count == 0 {
+                return []
+            } else {
+                for vInAr in arv {
+                    arRes.append(checkValue(vInAr))
+                }
+                return arRes
+            }
         default:
             return v
         }
