@@ -203,7 +203,7 @@ class UserMgr: DataMgr<User, UserMgrObserver> {
     func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
         ignoreNextUpdate = true
         Network.shareInstance.addDataToUser(e, listName: "active", needUploadAndCallback: nil)
-        Network.shareInstance.addDataToUser(e.ID, listName: "events", needUploadAndCallback: callback)
+        Network.shareInstance.addDataToUser(e.ID.rawValue, listName: "events", needUploadAndCallback: callback)
     }
 
     // 工具 -----------------------------------------------------------------------
