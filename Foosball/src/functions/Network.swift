@@ -210,9 +210,9 @@ class Network: NSObject {
         }
     }
 
-    func getCutImgUrl(from str: String, by width: Int32?) -> String? {
+    func getCutImgUrl(from str: String, by width: Int32) -> String? {
         let f = AVFile(url: str)
-        let cutUrl = f.getThumbnailURLWithScale(toFit: true, width: Int32(width), height: Int32(width))
+        let cutUrl = f.getThumbnailURLWithScale(toFit: true, width: width, height: width)
         return cutUrl
     }
 }
