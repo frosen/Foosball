@@ -32,6 +32,10 @@ class DataMgr<DATA, OB>: NSObject {
     func unregister(key: String) {
         obDict.removeValue(forKey: key)
     }
+
+    func hasOb(for key: String) -> Bool {
+        return obDict[key] != nil
+    }
     
     func set(hide: Bool, key: String) {
         if let obTup = obDict[key] {

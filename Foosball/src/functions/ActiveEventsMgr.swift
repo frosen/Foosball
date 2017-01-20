@@ -323,6 +323,37 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             }
         }
     }
+
+    // 添加一张图片到某个event上，回调前会判断obKey是否存在，不存在就不执行了，callback参数 回调类型，进度
+    func addNewImg(_ img: UIImage, to event: Event, obKey: String, callback: @escaping ((String, Int) -> Void)) {
+        guard let data = UIImagePNGRepresentation(img) else {
+            print("ERROR: can not change to PNG")
+            callback("fail", 0)
+            return
+        }
+
+        let filename = "img.png"
+
+        Network.shareInstance.upload(data: data, name: filename) { str, progress in
+            if !self.hasOb(for: obKey) {
+                return
+            }
+
+            if str == "p" {
+                callback("p", progress)
+            } else if str == "fail" {
+                callback("fail", 0)
+            } else {
+                self.changeData(changeFunc: { _ in
+
+                    event.imageURLList.append(str)
+
+                    return nil
+                }, needUpload: ["img": "add"])
+
+            }
+        }
+    }
 }
 
 

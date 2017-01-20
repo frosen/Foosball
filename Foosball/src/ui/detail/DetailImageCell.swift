@@ -25,6 +25,8 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
     private var imgViewArray: [UIImageView] = []
     private var imgUrlList: [Int: String] = [:]
 
+    var curEvent: Event! = nil
+
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
         let e = d as! Event
         let lineCount = ceil(CGFloat(e.imageURLList.count + 1) / imageCountIn1Line)
@@ -45,11 +47,11 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         imgListView = UIView(frame: CGRect(x: margin, y: 0, width: 99999, height: 99999))
         contentView.addSubview(imgListView!)
 
-        let e = d as! Event
+        curEvent = d as! Event
         var pos: Int = 0
         var line: Int = 0
         var index: Int = 0
-        for imgUrl in e.imageURLList {
+        for imgUrl in curEvent.imageURLList {
             let v = createImageView(url: imgUrl, index: index)
             imgListView!.addSubview(v)
             v.frame.origin = CGPoint(
@@ -73,7 +75,7 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         )
 
         // 提示 todo
-        if e.imageURLList.count == 0 {
+        if curEvent.imageURLList.count == 0 {
 
         }
     }
@@ -225,26 +227,41 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         //获取图片
         let img: UIImage = info[UIImagePickerControllerEditedImage] as! UIImage
 
-        //转圈
-
-        //上传图片，获取url，如果没有网，则提示是否重复，还是保存本地/取消
-
-        //取消转圈
-
-        //更新event，并上传，然后更新cell
-        let detailCtrlr = self.ctrlr as! DetailViewController
-        APP.activeEventsMgr.changeData(changeFunc: { data in
-            guard let e = detailCtrlr.getCurEvent(events: data.eList, totalEventsCount: data.count) else {
-                print("ERROR: no event in imagePickerController changeData")
-                return nil
-            }
-            e.imageURLList.append("http://up.qqjia.com/z/25/tu32700_3.png")
-
-            return nil
-        }, needUpload: ["img": "add"])
-
         //切换场景后更新cell
         picker.dismiss(animated: true)
+
+        upload(img: img)
+
+
+    }
+
+    func upload(img: UIImage) {
+        //转圈
+        showUploading(true)
+
+        //上传图片，获取url，如果没有网，则提示是否重复，还是保存本地/取消
+        let detailCtrlr = self.ctrlr as! DetailViewController
+        APP.activeEventsMgr.addNewImg(img, to: curEvent, obKey: detailCtrlr.DataObKey) { str, progress in
+            if str == "p" {
+                self.setUploading(progress: progress)
+            } else {
+                self.showUploading(false) //取消转圈
+
+                if str == "fail" {
+                    UITools.showAlert(detailCtrlr, title: "错误", msg: "上传图片有误，是否重新上传？", type: 2) { _ in
+                        self.upload(img: img)
+                    }
+                }
+            }
+        }
+    }
+
+    func showUploading(_ b: Bool) {
+        
+    }
+
+    func setUploading(progress: Int) {
+
     }
 }
 

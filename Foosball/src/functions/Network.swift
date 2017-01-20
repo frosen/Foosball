@@ -95,8 +95,8 @@ class Network: NSObject {
         var holdAttris = attris
         userQuery.findObjectsInBackground { objs, error in
             if error != nil || objs == nil {
-            callback(nil, [:])
-            return
+                callback(nil, [:])
+                return
             }
             print("fetch user suc")
             callback("suc", [:])
@@ -191,6 +191,22 @@ class Network: NSObject {
             }
         default:
             return v
+        }
+    }
+
+    // 上传数据
+    func upload(data: Data, name: String, callback: @escaping ((String, Int) -> Void)) {
+        let f = AVFile(name: name, data: data)
+        f.saveInBackground({ (suc, error) in
+            if !suc {
+                print("ERROR: in upload", error ?? "no error")
+                callback("fail", 0)
+            } else {
+                callback(f.url!, 0)
+            }
+
+        }) { progress in
+            callback("p", progress)
         }
     }
 }

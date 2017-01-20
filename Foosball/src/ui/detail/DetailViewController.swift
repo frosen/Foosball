@@ -105,7 +105,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
     }
 
-    private let DataObKey = "DetailViewController"
+    let DataObKey = "DetailViewController"
     override func initData() {
         APP.activeEventsMgr.register(observer: self, key: DataObKey)
     }

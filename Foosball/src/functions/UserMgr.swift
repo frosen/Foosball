@@ -143,9 +143,8 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         isScanPause = true
     }
 
-    private func resetScan() {
+    private func resumeScan() {
         isScanPause = false
-        scanSecond = UserMgr.scanSecondMax
     }
 
     func updateMe() {
@@ -157,12 +156,12 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         ) { str, attris in
             if str == nil {
                 print("ERROR: no attris in updateMe")
-                self.resetScan()
+                self.resumeScan()
 
             } else if str == "suc" {
                 // 成功后要刷新events表，所以先清空
                 APP.activeEventsMgr.cleanData()
-                self.resetScan()
+                self.resumeScan()
 
             } else if str == "active" {
                 APP.activeEventsMgr.addNewData(attris)
@@ -238,11 +237,11 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         Network.shareInstance.updateUsers(ids, into: &UserMgr.baseAttriKeeper, with: []) { str, attris in
             if str == nil {
                 print("ERROR: fetchUnfetchUsers wrong")
-                self.resetScan()
+                self.resumeScan()
                 callback(false)
 
             } else if str == "suc" {
-                self.resetScan()
+                self.resumeScan()
 
             } else if str == "" {
                 self.resetUser(by: attris["id"] as! String, attris: attris)
@@ -290,7 +289,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         pauseScan()
         Network.shareInstance.addDataToUser(e, listName: "active", needUploadAndCallback: nil)
         Network.shareInstance.addDataToUser(e.ID.rawValue, listName: "events") { suc, error in
-            self.resetScan()
+            self.resumeScan()
             callback(suc, error)
         }
     }
