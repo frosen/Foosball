@@ -53,7 +53,8 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
         let e = d as! Event
         curEvent = e
 
-        eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList)
+        let urlStr: String? = e.imageURLList.count > 0 ? e.imageURLList[0] : nil
+        eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList, url: urlStr)
 
         let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
         eventBoard.set(state: st)

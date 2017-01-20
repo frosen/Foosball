@@ -88,9 +88,9 @@ class EventBoard: UIView {
         contentView.center.y = h * 0.7
     }
 
-    func setData(et: EventType, it: ItemType, wager: [Wager]) {
+    func setData(et: EventType, it: ItemType, wager: [Wager], url: String?) {
         // 图片
-        let imgUrl = getURLFromItemType(it)
+        let imgUrl = (url != nil) ? URL(string: url!)! : getURLFromItemType(it)
         icon.sd_setImage(with: imgUrl, placeholderImage: EventIcon.spaceHolder)
 
         // 根据类型和奖杯组织一个题目

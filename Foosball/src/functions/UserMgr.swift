@@ -148,43 +148,43 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     }
 
     func updateMe() {
-        pauseScan()
-
-        Network.shareInstance.updateMe(
-            into: &UserMgr.attrisKeeper,
-            with: ["active"]
-        ) { str, attris in
-            if str == nil {
-                print("ERROR: no attris in updateMe")
-                self.resumeScan()
-
-            } else if str == "suc" {
-                // 成功后要刷新events表，所以先清空
-                APP.activeEventsMgr.cleanData()
-                self.resumeScan()
-
-            } else if str == "active" {
-                APP.activeEventsMgr.addNewData(attris)
-
-            } else if str == "" {
-                self.resetMe(attris)
-
-            } else if str == "end" {
-                self.updateObserver()
-                self.saveData()
-
-                // 看有没有未获取数据的用户，没有就获取
-                if self.hasUnfetchUsers() {
-                    self.fetchUnfetchUsers { suc in
-                        APP.activeEventsMgr.updateObserver()
-                        APP.activeEventsMgr.saveData()
-                    }
-                } else {
-                    APP.activeEventsMgr.updateObserver()
-                    APP.activeEventsMgr.saveData()
-                }
-            }
-        }
+//        pauseScan()
+//
+//        Network.shareInstance.updateMe(
+//            into: &UserMgr.attrisKeeper,
+//            with: ["active"]
+//        ) { str, attris in
+//            if str == nil {
+//                print("ERROR: no attris in updateMe")
+//                self.resumeScan()
+//
+//            } else if str == "suc" {
+//                // 成功后要刷新events表，所以先清空
+//                APP.activeEventsMgr.cleanData()
+//                self.resumeScan()
+//
+//            } else if str == "active" {
+//                APP.activeEventsMgr.addNewData(attris)
+//
+//            } else if str == "" {
+//                self.resetMe(attris)
+//
+//            } else if str == "end" {
+//                self.updateObserver()
+//                self.saveData()
+//
+//                // 看有没有未获取数据的用户，没有就获取
+//                if self.hasUnfetchUsers() {
+//                    self.fetchUnfetchUsers { suc in
+//                        APP.activeEventsMgr.updateObserver()
+//                        APP.activeEventsMgr.saveData()
+//                    }
+//                } else {
+//                    APP.activeEventsMgr.updateObserver()
+//                    APP.activeEventsMgr.saveData()
+//                }
+//            }
+//        }
     }
 
     func resetMe(_ attris: [String: Any]) {

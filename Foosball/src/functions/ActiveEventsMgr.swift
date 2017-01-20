@@ -326,13 +326,13 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
     // 添加一张图片到某个event上，回调前会判断obKey是否存在，不存在就不执行了，callback参数 回调类型，进度
     func addNewImg(_ img: UIImage, to event: Event, obKey: String, callback: @escaping ((String, Int) -> Void)) {
-        guard let data = UIImagePNGRepresentation(img) else {
-            print("ERROR: can not change to PNG")
+        guard let data = UIImageJPEGRepresentation(img, 0.5) else { // 使用jpg减少图片尺寸
+            print("ERROR: can not change to JPEG")
             callback("fail", 0)
             return
         }
 
-        let filename = "img.png"
+        let filename = event.ID.rawValue + "_" + String(event.imageURLList.count) + ".jpg"
 
         Network.shareInstance.upload(data: data, name: filename) { str, progress in
             if !self.hasOb(for: obKey) {

@@ -78,7 +78,8 @@ class DetailTitleCell: StaticCell {
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
-        eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList)
+        let urlStr: String? = e.imageURLList.count > 0 ? e.imageURLList[0] : nil
+        eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList, url: urlStr)
 
         let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
         set(state: st)
