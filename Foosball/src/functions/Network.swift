@@ -76,27 +76,41 @@ class Network: NSObject {
         return attris
     }
 
-    func updateUser(into attris: inout [String: Any], with lists: [String], callback: @escaping ((String?, [String: Any]) -> Void)) {
-        print("fetch user")
+    func updateMe(into attris: inout [String: Any], with lists: [String], callback: @escaping ((String?, [String: Any]) -> Void)) {
+        print("fetch me")
         guard let user = AVUser.current() else {
             return
         }
-        
+        updateUsers([user.objectId!], into: &attris, with: lists, callback: callback)
+    }
+
+    func updateUsers(_ ids: [String], into attris: inout [String: Any], with lists: [String], callback: @escaping ((String?, [String: Any]) -> Void)) {
         let userQuery = AVQuery(className: User.classname)
+
+        for id in ids {
+            userQuery.whereKey("objectId", equalTo: id)
+        }
 
         for list in lists {
             userQuery.includeKey(list)
         }
 
         var holdAttris = attris
-        userQuery.getObjectInBackground(withId: user.objectId!) { obj, error in
-            if error != nil || obj == nil {
-                callback(nil, [:])
-                return
+        userQuery.findObjectsInBackground { objs, error in
+            if error != nil || objs == nil {
+            callback(nil, [:])
+            return
             }
             print("fetch user suc")
             callback("suc", [:])
-            self.parse(obj: obj!, by: &holdAttris, callback: callback, key: "")
+            if let objList = objs as? [AVObject] {
+                for obj in objList {
+                    self.parse(obj: obj as NSObject, by: &holdAttris, callback: callback, key: "")
+                }
+            } else {
+                print("ERROR: findObjectsInBackground not return [AVObject]")
+            }
+            callback("end", [:])
         }
     }
 

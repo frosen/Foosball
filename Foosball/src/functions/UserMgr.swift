@@ -50,7 +50,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 
         } else {
             readLocalUserData()
-            perform(#selector(UserMgr.updateUser), with: nil, afterDelay: 1.0) // 1秒后立即更新
+            perform(#selector(UserMgr.updateMe), with: nil, afterDelay: 1.0) // 1秒后立即更新
             gotoScanServerData()
         }
     }
@@ -114,44 +114,63 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         if res == nil {
             print("ERROR: wrong getUserAttris in readLocalUserData")
         } else {
-            resetData(res!)
+            resetMe(res!)
         }
     }
 
-    // 开启轮询
+    // 开启轮询 --------------------------------------------------------------
+
     private func gotoScanServerData() {
-        Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(UserMgr.timer), userInfo: nil, repeats: true)
+        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(UserMgr.timer), userInfo: nil, repeats: true)
     }
 
-    // 忽略下次刷新
-    private var ignoreNextUpdate: Bool = false
-
+    private static let scanSecondMax: Int = 15
+    private var scanSecond: Int = scanSecondMax
+    private var isScanPause: Bool = false
     func timer(_ t: Timer) {
-        if ignoreNextUpdate {
-            ignoreNextUpdate = false
+        if isScanPause {
             return
         }
-        updateUser()
+
+        scanSecond -= 1
+        if scanSecond <= 0 {
+            updateMe()
+            scanSecond = UserMgr.scanSecondMax
+        }
     }
 
-    func updateUser() {
-        Network.shareInstance.updateUser(
+    private func pauseScan() {
+        isScanPause = true
+    }
+
+    private func resetScan() {
+        isScanPause = false
+        scanSecond = UserMgr.scanSecondMax
+    }
+
+    func updateMe() {
+        pauseScan()
+
+        Network.shareInstance.updateMe(
             into: &UserMgr.attrisKeeper,
             with: ["active"]
         ) { str, attris in
             if str == nil {
-                print("ERROR: no attris in gotoScanServerData")
+                print("ERROR: no attris in updateMe")
+                self.resetScan()
 
             } else if str == "suc" {
                 // 成功后要刷新events表，所以先清空
                 APP.activeEventsMgr.cleanData()
+                self.resetScan()
 
             } else if str == "active" {
                 APP.activeEventsMgr.addNewData(attris)
 
             } else if str == "" {
-                self.resetData(attris)
+                self.resetMe(attris)
 
+            } else if str == "end" {
                 self.updateObserver()
                 self.saveData()
 
@@ -169,7 +188,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         }
     }
 
-    func resetData(_ attris: [String: Any]) {
+    func resetMe(_ attris: [String: Any]) {
         if data.count == 0 {
             data.append(User(ID: DataID(ID: "reset")))
         }
@@ -179,16 +198,68 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     func reset(user: inout User, attris: [String: Any]) {
         user.ID = DataID(ID: attris["id"] as! String)
         user.name = attris["nick"] as! String
+        user.sign = attris["sign"] as! String
         user.avatarURL = attris["url"] as! String
         user.isRegistered = attris["isR"] as! Bool
     }
 
-    func hasUnfetchUsers() -> Bool {
-        return false
+    // -------------------------------------------------------------------------
+
+    // 记录需要从服务器获取具体数据的用户
+    var unfetchUserList: [User] = []
+
+    // 根据id，获取记录在表中的用户数据，如果没有则添加一个，并把新添加的这个user记录为“需fetch”
+    func getOrCreateUser(id: DataID.IDType) -> User {
+        for user in data {
+            if user.ID.rawValue == id {
+                return user
+            }
+        }
+
+        // 未找到已经存在的user
+        let newUser = User(ID: DataID(ID: id))
+        data.append(newUser)
+        unfetchUserList.append(newUser)
+
+        return newUser
     }
 
-    func fetchUnfetchUsers(callback: ((Bool) -> Void)) {
+    func hasUnfetchUsers() -> Bool {
+        return unfetchUserList.count > 0
+    }
 
+    func fetchUnfetchUsers(callback: @escaping ((Bool) -> Void)) {
+        pauseScan()
+
+        var ids: [String] = []
+        for user in unfetchUserList {
+            ids.append(user.ID.rawValue)
+        }
+        Network.shareInstance.updateUsers(ids, into: &UserMgr.baseAttriKeeper, with: []) { str, attris in
+            if str == nil {
+                print("ERROR: fetchUnfetchUsers wrong")
+                self.resetScan()
+                callback(false)
+
+            } else if str == "suc" {
+                self.resetScan()
+
+            } else if str == "" {
+                self.resetUser(by: attris["id"] as! String, attris: attris)
+
+            } else if str == "end" {
+                callback(true)
+            }
+        }
+    }
+
+    func resetUser(by id: String, attris: [String: Any]) {
+        for user in data {
+            if user.ID.rawValue == id {
+                var u = user
+                reset(user: &u, attris: attris)
+            }
+        }
     }
 
     var me: User {
@@ -216,9 +287,12 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 
     // 同时给活动事件和所有事件
     func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
-        ignoreNextUpdate = true
+        pauseScan()
         Network.shareInstance.addDataToUser(e, listName: "active", needUploadAndCallback: nil)
-        Network.shareInstance.addDataToUser(e.ID.rawValue, listName: "events", needUploadAndCallback: callback)
+        Network.shareInstance.addDataToUser(e.ID.rawValue, listName: "events") { suc, error in
+            self.resetScan()
+            callback(suc, error)
+        }
     }
 
     // 工具 -----------------------------------------------------------------------

@@ -28,34 +28,40 @@ class DataTools: NSObject {
     // -------------------------------------------------------
 
     class UserStates {
-        class func serialize(_ userStates: [UserState]) -> ([DataID.IDType], [Int]) {
-            var listUser: [DataID.IDType] = []
-            var listST: [Int] = []
+        class func serialize(_ userStates: [UserState]) -> [[String: Any]] {
+            var list: [[String: Any]] = []
             for userState in userStates {
-                listUser.append(userState.user.ID.rawValue)
-                listST.append(userState.state.rawValue)
+                list.append([
+                    "id": userState.user.ID.rawValue,
+                    "st": userState.state.rawValue
+                ])
             }
 
-            return (listUser, listST)
+            return list
         }
 
-        class func unserialize(_ listUserAttri: [[String: Any]], st: [Int]) -> [UserState] {
+        class func unserialize(_ list: [[String: Any]]) -> [UserState] {
             var users: [UserState] = []
-            if listUserAttri.count != st.count {
-                print("ERROR: UserStates unserialize listID.count != st.count")
-                return []
-            }
 
-            for i in 0 ..< listUserAttri.count {
-                var user = User(ID: DataID(ID: "us"))
-                APP.userMgr.reset(user: &user, attris: listUserAttri[i])
-                let st = EventState(rawValue: st[i])!
+            for map in list {
+                let user = APP.userMgr.getOrCreateUser(id: map["id"] as! DataID.IDType)
+                let st = EventState(rawValue: map["st"] as! Int)!
                 let ust = UserState(user: user, state: st)
                 users.append(ust)
             }
+
             return users
         }
     }
 
     // -------------------------------------------------------
 }
+
+
+
+
+
+
+
+
+

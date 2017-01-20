@@ -66,10 +66,8 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         "p2m": false,
         "wg": ["wg"],
         "dtl": "detail",
-        "our": ["id"],
-        "ourst": [1],
-        "opp": ["id"],
-        "oppst": [1],
+        "our": [["k": "v"]],
+        "opp": [["k": "v"]],
         "img": ["url"],
         "msg": ["id"],
         "ctm": "Date",
@@ -266,8 +264,8 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         e.wagerList = DataTools.Wagers.unserialize(attris["wg"] as! [String])
         e.detail = attris["dtl"] as! String
 
-        e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [[String: Any]], st: attris["ourst"] as! [Int])
-        e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [[String: Any]], st: attris["oppst"] as! [Int])
+        e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [[String: Any]])
+        e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [[String: Any]])
         
         e.imageURLList = attris["img"] as! [String]
         e.msgIDList = attris["msg"] as! [String]
@@ -289,9 +287,6 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     // ---------------------------------------------------------
 
     func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
-        let (our, ourst) = DataTools.UserStates.serialize(e.ourSideStateList)
-        let (opp, oppst) = DataTools.UserStates.serialize(e.opponentStateList)
-
         let attris: [String: Any] = [
             "tp": e.type.rawValue,
             "i": e.item.tag,
@@ -303,10 +298,8 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             "p2m": e.isPublishToMap,
             "wg": DataTools.Wagers.serialize(e.wagerList),
             "dtl": e.detail,
-            "our": our,
-            "ourst": ourst,
-            "opp": opp,
-            "oppst": oppst,
+            "our": DataTools.UserStates.serialize(e.ourSideStateList),
+            "opp": DataTools.UserStates.serialize(e.opponentStateList),
             "img": e.imageURLList,
             "msg": [], // 新事件并没有对话
             "ctm": e.createTime.getTimeData(),
