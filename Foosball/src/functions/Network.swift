@@ -209,6 +209,12 @@ class Network: NSObject {
             callback("p", progress)
         }
     }
+
+    func getCutImgUrl(from str: String, by width: Int32?) -> String? {
+        let f = AVFile(url: str)
+        let cutUrl = f.getThumbnailURLWithScale(toFit: true, width: Int32(width), height: Int32(width))
+        return cutUrl
+    }
 }
 
 
