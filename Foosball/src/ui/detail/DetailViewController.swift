@@ -277,7 +277,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
                 resetRowList.append(IndexPath(row: resetRowList.count + 1, section: 3)) // resetRowList.count + 1 表示从第二个cell开始插入
                 i -= 1
             } else {
-                k += 1 // 对比下一个记录值
+                k += 1
+                i -= 1// 对比下一个记录值
             }
         }
 

@@ -78,7 +78,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         let subStr = loginName.substring(to: index)
 
         var password: String = ""
-        for _ in 0 ..< 8 { // 前5位可能会显示到昵称里，所以都是大写英文
+        for _ in 0 ..< 8 {
             password += String(format: "%c", arc4random_uniform(123 - 48) + 48)
         }
 
@@ -296,6 +296,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     }
 
     // 工具 -----------------------------------------------------------------------
+    
     func getState(from event: Event, by id: DataID) -> EventState {
         var s = searchSelfState(from: event, by: id)
 

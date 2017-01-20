@@ -86,10 +86,7 @@ class Network: NSObject {
 
     func updateUsers(_ ids: [String], into attris: inout [String: Any], with lists: [String], callback: @escaping ((String?, [String: Any]) -> Void)) {
         let userQuery = AVQuery(className: User.classname)
-
-        for id in ids {
-            userQuery.whereKey("objectId", equalTo: id)
-        }
+        userQuery.whereKey("objectId", containedIn: ids)
 
         for list in lists {
             userQuery.includeKey(list)
