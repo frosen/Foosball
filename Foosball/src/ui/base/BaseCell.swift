@@ -26,7 +26,7 @@ class BaseCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+    class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
         return 44
     }
 
@@ -64,7 +64,7 @@ class BaseCell: UITableViewCell {
         }
 
         let baseCell = cell as! BaseCell
-        baseCell.h = type(of: baseCell).getCellHeight(d, index: index) //dynamicType可以获取对象的类，然后就能使用类函数了
+        baseCell.h = type(of: baseCell).getCellHeight(d, index: index, otherData: ctrlr) //dynamicType可以获取对象的类，然后就能使用类函数了
         baseCell.setData(d, index: index)
 
         return cell!
@@ -91,7 +91,7 @@ class StaticCell: BaseCell {
 
             let staticCell = cell as! StaticCell
             staticCell.w = UIScreen.main.bounds.width
-            staticCell.h = type(of: staticCell).getCellHeight(d, index: index) //dynamicType可以获取对象的类，然后就能使用类函数了
+            staticCell.h = type(of: staticCell).getCellHeight(d, index: index, otherData: ctrlr) //dynamicType可以获取对象的类，然后就能使用类函数了
             staticCell.ctrlr = ctrlr
             staticCell.initData(d, index: index)
             staticCell.setData(d, index: index)

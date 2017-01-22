@@ -135,8 +135,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     ] // 静态cell，但是又需要通过setData变化的
 
     // 优化高度获取，避免每次都进行计算
-    private var cellHeightDict: [Int: CGFloat] = [:]
-    private func getCellHeightDictIndex(section: Int, row: Int) -> Int {
+    private(set) var cellHeightDict: [Int: CGFloat] = [:]
+    func getCellHeightDictIndex(section: Int, row: Int) -> Int {
         return section * 1000 + row
     }
 
@@ -212,6 +212,11 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             for tup in indexList {
                 cellHeightDict[tup.0] = tup.1
             }
+
+            // 重新计算msg tail cell的高度
+            let msgTailCellIndex = IndexPath(row: e.msgList.count + 1, section: 3)
+            let msgTailCellHeightIndex = getCellHeightDictIndex(section: msgTailCellIndex.section, row: msgTailCellIndex.row)
+            cellHeightDict[msgTailCellHeightIndex] = DetailMsgTailCell.getCellHeight(e, index: msgTailCellIndex, otherData: self)
 
             // 插入新cell
             tableView.insertRows(at: resetRowList, with: .fade)
@@ -301,7 +306,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         case 2:
             return 2 // head body 就算是没有图片时，也应该有个默认的图
         case 3:
-            return 1 + curEvent.msgList.count //对话(s) + head
+            return 2 + curEvent.msgList.count //对话(s) + head
         default:
             return 0
         }
@@ -358,6 +363,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             switch r {
             case 0:
                 height = DetailMsgHeadCell.getCellHeight()
+            case curEvent.msgList.count + 1:
+                height = DetailMsgTailCell.getCellHeight(curEvent, index: indexPath, otherData: self)
             default:
                 height = DetailMsgCell.getCellHeight(curEvent, index: indexPath)
             }
@@ -422,6 +429,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             switch indexPath.row {
             case 0:
                 return BaseCell.CInfo(id: "MHCId", c: DetailMsgHeadCell.self)
+            case curEvent.msgList.count + 1:
+                return BaseCell.CInfo(id: "MTCId", c: DetailMsgTailCell.self)
             default:
                 return BaseCell.CInfo(id: "MCId", c: DetailMsgCell.self)
             }

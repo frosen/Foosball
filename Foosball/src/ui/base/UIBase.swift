@@ -75,3 +75,5 @@ class UITools {
     }
 }
 
+// iphone 6 宽高 375x667 2@
+

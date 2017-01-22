@@ -53,7 +53,7 @@ class DetailTitleCell: StaticCell {
     var eventBoard: EventBoard! = nil
     var createTime: UILabel! = nil
 
-    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
         return 72
     }
 
@@ -79,7 +79,7 @@ class DetailTitleCell: StaticCell {
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
         let urlStr: String? = e.imageURLList.count > 0 ? e.imageURLList[0] : nil
-        eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList, url: urlStr)
+        eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList, urlStr: urlStr)
 
         let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
         set(state: st)
@@ -128,7 +128,7 @@ class DetailStringCell: StaticCell {
 }
 
 class DetailContentCell: DetailStringCell {
-    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
         let e = d as! Event
         return DetailG.calculateLblHeight(e.detail, w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
@@ -156,7 +156,7 @@ class DetailWagerCell: DetailStringCell {
         return t
     }
 
-    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
         let e = d as! Event
         let wagerText: String = createText(from: e.wagerList)
         return DetailG.calculateLblHeight(wagerText, w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight
@@ -204,7 +204,7 @@ class DetailStringBtnCell: DetailStringCell {
 
 class DetailTimeCell: DetailStringBtnCell {
     private var tpv: TimePickerView? = nil
-    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
         return TextFont.lineHeight + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
@@ -265,7 +265,7 @@ class DetailTimeCell: DetailStringBtnCell {
 
 class DetailLocationCell: DetailStringBtnCell {
 
-    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
         return TextFont.lineHeight + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 

@@ -15,7 +15,7 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
 
     private var curEvent: Event! = nil
 
-    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
         return 108
     }
 
@@ -54,7 +54,7 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
         curEvent = e
 
         let urlStr: String? = e.imageURLList.count > 0 ? e.imageURLList[0] : nil
-        eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList, url: urlStr)
+        eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList, urlStr: urlStr)
 
         let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
         eventBoard.set(state: st)
@@ -108,6 +108,7 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
             actionBtnBoard.setStateTip(changeTup.0)
             actionBtnBoard.setMsgTip(changeTup.1)
         }
+        actionBtnBoard.setMsgTip(1)
     }
 
     private let avatarMargin: CGFloat = 3

@@ -92,7 +92,7 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
     private var picker: UIPickerView! = nil
     private var curIndex: Int = 0
 
-    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
         return pickerHeight + textHeight
     }
 
@@ -244,7 +244,7 @@ class CreateStep3DetailCell: StaticCell, UITextViewDelegate {
     private var input: UITextView! = nil
     private var placeholder: UITextView! = nil
 
-    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
         return 200
     }
     

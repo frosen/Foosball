@@ -32,7 +32,7 @@ class DetailTeamCell: StaticCell {
     private var curEvent: Event! = nil
     private var curIndex: Int = 1 // 记录索引值，就可以知道是哪个team
 
-    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
         let e = d as! Event?
         var avatarRowCount_float: CGFloat
         switch index!.row {

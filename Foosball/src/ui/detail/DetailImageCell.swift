@@ -25,9 +25,11 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
     private var imgViewArray: [UIImageView] = []
     private var imgUrlList: [Int: String] = [:]
 
+    private var imgAddBtn: UIView! = nil // 在这个按钮上展示上传进度
+
     var curEvent: Event! = nil
 
-    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil) -> CGFloat {
+    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
         let e = d as! Event
         let lineCount = ceil(CGFloat(e.imageURLList.count + 1) / imageCountIn1Line)
         return lineCount * imageViewWidth
@@ -67,9 +69,9 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
             index += 1
         }
 
-        let v = createNewBtn()
-        imgListView!.addSubview(v)
-        v.frame.origin = CGPoint(
+        imgAddBtn = createNewBtn()
+        imgListView!.addSubview(imgAddBtn)
+        imgAddBtn.frame.origin = CGPoint(
             x: CGFloat(pos) * DetailImageCell.imageViewWidth,
             y: CGFloat(line) * DetailImageCell.imageViewWidth
         )
@@ -94,7 +96,9 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         ))
         v.addSubview(img)
 
-        img.sd_setImage(with: URL(string: url), placeholderImage: #imageLiteral(resourceName: "img_default"))
+        let imgUrl = APP.activeEventsMgr.getImgUrl(from: url, by: imgWidth)
+        img.sd_setImage(with: URL(string: imgUrl), placeholderImage: #imageLiteral(resourceName: "img_default"))
+        img.tag = index
 
         v.tag = index
         let tap = UITapGestureRecognizer(target: self, action: #selector(DetailImageCell.tapImageView(ges:)))
@@ -138,7 +142,9 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         var skImgArray: [SKPhoto] = []
         for imgV in imgViewArray {
             if let img = imgV.image {
-                let photo = SKPhoto.photoWithImageURL("http://up.qqjia.com/z/25/tu32718_6.png", holder: img)
+                let tag = imgV.tag
+                let bigImgUrl = APP.activeEventsMgr.getImgUrl(from: curEvent.imageURLList[tag])
+                let photo = SKPhoto.photoWithImageURL(bigImgUrl, holder: img)
                 photo.shouldCachePhotoURLImage = true
                 skImgArray.append(photo)
             }
@@ -241,7 +247,10 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
 
         //上传图片，获取url，如果没有网，则提示是否重复，还是保存本地/取消
         let detailCtrlr = self.ctrlr as! DetailViewController
-        APP.activeEventsMgr.addNewImg(img, to: curEvent, obKey: detailCtrlr.DataObKey) { str, progress in
+        APP.activeEventsMgr.addNewImg(img, selectEvent: { data in
+            let detailCtrlr = self.ctrlr as! DetailViewController
+            return detailCtrlr.getCurEvent(events: data.eList, totalEventsCount: data.count)
+        }, obKey: detailCtrlr.DataObKey) { str, progress in
             if str == "p" {
                 self.setUploading(progress: progress)
             } else {

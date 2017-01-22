@@ -185,11 +185,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         e.wagerList = [Wager(str: "红牛")]
 
-        let m1 = MsgStruct(id: DataID(ID: "12345"), user: bk3, time: Time.now, msg: "1你说什么1")
-        let m2 = MsgStruct(id: DataID(ID: "123451"),user: bk2, time: Time.now, msg: "2你说什么2")
-        let m3 = MsgStruct(id: DataID(ID: "123452"),user: bk1, time: Time.now, msg: "3你说什么3")
-        let m4 = MsgStruct(id: DataID(ID: "123453"),user: bk3, time: Time.now, msg: "4你说什么4")
-        let m5 = MsgStruct(id: DataID(ID: "123454"),user: bk2, time: Time.now, msg: "5你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么6 你说什么5 你说什么7 你说什么5 你说什么9 你说什么5 你说什么0 你说什么5 你说什么00 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5 你说什么5")
+
 
         e.createTime = Time.now
         e.createUserID = DataID(ID: "123")
@@ -198,18 +194,23 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         e.time = Time(timeIntervalSinceNow: 136000)
 
-        e.msgList = [m1, m2, m3, m4, m5,
-            MsgStruct(id: DataID(ID: "123454g"), user: bk1, time: Time.now, msg: "6你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说什么"),
-            MsgStruct(id: DataID(ID: "123454f"), user: bk3, time: Time.now, msg: "7你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
-            MsgStruct(id: DataID(ID: "123454d"), user: bk2, time: Time.now, msg: "8你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
-            MsgStruct(id: DataID(ID: "123454s"), user: bk1, time: Time.now, msg: "9你说什么1"),
-            MsgStruct(id: DataID(ID: "123454a"), user: bk3, time: Time.now, msg: "10你说什么1"),
-            MsgStruct(id: DataID(ID: "1234545"), user: bk2, time: Time.now, msg: "1你说什么1说什么5 你说什么5 你说什么5 你说什么5 你说"),
-            MsgStruct(id: DataID(ID: "123454r"), user: bk1, time: Time.now, msg: "2你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
-            MsgStruct(id: DataID(ID: "123454e"), user: bk3, time: Time.now, msg: "3你说什么1"),
-            MsgStruct(id: DataID(ID: "123454w"), user: bk1, time: Time.now, msg: "4你说什么1说什么5 你说什么5 你说什么5 你说什么5 你说 zv说什么5 你说什么5 你说什么5 你说什么5 你说"),
-            MsgStruct(id: DataID(ID: "123454q"), user: bk2, time: Time.now, msg: "5你说什么1"),
-        ]
+        e.msgList = [
+              MsgStruct(id: DataID(ID: "12345"), user: bk3, time: Time.now, msg: "1你说什么1"),
+              MsgStruct(id: DataID(ID: "123451"),user: bk2, time: Time.now, msg: "2你说什么2"),
+              MsgStruct(id: DataID(ID: "123452"),user: bk1, time: Time.now, msg: "3你说什么3"),
+//              MsgStruct(id: DataID(ID: "123453"),user: bk3, time: Time.now, msg: "4你说什么4"),
+//              MsgStruct(id: DataID(ID: "123454"),user: bk2, time: Time.now, msg: "5你说什么5 你说什么5 你说什么5 你说什么5 你"),
+//              MsgStruct(id: DataID(ID: "123454g"), user: bk1, time: Time.now, msg: "6你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说什么"),
+//              MsgStruct(id: DataID(ID: "123454f"), user: bk3, time: Time.now, msg: "7你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
+//              MsgStruct(id: DataID(ID: "123454d"), user: bk2, time: Time.now, msg: "8你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
+//              MsgStruct(id: DataID(ID: "123454s"), user: bk1, time: Time.now, msg: "9你说什么1"),
+//              MsgStruct(id: DataID(ID: "123454a"), user: bk3, time: Time.now, msg: "10你说什么1"),
+//              MsgStruct(id: DataID(ID: "1234545"), user: bk2, time: Time.now, msg: "1你说什么1说什么5 你说什么5 你说什么5 你说什么5 你说"),
+//              MsgStruct(id: DataID(ID: "123454r"), user: bk1, time: Time.now, msg: "2你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
+//              MsgStruct(id: DataID(ID: "123454e"), user: bk3, time: Time.now, msg: "3你说什么1"),
+//              MsgStruct(id: DataID(ID: "123454w"), user: bk1, time: Time.now, msg: "v说什么5 你说什么5 你说什么5 你说什么5 你说"),
+//              MsgStruct(id: DataID(ID: "123454q"), user: bk2, time: Time.now, msg: "5你说什么1"),
+          ]
         data.add(e: e)
     }
 
@@ -266,7 +267,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [[String: Any]])
         e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [[String: Any]])
-        
+
         e.imageURLList = attris["img"] as! [String]
         e.msgIDList = attris["msg"] as! [String]
 
@@ -325,16 +326,22 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     }
 
     // 添加一张图片到某个event上，回调前会判断obKey是否存在，不存在就不执行了，callback参数 回调类型，进度
-    func addNewImg(_ img: UIImage, to event: Event, obKey: String, callback: @escaping ((String, Int) -> Void)) {
-        guard let data = UIImageJPEGRepresentation(img, 0.5) else { // 使用jpg减少图片尺寸
+    func addNewImg(_ img: UIImage, selectEvent: ((ActEvents) -> Event?), obKey: String, callback: @escaping ((String, Int) -> Void)) {
+        guard let imgData = UIImageJPEGRepresentation(img, 0.5) else { // 使用jpg减少图片尺寸
             print("ERROR: can not change to JPEG")
             callback("fail", 0)
             return
         }
 
+        let eventOrNil = selectEvent(data)
+        guard let event = eventOrNil else {
+            print("ERROR: no event in addNewImg")
+            return
+        }
+
         let filename = event.ID.rawValue + "_" + String(event.imageURLList.count) + ".jpg"
 
-        Network.shareInstance.upload(data: data, name: filename) { str, progress in
+        Network.shareInstance.upload(data: imgData, name: filename) { str, progress in
             if !self.hasOb(for: obKey) {
                 return
             }
@@ -356,13 +363,16 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     }
 
     // 获取裁切后图片的url
-    func getImgUrl(from str: String, by width: CGFloat? = nil) -> URL {
+    func getImgUrl(from str: String, by width: CGFloat? = nil) -> String {
+
+        return str // todo
+
         if width == nil {
-            return URL(string: str)!
+            return str
         }
 
         let cutUrl: String = Network.shareInstance.getCutImgUrl(from: str, by: Int32(width!)) ?? str
-        return URL(string: cutUrl)!
+        return cutUrl
     }
 }
 
