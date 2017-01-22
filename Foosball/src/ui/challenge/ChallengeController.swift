@@ -106,6 +106,22 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         enterDetail(cell: c, id: e.ID)
     }
 
+    // scrollView delegate ---------------------------------------------------------
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        APP.activeEventsMgr.set(hide: true, key: DataObKey)
+    }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            APP.activeEventsMgr.set(hide: false, key: DataObKey)
+        }
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        APP.activeEventsMgr.set(hide: false, key: DataObKey)
+    }
+
     // BaseCellDelegate --------------------------------------------------------------
 
     func getCInfo(_ indexPath: IndexPath) -> BaseCell.CInfo {

@@ -384,10 +384,30 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         }
     }
 
+    // scrollView delegate ---------------------------------------------------------
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let cellRect = tableView.rectForRow(at: IndexPath(row: 0, section: 3))
         let cellPosForScreen = tableView.convert(cellRect.origin, to: baseView)
+
+        // msg head 到达顶部时，显示替身
         msgHeadCellRelief.isHidden = (cellPosForScreen.y > 0)
+
+        // msg head 出现时，开始刷新msg cell
+    }
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        APP.activeEventsMgr.set(hide: true, key: DataObKey)
+    }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            APP.activeEventsMgr.set(hide: false, key: DataObKey)
+        }
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        APP.activeEventsMgr.set(hide: false, key: DataObKey)
     }
 
     // BaseCellDelegate --------------------------------------------------------------

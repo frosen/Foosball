@@ -128,50 +128,50 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         var e: Event! = nil
 
-//        e = Event(ID: DataID(ID: 50001))
+//        e = Event(ID: DataID(ID: "123"))
 //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 //        e.opponentStateList = [pk1, pk2, pk3]
 //        data.add(e: e)
-
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e)
-
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e)
-
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e)
-
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e)
-
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e)
-
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e)
-
-//        e = Event(ID: DataID(ID: 50001))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e)
 //
-//        e = Event(ID: DataID(ID: 50001))
+//        e = Event(ID: DataID(ID: "123"))
 //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
 //        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e)
+//        data.add(e: e)
+//
+//        e = Event(ID: DataID(ID: "123"))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.add(e: e)
+//
+//        e = Event(ID: DataID(ID: "123"))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.add(e: e)
+//
+//        e = Event(ID: DataID(ID: "123"))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.add(e: e)
+//
+//        e = Event(ID: DataID(ID: "123"))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.add(e: e)
+//
+//        e = Event(ID: DataID(ID: "123"))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.add(e: e)
+//
+//        e = Event(ID: DataID(ID: "123"))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.add(e: e)
+//
+//        e = Event(ID: DataID(ID: "123"))
+//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+//        e.opponentStateList = [pk1, pk2, pk3]
+//        data.add(e: e)
 
         // -----------------
         e = Event(ID: DataID(ID: "50001"))

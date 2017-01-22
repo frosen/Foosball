@@ -87,7 +87,7 @@ class DataMgr<DATA, OB>: NSObject {
     }
 
     func saveToServer(_ attris: [String: String]?) {
-
+        
     }
 
     // 需要继承
