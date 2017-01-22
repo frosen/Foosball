@@ -366,7 +366,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             case curEvent.msgList.count + 1:
                 height = DetailMsgTailCell.getCellHeight(curEvent, index: indexPath, otherData: self)
             default:
-                height = DetailMsgCell.getCellHeight(curEvent, index: indexPath)
+                height = DetailMsgCell.getCellHeight(curEvent, index: indexPath, otherData: self)
             }
         default:
             height = 0

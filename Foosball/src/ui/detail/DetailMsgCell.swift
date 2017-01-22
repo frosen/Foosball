@@ -75,9 +75,21 @@ class DetailMsgCell: BaseCell {
     }
 
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
+        let vc = otherData as! DetailViewController
+        let section = index!.section
+        let row = index!.row
+
+        if let saveH = vc.cellHeightDict[vc.getCellHeightDictIndex(section: section, row: row)] {
+            return saveH
+        }
+
         let e = d as! Event
-        let msgStru: MsgStruct = e.msgList[e.msgList.count - index!.row] // 倒过来显示的
+        let msgStru: MsgStruct = getMsgStru(e, row: row)
         return DetailG.calculateLblHeight(msgStru.msg, w: msgStrWidth, style: lblStyleAttri) + DetailG.subTitleHeight + DetailG.contentBottomHeight
+    }
+
+    class func getMsgStru(_ e: Event, row: Int) -> MsgStruct {
+        return e.msgList[e.msgList.count - row] // 这里的减法是为了倒过来显示，时间靠后的放上面
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
@@ -119,7 +131,7 @@ class DetailMsgCell: BaseCell {
         curEvent = e
         curIndex = index!.row
 
-        let msgStru: MsgStruct = e.msgList[e.msgList.count - curIndex] // 这里的减法是为了倒过来显示，时间靠后的放上面
+        let msgStru: MsgStruct =  DetailMsgCell.getMsgStru(curEvent, row: curIndex)
         let user: User = msgStru.user
 
         if img == nil {
@@ -166,18 +178,19 @@ class DetailMsgTailCell: StaticCell {
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
         let vc = otherData as! DetailViewController
         let section = index!.section
-        let maxRow = index!.row
+        let row = index!.row
+
+        if let saveH = vc.cellHeightDict[vc.getCellHeightDictIndex(section: section, row: row)] {
+            return saveH
+        }
+
         var totalMsgH: CGFloat = 0
-        for i in 0 ..< maxRow { // 其他msg高度之和
+        for i in 0 ..< row { // 本row之前其他msg高度之和
             totalMsgH += vc.cellHeightDict[vc.getCellHeightDictIndex(section: section, row: i)]!
         }
 
-        print(vc.tableView.frame.height, vc.tableView.contentInset.top, vc.tableView.contentInset.bottom)
         let tableH = vc.tableView.frame.height - vc.tableView.contentInset.top - vc.tableView.contentInset.bottom
-
         let leftH = tableH - totalMsgH - vc.tableView(vc.tableView, heightForFooterInSection: 3)
-
-        print("leftH", tableH, totalMsgH, leftH)
 
         return max(leftH, 44) // 最小44
     }
