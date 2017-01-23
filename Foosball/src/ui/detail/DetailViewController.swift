@@ -10,7 +10,7 @@ import UIKit
 
 class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource, StaticCellDelegate, InputViewDelegate {
 
-    private var curEventId: DataID! = nil
+    private(set) var curEventId: DataID! = nil
     private var curEvent: Event! = nil
     private var sectionNum: Int = 0
 
@@ -149,7 +149,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     // ActiveEventsMgrObserver ==============================================================================
 
     func onInit(actE: ActEvents) {
-        guard let e = getCurEvent(events: actE.eList, totalEventsCount: actE.count) else {
+        guard let e = actE.getCurEvent(curId: curEventId) else {
             return
         }
 
@@ -176,7 +176,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     }
 
     func onModify(actE: ActEvents) {
-        guard let e = getCurEvent(events: actE.eList, totalEventsCount: actE.count) else {
+        guard let e = actE.getCurEvent(curId: curEventId) else {
             return
         }
 
@@ -237,15 +237,6 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             print(changeTup)
             APP.activeEventsMgr.clearEventChange(e)
         }
-    }
-
-    func getCurEvent(events: [Event], totalEventsCount: Int) -> Event? {
-        for i in 0 ..< totalEventsCount {
-            if curEventId == events[i].ID {
-                return events[i]
-            }
-        }
-        return nil
     }
 
     // 记录最新的5次对话的id，从头开始查找，不属于记录的id则是新的id（考虑网络延迟问题，所以记录5次而不是最新的一次）,
@@ -554,7 +545,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
     func sendMsg(text: String) {
         APP.activeEventsMgr.changeData(changeFunc: { data in
-            guard let e = getCurEvent(events: data.eList, totalEventsCount: data.count) else {
+            guard let e = data.getCurEvent(curId: curEventId) else {
                 print("ERROR: no event in sendMsg changeData")
                 return nil
             }

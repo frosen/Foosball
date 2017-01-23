@@ -169,7 +169,7 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
             let detailCtrlr = self.ctrlr as! DetailViewController
             APP.activeEventsMgr.changeData(changeFunc: { data in
 
-                guard let e = detailCtrlr.getCurEvent(events: data.eList, totalEventsCount: data.count) else {
+                guard let e = data.getCurEvent(curId: detailCtrlr.curEventId) else {
                     print("ERROR: no event in removePhoto changeData")
                     return nil
                 }
@@ -249,7 +249,7 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         let detailCtrlr = self.ctrlr as! DetailViewController
         APP.activeEventsMgr.addNewImg(img, selectEvent: { data in
             let detailCtrlr = self.ctrlr as! DetailViewController
-            return detailCtrlr.getCurEvent(events: data.eList, totalEventsCount: data.count)
+            return data.getCurEvent(curId: detailCtrlr.curEventId)
         }, obKey: detailCtrlr.DataObKey) { str, progress in
             if str == "p" {
                 self.setUploading(progress: progress)

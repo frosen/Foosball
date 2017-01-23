@@ -25,6 +25,7 @@
 		6554A3C51D6FE97B001AB4D6 /* QRCodeTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6554A3C41D6FE97B001AB4D6 /* QRCodeTools.swift */; };
 		657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657219201D5EFA2A007DCE6A /* DetailViewController.swift */; };
 		658E06741D56C7C8008D94FC /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E06731D56C7C8008D94FC /* Event.swift */; };
+		658EFA351E35A33500427416 /* MsgMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658EFA341E35A33500427416 /* MsgMgr.swift */; };
 		6593C0BD1DCDD65D00589943 /* UserMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6593C0BC1DCDD65D00589943 /* UserMgr.swift */; };
 		65A66D221E03C63800FF9589 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A66D211E03C63800FF9589 /* MapController.swift */; };
 		65A66D301E07AE0E00FF9589 /* DataMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A66D2F1E07AE0E00FF9589 /* DataMgr.swift */; };
@@ -79,6 +80,7 @@
 		6554A3C41D6FE97B001AB4D6 /* QRCodeTools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QRCodeTools.swift; path = qrcode/QRCodeTools.swift; sourceTree = "<group>"; };
 		657219201D5EFA2A007DCE6A /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailViewController.swift; path = detail/DetailViewController.swift; sourceTree = "<group>"; };
 		658E06731D56C7C8008D94FC /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = model/Event.swift; sourceTree = "<group>"; };
+		658EFA341E35A33500427416 /* MsgMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MsgMgr.swift; path = functions/MsgMgr.swift; sourceTree = "<group>"; };
 		6593C0BC1DCDD65D00589943 /* UserMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserMgr.swift; path = functions/UserMgr.swift; sourceTree = "<group>"; };
 		65A66D211E03C63800FF9589 /* MapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapController.swift; path = map/MapController.swift; sourceTree = "<group>"; };
 		65A66D2F1E07AE0E00FF9589 /* DataMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataMgr.swift; path = functions/DataMgr.swift; sourceTree = "<group>"; };
@@ -320,6 +322,7 @@
 				65A66D2F1E07AE0E00FF9589 /* DataMgr.swift */,
 				6593C0BC1DCDD65D00589943 /* UserMgr.swift */,
 				65D61D0F1DC0602D0032C2E7 /* ActiveEventsMgr.swift */,
+				658EFA341E35A33500427416 /* MsgMgr.swift */,
 				65D61CFC1DBF70900032C2E7 /* Network.swift */,
 			);
 			name = functions;
@@ -488,6 +491,7 @@
 				65D427FC1D6073D700994EA8 /* User.swift in Sources */,
 				65F14B881D68439D0073D547 /* MyTabBar.swift in Sources */,
 				6508C2971DDEB0A400E3D7C2 /* Transitioning.swift in Sources */,
+				658EFA351E35A33500427416 /* MsgMgr.swift in Sources */,
 				6554A3C51D6FE97B001AB4D6 /* QRCodeTools.swift in Sources */,
 				65F14B891D68439D0073D547 /* MyTabBarItem.swift in Sources */,
 				65F14B871D68439D0073D547 /* InfoHeadView.swift in Sources */,

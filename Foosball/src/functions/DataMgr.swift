@@ -21,12 +21,17 @@ class DataMgr<DATA, OB>: NSObject {
         }
     }
 
-    // 逻辑数据 观察者，是否隐藏，是否需要刷新
-    private var obDict: [String: (OB, Bool, Bool)] = [:]
+    // 逻辑数据 观察者，是否隐藏，是否需要刷新 ----------------------------------------
+
+    private(set) var obDict: [String: (OB, Bool, Bool)] = [:]
 
     func register(observer ob: OB, key: String) {
-        obDict[key] = (ob, false, false)
-        initObserver(ob)
+        if !hasOb(for: key) {
+            obDict[key] = (ob, false, false)
+            initObserver(ob)
+        } else {
+            print("\(key) has been register")
+        }
     }
 
     func unregister(key: String) {
@@ -50,16 +55,23 @@ class DataMgr<DATA, OB>: NSObject {
         }
     }
 
+    // 需要继承
+    func initObserver(_ ob: OB) {}
+    func modifyObserver(_ ob: OB) {}
+
+    // 本地更新 -----------------------------------------------------------------
+
     // 注意：这个函数不可被继承！swift 的 模板函数如果函数有一个参数是function 并且这个function中的参数为模板，则不能继承这个函数，否则会报错
-    func changeData(changeFunc: ((DATA) -> AnyObject?), needUpload: [String: String]? = nil) {
+    func changeData(changeFunc: ((DATA) -> Any?), needUpload: [String: String]? = nil) {
         // 接受新变化
-        if let res = changeFunc(_data) {
-            handleChangeResult(res)
-        }
+        let res = changeFunc(_data)
+        handleChangeResult(res)
 
         updateObserver()
         saveData(needUpload: needUpload)
     }
+
+    func handleChangeResult(_ res: Any?) {} // 需要继承
 
     func updateObserver() {
         // 在每个观察者中进行对比
@@ -89,10 +101,4 @@ class DataMgr<DATA, OB>: NSObject {
     func saveToServer(_ attris: [String: String]?) {
         
     }
-
-    // 需要继承
-    func initObserver(_ ob: OB) {}
-    func modifyObserver(_ ob: OB) {}
-
-    func handleChangeResult(_ res: AnyObject) {}
 }

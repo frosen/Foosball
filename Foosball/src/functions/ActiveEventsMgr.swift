@@ -44,6 +44,15 @@ class ActEvents {
 
         count += 1
     }
+
+    func getCurEvent(curId: DataID) -> Event? {
+        for i in 0 ..< count {
+            if curId == eList[i].ID {
+                return eList[i]
+            }
+        }
+        return nil
+    }
 }
 
 protocol ActiveEventsMgrObserver {
@@ -214,17 +223,29 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         data.add(e: e)
     }
 
+    // set ob --------------------------------------------------------------
+
+    override func initObserver(_ ob: ActiveEventsMgrObserver) {
+        ob.onInit(actE: data)
+    }
+
+    override func modifyObserver(_ ob: ActiveEventsMgrObserver) {
+        ob.onModify(actE: data)
+    }
+
+    // 继承本地更新函数 -----------------------------------------------------
+
     // 记录每个事件更新时，状态和对话数的变化
     private(set) var eventChangeMap: [Event: (Bool, Int)] = [:]
     func clearEventChange(_ e: Event) {
         eventChangeMap.removeValue(forKey: e)
     }
 
-    override func handleChangeResult(_ res: AnyObject) {
+    override func handleChangeResult(_ res: Any?) {
         eventChangeMap = res as! [Event: (Bool, Int)]
     }
 
-    // 刷新数据时调用 ---------------------------------------------
+    // 刷新数据时调用 ---------------------------------------------------------
 
     func cleanData() {
         data.clean()
@@ -275,17 +296,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         e.createUserID = DataID(ID: attris["cid"] as! DataID.IDType)
     }
 
-    // set ob --------------------------------------------------
-
-    override func initObserver(_ ob: ActiveEventsMgrObserver) {
-        ob.onInit(actE: data)
-    }
-
-    override func modifyObserver(_ ob: ActiveEventsMgrObserver) {
-        ob.onModify(actE: data)
-    }
-
-    // ---------------------------------------------------------
+    // 本地便捷函数 ------------------------------------------------------------
 
     func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
         let attris: [String: Any] = [

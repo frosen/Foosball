@@ -118,7 +118,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         }
     }
 
-    // 开启轮询 --------------------------------------------------------------
+    // 开启轮询 --------------------------------------------------------------------------
 
     private func gotoScanServerData() {
         Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(UserMgr.timer), userInfo: nil, repeats: true)
@@ -202,7 +202,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         user.isRegistered = attris["isR"] as! Bool
     }
 
-    // -------------------------------------------------------------------------
+    // 获取未获取的用户数据 -------------------------------------------------------------------
 
     // 记录需要从服务器获取具体数据的用户
     var unfetchUserList: [User] = []
@@ -265,14 +265,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         return data[0]
     }
 
-    // ---------------------------------------------------------------------------
-
-    override func saveData(needUpload: [String: String]? = nil) {
-        // 用户数据不需要自己进行本地保存，会保存到leancloud中
-        
-        //上传网络
-        saveToServer(needUpload)
-    }
+    // 继承 -------------------------------------------------------------------------------
 
     override func initObserver(_ ob: UserMgrObserver) {
         ob.onInit(user: data[0])
@@ -282,7 +275,14 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         ob.onModify(user: data[0])
     }
 
-    // ---------------------------------------------------------------------------
+    override func saveData(needUpload: [String: String]? = nil) {
+        // 用户数据不需要自己进行本地保存，会保存到leancloud中
+        
+        //上传网络
+        saveToServer(needUpload)
+    }
+
+    // 便捷函数 ----------------------------------------------------------------------------------
 
     // 同时给活动事件和所有事件
     func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
@@ -293,8 +293,6 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
             callback(suc, error)
         }
     }
-
-    // 工具 -----------------------------------------------------------------------
     
     func getState(from event: Event, by id: DataID) -> EventState {
         var s = searchSelfState(from: event, by: id)
