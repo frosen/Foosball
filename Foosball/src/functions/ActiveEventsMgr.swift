@@ -15,11 +15,11 @@ class ActEvents {
     private(set) var count: Int = 0
     private(set) var eList: [Event] = []
 
-    func clean() {
+    fileprivate func clean() {
         count = 0 // 不用真正的清空，用数量值表示即可，留下无用的event复用避免create时损失效率
     }
 
-    func add() -> Event {
+    fileprivate func add() -> Event {
         count += 1
         if count > eList.count {
             for _ in 0 ..< count - eList.count {
@@ -30,7 +30,7 @@ class ActEvents {
         return eList[count - 1]
     }
 
-    func add(e: Event) {
+    fileprivate func add(e: Event) {
         if eList.count > count {
             eList[count] = e
         } else {

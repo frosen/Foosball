@@ -10,10 +10,12 @@ import UIKit
 
 class MsgContainer {
     // 每个event对应其对话列表和这个对话是否已经被下载
-    var msgList: [(MsgStruct, Bool)] = []
+    fileprivate(set) var msgIdList: [DataID.IDType] = []
+    fileprivate(set) var msgDict: [DataID.IDType: MsgStruct] = [:]
+    fileprivate(set) var insertPos: [Int] = []
 
     // 已经保持的msg的数量
-    var msgNum: Int = 20
+    fileprivate(set) var msgNum: Int = 20
 }
 
 typealias MsgContainerList = [DataID.IDType: MsgContainer]
@@ -82,26 +84,51 @@ class MsgMgr: DataMgr<MsgContainerList, MsgMgrObserver>, ActiveEventsMgrObserver
     func handleMsgIds(_ ids: [DataID.IDType]) {
         var msgContainer = data[curEventID!.ID]
         var downIDList: [DataID.IDType] = []
+        var insertPos: [Int] = []
 
         if msgContainer == nil {
-            let newMsgC = MsgContainer()
+            msgContainer = MsgContainer()
 
-            let totalNum = min(ids.count, newMsgC.msgNum)
-            for i in (0 ..< totalNum).reversed() {
+            let numFrom = max(ids.count - msgContainer!.msgNum, 0)
+            for i in numFrom ..< ids.count {
                 let id = ids[i]
-                let msgStru = MsgStruct(ID: DataID(ID: id))
-                newMsgC.msgList.append((msgStru, false))
                 downIDList.append(id)
             }
 
-            data[curEventID!.ID] = newMsgC
-            msgContainer = newMsgC
+            data[curEventID!.ID] = msgContainer
+        } else {
+            // 对比
+            let checkOriNumMax = min(ids.count, msgContainer!.msgNum)
+            let checkSaveNumMin = msgContainer!.msgIdList.count - 1 - 4
+            var i = 0
+            var k = msgContainer!.msgIdList.count - 1
+            while true {
+                if k <= checkSaveNumMin { // 有n个匹配上，说明不会再找到新增了
+                    break
+                }
+
+                if i >= checkOriNumMax { // 所有最前面的几个都是新的
+                    break
+                }
+
+                let id = ids[ids.count - 1 - i]
+                if msgContainer!.msgIdList[k] != id {
+                    downIDList.append(id)
+                    insertPos.append(i)
+                    i += 1
+                } else {
+                    k -= 1
+                    i += 1// 对比下一个记录值
+                }
+            }
         }
 
-        downloadMsgs(downIDList, container: msgContainer!)
+        if downIDList.count > 0 {
+            downloadMsgs(downIDList, insertPos, container: msgContainer!)
+        }
     }
 
-    func downloadMsgs(_ downIDList: [DataID.IDType], container: MsgContainer) {
+    func downloadMsgs(_ downIDList: [DataID.IDType], _ insertList: [Int], container: MsgContainer) {
         Network.shareInstance.updateObjs(from: MsgStruct.classname, ids: downIDList, into: &MsgMgr.attrisKeeper, with: []) { str, attris in
             if str == nil {
                 print("ERROR: downloadMsgs wrong")
@@ -114,83 +141,37 @@ class MsgMgr: DataMgr<MsgContainerList, MsgMgrObserver>, ActiveEventsMgrObserver
                 if APP.userMgr.hasUnfetchUsers() {
                     APP.userMgr.fetchUnfetchUsers { suc in
                         if suc {
+                            self.updateData(downIDList, insertList, container: container)
                             self.updateObserver()
                         } else {
                             APP.errorMgr.hasError()
                         }
                     }
                 } else {
+                    self.updateData(downIDList, insertList, container: container)
                     self.updateObserver()
                 }
             }
         }
     }
 
+    // 下载好的msg放到一个字典里，以后根据list中的id获取
     func resetMsg(in c: MsgContainer, by id: String, attris: [String: Any]) {
-        let list = c.msgList
+        let list = c.msgIdList
     }
 
-//    func onModify(actE: ActEvents) {
-//        guard let e = getCurEvent(events: actE.eList, totalEventsCount: actE.count) else {
-//            return
-//        }
-//
-//        curEvent = e
-//
-//        tableView.beginUpdates()
-//
-//        // team和瞬间的更新
-//        for indexPath in staticVarCellIndexList {
-//            cellHeightDict.removeValue(forKey: getCellHeightDictIndex(section: indexPath.section, row: indexPath.row))
-//            cellNeedUpdate[indexPath] = true
-//        }
-//        tableView.reloadRows(at: staticVarCellIndexList, with: .none)
-//
-//        let resetRowList = getNeedAddMsgCellIndex(e.msgList)
-//        let addRowCount = resetRowList.count
-//        if addRowCount > 0 {
-//            // 把cellHeightDict里面的数据往后移
-//            var i = 1
-//            var indexList: [(Int, CGFloat)] = []
-//            while true {
-//                let index = getCellHeightDictIndex(section: 3, row: i)
-//                guard let h = cellHeightDict[index] else {
-//                    break
-//                }
-//
-//                let tup: (Int, CGFloat) = (index + addRowCount, h)
-//                indexList.append(tup)
-//                cellHeightDict.removeValue(forKey: index)
-//
-//                i += 1
-//            }
-//            for tup in indexList {
-//                cellHeightDict[tup.0] = tup.1
-//            }
-//
-//            // 重新计算msg tail cell的高度
-//            let msgTailCellIndex = IndexPath(row: e.msgList.count + 1, section: 3)
-//            let msgTailCellHeightIndex = getCellHeightDictIndex(section: msgTailCellIndex.section, row: msgTailCellIndex.row)
-//            cellHeightDict[msgTailCellHeightIndex] = DetailMsgTailCell.getCellHeight(e, index: msgTailCellIndex, otherData: self)
-//
-//            // 插入新cell
-//            tableView.insertRows(at: resetRowList, with: .fade)
-//        }
-//        tableView.endUpdates()
-//
-//        saveNewestMsg(e.msgList)
-//
-//        // 状态
-//        let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
-//        actBtnBoard.setState(st)
-//        if let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? DetailTitleCell {
-//            titleCell.set(state: st)
-//        }
-//
-//        // 在显示着这个event的细节时更新，显示更新并结束提示
-//        if let changeTup: (Bool, Int) = APP.activeEventsMgr.eventChangeMap[e] {
-//            print(changeTup)
-//            APP.activeEventsMgr.clearEventChange(e)
-//        }
-//    }
+    // 完成下载，更新data中的msgList，这样就可以获取了
+    func updateData(_ downIDList: [DataID.IDType], _ insertList: [Int], container: MsgContainer) {
+        if container.msgIdList.count == 0 {
+            container.msgIdList = downIDList
+            container.insertPos = []
+            container.msgNum = downIDList.count
+        } else {
+            for i in 0 ..< downIDList.count {
+                container.msgIdList.insert(downIDList[i], at: container.msgIdList.count - insertList[i])
+            }
+            container.insertPos = insertList
+            container.msgNum += downIDList.count
+        }
+    }
 }
