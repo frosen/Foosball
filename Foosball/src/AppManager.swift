@@ -13,6 +13,8 @@ class AppManager: NSObject {
     // 数据管理器
     let userMgr: UserMgr
     let activeEventsMgr: ActiveEventsMgr
+    let msgMgr: MsgMgr
+    let errorMgr: ErrorMgr
 
     //单例
     fileprivate static let shareInstance = AppManager()
@@ -22,6 +24,8 @@ class AppManager: NSObject {
         ItemType.initAllItem()
         userMgr = UserMgr()
         activeEventsMgr = ActiveEventsMgr()
+        msgMgr = MsgMgr()
+        errorMgr = ErrorMgr()
 
         super.init()
 

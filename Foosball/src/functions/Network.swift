@@ -85,30 +85,7 @@ class Network: NSObject {
     }
 
     func updateUsers(_ ids: [String], into attris: inout [String: Any], with lists: [String], callback: @escaping ((String?, [String: Any]) -> Void)) {
-        let userQuery = AVQuery(className: User.classname)
-        userQuery.whereKey("objectId", containedIn: ids)
-
-        for list in lists {
-            userQuery.includeKey(list)
-        }
-
-        var holdAttris = attris
-        userQuery.findObjectsInBackground { objs, error in
-            if error != nil || objs == nil {
-                callback(nil, [:])
-                return
-            }
-            print("fetch user suc")
-            callback("suc", [:])
-            if let objList = objs as? [AVObject] {
-                for obj in objList {
-                    self.parse(obj: obj as NSObject, by: &holdAttris, callback: callback, key: "")
-                }
-            } else {
-                print("ERROR: findObjectsInBackground not return [AVObject]")
-            }
-            callback("end", [:])
-        }
+        updateObjs(from: User.classname, ids: ids, into: &attris, with: lists, callback: callback)
     }
 
     // 对象 --------------------------------------------------------------------
@@ -123,6 +100,34 @@ class Network: NSObject {
         
         todo.saveInBackground { suc, error in
             callback(suc, error, todo.objectId)
+        }
+    }
+
+    // 获取
+    func updateObjs(from: String, ids: [String], into attris: inout [String: Any], with lists: [String], callback: @escaping ((String?, [String: Any]) -> Void)) {
+        let query = AVQuery(className: from)
+        query.whereKey("objectId", containedIn: ids)
+
+        for list in lists {
+            query.includeKey(list)
+        }
+
+        var holdAttris = attris
+        query.findObjectsInBackground { objs, error in
+            if error != nil || objs == nil {
+                callback(nil, [:])
+                return
+            }
+            print("fetch \(from) suc")
+            callback("suc", [:])
+            if let objList = objs as? [AVObject] {
+                for obj in objList {
+                    self.parse(obj: obj as NSObject, by: &holdAttris, callback: callback, key: "")
+                }
+            } else {
+                print("ERROR: updateObj at \(from) not return [AVObject]")
+            }
+            callback("end", [:])
         }
     }
 

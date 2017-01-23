@@ -89,15 +89,21 @@ class Wager {
 }
 
 class MsgStruct: BaseData {
-    var user: User
-    var time: Time
-    var msg: String
+    static let classname = "msg"
+
+    var user: User? = nil
+    var time: Time? = nil
+    var msg: String = ""
 
     init(id: DataID, user: User, time: Time, msg: String) {
+        super.init(ID: id)
         self.user = user
         self.time = time
         self.msg = msg
-        super.init(ID: id)
+    }
+
+    override init(ID: DataID) {
+        super.init(ID: ID)
     }
 }
 

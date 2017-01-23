@@ -26,6 +26,7 @@
 		657219211D5EFA2A007DCE6A /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657219201D5EFA2A007DCE6A /* DetailViewController.swift */; };
 		658E06741D56C7C8008D94FC /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658E06731D56C7C8008D94FC /* Event.swift */; };
 		658EFA351E35A33500427416 /* MsgMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658EFA341E35A33500427416 /* MsgMgr.swift */; };
+		658EFA371E35EB6100427416 /* ErrorMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658EFA361E35EB6100427416 /* ErrorMgr.swift */; };
 		6593C0BD1DCDD65D00589943 /* UserMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6593C0BC1DCDD65D00589943 /* UserMgr.swift */; };
 		65A66D221E03C63800FF9589 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A66D211E03C63800FF9589 /* MapController.swift */; };
 		65A66D301E07AE0E00FF9589 /* DataMgr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A66D2F1E07AE0E00FF9589 /* DataMgr.swift */; };
@@ -81,6 +82,7 @@
 		657219201D5EFA2A007DCE6A /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DetailViewController.swift; path = detail/DetailViewController.swift; sourceTree = "<group>"; };
 		658E06731D56C7C8008D94FC /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = model/Event.swift; sourceTree = "<group>"; };
 		658EFA341E35A33500427416 /* MsgMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MsgMgr.swift; path = functions/MsgMgr.swift; sourceTree = "<group>"; };
+		658EFA361E35EB6100427416 /* ErrorMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ErrorMgr.swift; path = functions/ErrorMgr.swift; sourceTree = "<group>"; };
 		6593C0BC1DCDD65D00589943 /* UserMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserMgr.swift; path = functions/UserMgr.swift; sourceTree = "<group>"; };
 		65A66D211E03C63800FF9589 /* MapController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MapController.swift; path = map/MapController.swift; sourceTree = "<group>"; };
 		65A66D2F1E07AE0E00FF9589 /* DataMgr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataMgr.swift; path = functions/DataMgr.swift; sourceTree = "<group>"; };
@@ -323,6 +325,7 @@
 				6593C0BC1DCDD65D00589943 /* UserMgr.swift */,
 				65D61D0F1DC0602D0032C2E7 /* ActiveEventsMgr.swift */,
 				658EFA341E35A33500427416 /* MsgMgr.swift */,
+				658EFA361E35EB6100427416 /* ErrorMgr.swift */,
 				65D61CFC1DBF70900032C2E7 /* Network.swift */,
 			);
 			name = functions;
@@ -477,6 +480,7 @@
 				65005E7F1E28D4AA000AADC4 /* DataTools.swift in Sources */,
 				6508C2931DDD994500E3D7C2 /* CreateStep3Ctrlr.swift in Sources */,
 				65EEB7621DAE3A0500BB767D /* DetailMsgCell.swift in Sources */,
+				658EFA371E35EB6100427416 /* ErrorMgr.swift in Sources */,
 				6554A3C31D6FE956001AB4D6 /* ScanViewController.swift in Sources */,
 				65AB52451D3291E6005E7D4C /* AppDelegate.swift in Sources */,
 				65B4F2F31D67011A00F8E961 /* BaseController.swift in Sources */,

@@ -132,7 +132,7 @@ class DetailMsgCell: BaseCell {
         curIndex = index!.row
 
         let msgStru: MsgStruct =  DetailMsgCell.getMsgStru(curEvent, row: curIndex)
-        let user: User = msgStru.user
+        let user: User = msgStru.user!
 
         if img == nil {
             img = Avatar.create(
@@ -148,7 +148,7 @@ class DetailMsgCell: BaseCell {
 
         //名字和时间
         nameLbl.text = (user.ID == APP.userMgr.me.ID) ? "自己" : user.name
-        timeLbl.text = msgStru.time.toString
+        timeLbl.text = msgStru.time!.toString
 
         //文本
         let height = h - (DetailG.subTitleHeight + DetailG.contentBottomHeight) 
