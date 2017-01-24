@@ -68,24 +68,25 @@ class Network: NSObject {
     }
 
     // 因为User有特殊的list，所以单独做一个函数 不用回调，以免误以为会有延迟
-    func getUserAttris(into attris: inout [String: Any]) -> [String: Any]? {
-        guard let user = AVUser.current() else {
-            return nil
-        }
-        parse(obj: user, by: &attris, callback: { _, _ in }, key: "")
-        return attris
+    func getUserAttris() -> Any? {
+        return AVUser.current()
+//        guard let user =  else {
+//            return nil
+//        }
+//        parse(obj: user, by: &attris, callback: { _, _ in }, key: "")
+//        return attris
     }
 
-    func updateMe(into attris: inout [String: Any], with lists: [String], callback: @escaping ((String?, [String: Any]) -> Void)) {
+    func updateMe(with lists: [String], callback: @escaping ((Bool, Any?) -> Void)) {
         print("fetch me")
         guard let user = AVUser.current() else {
             return
         }
-        updateUsers([user.objectId!], into: &attris, with: lists, callback: callback)
+        updateUsers([user.objectId!], with: lists, callback: callback)
     }
 
-    func updateUsers(_ ids: [String], into attris: inout [String: Any], with lists: [String], callback: @escaping ((String?, [String: Any]) -> Void)) {
-        updateObjs(from: User.classname, ids: ids, into: &attris, with: lists, callback: callback)
+    func updateUsers(_ ids: [String], with lists: [String], callback: @escaping ((Bool, Any?) -> Void)) {
+        updateObjs(from: User.classname, ids: ids, with: lists, callback: callback)
     }
 
     // 对象 --------------------------------------------------------------------
@@ -104,7 +105,7 @@ class Network: NSObject {
     }
 
     // 获取
-    func updateObjs(from: String, ids: [String], into attris: inout [String: Any], with lists: [String], callback: @escaping ((String?, [String: Any]) -> Void)) {
+    func updateObjs(from: String, ids: [String], with lists: [String], callback: @escaping ((Bool, Any?) -> Void)) {
         let query = AVQuery(className: from)
         query.whereKey("objectId", containedIn: ids)
 
@@ -112,34 +113,30 @@ class Network: NSObject {
             query.includeKey(list)
         }
 
-        var holdAttris = attris
         query.findObjectsInBackground { objs, error in
             if error != nil || objs == nil {
-                callback(nil, [:])
-                return
+                return callback(false, nil)
             }
             print("fetch \(from) suc")
-            callback("suc", [:])
-            if let objList = objs as? [AVObject] {
-                for obj in objList {
-                    self.parse(obj: obj as NSObject, by: &holdAttris, callback: callback, key: "")
-                }
-            } else {
-                print("ERROR: updateObj at \(from) not return [AVObject]")
-            }
-            callback("end", [:])
+            callback(true, objs)
         }
     }
 
     // 解析：参数必须是AVObject，为了不对外开放，所以对外为NSObject
     // inout: 参考 http://blog.csdn.net/chenyufeng1991/article/details/48495367
-    private func parse(obj: NSObject, by attris: inout [String: Any], callback: ((String?, [String: Any]) -> Void), key: String) {
-        guard let avobj = obj as? AVObject else {
-            print("ERROR: obj is not AVObj")
+    func parse(obj: Any, by attris: inout [String: Any], callback: ((String?, [String: Any]) -> Void)) {
+        if let avobjList = obj as? [AVObject] {
+            for avobj in avobjList {
+                parse(avobj: avobj, by: &attris, callback: callback, key: "")
+            }
+        } else if let avobj = obj as? AVObject {
+            parse(avobj: avobj, by: &attris, callback: callback, key: "")
+        } else {
             callback(nil, [:])
-            return
         }
+    }
 
+    private func parse(avobj: AVObject, by attris: inout [String: Any], callback: ((String?, [String: Any]) -> Void), key: String) {
         for attri in attris {
             let name = attri.key
             guard let value = avobj[name] else {
@@ -157,14 +154,14 @@ class Network: NSObject {
 
             } else if value is AVObject && attri.value is [String: Any] {
                 var subAttri: [String: Any] = attri.value as! [String : Any]
-                parse(obj: value as! AVObject, by: &subAttri, callback: callback, key: name)
+                parse(avobj: value as! AVObject, by: &subAttri, callback: callback, key: name)
 
             } else if value is [AVObject] && (value as! [AVObject]).count > 0 && attri.value is [[String: Any]] {
                 let valueList = value as! [AVObject]
                 var attriDict = attri.value as! [[String: Any]]
                 var subAttri: [String: Any] = attriDict[0]
                 for v in valueList {
-                    parse(obj: v, by: &subAttri, callback: callback, key: name)
+                    parse(avobj: v, by: &subAttri, callback: callback, key: name)
                     attriDict.append(subAttri)
                 }
             } else {

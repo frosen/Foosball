@@ -10,6 +10,8 @@ import UIKit
 
 class DataMgr<DATA, OB>: NSObject {
 
+    let parseThreadName: String = "data.parse" // 服务器返回数据的解析线程名称
+
     //数据
     private var _data: DATA! = nil
     var data: DATA! {

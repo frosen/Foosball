@@ -21,22 +21,29 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         case user
     }
 
-    static var baseAttriKeeper: [String: Any] = [
+    static var attrisKeeper: [String: Any] = [
         "id": "id",
         "nick": "name",
         "sign": "sign",
         "url": "url",
         "isR": false,
-        ]
+    ]
 
-    static var attrisKeeper: [String: Any] = {
+    func getAttrisKeeperWithActive() -> [String: Any] {
         var keeper: [String: Any] = [:]
-        for attri in baseAttriKeeper {
+        for attri in UserMgr.attrisKeeper {
             keeper[attri.key] = attri.value
         }
-        keeper["active"] = [ActiveEventsMgr.attrisKeeper]
+
+        var active: [String: Any] = [:]
+        for tup in ActiveEventsMgr.attrisKeeper {
+            active[tup.key] = tup.value
+        }
+
+        keeper["active"] = active
+
         return keeper
-    }()
+    }
 
     override init() {
         super.init()
@@ -110,11 +117,12 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 
     func readLocalUserData() {
         // 个人信息的数据用Network储存到本地，所以从这里取
-        let res: [String: Any]? = Network.shareInstance.getUserAttris(into: &UserMgr.baseAttriKeeper)
+        let res: Any? = Network.shareInstance.getUserAttris()
         if res == nil {
             print("ERROR: wrong getUserAttris in readLocalUserData")
         } else {
-            resetMe(res!)
+            Network.shareInstance.parse(obj: res!, by: &UserMgr.attrisKeeper, callback: { _, _ in })
+            resetMe(UserMgr.attrisKeeper)
         }
     }
 
@@ -148,43 +156,52 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     }
 
     func updateMe() {
-//        pauseScan()
-//
-//        Network.shareInstance.updateMe(
-//            into: &UserMgr.attrisKeeper,
-//            with: ["active"]
-//        ) { str, attris in
-//            if str == nil {
-//                print("ERROR: no attris in updateMe")
-//                self.resumeScan()
-//
-//            } else if str == "suc" {
-//                // 成功后要刷新events表，所以先清空
-//                APP.activeEventsMgr.cleanData()
-//                self.resumeScan()
-//
-//            } else if str == "active" {
-//                APP.activeEventsMgr.addNewData(attris)
-//
-//            } else if str == "" {
-//                self.resetMe(attris)
-//
-//            } else if str == "end" {
-//                self.updateObserver()
-//                self.saveData()
-//
-//                // 看有没有未获取数据的用户，没有就获取
-//                if self.hasUnfetchUsers() {
-//                    self.fetchUnfetchUsers { suc in
-//                        APP.activeEventsMgr.updateObserver()
-//                        APP.activeEventsMgr.saveData()
-//                    }
-//                } else {
-//                    APP.activeEventsMgr.updateObserver()
-//                    APP.activeEventsMgr.saveData()
-//                }
-//            }
-//        }
+        pauseScan()
+
+        Network.shareInstance.updateMe(with: ["active"]) { suc, objs in
+            if !suc {
+                print("ERROR: no attris in updateMe")
+                self.resumeScan()
+                APP.errorMgr.hasError()
+                return
+            }
+
+            DispatchQueue(label: self.parseThreadName).async {
+                // 创建一个属性持有器
+                var keeper = self.getAttrisKeeperWithActive()
+                var newEventList: [Event] = []
+                var needFetchUserList: [User] = []
+                Network.shareInstance.parse(obj: objs!, by: &keeper, callback: { str, attris in
+                    if str == "active" {
+                        let e = APP.activeEventsMgr.createNewEvent(attris, needFetch: &needFetchUserList)
+                        newEventList.append(e)
+                    }
+                })
+
+                DispatchQueue.main.async {
+                    self.resumeScan()
+                    self.resetMe(keeper)
+
+                    self.updateObserver()
+                    self.saveData()
+
+                    // 看有没有未获取数据的用户，没有就获取
+                    if needFetchUserList.count > 0 {
+                        self.fetchUnfetchUsers(needFetchUserList) { suc in
+                            if suc {
+                                APP.activeEventsMgr.updateObserver()
+                                APP.activeEventsMgr.saveData()
+                            } else {
+                                APP.errorMgr.hasError()
+                            }
+                        }
+                    } else {
+                        APP.activeEventsMgr.updateObserver()
+                        APP.activeEventsMgr.saveData()
+                    }
+                }
+            }
+        }
     }
 
     func resetMe(_ attris: [String: Any]) {
@@ -204,55 +221,51 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 
     // 获取未获取的用户数据 -------------------------------------------------------------------
 
-    // 记录需要从服务器获取具体数据的用户
-    var unfetchUserList: [User] = []
-
     // 根据id，获取记录在表中的用户数据，如果没有则添加一个，并把新添加的这个user记录为“需fetch”
-    func getOrCreateUser(id: DataID.IDType) -> User {
+    func getOrCreateUser(id: DataID.IDType) -> (User, Bool) {
         for user in data {
             if user.ID.rawValue == id {
-                return user
+                return (user, false)
             }
         }
 
         // 未找到已经存在的user
         let newUser = User(ID: DataID(ID: id))
-        data.append(newUser)
-        unfetchUserList.append(newUser)
 
-        return newUser
+        return (newUser, true)
     }
 
-    func hasUnfetchUsers() -> Bool {
-        return unfetchUserList.count > 0
-    }
-
-    func fetchUnfetchUsers(callback: @escaping ((Bool) -> Void)) {
+    func fetchUnfetchUsers(_ unfetchUserList: [User], callback: @escaping ((Bool) -> Void)) {
         pauseScan()
 
         var ids: [String] = []
         for user in unfetchUserList {
             ids.append(user.ID.rawValue)
         }
-        Network.shareInstance.updateUsers(ids, into: &UserMgr.baseAttriKeeper, with: []) { str, attris in
-            if str == nil {
-                print("ERROR: fetchUnfetchUsers wrong")
+        Network.shareInstance.updateUsers(ids, with: []) { suc, objs in
+            if !suc {
+                print("ERROR: no attris in updateMe")
                 self.resumeScan()
                 callback(false)
-
-            } else if str == "suc" {
-                self.resumeScan()
-
-            } else if str == "" {
-                self.resetUser(by: attris["id"] as! String, attris: attris)
-
-            } else if str == "end" {
-                callback(true)
+                return
+            }
+            
+            DispatchQueue(label: self.parseThreadName).async {
+                Network.shareInstance.parse(obj: objs!, by: &UserMgr.attrisKeeper, callback: { str, attris in
+                    if str == "" {
+                        self.resetUser(by: attris["id"] as! String, data: unfetchUserList, attris: attris)
+                    }
+                })
+                DispatchQueue.main.async {
+                    self.data.append(contentsOf: unfetchUserList)
+                    self.resumeScan()
+                    callback(true)
+                }
             }
         }
     }
 
-    func resetUser(by id: String, attris: [String: Any]) {
+    func resetUser(by id: String, data: [User], attris: [String: Any]) {
         for user in data {
             if user.ID.rawValue == id {
                 var u = user

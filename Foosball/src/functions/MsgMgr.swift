@@ -29,7 +29,7 @@ class MsgMgr: DataMgr<MsgContainerList, MsgMgrObserver>, ActiveEventsMgrObserver
 
     static var attrisKeeper: [String: Any] = [
         "id": "id",
-        "user": "userid",
+        "u": "userid",
         "tm": "Date",
         "msg": "str"
     ]
@@ -129,35 +129,67 @@ class MsgMgr: DataMgr<MsgContainerList, MsgMgrObserver>, ActiveEventsMgrObserver
     }
 
     func downloadMsgs(_ downIDList: [DataID.IDType], _ insertList: [Int], container: MsgContainer) {
-        Network.shareInstance.updateObjs(from: MsgStruct.classname, ids: downIDList, into: &MsgMgr.attrisKeeper, with: []) { str, attris in
-            if str == nil {
+        Network.shareInstance.updateObjs(from: MsgStruct.classname, ids: downIDList, with: []) { suc, objs in
+            if !suc {
                 print("ERROR: downloadMsgs wrong")
                 APP.errorMgr.hasError()
+                return
+            }
 
-            } else if str == "" {
-                self.resetMsg(in: container, by: attris["id"] as! String, attris: attris)
-
-            } else if str == "end" {
-                if APP.userMgr.hasUnfetchUsers() {
-                    APP.userMgr.fetchUnfetchUsers { suc in
-                        if suc {
-                            self.updateData(downIDList, insertList, container: container)
-                            self.updateObserver()
-                        } else {
-                            APP.errorMgr.hasError()
-                        }
+            DispatchQueue(label: self.parseThreadName).async {
+                var msgList: [MsgStruct] = []
+                var needFetchUserList: [User] = []
+                Network.shareInstance.parse(obj: objs!, by: &MsgMgr.attrisKeeper, callback: { str, attris in
+                    if str == "" {
+                        let msg = self.createMsgStruct(attris, needFetchUsers: &needFetchUserList)
+                        msgList.append(msg)
                     }
-                } else {
+                })
+
+                DispatchQueue.main.async {
+                    self.resetMsg(in: container, msgs: msgList)
                     self.updateData(downIDList, insertList, container: container)
-                    self.updateObserver()
+
+                    if needFetchUserList.count > 0 {
+                        APP.userMgr.fetchUnfetchUsers(needFetchUserList) { suc in
+                            if suc {
+                                self.updateObserver()
+                                self.saveData()
+                            } else {
+                                APP.errorMgr.hasError()
+                            }
+                        }
+                    } else {
+                        self.updateObserver()
+                        self.saveData()
+                    }
                 }
             }
         }
     }
 
+    // 创建msg的结构体，根据服务器获得的属性，如果用户未获取，则记录
+    func createMsgStruct(_ attris: [String: Any], needFetchUsers: inout [User]) -> MsgStruct {
+        let ms = MsgStruct(ID: DataID(ID: attris["id"] as! DataID.IDType))
+        ms.msg = attris["msg"] as! String
+        ms.time = Time(t: attris["tm"] as? Date)
+
+        let (user, needFetch) = APP.userMgr.getOrCreateUser(id: attris["u"] as! DataID.IDType)
+        ms.user = user
+
+        if needFetch {
+            needFetchUsers.append(user)
+        }
+
+        return ms
+    }
+
     // 下载好的msg放到一个字典里，以后根据list中的id获取
-    func resetMsg(in c: MsgContainer, by id: String, attris: [String: Any]) {
-        let list = c.msgIdList
+    func resetMsg(in c: MsgContainer, msgs: [MsgStruct]) {
+        var dict = c.msgDict
+        for msg in msgs {
+            dict[msg.ID.ID] = msg
+        }
     }
 
     // 完成下载，更新data中的msgList，这样就可以获取了

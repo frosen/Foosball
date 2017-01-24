@@ -9,44 +9,11 @@
 
 import UIKit
 
-// 为了提高每次刷新的效率，复用data中的event，数量不足才新建，否则只修改已经创建好的
-// 用eventCount记录有效event数量，超过的event不删除也没有用
 class ActEvents {
-    private(set) var count: Int = 0
-    private(set) var eList: [Event] = []
-
-    fileprivate func clean() {
-        count = 0 // 不用真正的清空，用数量值表示即可，留下无用的event复用避免create时损失效率
-    }
-
-    fileprivate func add() -> Event {
-        count += 1
-        if count > eList.count {
-            for _ in 0 ..< count - eList.count {
-                eList.append(Event(ID: DataID(ID: "add")))
-            }
-        }
-
-        return eList[count - 1]
-    }
-
-    fileprivate func add(e: Event) {
-        if eList.count > count {
-            eList[count] = e
-        } else {
-            if eList.count < count {
-                for _ in 0 ..< count - eList.count {
-                    eList.append(Event(ID: DataID(ID: "add")))
-                }
-            }
-            eList.append(e)
-        }
-
-        count += 1
-    }
+    fileprivate(set) var eList: [Event] = []
 
     func getCurEvent(curId: DataID) -> Event? {
-        for i in 0 ..< count {
+        for i in 0 ..< eList.count {
             if curId == eList[i].ID {
                 return eList[i]
             }
@@ -220,7 +187,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
               MsgStruct(id: DataID(ID: "123454w"), user: bk1, time: Time.now, msg: "v说什么5 你说什么5 你说什么5 你说什么5 你说"),
               MsgStruct(id: DataID(ID: "123454q"), user: bk2, time: Time.now, msg: "5你说什么1"),
           ]
-        data.add(e: e)
+        data.eList.append(e)
     }
 
     // set ob --------------------------------------------------------------
@@ -247,35 +214,13 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
     // 刷新数据时调用 ---------------------------------------------------------
 
-    func cleanData() {
-        data.clean()
+    func createNewEvent(_ attris: [String: Any], needFetch: inout [User]) -> Event {
+        let e = Event(ID: DataID(ID: attris["id"] as! DataID.IDType))
+        setAttris(attris, e: e, needFetch: &needFetch)
+        return e
     }
 
-    func addNewData(_ attris: [String: Any]) {
-        let e = data.add()
-
-        e.ID = DataID(ID: attris["id"] as! DataID.IDType)
-        setAttris(attris, e: e)
-    }
-
-    func updateData(_ attris: [String: Any]) {
-        let id = DataID(ID: attris["id"] as! DataID.IDType)
-        var updateE: Event? = nil
-        for e in data.eList {
-            if e.ID == id {
-                updateE = e
-                break
-            }
-        }
-
-        if updateE == nil {
-            addNewData(attris)
-        } else {
-            setAttris(attris, e: updateE!)
-        }
-    }
-
-    private func setAttris(_ attris: [String: Any], e: Event) {
+    private func setAttris(_ attris: [String: Any], e: Event, needFetch: inout [User]) {
         e.type = EventType(rawValue: attris["tp"] as! Int)!
         e.item = ItemType.list[attris["i"] as! Int]
         e.memberCount = attris["mc1"] as! Int
@@ -286,14 +231,18 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         e.wagerList = DataTools.Wagers.unserialize(attris["wg"] as! [String])
         e.detail = attris["dtl"] as! String
 
-        e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [[String: Any]])
-        e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [[String: Any]])
+        e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [[String: Any]], needFetchList: &needFetch)
+        e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [[String: Any]], needFetchList: &needFetch)
 
         e.imageURLList = attris["img"] as! [String]
         e.msgIDList = attris["msg"] as! [String]
 
         e.createTime = Time(t: attris["ctm"] as? Date)
         e.createUserID = DataID(ID: attris["cid"] as! DataID.IDType)
+    }
+
+    func updateData(_ newEList: [Event]) {
+        data.eList = newEList
     }
 
     // 本地便捷函数 ------------------------------------------------------------
@@ -322,7 +271,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             print("create event on net: \(suc), ", error ?? "no error")
             if suc {
                 e.ID = DataID(ID: newID!)
-                self.data.add(e: e)
+                self.data.eList.append(e)
                 APP.userMgr.addNewEvent(e) { suc, error in
                     if suc {
                         self.updateObserver()
