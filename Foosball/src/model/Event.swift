@@ -155,4 +155,28 @@ class Event: BaseData {
     //被动生成的数据 -------------------------------------------
     var createTime: Time! = nil
     var createUserID: DataID! = nil
+
+    //便捷函数 -------------------------------------------------
+
+    func eachUserState(_ callback: ((UserState) -> Bool)) -> UserState? {
+        for us in ourSideStateList {
+            if callback(us) {
+                return us
+            }
+        }
+
+        for us in opponentStateList {
+            if callback(us) {
+                return us
+            }
+        }
+
+        return nil
+    }
 }
+
+
+
+
+
+

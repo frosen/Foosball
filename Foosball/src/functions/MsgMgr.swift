@@ -138,13 +138,29 @@ class MsgMgr: DataMgr<MsgContainerList, MsgMgrObserver>, ActiveEventsMgrObserver
 
             DispatchQueue(label: self.parseThreadName).async {
                 var msgList: [MsgStruct] = []
-                var needFetchUserList: [User] = []
                 Network.shareInstance.parse(obj: objs!, by: &MsgMgr.attrisKeeper, callback: { str, attris in
                     if str == "" {
-                        let msg = self.createMsgStruct(attris, needFetchUsers: &needFetchUserList)
+                        let msg = MsgMgr.createMsgStruct(attris)
                         msgList.append(msg)
                     }
                 })
+
+                // 检测需要获取的user
+                var needFetchUserList: [User] = []
+                let oldUsers = APP.userMgr.data!
+                for ms in msgList {
+                    var isNew = true
+                    for oldUser in oldUsers {
+                        if ms.user!.ID == oldUser.ID {
+                            ms.user = oldUser
+                            isNew = false
+                            break
+                        }
+                    }
+                    if isNew {
+                        needFetchUserList.append(ms.user!)
+                    }
+                }
 
                 DispatchQueue.main.async {
                     self.resetMsg(in: container, msgs: msgList)
@@ -169,17 +185,11 @@ class MsgMgr: DataMgr<MsgContainerList, MsgMgrObserver>, ActiveEventsMgrObserver
     }
 
     // 创建msg的结构体，根据服务器获得的属性，如果用户未获取，则记录
-    func createMsgStruct(_ attris: [String: Any], needFetchUsers: inout [User]) -> MsgStruct {
+    class func createMsgStruct(_ attris: [String: Any]) -> MsgStruct {
         let ms = MsgStruct(ID: DataID(ID: attris["id"] as! DataID.IDType))
         ms.msg = attris["msg"] as! String
         ms.time = Time(t: attris["tm"] as? Date)
-
-        let (user, needFetch) = APP.userMgr.getOrCreateUser(id: attris["u"] as! DataID.IDType)
-        ms.user = user
-
-        if needFetch {
-            needFetchUsers.append(user)
-        }
+        ms.user = User(ID: DataID(ID: attris["id"] as! DataID.IDType)) // 先暂时都是用新建的user
 
         return ms
     }

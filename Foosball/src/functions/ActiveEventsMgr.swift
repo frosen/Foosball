@@ -214,13 +214,13 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
     // 刷新数据时调用 ---------------------------------------------------------
 
-    func createNewEvent(_ attris: [String: Any], needFetch: inout [User]) -> Event {
+    class func createNewEvent(_ attris: [String: Any]) -> Event {
         let e = Event(ID: DataID(ID: attris["id"] as! DataID.IDType))
-        setAttris(attris, e: e, needFetch: &needFetch)
+        setAttris(attris, e: e)
         return e
     }
 
-    private func setAttris(_ attris: [String: Any], e: Event, needFetch: inout [User]) {
+    class private func setAttris(_ attris: [String: Any], e: Event) {
         e.type = EventType(rawValue: attris["tp"] as! Int)!
         e.item = ItemType.list[attris["i"] as! Int]
         e.memberCount = attris["mc1"] as! Int
@@ -231,8 +231,8 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         e.wagerList = DataTools.Wagers.unserialize(attris["wg"] as! [String])
         e.detail = attris["dtl"] as! String
 
-        e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [[String: Any]], needFetchList: &needFetch)
-        e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [[String: Any]], needFetchList: &needFetch)
+        e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [[String: Any]])
+        e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [[String: Any]])
 
         e.imageURLList = attris["img"] as! [String]
         e.msgIDList = attris["msg"] as! [String]
@@ -242,6 +242,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     }
 
     func updateData(_ newEList: [Event]) {
+        // todo 以后要改成根据new list进行新增，按顺序添加到data上，并remove以前同id的
         data.eList = newEList
     }
 

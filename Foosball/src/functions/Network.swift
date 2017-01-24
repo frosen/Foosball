@@ -139,6 +139,7 @@ class Network: NSObject {
     private func parse(avobj: AVObject, by attris: inout [String: Any], callback: ((String?, [String: Any]) -> Void), key: String) {
         for attri in attris {
             let name = attri.key
+
             guard let value = avobj[name] else {
                 if name == "id" { // 特殊字段
                     attris[name] = avobj.objectId

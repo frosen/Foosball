@@ -40,16 +40,13 @@ class DataTools: NSObject {
             return list
         }
 
-        class func unserialize(_ list: [[String: Any]], needFetchList: inout [User]) -> [UserState] {
+        class func unserialize(_ list: [[String: Any]]) -> [UserState] {
             var users: [UserState] = []
             for map in list {
-                let (user, needFetch) = APP.userMgr.getOrCreateUser(id: map["id"] as! DataID.IDType)
+                let user = User(ID: DataID(ID: map["id"] as! DataID.IDType)) // 先暂时都是用新建的user
                 let st = EventState(rawValue: map["st"] as! Int)!
                 let ust = UserState(user: user, state: st)
                 users.append(ust)
-                if needFetch {
-                    needFetchList.append(user)
-                }
             }
 
             return users

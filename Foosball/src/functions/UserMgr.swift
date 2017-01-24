@@ -29,18 +29,24 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         "isR": false,
     ]
 
-    func getAttrisKeeperWithActive() -> [String: Any] {
+    class func copyAttrisKeeper() -> [String: Any] {
         var keeper: [String: Any] = [:]
         for attri in UserMgr.attrisKeeper {
             keeper[attri.key] = attri.value
         }
+        return keeper
+    }
+
+    // 复制一个user的attrisKeeper，并且其中有个属性为active，里面是event的attrisKeeper的list
+    class func createAttrisKeeperWithActive() -> [String: Any] {
+        var keeper = copyAttrisKeeper()
 
         var active: [String: Any] = [:]
         for tup in ActiveEventsMgr.attrisKeeper {
             active[tup.key] = tup.value
         }
 
-        keeper["active"] = active
+        keeper["active"] = [active]
 
         return keeper
     }
@@ -168,15 +174,18 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 
             DispatchQueue(label: self.parseThreadName).async {
                 // 创建一个属性持有器
-                var keeper = self.getAttrisKeeperWithActive()
+                var keeper = UserMgr.createAttrisKeeperWithActive()
                 var newEventList: [Event] = []
-                var needFetchUserList: [User] = []
-                Network.shareInstance.parse(obj: objs!, by: &keeper, callback: { str, attris in
+                Network.shareInstance.parse(obj: objs!, by: &keeper) { str, attris in
                     if str == "active" {
-                        let e = APP.activeEventsMgr.createNewEvent(attris, needFetch: &needFetchUserList)
+                        let e = ActiveEventsMgr.createNewEvent(attris)
+                        print("active", e.canInvite)
                         newEventList.append(e)
                     }
-                })
+                }
+
+                var needFetchUserList: [User] = []
+                UserMgr.checkUnfetchUsers(from: newEventList, by: self.data!, needFetchUserList: &needFetchUserList)
 
                 DispatchQueue.main.async {
                     self.resumeScan()
@@ -185,7 +194,8 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
                     self.updateObserver()
                     self.saveData()
 
-                    // 看有没有未获取数据的用户，没有就获取
+                    APP.activeEventsMgr.updateData(newEventList)
+
                     if needFetchUserList.count > 0 {
                         self.fetchUnfetchUsers(needFetchUserList) { suc in
                             if suc {
@@ -208,10 +218,10 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         if data.count == 0 {
             data.append(User(ID: DataID(ID: "reset")))
         }
-        reset(user: &data[0], attris: attris)
+        UserMgr.reset(user: &data[0], attris: attris)
     }
 
-    func reset(user: inout User, attris: [String: Any]) {
+    class func reset(user: inout User, attris: [String: Any]) {
         user.ID = DataID(ID: attris["id"] as! String)
         user.name = attris["nick"] as! String
         user.sign = attris["sign"] as! String
@@ -219,21 +229,27 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         user.isRegistered = attris["isR"] as! Bool
     }
 
-    // 获取未获取的用户数据 -------------------------------------------------------------------
-
-    // 根据id，获取记录在表中的用户数据，如果没有则添加一个，并把新添加的这个user记录为“需fetch”
-    func getOrCreateUser(id: DataID.IDType) -> (User, Bool) {
-        for user in data {
-            if user.ID.rawValue == id {
-                return (user, false)
+    // 判断一个event list里面的所有user是否是下载过的，是则指向已经下载的，不是则放入“需下载”列表
+    class func checkUnfetchUsers(from newEventList: [Event], by oldUsers: [User], needFetchUserList: inout [User]) {
+        for e in newEventList {
+            let _ = e.eachUserState { newUserSt in
+                var isNew = true
+                for oldUser in oldUsers {
+                    if newUserSt.user.ID == oldUser.ID {
+                        newUserSt.user = oldUser
+                        isNew = false
+                        break
+                    }
+                }
+                if isNew {
+                    needFetchUserList.append(newUserSt.user)
+                }
+                return false
             }
         }
-
-        // 未找到已经存在的user
-        let newUser = User(ID: DataID(ID: id))
-
-        return (newUser, true)
     }
+
+    // 获取未获取的用户数据 -------------------------------------------------------------------
 
     func fetchUnfetchUsers(_ unfetchUserList: [User], callback: @escaping ((Bool) -> Void)) {
         pauseScan()
@@ -251,9 +267,10 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
             }
             
             DispatchQueue(label: self.parseThreadName).async {
-                Network.shareInstance.parse(obj: objs!, by: &UserMgr.attrisKeeper, callback: { str, attris in
+                var keeper = UserMgr.copyAttrisKeeper()
+                Network.shareInstance.parse(obj: objs!, by: &keeper, callback: { str, attris in
                     if str == "" {
-                        self.resetUser(by: attris["id"] as! String, data: unfetchUserList, attris: attris)
+                        UserMgr.resetUser(by: attris["id"] as! String, data: unfetchUserList, attris: attris)
                     }
                 })
                 DispatchQueue.main.async {
@@ -265,11 +282,11 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         }
     }
 
-    func resetUser(by id: String, data: [User], attris: [String: Any]) {
+    class func resetUser(by id: String, data: [User], attris: [String: Any]) {
         for user in data {
             if user.ID.rawValue == id {
                 var u = user
-                reset(user: &u, attris: attris)
+                UserMgr.reset(user: &u, attris: attris)
             }
         }
     }
@@ -319,19 +336,16 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     }
 
     private func searchSelfState(from event: Event, by id: DataID) -> EventState {
-        for us in event.ourSideStateList {
-            if us.user.ID == id {
-                return us.state
-            }
-        }
-        for us in event.opponentStateList {
-            if us.user.ID == id {
-                return us.state
-            }
+        let us = event.eachUserState { us in
+            return us.user.ID == id
         }
 
-        print("ERROR: wrong in searchState")
-        return .ready
+        if us == nil {
+            print("ERROR: wrong in searchState")
+            return .ready
+        } else {
+            return us!.state
+        }
     }
 }
 
