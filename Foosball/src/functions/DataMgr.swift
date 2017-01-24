@@ -28,12 +28,8 @@ class DataMgr<DATA, OB>: NSObject {
     private(set) var obDict: [String: (OB, Bool, Bool)] = [:]
 
     func register(observer ob: OB, key: String) {
-        if !hasOb(for: key) {
-            obDict[key] = (ob, false, false)
-            initObserver(ob)
-        } else {
-            print("\(key) has been register")
-        }
+        obDict[key] = (ob, false, false)
+        initObserver(ob)
     }
 
     func unregister(key: String) {

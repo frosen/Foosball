@@ -59,6 +59,10 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         // 读取本地数据
 
+        test()
+    }
+
+    func test() {
         //自己方
         let bb1 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         let p1 = UserState(user: bb1, state: .invite)
@@ -104,50 +108,50 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         var e: Event! = nil
 
-//        e = Event(ID: DataID(ID: "123"))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e: e)
-//
-//        e = Event(ID: DataID(ID: "123"))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e: e)
-//
-//        e = Event(ID: DataID(ID: "123"))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e: e)
-//
-//        e = Event(ID: DataID(ID: "123"))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e: e)
-//
-//        e = Event(ID: DataID(ID: "123"))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e: e)
-//
-//        e = Event(ID: DataID(ID: "123"))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e: e)
-//
-//        e = Event(ID: DataID(ID: "123"))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e: e)
-//
-//        e = Event(ID: DataID(ID: "123"))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e: e)
-//
-//        e = Event(ID: DataID(ID: "123"))
-//        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
-//        e.opponentStateList = [pk1, pk2, pk3]
-//        data.add(e: e)
+        //        e = Event(ID: DataID(ID: "123"))
+        //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        //        e.opponentStateList = [pk1, pk2, pk3]
+        //        data.add(e: e)
+        //
+        //        e = Event(ID: DataID(ID: "123"))
+        //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        //        e.opponentStateList = [pk1, pk2, pk3]
+        //        data.add(e: e)
+        //
+        //        e = Event(ID: DataID(ID: "123"))
+        //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        //        e.opponentStateList = [pk1, pk2, pk3]
+        //        data.add(e: e)
+        //
+        //        e = Event(ID: DataID(ID: "123"))
+        //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        //        e.opponentStateList = [pk1, pk2, pk3]
+        //        data.add(e: e)
+        //
+        //        e = Event(ID: DataID(ID: "123"))
+        //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        //        e.opponentStateList = [pk1, pk2, pk3]
+        //        data.add(e: e)
+        //
+        //        e = Event(ID: DataID(ID: "123"))
+        //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        //        e.opponentStateList = [pk1, pk2, pk3]
+        //        data.add(e: e)
+        //
+        //        e = Event(ID: DataID(ID: "123"))
+        //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        //        e.opponentStateList = [pk1, pk2, pk3]
+        //        data.add(e: e)
+        //
+        //        e = Event(ID: DataID(ID: "123"))
+        //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        //        e.opponentStateList = [pk1, pk2, pk3]
+        //        data.add(e: e)
+        //
+        //        e = Event(ID: DataID(ID: "123"))
+        //        e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
+        //        e.opponentStateList = [pk1, pk2, pk3]
+        //        data.add(e: e)
 
         // -----------------
         e = Event(ID: DataID(ID: "50001"))
@@ -156,37 +160,22 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         e.opponentStateList = [pk1, pk2, pk3]
 
         e.imageURLList = ["http://up.qqjia.com/z/25/tu32700_3.png", "http://up.qqjia.com/z/25/tu32718_6.png", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg", "http://img.asdf/asdf.jpg"]
-
+        
         e.detail = "~ 这是一首简单的小情歌；\n~ 这是一首简单的小情歌；\n~ 这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；\n~ 这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；"
-
+        
         e.wagerList = [Wager(str: "红牛")]
-
-
-
+        
+        
+        
         e.createTime = Time.now
         e.createUserID = DataID(ID: "123")
-
+        
         e.location = Location()
-
+        
         e.time = Time(timeIntervalSinceNow: 136000)
 
-        e.msgList = [
-              MsgStruct(id: DataID(ID: "12345"), user: bk3, time: Time.now, msg: "1你说什么1"),
-              MsgStruct(id: DataID(ID: "123451"),user: bk2, time: Time.now, msg: "2你说什么2"),
-              MsgStruct(id: DataID(ID: "123452"),user: bk1, time: Time.now, msg: "3你说什么3"),
-              MsgStruct(id: DataID(ID: "123453"),user: bk3, time: Time.now, msg: "4你说什么4"),
-              MsgStruct(id: DataID(ID: "123454"),user: bk2, time: Time.now, msg: "5你说什么5 你说什么5 你说什么5 你说什么5 你"),
-              MsgStruct(id: DataID(ID: "123454g"), user: bk1, time: Time.now, msg: "6你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说什么"),
-              MsgStruct(id: DataID(ID: "123454f"), user: bk3, time: Time.now, msg: "7你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
-              MsgStruct(id: DataID(ID: "123454d"), user: bk2, time: Time.now, msg: "8你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
-              MsgStruct(id: DataID(ID: "123454s"), user: bk1, time: Time.now, msg: "9你说什么1"),
-              MsgStruct(id: DataID(ID: "123454a"), user: bk3, time: Time.now, msg: "10你说什么1"),
-              MsgStruct(id: DataID(ID: "1234545"), user: bk2, time: Time.now, msg: "1你说什么1说什么5 你说什么5 你说什么5 你说什么5 你说"),
-              MsgStruct(id: DataID(ID: "123454r"), user: bk1, time: Time.now, msg: "2你说什么1 说什么5 你说什么5 你说什么5 你说什么5 你说"),
-              MsgStruct(id: DataID(ID: "123454e"), user: bk3, time: Time.now, msg: "3你说什么1"),
-              MsgStruct(id: DataID(ID: "123454w"), user: bk1, time: Time.now, msg: "v说什么5 你说什么5 你说什么5 你说什么5 你说"),
-              MsgStruct(id: DataID(ID: "123454q"), user: bk2, time: Time.now, msg: "5你说什么1"),
-          ]
+        e.msgIDList = ["m1", "m2", "m3", "m4", "m5", "m6", "m7"]
+        
         data.eList.append(e)
     }
 

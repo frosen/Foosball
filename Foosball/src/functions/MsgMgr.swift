@@ -18,14 +18,12 @@ class MsgContainer {
     fileprivate(set) var msgNum: Int = 20
 }
 
-typealias MsgContainerList = [DataID.IDType: MsgContainer]
-
 protocol MsgMgrObserver {
-    func getCurEventID() -> DataID
-    func onModify(msgs: MsgContainerList)
+    func getCurEventID(for msgMgr: MsgMgr) -> DataID
+    func onModify(msgs: MsgContainer)
 }
 
-class MsgMgr: DataMgr<MsgContainerList, MsgMgrObserver>, ActiveEventsMgrObserver {
+class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrObserver {
 
     static var attrisKeeper: [String: Any] = [
         "id": "id",
@@ -40,8 +38,29 @@ class MsgMgr: DataMgr<MsgContainerList, MsgMgrObserver>, ActiveEventsMgrObserver
         super.init()
         print("初始化 MsgMgr")
 
-
         data = [:]
+
+        test()
+    }
+
+    func test() {
+        print("test")
+        // 测试代码
+        let mc = MsgContainer()
+        mc.msgIdList = [
+            "m1", "m2", "m3", "m4", "m5", "m6", "m7"
+        ]
+        mc.msgDict = [
+            "m1": MsgStruct(id: DataID(ID: "m1"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么1"),
+            "m2": MsgStruct(id: DataID(ID: "m2"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么2"),
+            "m3": MsgStruct(id: DataID(ID: "m3"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么3"),
+            "m4": MsgStruct(id: DataID(ID: "m4"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么4"),
+            "m5": MsgStruct(id: DataID(ID: "m5"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么5"),
+            "m6": MsgStruct(id: DataID(ID: "m6"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么6"),
+            "m7": MsgStruct(id: DataID(ID: "m7"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么7"),
+        ]
+
+        data[DataID(ID: "50001")] = mc
     }
 
     // set ob --------------------------------------------------
@@ -55,7 +74,7 @@ class MsgMgr: DataMgr<MsgContainerList, MsgMgrObserver>, ActiveEventsMgrObserver
     }
 
     override func initObserver(_ ob: MsgMgrObserver) {
-        curEventID = ob.getCurEventID()
+        curEventID = ob.getCurEventID(for: self)
 
         // 注册成为 act events的观察者，当其有变化时，检测是否是当前event的msg的变化
         APP.activeEventsMgr.register(observer: self, key: DataObKey)
@@ -64,7 +83,9 @@ class MsgMgr: DataMgr<MsgContainerList, MsgMgrObserver>, ActiveEventsMgrObserver
 
     // 从act events获取对应事件的msg id 与数据表中比较，前20个里面没有下载的则开启下载
     override func modifyObserver(_ ob: MsgMgrObserver) {
-        ob.onModify(msgs: data)
+        if let msgContainer =  data[curEventID ?? DataID(ID: "")] {
+            ob.onModify(msgs: msgContainer)
+        }
     }
 
     // ---------------------------------------------------------
@@ -72,7 +93,9 @@ class MsgMgr: DataMgr<MsgContainerList, MsgMgrObserver>, ActiveEventsMgrObserver
     func onInit(actE: ActEvents) {
         if let e = actE.getCurEvent(curId: curEventID!) {
             handleMsgIds(e.msgIDList)
+            print("on init suc")
         }
+        print("on init")
     }
 
     func onModify(actE: ActEvents) {
@@ -82,7 +105,7 @@ class MsgMgr: DataMgr<MsgContainerList, MsgMgrObserver>, ActiveEventsMgrObserver
     }
 
     func handleMsgIds(_ ids: [DataID.IDType]) {
-        var msgContainer = data[curEventID!.ID]
+        var msgContainer = data[curEventID!]
         var downIDList: [DataID.IDType] = []
         var insertPos: [Int] = []
 
@@ -95,7 +118,7 @@ class MsgMgr: DataMgr<MsgContainerList, MsgMgrObserver>, ActiveEventsMgrObserver
                 downIDList.append(id)
             }
 
-            data[curEventID!.ID] = msgContainer
+            data[curEventID!] = msgContainer
         } else {
             // 对比
             let checkOriNumMax = min(ids.count, msgContainer!.msgNum)

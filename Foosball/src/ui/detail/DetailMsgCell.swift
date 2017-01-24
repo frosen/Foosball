@@ -83,13 +83,13 @@ class DetailMsgCell: BaseCell {
             return saveH
         }
 
-        let e = d as! Event
-        let msgStru: MsgStruct = getMsgStru(e, row: row)
+        let msgStru: MsgStruct = getMsgStru(vc.msgContainer!, row: row)
         return DetailG.calculateLblHeight(msgStru.msg, w: msgStrWidth, style: lblStyleAttri) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
-    class func getMsgStru(_ e: Event, row: Int) -> MsgStruct {
-        return e.msgList[e.msgList.count - row] // 这里的减法是为了倒过来显示，时间靠后的放上面
+    class func getMsgStru(_ c: MsgContainer, row: Int) -> MsgStruct {
+        let id = c.msgIdList[c.msgIdList.count - row] // 这里的减法是为了倒过来显示，时间靠后的放上面
+        return c.msgDict[id]!
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
@@ -131,7 +131,8 @@ class DetailMsgCell: BaseCell {
         curEvent = e
         curIndex = index!.row
 
-        let msgStru: MsgStruct =  DetailMsgCell.getMsgStru(curEvent, row: curIndex)
+        let vc = ctrlr as! DetailViewController
+        let msgStru: MsgStruct =  DetailMsgCell.getMsgStru(vc.msgContainer!, row: curIndex)
         let user: User = msgStru.user!
 
         if img == nil {

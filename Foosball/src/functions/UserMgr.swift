@@ -162,56 +162,56 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     }
 
     func updateMe() {
-        pauseScan()
-
-        Network.shareInstance.updateMe(with: ["active"]) { suc, objs in
-            if !suc {
-                print("ERROR: no attris in updateMe")
-                self.resumeScan()
-                APP.errorMgr.hasError()
-                return
-            }
-
-            DispatchQueue(label: self.parseThreadName).async {
-                // 创建一个属性持有器
-                var keeper = UserMgr.createAttrisKeeperWithActive()
-                var newEventList: [Event] = []
-                Network.shareInstance.parse(obj: objs!, by: &keeper) { str, attris in
-                    if str == "active" {
-                        let e = ActiveEventsMgr.createNewEvent(attris)
-                        print("active", e.canInvite)
-                        newEventList.append(e)
-                    }
-                }
-
-                var needFetchUserList: [User] = []
-                UserMgr.checkUnfetchUsers(from: newEventList, by: self.data!, needFetchUserList: &needFetchUserList)
-
-                DispatchQueue.main.async {
-                    self.resumeScan()
-                    self.resetMe(keeper)
-
-                    self.updateObserver()
-                    self.saveData()
-
-                    APP.activeEventsMgr.updateData(newEventList)
-
-                    if needFetchUserList.count > 0 {
-                        self.fetchUnfetchUsers(needFetchUserList) { suc in
-                            if suc {
-                                APP.activeEventsMgr.updateObserver()
-                                APP.activeEventsMgr.saveData()
-                            } else {
-                                APP.errorMgr.hasError()
-                            }
-                        }
-                    } else {
-                        APP.activeEventsMgr.updateObserver()
-                        APP.activeEventsMgr.saveData()
-                    }
-                }
-            }
-        }
+//        pauseScan()
+//
+//        Network.shareInstance.updateMe(with: ["active"]) { suc, objs in
+//            if !suc {
+//                print("ERROR: no attris in updateMe")
+//                self.resumeScan()
+//                APP.errorMgr.hasError()
+//                return
+//            }
+//
+//            DispatchQueue(label: self.parseThreadName).async {
+//                // 创建一个属性持有器
+//                var keeper = UserMgr.createAttrisKeeperWithActive()
+//                var newEventList: [Event] = []
+//                Network.shareInstance.parse(obj: objs!, by: &keeper) { str, attris in
+//                    if str == "active" {
+//                        let e = ActiveEventsMgr.createNewEvent(attris)
+//                        print("active", e.canInvite)
+//                        newEventList.append(e)
+//                    }
+//                }
+//
+//                var needFetchUserList: [User] = []
+//                UserMgr.checkUnfetchUsers(from: newEventList, by: self.data!, needFetchUserList: &needFetchUserList)
+//
+//                DispatchQueue.main.async {
+//                    self.resumeScan()
+//                    self.resetMe(keeper)
+//
+//                    self.updateObserver()
+//                    self.saveData()
+//
+//                    APP.activeEventsMgr.updateData(newEventList)
+//
+//                    if needFetchUserList.count > 0 {
+//                        self.fetchUnfetchUsers(needFetchUserList) { suc in
+//                            if suc {
+//                                APP.activeEventsMgr.updateObserver()
+//                                APP.activeEventsMgr.saveData()
+//                            } else {
+//                                APP.errorMgr.hasError()
+//                            }
+//                        }
+//                    } else {
+//                        APP.activeEventsMgr.updateObserver()
+//                        APP.activeEventsMgr.saveData()
+//                    }
+//                }
+//            }
+//        }
     }
 
     func resetMe(_ attris: [String: Any]) {

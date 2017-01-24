@@ -11,23 +11,27 @@ import Foundation
 class AppManager: NSObject {
 
     // 数据管理器
-    let userMgr: UserMgr
-    let activeEventsMgr: ActiveEventsMgr
-    let msgMgr: MsgMgr
-    let errorMgr: ErrorMgr
+    private(set) var userMgr: UserMgr! = nil
+    private(set) var activeEventsMgr: ActiveEventsMgr! = nil
+    private(set) var msgMgr: MsgMgr! = nil
+    private(set) var errorMgr: ErrorMgr! = nil
 
     //单例
     fileprivate static let shareInstance = AppManager()
     fileprivate override init() {
         print("初始化导演类")
+        super.init()
+    }
+
+    func setGlobal() {
+        print("全局设置")
 
         ItemType.initAllItem()
+
         userMgr = UserMgr()
         activeEventsMgr = ActiveEventsMgr()
         msgMgr = MsgMgr()
         errorMgr = ErrorMgr()
-
-        super.init()
 
         AMapServices.shared().apiKey = "04ec496139134f937690624ac77f2363"
         AMapServices.shared().enableHTTPS = true

@@ -8,11 +8,14 @@
 
 import UIKit
 
-class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableViewDelegate, UITableViewDataSource, StaticCellDelegate, InputViewDelegate {
+class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObserver, UITableViewDelegate, UITableViewDataSource, StaticCellDelegate, InputViewDelegate {
+
+    private var sectionNum: Int = 0
 
     private(set) var curEventId: DataID! = nil
     private var curEvent: Event! = nil
-    private var sectionNum: Int = 0
+
+    private(set) var msgContainer: MsgContainer? = nil
 
     private var isShowMsg: Bool = false
 
@@ -165,8 +168,6 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
 
         tableView.reloadData()
 
-        saveNewestMsg(e.msgList)
-
         // toolbar
         let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
         actBtnBoard.setState(st)
@@ -191,39 +192,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         }
         tableView.reloadRows(at: staticVarCellIndexList, with: .none)
 
-        let resetRowList = getNeedAddMsgCellIndex(e.msgList)
-        let addRowCount = resetRowList.count
-        if addRowCount > 0 {
-            // 把cellHeightDict里面的数据往后移
-            var i = 1
-            var indexList: [(Int, CGFloat)] = []
-            while true {
-                let index = getCellHeightDictIndex(section: 3, row: i)
-                guard let h = cellHeightDict[index] else {
-                    break
-                }
-
-                let tup: (Int, CGFloat) = (index + addRowCount, h)
-                indexList.append(tup)
-                cellHeightDict.removeValue(forKey: index)
-
-                i += 1
-            }
-            for tup in indexList {
-                cellHeightDict[tup.0] = tup.1
-            }
-
-            // 重新计算msg tail cell的高度
-            let msgTailCellIndex = IndexPath(row: e.msgList.count + 1, section: 3)
-            let msgTailCellHeightIndex = getCellHeightDictIndex(section: msgTailCellIndex.section, row: msgTailCellIndex.row)
-            cellHeightDict[msgTailCellHeightIndex] = DetailMsgTailCell.getCellHeight(e, index: msgTailCellIndex, otherData: self)
-
-            // 插入新cell
-            tableView.insertRows(at: resetRowList, with: .fade)
-        }
         tableView.endUpdates()
-
-        saveNewestMsg(e.msgList)
 
         // 状态
         let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
@@ -239,46 +208,80 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         }
     }
 
-    // 记录最新的5次对话的id，从头开始查找，不属于记录的id则是新的id（考虑网络延迟问题，所以记录5次而不是最新的一次）,
-    // 5次都满足时，视为没有新增的对话了
-    private let recordMsgCount: Int = 5
-    private var recordMsgIdList: [DataID] = []
+    // MsgMgrObserver ---------------------------------------------------------------------------------
 
-    private func saveNewestMsg(_ msgList: [MsgStruct]) {
-        for i in 0 ..< recordMsgCount {
-            let index = msgList.count - i - 1
-            if index < 0 {
+    func getCurEventID(for msgMgr: MsgMgr) -> DataID {
+        return curEventId
+    }
+
+    func onModify(msgs: MsgContainer) {
+        msgContainer = msgs
+
+        let section: Int = 3
+        var indexPathList: [IndexPath] = []
+
+        let posList = msgs.insertPos
+
+        if posList.count == 0 && msgs.msgIdList.count > 0 { // 全部
+            for i in 0 ..< msgs.msgNum {
+                let indexPath = IndexPath(row: i, section: section)
+                indexPathList.append(indexPath)
+            }
+
+            // 插入新cell
+            tableView.insertRows(at: indexPathList, with: .fade)
+            return
+        }
+
+        for pos in posList {
+            let indexPath = IndexPath(row: pos + 1, section: section) // +1 为了跳过标题
+            indexPathList.append(indexPath)
+        }
+
+        if indexPathList.count == 0 {
+            return
+        }
+
+        // 计算偏移量
+        var p: Int = 0
+        var offsetList: [Int] = [] //表示当前序号的这个值需要偏移的量
+        for i in 0 ... posList.last! {
+            let pos = posList[p]
+            if pos == i {
+                p += 1
+            } else {
+                offsetList.append(p)
+            }
+        }
+
+        // 把cellHeightDict里面的数据往后移
+        var i = 1
+        var indexList: [(Int, CGFloat)] = []
+        while true {
+            let index = getCellHeightDictIndex(section: 3, row: i)
+            guard let h = cellHeightDict[index] else {
                 break
             }
 
-            if recordMsgIdList.count < i + 1 {
-                recordMsgIdList.append(msgList[index].ID)
-            } else {
-                recordMsgIdList[i] = msgList[index].ID
-            }
+            let offset = i > offsetList.count ? indexPathList.count : offsetList[i - 1]
+
+            let tup: (Int, CGFloat) = (index + offset, h)
+            indexList.append(tup)
+            cellHeightDict.removeValue(forKey: index)
+
+            i += 1
         }
-    }
-
-    private func getNeedAddMsgCellIndex(_ msgList: [MsgStruct]) -> [IndexPath] {
-        var resetRowList: [IndexPath] = []
-        var i = msgList.count - 1
-        var k = 0
-        while true {
-            if i < 0 || k >= recordMsgIdList.count {
-                break // 记录值用完，意味着不会再有没有找到的新增cell，退出
-            }
-
-            let id = msgList[i].ID
-            if recordMsgIdList[k] != id {
-                resetRowList.append(IndexPath(row: resetRowList.count + 1, section: 3)) // resetRowList.count + 1 表示从第二个cell开始插入
-                i -= 1
-            } else {
-                k += 1
-                i -= 1// 对比下一个记录值
-            }
+        for tup in indexList {
+            cellHeightDict[tup.0] = tup.1
         }
 
-        return resetRowList
+        // 重新计算msg tail cell的高度
+        let tailIndex = IndexPath(row: msgs.msgNum + 1, section: section)
+        let tailHIndex = getCellHeightDictIndex(section: tailIndex.section, row: tailIndex.row)
+        cellHeightDict[tailHIndex] = DetailMsgTailCell.getCellHeight(curEvent, index: tailIndex, otherData: self)
+
+        // 插入新cell
+        tableView.insertRows(at: indexPathList, with: .fade)
     }
 
     // table view delegate ==========================================================================================
@@ -297,7 +300,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         case 2:
             return 2 // head body 就算是没有图片时，也应该有个默认的图
         case 3:
-            return 2 + curEvent.msgList.count //对话(s) + head
+            return 2 + (msgContainer?.msgIdList.count ?? 0) //对话(s) + head
         default:
             return 0
         }
@@ -354,7 +357,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             switch r {
             case 0:
                 height = DetailMsgHeadCell.getCellHeight()
-            case curEvent.msgList.count + 1:
+            case (msgContainer?.msgNum ?? 0) + 1:
                 height = DetailMsgTailCell.getCellHeight(curEvent, index: indexPath, otherData: self)
             default:
                 height = DetailMsgCell.getCellHeight(curEvent, index: indexPath, otherData: self)
@@ -376,7 +379,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     }
 
     // scrollView delegate ---------------------------------------------------------
-
+    private var msgMgrHasBeenRegistered: Bool = false
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let cellRect = tableView.rectForRow(at: IndexPath(row: 0, section: 3))
         let cellPosForScreen = tableView.convert(cellRect.origin, to: baseView)
@@ -385,6 +388,12 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
         msgHeadCellRelief.isHidden = (cellPosForScreen.y > 0)
 
         // msg head 出现时，开始刷新msg cell
+        if !msgMgrHasBeenRegistered {
+            if cellPosForScreen.y < UIScreen.main.bounds.height - 64 {
+                APP.msgMgr.register(observer: self, key: DataObKey)
+                msgMgrHasBeenRegistered = true
+            }
+        }
     }
 
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -440,7 +449,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
             switch indexPath.row {
             case 0:
                 return BaseCell.CInfo(id: "MHCId", c: DetailMsgHeadCell.self)
-            case curEvent.msgList.count + 1:
+            case (msgContainer?.msgNum ?? 0) + 1:
                 return BaseCell.CInfo(id: "MTCId", c: DetailMsgTailCell.self)
             default:
                 return BaseCell.CInfo(id: "MCId", c: DetailMsgCell.self)
@@ -461,7 +470,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     // 回调 ==================================================================================================================
 
     func onBack() {
-        APP.activeEventsMgr.unregister(key: "DetailViewController")
+        APP.activeEventsMgr.unregister(key: DataObKey)
+        APP.msgMgr.unregister(key: DataObKey)
+        
         NotificationCenter.default.removeObserver(self)
         let _ = navigationController?.popViewController(animated: true)
     }
@@ -544,17 +555,17 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, UITableView
     }
 
     func sendMsg(text: String) {
-        APP.activeEventsMgr.changeData(changeFunc: { data in
-            guard let e = data.getCurEvent(curId: curEventId) else {
-                print("ERROR: no event in sendMsg changeData")
-                return nil
-            }
-
-            let me = APP.userMgr.me
-            let mS = MsgStruct(id: DataID(ID: "send"), user: me, time: Time.now, msg: text)
-            e.msgList.append(mS)
-
-            return nil
-        }, needUpload: ["msg": "add"])
+//        APP.activeEventsMgr.changeData(changeFunc: { data in
+//            guard let e = data.getCurEvent(curId: curEventId) else {
+//                print("ERROR: no event in sendMsg changeData")
+//                return nil
+//            }
+//
+//            let me = APP.userMgr.me
+//            let mS = MsgStruct(id: DataID(ID: "send"), user: me, time: Time.now, msg: text)
+//            e.msgList.append(mS)
+//
+//            return nil
+//        }, needUpload: ["msg": "add"])
     }
 }
