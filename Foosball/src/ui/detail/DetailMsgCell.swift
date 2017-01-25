@@ -191,9 +191,9 @@ class DetailMsgTailCell: StaticCell {
         }
 
         let tableH = vc.tableView.frame.height - vc.tableView.contentInset.top - vc.tableView.contentInset.bottom
-        let leftH = tableH - totalMsgH - vc.tableView(vc.tableView, heightForFooterInSection: 3)
-
-        return max(leftH, 44) // 最小44
+        let footerH = vc.tableView(vc.tableView, heightForFooterInSection: 3)
+        let leftH = tableH - totalMsgH - footerH
+        return max(leftH, 44 - footerH) // 最小44
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {

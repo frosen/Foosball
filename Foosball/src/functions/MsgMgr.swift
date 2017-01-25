@@ -14,8 +14,8 @@ class MsgContainer {
     fileprivate(set) var msgDict: [DataID.IDType: MsgStruct] = [:]
     fileprivate(set) var insertPos: [Int] = []
 
-    // 已经保持的msg的数量
-    fileprivate(set) var msgNum: Int = 20
+    // 需要保持的msg的数量
+    fileprivate(set) var msgNeedNum: Int = 20
 }
 
 protocol MsgMgrObserver {
@@ -48,7 +48,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         // 测试代码
         let mc = MsgContainer()
         mc.msgIdList = [
-            "m1", "m2", "m3", "m4", "m5", "m6", "m7"
+            "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8"
         ]
         mc.msgDict = [
             "m1": MsgStruct(id: DataID(ID: "m1"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么1"),
@@ -58,6 +58,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
             "m5": MsgStruct(id: DataID(ID: "m5"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么5"),
             "m6": MsgStruct(id: DataID(ID: "m6"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么6"),
             "m7": MsgStruct(id: DataID(ID: "m7"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么7"),
+            "m8": MsgStruct(id: DataID(ID: "m7"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么7"),
         ]
 
         data[DataID(ID: "50001")] = mc
@@ -91,11 +92,15 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
     // ---------------------------------------------------------
 
     func onInit(actE: ActEvents) {
+        if let msgContainer = data[curEventID!] {
+            if msgContainer.msgIdList.count > 0 {
+                updateObserver()
+            }
+        }
+
         if let e = actE.getCurEvent(curId: curEventID!) {
             handleMsgIds(e.msgIDList)
-            print("on init suc")
         }
-        print("on init")
     }
 
     func onModify(actE: ActEvents) {
@@ -112,7 +117,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         if msgContainer == nil {
             msgContainer = MsgContainer()
 
-            let numFrom = max(ids.count - msgContainer!.msgNum, 0)
+            let numFrom = max(ids.count - msgContainer!.msgNeedNum, 0)
             for i in numFrom ..< ids.count {
                 let id = ids[i]
                 downIDList.append(id)
@@ -121,27 +126,27 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
             data[curEventID!] = msgContainer
         } else {
             // 对比
-            let checkOriNumMax = min(ids.count, msgContainer!.msgNum)
+            let checkOriginNumMax = min(ids.count, msgContainer!.msgNeedNum)
             let checkSaveNumMin = msgContainer!.msgIdList.count - 1 - 4
-            var i = 0
-            var k = msgContainer!.msgIdList.count - 1
+            var originIndex = 0
+            var saveIndex = msgContainer!.msgIdList.count - 1
             while true {
-                if k <= checkSaveNumMin { // 有n个匹配上，说明不会再找到新增了
+                if saveIndex <= checkSaveNumMin { // 有n个匹配上，说明不会再找到新增了
                     break
                 }
 
-                if i >= checkOriNumMax { // 所有最前面的几个都是新的
+                if originIndex >= checkOriginNumMax { // 所有最前面的几个都是新的
                     break
                 }
 
-                let id = ids[ids.count - 1 - i]
-                if msgContainer!.msgIdList[k] != id {
-                    downIDList.append(id)
-                    insertPos.append(i)
-                    i += 1
+                let originId = ids[ids.count - 1 - originIndex] // 倒着找
+                if msgContainer!.msgIdList[saveIndex] != originId {
+                    downIDList.append(originId)
+                    insertPos.append(originIndex)
+                    originIndex += 1
                 } else {
-                    k -= 1
-                    i += 1// 对比下一个记录值
+                    saveIndex -= 1
+                    originIndex += 1// 对比下一个记录值
                 }
             }
         }
@@ -151,7 +156,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         }
     }
 
-    func downloadMsgs(_ downIDList: [DataID.IDType], _ insertList: [Int], container: MsgContainer) {
+    private func downloadMsgs(_ downIDList: [DataID.IDType], _ insertList: [Int], container: MsgContainer) {
         Network.shareInstance.updateObjs(from: MsgStruct.classname, ids: downIDList, with: []) { suc, objs in
             if !suc {
                 print("ERROR: downloadMsgs wrong")
@@ -230,13 +235,11 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         if container.msgIdList.count == 0 {
             container.msgIdList = downIDList
             container.insertPos = []
-            container.msgNum = downIDList.count
         } else {
             for i in 0 ..< downIDList.count {
                 container.msgIdList.insert(downIDList[i], at: container.msgIdList.count - insertList[i])
             }
             container.insertPos = insertList
-            container.msgNum += downIDList.count
         }
     }
 }

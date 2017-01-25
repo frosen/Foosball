@@ -116,6 +116,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         APP.activeEventsMgr.set(hide: false, key: DataObKey)
+        APP.msgMgr.set(hide: false, key: DataObKey)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -128,6 +129,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         APP.activeEventsMgr.set(hide: true, key: DataObKey)
+        APP.msgMgr.set(hide: true, key: DataObKey)
     }
 
     // cell 滑动优化相关 ==============================================================================
@@ -223,9 +225,21 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         let posList = msgs.insertPos
 
         if posList.count == 0 && msgs.msgIdList.count > 0 { // 全部
-            for i in 0 ..< msgs.msgNum {
+            for i in 0 ..< msgs.msgIdList.count {
                 let indexPath = IndexPath(row: i, section: section)
                 indexPathList.append(indexPath)
+            }
+
+            // 修改高度，所以先删除原来所有高度
+            var i = 1
+            while true {
+                let index = getCellHeightDictIndex(section: 3, row: i)
+                let rmHeight = cellHeightDict.removeValue(forKey: index)
+                if rmHeight == nil {
+                    break
+                } else {
+                    i += 1
+                }
             }
 
             // 插入新cell
@@ -275,10 +289,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
             cellHeightDict[tup.0] = tup.1
         }
 
-        // 重新计算msg tail cell的高度
-        let tailIndex = IndexPath(row: msgs.msgNum + 1, section: section)
-        let tailHIndex = getCellHeightDictIndex(section: tailIndex.section, row: tailIndex.row)
-        cellHeightDict[tailHIndex] = DetailMsgTailCell.getCellHeight(curEvent, index: tailIndex, otherData: self)
+        // 重新计算msg tail cell的高度，所以要删除原来的
+        let tailHIndex = getCellHeightDictIndex(section: section, row: msgs.msgIdList.count + 1)
+        cellHeightDict.removeValue(forKey: tailHIndex)
 
         // 插入新cell
         tableView.insertRows(at: indexPathList, with: .fade)
@@ -357,7 +370,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
             switch r {
             case 0:
                 height = DetailMsgHeadCell.getCellHeight()
-            case (msgContainer?.msgNum ?? 0) + 1:
+            case (msgContainer?.msgIdList.count ?? 0) + 1:
                 height = DetailMsgTailCell.getCellHeight(curEvent, index: indexPath, otherData: self)
             default:
                 height = DetailMsgCell.getCellHeight(curEvent, index: indexPath, otherData: self)
@@ -379,7 +392,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     }
 
     // scrollView delegate ---------------------------------------------------------
+
     private var msgMgrHasBeenRegistered: Bool = false
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let cellRect = tableView.rectForRow(at: IndexPath(row: 0, section: 3))
         let cellPosForScreen = tableView.convert(cellRect.origin, to: baseView)
@@ -398,16 +413,19 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
 
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         APP.activeEventsMgr.set(hide: true, key: DataObKey)
+        APP.msgMgr.set(hide: true, key: DataObKey)
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
             APP.activeEventsMgr.set(hide: false, key: DataObKey)
+            APP.msgMgr.set(hide: false, key: DataObKey)
         }
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         APP.activeEventsMgr.set(hide: false, key: DataObKey)
+        APP.msgMgr.set(hide: false, key: DataObKey)
     }
 
     // BaseCellDelegate --------------------------------------------------------------
@@ -449,7 +467,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
             switch indexPath.row {
             case 0:
                 return BaseCell.CInfo(id: "MHCId", c: DetailMsgHeadCell.self)
-            case (msgContainer?.msgNum ?? 0) + 1:
+            case (msgContainer?.msgIdList.count ?? 0) + 1:
                 return BaseCell.CInfo(id: "MTCId", c: DetailMsgTailCell.self)
             default:
                 return BaseCell.CInfo(id: "MCId", c: DetailMsgCell.self)
