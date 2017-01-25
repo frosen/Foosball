@@ -111,6 +111,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     let DataObKey = "DetailViewController"
     override func initData() {
         APP.activeEventsMgr.register(observer: self, key: DataObKey)
+        APP.msgMgr.register(observer: self, key: DataObKey)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -226,7 +227,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
 
         if posList.count == 0 && msgs.msgIdList.count > 0 { // 全部
             for i in 0 ..< msgs.msgIdList.count {
-                let indexPath = IndexPath(row: i, section: section)
+                let indexPath = IndexPath(row: i + 1, section: section)
                 indexPathList.append(indexPath)
             }
 
@@ -313,6 +314,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         case 2:
             return 2 // head body 就算是没有图片时，也应该有个默认的图
         case 3:
+            print(2 + (msgContainer?.msgIdList.count ?? 0))
             return 2 + (msgContainer?.msgIdList.count ?? 0) //对话(s) + head
         default:
             return 0
@@ -392,8 +394,6 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     }
 
     // scrollView delegate ---------------------------------------------------------
-
-    private var msgMgrHasBeenRegistered: Bool = false
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let cellRect = tableView.rectForRow(at: IndexPath(row: 0, section: 3))
@@ -401,14 +401,6 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
 
         // msg head 到达顶部时，显示替身
         msgHeadCellRelief.isHidden = (cellPosForScreen.y > 0)
-
-        // msg head 出现时，开始刷新msg cell
-        if !msgMgrHasBeenRegistered {
-            if cellPosForScreen.y < UIScreen.main.bounds.height - 64 {
-                APP.msgMgr.register(observer: self, key: DataObKey)
-                msgMgrHasBeenRegistered = true
-            }
-        }
     }
 
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -573,14 +565,16 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     }
 
     func sendMsg(text: String) {
+        let me = APP.userMgr.me
+        let mS = MsgStruct(id: DataID(ID: "send"), user: me, time: Time.now, msg: text)
+        APP.msgMgr.addNewMsg(mS)
 //        APP.activeEventsMgr.changeData(changeFunc: { data in
 //            guard let e = data.getCurEvent(curId: curEventId) else {
 //                print("ERROR: no event in sendMsg changeData")
 //                return nil
 //            }
 //
-//            let me = APP.userMgr.me
-//            let mS = MsgStruct(id: DataID(ID: "send"), user: me, time: Time.now, msg: text)
+//
 //            e.msgList.append(mS)
 //
 //            return nil

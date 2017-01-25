@@ -52,19 +52,20 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         ]
         mc.msgDict = [
             "m1": MsgStruct(id: DataID(ID: "m1"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么1"),
-            "m2": MsgStruct(id: DataID(ID: "m2"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么2"),
+            "m2": MsgStruct(id: DataID(ID: "m2"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么\n2"),
             "m3": MsgStruct(id: DataID(ID: "m3"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么3"),
-            "m4": MsgStruct(id: DataID(ID: "m4"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么4"),
+            "m4": MsgStruct(id: DataID(ID: "m4"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么\n4"),
             "m5": MsgStruct(id: DataID(ID: "m5"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么5"),
-            "m6": MsgStruct(id: DataID(ID: "m6"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么6"),
+            "m6": MsgStruct(id: DataID(ID: "m6"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么\n6"),
             "m7": MsgStruct(id: DataID(ID: "m7"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么7"),
-            "m8": MsgStruct(id: DataID(ID: "m7"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么7"),
+            "m8": MsgStruct(id: DataID(ID: "m7"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么\n8"),
         ]
 
         data[DataID(ID: "50001")] = mc
     }
 
     // set ob --------------------------------------------------
+
     let DataObKey = "DataMgr"
 
     override func unregister(key: String) {
@@ -191,7 +192,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
                 }
 
                 DispatchQueue.main.async {
-                    self.resetMsg(in: container, msgs: msgList)
+                    self.saveMsg(in: container, msgs: msgList)
                     self.updateData(downIDList, insertList, container: container)
 
                     if needFetchUserList.count > 0 {
@@ -223,7 +224,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
     }
 
     // 下载好的msg放到一个字典里，以后根据list中的id获取
-    func resetMsg(in c: MsgContainer, msgs: [MsgStruct]) {
+    func saveMsg(in c: MsgContainer, msgs: [MsgStruct]) {
         var dict = c.msgDict
         for msg in msgs {
             dict[msg.ID.ID] = msg
@@ -241,5 +242,41 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
             }
             container.insertPos = insertList
         }
+    }
+
+    // 上传 -------------------------------------------------------------------------------
+
+    func addNewMsg(_ newMsg: MsgStruct) {
+        guard let msgContainer = data[curEventID!] else {
+            return
+        }
+
+        msgContainer.msgIdList.append(newMsg.ID.rawValue)
+        msgContainer.msgDict[newMsg.ID.rawValue] = newMsg
+        msgContainer.insertPos = [0]
+        updateObserver()
+
+//        let attris: [String: Any] = [
+//            "u": newMsg.user!.ID.rawValue,
+//            "tm": newMsg.time!.getTimeData(),
+//            "msg": newMsg.msg,
+//        ]
+//
+//        Network.shareInstance.createObj(to: MsgStruct.classname, attris: attris) { suc, error, newID in
+//            print("create Msg on net: \(suc), ", error ?? "no error")
+//            if suc {
+//                newMsg.ID = DataID(ID: newID!)
+//                self.data.eList.append(e)
+//                APP.userMgr.addNewEvent(e) { suc, error in
+//                    if suc {
+//                        self.updateObserver()
+//                        self.saveData()
+//                    }
+//                    callback(suc, error)
+//                }
+//            } else {
+//                callback(suc, error)
+//            }
+//        }
     }
 }
