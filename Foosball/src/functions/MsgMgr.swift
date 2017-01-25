@@ -246,7 +246,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
 
     // 上传 -------------------------------------------------------------------------------
 
-    func addNewMsg(_ newMsg: MsgStruct) {
+    func addNewMsg(_ newMsg: MsgStruct, callback: @escaping ((Bool) -> Void)) {
         guard let msgContainer = data[curEventID!] else {
             return
         }
@@ -256,27 +256,37 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         msgContainer.insertPos = [0]
         updateObserver()
 
-//        let attris: [String: Any] = [
-//            "u": newMsg.user!.ID.rawValue,
-//            "tm": newMsg.time!.getTimeData(),
-//            "msg": newMsg.msg,
-//        ]
-//
-//        Network.shareInstance.createObj(to: MsgStruct.classname, attris: attris) { suc, error, newID in
-//            print("create Msg on net: \(suc), ", error ?? "no error")
-//            if suc {
-//                newMsg.ID = DataID(ID: newID!)
-//                self.data.eList.append(e)
-//                APP.userMgr.addNewEvent(e) { suc, error in
-//                    if suc {
-//                        self.updateObserver()
-//                        self.saveData()
-//                    }
-//                    callback(suc, error)
-//                }
-//            } else {
-//                callback(suc, error)
-//            }
-//        }
+        let attris: [String: Any] = [
+            "u": newMsg.user!.ID.rawValue,
+            "tm": newMsg.time!.getTimeData(),
+            "msg": newMsg.msg,
+        ]
+
+        Network.shareInstance.createObj(to: MsgStruct.classname, attris: attris) { suc, error, newID in
+            print("create Msg on net: \(suc), ", error ?? "no error")
+            if suc {
+                // 置换原来的id
+                let oldID = newMsg.ID.rawValue
+                newMsg.ID = DataID(ID: newID!)
+
+                for i in (0 ..< msgContainer.msgIdList.count).reversed() {
+                    if msgContainer.msgIdList[i] == oldID {
+                        msgContainer.msgIdList.remove(at: i)
+                        break
+                    }
+                }
+                msgContainer.msgIdList.append(newID!)
+                msgContainer.msgDict[newMsg.ID.rawValue] = newMsg
+
+                APP.activeEventsMgr.addNewMsg(newID!, eventId: self.curEventID!) { suc in
+                    if suc {
+                        self.saveData()
+                    }
+                    callback(suc)
+                }
+            } else {
+                callback(suc)
+            }
+        }
     }
 }

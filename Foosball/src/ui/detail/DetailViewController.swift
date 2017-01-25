@@ -567,7 +567,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     func sendMsg(text: String) {
         let me = APP.userMgr.me
         let mS = MsgStruct(id: DataID(ID: "send"), user: me, time: Time.now, msg: text)
-        APP.msgMgr.addNewMsg(mS)
+        APP.msgMgr.addNewMsg(mS) { suc in
+
+        }
 //        APP.activeEventsMgr.changeData(changeFunc: { data in
 //            guard let e = data.getCurEvent(curId: curEventId) else {
 //                print("ERROR: no event in sendMsg changeData")

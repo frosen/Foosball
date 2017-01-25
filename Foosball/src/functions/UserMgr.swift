@@ -315,12 +315,13 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     // 便捷函数 ----------------------------------------------------------------------------------
 
     // 同时给活动事件和所有事件
-    func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
+    func addNewEvent(_ e: Event, callback: @escaping ((Bool) -> Void)) {
         pauseScan()
         Network.shareInstance.addDataToUser(e, listName: "active", needUploadAndCallback: nil)
         Network.shareInstance.addDataToUser(e.ID.rawValue, listName: "events") { suc, error in
             self.resumeScan()
-            callback(suc, error)
+            print("addNewEvent to User", suc, error ?? "no_error")
+            callback(suc)
         }
     }
     

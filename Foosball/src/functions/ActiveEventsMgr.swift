@@ -237,7 +237,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
     // 本地便捷函数 ------------------------------------------------------------
 
-    func addNewEvent(_ e: Event, callback: @escaping ((Bool, Error?) -> Void)) {
+    func addNewEvent(_ e: Event, callback: @escaping ((Bool) -> Void)) {
         let attris: [String: Any] = [
             "tp": e.type.rawValue,
             "i": e.item.tag,
@@ -262,15 +262,15 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             if suc {
                 e.ID = DataID(ID: newID!)
                 self.data.eList.append(e)
-                APP.userMgr.addNewEvent(e) { suc, error in
+                APP.userMgr.addNewEvent(e) { suc in
                     if suc {
                         self.updateObserver()
                         self.saveData()
                     }
-                    callback(suc, error)
+                    callback(suc)
                 }
             } else {
-                callback(suc, error)
+                callback(suc)
             }
         }
     }
@@ -323,6 +323,11 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         let cutUrl: String = Network.shareInstance.getCutImgUrl(from: str, by: Int32(width!)) ?? str
         return cutUrl
+    }
+
+    func addNewMsg(_ msgId: DataID.IDType, eventId: DataID, callback: @escaping ((Bool) -> Void)) {
+        let e = data.getCurEvent(curId: eventId)
+        e?.msgIDList.append(msgId)
     }
 }
 
