@@ -60,13 +60,13 @@ class DataMgr<DATA, OB>: NSObject {
     // 本地更新 -----------------------------------------------------------------
 
     // 注意：这个函数不可被继承！swift 的 模板函数如果函数有一个参数是function 并且这个function中的参数为模板，则不能继承这个函数，否则会报错
-    func changeData(changeFunc: ((DATA) -> Any?), needUpload: [String: String]? = nil) {
+    func changeData(changeFunc: ((DATA) -> Any?), needUpload: [String: String]? = nil, callback: ((Bool) -> Void)? = nil) {
         // 接受新变化
         let res = changeFunc(_data)
         handleChangeResult(res)
 
         updateObserver()
-        saveData(needUpload: needUpload)
+        saveData(needUpload: needUpload, callback: callback)
     }
 
     func handleChangeResult(_ res: Any?) {} // 需要继承
@@ -84,19 +84,21 @@ class DataMgr<DATA, OB>: NSObject {
         }
     }
 
-    func saveData(needUpload: [String: String]? = nil) {
+    func saveData(needUpload: [String: String]?, callback: ((Bool) -> Void)?) {
         //保存本地
         saveToLocal()
 
         //上传网络
-        saveToServer(needUpload)
+        if needUpload != nil {
+            saveToServer(needUpload, callback)
+        }
     }
 
     func saveToLocal() {
 
     }
 
-    func saveToServer(_ attris: [String: String]?) {
+    func saveToServer(_ attris: [String: String]?, _ callback: ((Bool) -> Void)?) {
         
     }
 }

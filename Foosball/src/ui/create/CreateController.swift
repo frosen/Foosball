@@ -107,12 +107,12 @@ class CreateController: BaseController, UIScrollViewDelegate {
         createEvent.createTime = Time.now
         createEvent.createUserID = APP.userMgr.me.ID
 
-        APP.activeEventsMgr.addNewEvent(createEvent) { suc, error in
+        APP.activeEventsMgr.addNewEvent(createEvent) { suc in
             if suc {
                 // 返回
                 self.goBackToHome()
             } else {
-                print("ERROR: CreateController finish", error ?? "no error")
+
             }
         }
     }

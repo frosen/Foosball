@@ -63,7 +63,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 
         } else {
             readLocalUserData()
-            perform(#selector(UserMgr.updateMe), with: nil, afterDelay: 1.0) // 1秒后立即更新
+            perform(#selector(UserMgr.fetchMe), with: nil, afterDelay: 1.0) // 1秒后立即更新
             gotoScanServerData()
         }
     }
@@ -116,7 +116,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
             me.ID = DataID(ID: newID)
 
             self.updateObserver()
-            self.saveData()
+            self.saveToLocal()
             self.gotoScanServerData()
         }
     }
@@ -140,33 +140,33 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 
     private static let scanSecondMax: Int = 15
     private var scanSecond: Int = scanSecondMax
-    private var isScanPause: Bool = false
+    private var scanPauseIndex: Int = 0
     func timer(_ t: Timer) {
-        if isScanPause {
+        if scanPauseIndex > 0 {
             return
         }
 
         scanSecond -= 1
         if scanSecond <= 0 {
-            updateMe()
+            fetchMe()
             scanSecond = UserMgr.scanSecondMax
         }
     }
 
-    private func pauseScan() {
-        isScanPause = true
+    func pauseScan() {
+        scanPauseIndex += 1
     }
 
-    private func resumeScan() {
-        isScanPause = false
+    func resumeScan() {
+        scanPauseIndex -= 1
     }
 
-    func updateMe() {
+    func fetchMe() {
 //        pauseScan()
 //
-//        Network.shareInstance.updateMe(with: ["active"]) { suc, objs in
+//        Network.shareInstance.fetchMe(with: ["active"]) { suc, objs in
 //            if !suc {
-//                print("ERROR: no attris in updateMe")
+//                print("ERROR: no attris in fetchMe")
 //                self.resumeScan()
 //                APP.errorMgr.hasError()
 //                return
@@ -192,22 +192,21 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 //                    self.resetMe(keeper)
 //
 //                    self.updateObserver()
-//                    self.saveData()
+//                    self.saveToLocal()
 //
 //                    APP.activeEventsMgr.updateData(newEventList)
+//                    APP.activeEventsMgr.saveToLocal()
 //
 //                    if needFetchUserList.count > 0 {
 //                        self.fetchUnfetchUsers(needFetchUserList) { suc in
 //                            if suc {
 //                                APP.activeEventsMgr.updateObserver()
-//                                APP.activeEventsMgr.saveData()
 //                            } else {
 //                                APP.errorMgr.hasError()
 //                            }
 //                        }
 //                    } else {
 //                        APP.activeEventsMgr.updateObserver()
-//                        APP.activeEventsMgr.saveData()
 //                    }
 //                }
 //            }
@@ -258,7 +257,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         for user in unfetchUserList {
             ids.append(user.ID.rawValue)
         }
-        Network.shareInstance.updateUsers(ids, with: []) { suc, objs in
+        Network.shareInstance.fetchUsers(ids, with: []) { suc, objs in
             if !suc {
                 print("ERROR: no attris in updateMe")
                 self.resumeScan()
@@ -305,11 +304,8 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         ob.onModify(user: data[0])
     }
 
-    override func saveData(needUpload: [String: String]? = nil) {
+    override func saveToLocal() {
         // 用户数据不需要自己进行本地保存，会保存到leancloud中
-        
-        //上传网络
-        saveToServer(needUpload)
     }
 
     // 便捷函数 ----------------------------------------------------------------------------------
@@ -317,8 +313,8 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     // 同时给活动事件和所有事件
     func addNewEvent(_ e: Event, callback: @escaping ((Bool) -> Void)) {
         pauseScan()
-        Network.shareInstance.addDataToUser(e, listName: "active", needUploadAndCallback: nil)
-        Network.shareInstance.addDataToUser(e.ID.rawValue, listName: "events") { suc, error in
+        Network.shareInstance.addDataToUser(e, listName: "active", andUpdate: false)
+        Network.shareInstance.addDataToUser(e.ID.rawValue, listName: "events", andUpdate: true) { suc, error in
             self.resumeScan()
             print("addNewEvent to User", suc, error ?? "no_error")
             callback(suc)

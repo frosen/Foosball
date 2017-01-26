@@ -158,7 +158,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
     }
 
     private func downloadMsgs(_ downIDList: [DataID.IDType], _ insertList: [Int], container: MsgContainer) {
-        Network.shareInstance.updateObjs(from: MsgStruct.classname, ids: downIDList, with: []) { suc, objs in
+        Network.shareInstance.fetchObjs(from: MsgStruct.classname, ids: downIDList, with: []) { suc, objs in
             if !suc {
                 print("ERROR: downloadMsgs wrong")
                 APP.errorMgr.hasError()
@@ -199,14 +199,14 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
                         APP.userMgr.fetchUnfetchUsers(needFetchUserList) { suc in
                             if suc {
                                 self.updateObserver()
-                                self.saveData()
+                                self.saveToLocal()
                             } else {
                                 APP.errorMgr.hasError()
                             }
                         }
                     } else {
                         self.updateObserver()
-                        self.saveData()
+                        self.saveToLocal()
                     }
                 }
             }
@@ -246,7 +246,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
 
     // 上传 -------------------------------------------------------------------------------
 
-    func addNewMsg(_ newMsg: MsgStruct, callback: @escaping ((Bool) -> Void)) {
+    func addNewMsg(_ newMsg: MsgStruct, obKey: String, callback: @escaping ((Bool) -> Void)) {
         guard let msgContainer = data[curEventID!] else {
             return
         }
@@ -262,8 +262,10 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
             "msg": newMsg.msg,
         ]
 
+        APP.userMgr.pauseScan()
         Network.shareInstance.createObj(to: MsgStruct.classname, attris: attris) { suc, error, newID in
             print("create Msg on net: \(suc), ", error ?? "no error")
+            APP.userMgr.resumeScan()
             if suc {
                 // 置换原来的id
                 let oldID = newMsg.ID.rawValue
@@ -278,14 +280,19 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
                 msgContainer.msgIdList.append(newID!)
                 msgContainer.msgDict[newMsg.ID.rawValue] = newMsg
 
-                APP.activeEventsMgr.addNewMsg(newID!, eventId: self.curEventID!) { suc in
+                // 更新event
+                APP.activeEventsMgr.addNewMsg(newID!, to: self.curEventID!) { suc in
                     if suc {
-                        self.saveData()
+                        self.saveToLocal()
                     }
-                    callback(suc)
+                    if self.hasOb(for: obKey) {
+                        callback(true)
+                    }
                 }
             } else {
-                callback(suc)
+                if self.hasOb(for: obKey) {
+                    callback(false)
+                }
             }
         }
     }

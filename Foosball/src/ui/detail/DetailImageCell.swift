@@ -164,7 +164,7 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
 
     func removePhoto(_ index: Int) {
         print("deleta img: ", index)
-        UITools.showAlert(ctrlr, title: "删除图片", msg: "您确定要删除这张图片吗？", type: 2) { _ in
+        UITools.showAlert(ctrlr, title: "删除图片", msg: "您确定要删除这张图片吗？", type: 2, callback: { _ in
             print("confirm to delete")
             let detailCtrlr = self.ctrlr as! DetailViewController
             APP.activeEventsMgr.changeData(changeFunc: { data in
@@ -185,7 +185,7 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
 
                 return nil
             }, needUpload: ["img": "rm"])
-        }
+        })
     }
 
     // 获取图片 ---------------------------------------------------------------------
@@ -254,13 +254,14 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
             if str == "p" {
                 self.setUploading(progress: progress)
             } else {
-                self.showUploading(false) //取消转圈
-
                 if str == "fail" {
-                    UITools.showAlert(detailCtrlr, title: "错误", msg: "上传图片有误，是否重新上传？", type: 2) { _ in
+                    UITools.showAlert(detailCtrlr, title: "错误", msg: "上传图片有误，是否重新上传？", type: 2, callback: { _ in
                         self.upload(img: img)
+                    }) { _ in
+                        self.showUploading(false) //取消转圈
                     }
                 }
+                // 成功就不做任何处理了，因为反正马上要刷新
             }
         }
     }

@@ -47,8 +47,24 @@ class Network: NSObject {
         }
     }
 
+    func getUserAttris() -> Any? {
+        return AVUser.current()
+    }
+
+    func fetchMe(with lists: [String], callback: @escaping ((Bool, Any?) -> Void)) {
+        print("fetch me")
+        guard let user = AVUser.current() else {
+            return
+        }
+        fetchUsers([user.objectId!], with: lists, callback: callback)
+    }
+
+    func fetchUsers(_ ids: [String], with lists: [String], callback: @escaping ((Bool, Any?) -> Void)) {
+        fetchObjs(from: User.classname, ids: ids, with: lists, callback: callback)
+    }
+
     // 把事件添加到user上
-    func addDataToUser(_ data: Any, listName: String, needUploadAndCallback: ((Bool, Error?) -> Void)?) {
+    func addDataToUser(_ data: Any, listName: String, andUpdate: Bool, callback: ((Bool, Error?) -> Void)? = nil) {
         guard let user = AVUser.current() else {
             return
         }
@@ -56,44 +72,26 @@ class Network: NSObject {
         let value = checkValue(data)
         user.add(value, forKey: listName)
 
-        if needUploadAndCallback == nil {
+        if !andUpdate {
             return
         }
 
         let opt = AVSaveOption()
         opt.fetchWhenSave = true
         user.saveInBackground(with: opt, block: { suc, error in
-            needUploadAndCallback!(suc, error)
+            callback!(suc, error)
         })
     }
 
-    // 因为User有特殊的list，所以单独做一个函数 不用回调，以免误以为会有延迟
-    func getUserAttris() -> Any? {
-        return AVUser.current()
-//        guard let user =  else {
-//            return nil
-//        }
-//        parse(obj: user, by: &attris, callback: { _, _ in }, key: "")
-//        return attris
-    }
+    func updateUser(_ attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
 
-    func updateMe(with lists: [String], callback: @escaping ((Bool, Any?) -> Void)) {
-        print("fetch me")
-        guard let user = AVUser.current() else {
-            return
-        }
-        updateUsers([user.objectId!], with: lists, callback: callback)
-    }
-
-    func updateUsers(_ ids: [String], with lists: [String], callback: @escaping ((Bool, Any?) -> Void)) {
-        updateObjs(from: User.classname, ids: ids, with: lists, callback: callback)
     }
 
     // 对象 --------------------------------------------------------------------
 
     // 创建对象
     func createObj(to list: String, attris: [String: Any], callback: @escaping ((Bool, Error?, String?) -> Void)) {
-        let todo = AVObject(className:  list)
+        let todo = AVObject(className: list)
         for attri in attris {
             let value = checkValue(attri.value)
             todo.setObject(value, forKey: attri.0)
@@ -105,7 +103,7 @@ class Network: NSObject {
     }
 
     // 获取
-    func updateObjs(from: String, ids: [String], with lists: [String], callback: @escaping ((Bool, Any?) -> Void)) {
+    func fetchObjs(from: String, ids: [String], with lists: [String], callback: @escaping ((Bool, Any?) -> Void)) {
         let query = AVQuery(className: from)
         query.whereKey("objectId", containedIn: ids)
 
@@ -197,7 +195,21 @@ class Network: NSObject {
         }
     }
 
-    // 上传数据
+    // 更新服务器
+    func updateObj(from: String, id: String, attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
+        let todo = AVObject(className: from, objectId: id)
+        for attri in attris {
+            let value = checkValue(attri.value)
+            todo.setObject(value, forKey: attri.0)
+        }
+
+        todo.saveInBackground { suc, error in
+            callback(suc, error)
+        }
+    }
+
+    // 上传文件 -----------------------------------------------------------------------------------
+
     func upload(data: Data, name: String, callback: @escaping ((String, Int) -> Void)) {
         let f = AVFile(name: name, data: data)
         f.saveInBackground({ (suc, error) in

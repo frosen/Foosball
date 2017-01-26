@@ -257,21 +257,36 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             "cid": e.createUserID.rawValue
         ]
 
+        APP.userMgr.pauseScan()
         Network.shareInstance.createObj(to: Event.classname, attris: attris) { suc, error, newID in
             print("create event on net: \(suc), ", error ?? "no error")
+            APP.userMgr.resumeScan()
             if suc {
-                e.ID = DataID(ID: newID!)
-                self.data.eList.append(e)
                 APP.userMgr.addNewEvent(e) { suc in
                     if suc {
+                        e.ID = DataID(ID: newID!)
+                        self.data.eList.append(e)
+                        
                         self.updateObserver()
-                        self.saveData()
+                        self.saveToLocal()
                     }
                     callback(suc)
                 }
             } else {
                 callback(suc)
             }
+        }
+    }
+
+    func updateEvent(_ e: Event, attris: [String: Any], callback: @escaping ((Bool) -> Void)) {
+        APP.userMgr.pauseScan()
+        Network.shareInstance.updateObj(from: Event.classname, id: e.ID.rawValue, attris: attris) { suc, error in
+            APP.userMgr.resumeScan()
+            print("updateEvent event on net: \(suc), ", error ?? "no error")
+            if suc {
+                self.saveToLocal()
+            }
+            callback(suc)
         }
     }
 
@@ -292,22 +307,15 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         let filename = event.ID.rawValue + "_" + String(event.imageURLList.count) + ".jpg"
 
         Network.shareInstance.upload(data: imgData, name: filename) { str, progress in
-            if !self.hasOb(for: obKey) {
-                return
-            }
-
-            if str == "p" {
-                callback("p", progress)
-            } else if str == "fail" {
-                callback("fail", 0)
-            } else {
+            if str != "p" && str != "fail" {
                 self.changeData(changeFunc: { _ in
-
                     event.imageURLList.append(str)
-
                     return nil
                 }, needUpload: ["img": "add"])
+            }
 
+            if self.hasOb(for: obKey) {
+                callback(str, progress)
             }
         }
     }
@@ -317,17 +325,27 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         return str // todo
 
-        if width == nil {
-            return str
-        }
-
-        let cutUrl: String = Network.shareInstance.getCutImgUrl(from: str, by: Int32(width!)) ?? str
-        return cutUrl
+//        if width == nil {
+//            return str
+//        }
+//
+//        let cutUrl: String = Network.shareInstance.getCutImgUrl(from: str, by: Int32(width!)) ?? str
+//        return cutUrl
     }
 
-    func addNewMsg(_ msgId: DataID.IDType, eventId: DataID, callback: @escaping ((Bool) -> Void)) {
+    func addNewMsg(_ msgId: DataID.IDType, to eventId: DataID, callback: @escaping ((Bool) -> Void)) {
         let e = data.getCurEvent(curId: eventId)
-        e?.msgIDList.append(msgId)
+        if e == nil {
+            callback(false)
+            return
+        }
+
+        e!.msgIDList.append(msgId)
+
+        let attris: [String: Any] = [
+            "msg": e!.msgIDList,
+        ]
+        updateEvent(e!, attris: attris, callback: callback)
     }
 }
 

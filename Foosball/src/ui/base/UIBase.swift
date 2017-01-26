@@ -53,12 +53,12 @@ class UITools {
         vc.navigationItem.leftBarButtonItem = UITools.createBarBtnItem(vc, action: action, image: #imageLiteral(resourceName: "go_back"))
     }
 
-    class func showAlert(_ target: UIViewController, title: String, msg: String, type: Int, callback: ((UIAlertAction) -> Void)?) {
+    class func showAlert(_ target: UIViewController, title: String, msg: String, type: Int, callback: ((UIAlertAction) -> Void)?, cancelCallback: ((UIAlertAction) -> Void)? = nil) {
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         if type == 1 {
             alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: callback))
         } else {
-            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: cancelCallback))
             alert.addAction(UIAlertAction(title: "确定", style: .default, handler: callback))
         }
         target.present(alert, animated: true, completion: nil)

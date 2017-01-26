@@ -108,7 +108,6 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
             actionBtnBoard.setStateTip(changeTup.0)
             actionBtnBoard.setMsgTip(changeTup.1)
         }
-        actionBtnBoard.setMsgTip(1)
     }
 
     private let avatarMargin: CGFloat = 3

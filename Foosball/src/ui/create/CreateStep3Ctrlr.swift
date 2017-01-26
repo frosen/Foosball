@@ -149,10 +149,10 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     // CreateStep3ToolbarDelegate ================================================================================================
 
     func onPublish() {
-        UITools.showAlert(rootCtrlr, title: "确认发布", msg: "是否确认直接发布?", type: 2) { act in
+        UITools.showAlert(rootCtrlr, title: "确认发布", msg: "是否确认直接发布?", type: 2, callback: { act in
             self.rootCtrlr.createEvent.isPublishToMap = true
             self.rootCtrlr.finish()
-        }
+        })
     }
 
     func onGoon() {
