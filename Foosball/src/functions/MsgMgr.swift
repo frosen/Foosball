@@ -262,10 +262,8 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
             "msg": newMsg.msg,
         ]
 
-        APP.userMgr.pauseScan()
         Network.shareInstance.createObj(to: MsgStruct.classname, attris: attris) { suc, error, newID in
             print("create Msg on net: \(suc), ", error ?? "no error")
-            APP.userMgr.resumeScan()
             if suc {
                 // 置换原来的id
                 let oldID = newMsg.ID.rawValue

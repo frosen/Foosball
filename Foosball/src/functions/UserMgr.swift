@@ -51,6 +51,8 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         return keeper
     }
 
+    // ------------------------------------------------------
+
     override init() {
         super.init()
         print("初始化 UserMgr")
@@ -63,7 +65,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 
         } else {
             readLocalUserData()
-            perform(#selector(UserMgr.fetchMe), with: nil, afterDelay: 1.0) // 1秒后立即更新
+            perform(#selector(UserMgr.fetchMeAtOnce), with: nil, afterDelay: 1.0) // 1秒后立即更新
             gotoScanServerData()
         }
     }
@@ -78,6 +80,8 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 
     // 用户未登录前，直接用设备id注册一个用户
     func registerDeviceLogin() {
+
+        // 随机一个用户名和密码
         var loginName: String = ""
         for _ in 0 ..< 5 { // 前5位可能会显示到昵称里，所以都是大写英文
             loginName += String(format: "%c", arc4random_uniform(91 - 65) + 65)
@@ -86,15 +90,16 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
             loginName += String(format: "%c", arc4random_uniform(123 - 48) + 48)
         }
 
-        // 截出前几位，用于昵称中
-        let index = loginName.index(loginName.startIndex, offsetBy: 4)
-        let subStr = loginName.substring(to: index)
-
         var password: String = ""
         for _ in 0 ..< 8 {
             password += String(format: "%c", arc4random_uniform(123 - 48) + 48)
         }
 
+        // 截出前几位，用于昵称中
+        let index = loginName.index(loginName.startIndex, offsetBy: 4)
+        let subStr = loginName.substring(to: index)
+
+        // 创建数据
         let me = User(ID: DataID(ID: "no register"))
         me.name = "苹果玩家" + subStr
 
@@ -140,81 +145,69 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 
     private static let scanSecondMax: Int = 15
     private var scanSecond: Int = scanSecondMax
-    private var scanPauseIndex: Int = 0
-    func timer(_ t: Timer) {
-        if scanPauseIndex > 0 {
-            return
-        }
 
+    func timer(_ t: Timer) {
         scanSecond -= 1
         if scanSecond <= 0 {
-            fetchMe()
-            scanSecond = UserMgr.scanSecondMax
+            fetchMeAtOnce()
         }
     }
 
-    func pauseScan() {
-        scanPauseIndex += 1
+    func fetchMeAtOnce() {
+        fetchMe()
+        scanSecond = UserMgr.scanSecondMax
     }
 
-    func resumeScan() {
-        scanPauseIndex -= 1
-    }
+    private func fetchMe() {
+        Network.shareInstance.fetchMe(with: ["active"]) { suc, objs in
+            if !suc {
+                print("ERROR: no attris in fetchMe")
+                APP.errorMgr.hasError()
+                return
+            }
 
-    func fetchMe() {
-//        pauseScan()
-//
-//        Network.shareInstance.fetchMe(with: ["active"]) { suc, objs in
-//            if !suc {
-//                print("ERROR: no attris in fetchMe")
-//                self.resumeScan()
-//                APP.errorMgr.hasError()
-//                return
-//            }
-//
-//            DispatchQueue(label: self.parseThreadName).async {
-//                // 创建一个属性持有器
-//                var keeper = UserMgr.createAttrisKeeperWithActive()
-//                var newEventList: [Event] = []
-//                Network.shareInstance.parse(obj: objs!, by: &keeper) { str, attris in
-//                    if str == "active" {
-//                        let e = ActiveEventsMgr.createNewEvent(attris)
-//                        print("active", e.canInvite)
-//                        newEventList.append(e)
-//                    }
-//                }
-//
-//                var needFetchUserList: [User] = []
-//                UserMgr.checkUnfetchUsers(from: newEventList, by: self.data!, needFetchUserList: &needFetchUserList)
-//
-//                DispatchQueue.main.async {
-//                    self.resumeScan()
-//                    self.resetMe(keeper)
-//
-//                    self.updateObserver()
-//                    self.saveToLocal()
-//
-//                    APP.activeEventsMgr.updateData(newEventList)
-//                    APP.activeEventsMgr.saveToLocal()
-//
-//                    if needFetchUserList.count > 0 {
-//                        self.fetchUnfetchUsers(needFetchUserList) { suc in
-//                            if suc {
-//                                APP.activeEventsMgr.updateObserver()
-//                            } else {
-//                                APP.errorMgr.hasError()
-//                            }
-//                        }
-//                    } else {
-//                        APP.activeEventsMgr.updateObserver()
-//                    }
-//                }
-//            }
-//        }
+            DispatchQueue(label: self.parseThreadName).async {
+
+                var keeper = UserMgr.createAttrisKeeperWithActive() // 创建一个属性持有器
+                var newEventList: [Event] = []
+
+                Network.shareInstance.parse(obj: objs!, by: &keeper) { str, attris in
+                    if str == "active" {
+                        let e = ActiveEventsMgr.createNewEvent(attris)
+                        newEventList.append(e)
+                    }
+                }
+
+                var needFetchUserList: [User] = []
+                UserMgr.checkUnfetchUsers(from: newEventList, by: self.data!, needFetchUserList: &needFetchUserList)
+
+                DispatchQueue.main.async {
+                    self.resetMe(keeper)
+                    self.saveToLocal()
+
+                    self.updateObserver()
+
+                    APP.activeEventsMgr.updateData(newEventList)
+                    APP.activeEventsMgr.saveToLocal()
+
+                    if needFetchUserList.count > 0 {
+                        self.fetchUnfetchUsers(needFetchUserList) { suc in
+                            if suc {
+                                APP.activeEventsMgr.updateObserver()
+                            } else {
+                                APP.errorMgr.hasError()
+                            }
+                        }
+                    } else {
+                        APP.activeEventsMgr.updateObserver()
+                    }
+                }
+            }
+        }
     }
 
     func resetMe(_ attris: [String: Any]) {
-        if data.count == 0 {
+        if data.count == 0 { // 列表中第一个就是自己
             data.append(User(ID: DataID(ID: "reset")))
         }
         UserMgr.reset(user: &data[0], attris: attris)
@@ -251,16 +244,14 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     // 获取未获取的用户数据 -------------------------------------------------------------------
 
     func fetchUnfetchUsers(_ unfetchUserList: [User], callback: @escaping ((Bool) -> Void)) {
-        pauseScan()
 
         var ids: [String] = []
         for user in unfetchUserList {
             ids.append(user.ID.rawValue)
         }
         Network.shareInstance.fetchUsers(ids, with: []) { suc, objs in
-            if !suc {
+            guard suc else {
                 print("ERROR: no attris in updateMe")
-                self.resumeScan()
                 callback(false)
                 return
             }
@@ -274,7 +265,6 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
                 })
                 DispatchQueue.main.async {
                     self.data.append(contentsOf: unfetchUserList)
-                    self.resumeScan()
                     callback(true)
                 }
             }
@@ -288,10 +278,6 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
                 UserMgr.reset(user: &u, attris: attris)
             }
         }
-    }
-
-    var me: User {
-        return data[0]
     }
 
     // 继承 -------------------------------------------------------------------------------
@@ -310,12 +296,14 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 
     // 便捷函数 ----------------------------------------------------------------------------------
 
+    var me: User {
+        return data[0]
+    }
+
     // 同时给活动事件和所有事件
     func addNewEvent(_ e: Event, callback: @escaping ((Bool) -> Void)) {
-        pauseScan()
         Network.shareInstance.addDataToUser(e, listName: "active", andUpdate: false)
         Network.shareInstance.addDataToUser(e.ID.rawValue, listName: "events", andUpdate: true) { suc, error in
-            self.resumeScan()
             print("addNewEvent to User", suc, error ?? "no_error")
             callback(suc)
         }

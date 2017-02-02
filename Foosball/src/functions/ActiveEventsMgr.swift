@@ -257,18 +257,12 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             "cid": e.createUserID.rawValue
         ]
 
-        APP.userMgr.pauseScan()
         Network.shareInstance.createObj(to: Event.classname, attris: attris) { suc, error, newID in
             print("create event on net: \(suc), ", error ?? "no error")
-            APP.userMgr.resumeScan()
             if suc {
                 APP.userMgr.addNewEvent(e) { suc in
                     if suc {
-                        e.ID = DataID(ID: newID!)
-                        self.data.eList.append(e)
-                        
-                        self.updateObserver()
-                        self.saveToLocal()
+                        APP.userMgr.fetchMeAtOnce()
                     }
                     callback(suc)
                 }
@@ -279,9 +273,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     }
 
     func updateEvent(_ e: Event, attris: [String: Any], callback: @escaping ((Bool) -> Void)) {
-        APP.userMgr.pauseScan()
         Network.shareInstance.updateObj(from: Event.classname, id: e.ID.rawValue, attris: attris) { suc, error in
-            APP.userMgr.resumeScan()
             print("updateEvent event on net: \(suc), ", error ?? "no error")
             if suc {
                 self.saveToLocal()
