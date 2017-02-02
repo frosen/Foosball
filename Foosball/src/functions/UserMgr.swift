@@ -299,15 +299,6 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     var me: User {
         return data[0]
     }
-
-    // 同时给活动事件和所有事件
-    func addNewEvent(_ e: Event, callback: @escaping ((Bool) -> Void)) {
-        Network.shareInstance.addDataToUser(e, listName: "active", andUpdate: false)
-        Network.shareInstance.addDataToUser(e.ID.rawValue, listName: "events", andUpdate: true) { suc, error in
-            print("addNewEvent to User", suc, error ?? "no_error")
-            callback(suc)
-        }
-    }
     
     func getState(from event: Event, by id: DataID) -> EventState {
         var s = searchSelfState(from: event, by: id)

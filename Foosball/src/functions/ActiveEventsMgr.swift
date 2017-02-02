@@ -260,7 +260,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         Network.shareInstance.createObj(to: Event.classname, attris: attris) { suc, error, newID in
             print("create event on net: \(suc), ", error ?? "no error")
             if suc {
-                APP.userMgr.addNewEvent(e) { suc in
+                ActiveEventsMgr.addNewEventToUser(e) { suc in
                     if suc {
                         APP.userMgr.fetchMeAtOnce()
                     }
@@ -271,6 +271,19 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             }
         }
     }
+
+    // 同时给活动事件和所有事件
+    private class func addNewEventToUser(_ e: Event, callback: @escaping ((Bool) -> Void)) {
+        Network.shareInstance.addDataToUser([
+            "active": e,
+            "events": e.ID.rawValue
+        ]) { suc, error in
+            print("addNewEvent to User", suc, error ?? "no_error")
+            callback(suc)
+        }
+    }
+
+    // --------------------------------------------------------------------------------
 
     func updateEvent(_ e: Event, attris: [String: Any], callback: @escaping ((Bool) -> Void)) {
         Network.shareInstance.updateObj(from: Event.classname, id: e.ID.rawValue, attris: attris) { suc, error in

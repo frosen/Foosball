@@ -64,23 +64,11 @@ class Network: NSObject {
     }
 
     // 把事件添加到user上
-    func addDataToUser(_ data: Any, listName: String, andUpdate: Bool, callback: ((Bool, Error?) -> Void)? = nil) {
+    func addDataToUser(_ attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
         guard let user = AVUser.current() else {
             return
         }
-
-        let value = checkValue(data)
-        user.add(value, forKey: listName)
-
-        if !andUpdate {
-            return
-        }
-
-        let opt = AVSaveOption()
-        opt.fetchWhenSave = true
-        user.saveInBackground(with: opt, block: { suc, error in
-            callback!(suc, error)
-        })
+        addData(to: User.classname, id: user.objectId!, attris: attris, callback: callback)
     }
 
     func updateUser(_ attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
@@ -117,6 +105,35 @@ class Network: NSObject {
             }
             print("fetch \(from) suc")
             callback(true, objs)
+        }
+    }
+
+    // 给某个列表的属性添加值
+    func addData(to classname: String, id: String, attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
+        let todo = AVObject(className: classname, objectId: id)
+
+        for attri in attris {
+            let value = checkValue(attri.value)
+            todo.add(value, forKey: attri.key)
+        }
+
+        let opt = AVSaveOption()
+        opt.fetchWhenSave = true
+        todo.saveInBackground(with: opt) { suc, error in
+            callback(suc, error)
+        }
+    }
+
+    // 更新服务器
+    func updateObj(from: String, id: String, attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
+        let todo = AVObject(className: from, objectId: id)
+        for attri in attris {
+            let value = checkValue(attri.value)
+            todo.setObject(value, forKey: attri.0)
+        }
+
+        todo.saveInBackground { suc, error in
+            callback(suc, error)
         }
     }
 
@@ -192,19 +209,6 @@ class Network: NSObject {
             }
         default:
             return v
-        }
-    }
-
-    // 更新服务器
-    func updateObj(from: String, id: String, attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
-        let todo = AVObject(className: from, objectId: id)
-        for attri in attris {
-            let value = checkValue(attri.value)
-            todo.setObject(value, forKey: attri.0)
-        }
-
-        todo.saveInBackground { suc, error in
-            callback(suc, error)
         }
     }
 
