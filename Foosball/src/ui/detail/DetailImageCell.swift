@@ -96,7 +96,7 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         ))
         v.addSubview(img)
 
-        let imgUrl = APP.activeEventsMgr.getImgUrl(from: url, by: imgWidth)
+        let imgUrl = APP.activeEventsMgr.getImgUrl(from: url, useCut: true)
         img.sd_setImage(with: URL(string: imgUrl), placeholderImage: #imageLiteral(resourceName: "img_default"))
         img.tag = index
 

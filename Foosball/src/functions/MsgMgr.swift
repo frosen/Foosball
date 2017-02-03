@@ -248,6 +248,14 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
             callback(suc)
         }
     }
+
+    // 临时信息记录 ======================================================
+
+    class MsgStructList: NSObject { // 使用一个类套在list之上，为了在复制时只复制其引用，而不是数据
+        var list: [MsgStruct] = []
+    }
+
+    var tmpMsgListDict: [DataID: MsgStructList] = [:]
 }
 
 

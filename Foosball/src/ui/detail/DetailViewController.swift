@@ -19,7 +19,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
 
     private(set) var msgContainer: MsgContainer? = nil
     private var firstMsg: MsgStruct? = nil
-    private var tmpMsgList: [MsgStruct] = [] // 临时对话，用于信息发送时
+    private var tmpMsgList: MsgMgr.MsgStructList! = nil // 临时对话，用于信息发送时
 
     private var isShowMsgDirectly: Bool = false // 是否是进入场景时直接显示对话
 
@@ -173,6 +173,13 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
             holdCellDict[indexPath] = c
         }
 
+        // 加载未发送成功的临时msgCell
+        if APP.msgMgr.tmpMsgListDict[curEventId] == nil {
+            APP.msgMgr.tmpMsgListDict[curEventId] = MsgMgr.MsgStructList()
+        }
+        tmpMsgList = APP.msgMgr.tmpMsgListDict[curEventId]!
+
+        // 刷新
         tableView.reloadData()
 
         // toolbar
@@ -242,9 +249,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         var replaceCount: Int = 0
         for msgStru in newMsgs {
             if msgStru.user!.ID == APP.userMgr.me.ID {
-                for i in 0 ..< tmpMsgList.count {
-                    if msgStru.time! == tmpMsgList[i].time! {
-                        tmpMsgList.remove(at: i)
+                for i in 0 ..< tmpMsgList.list.count {
+                    if msgStru.time! == tmpMsgList.list[i].time! {
+                        tmpMsgList.list.remove(at: i)
                         replaceCount += 1
                         break
                     }
@@ -269,7 +276,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
                 break
             }
 
-            if i > tmpMsgList.count { // 临时msg的高度每次都清理掉，重新获取
+            if i > tmpMsgList.list.count { // 临时msg的高度每次都清理掉，重新获取
                 let tup: (Int, CGFloat) = (index + offset, h)
                 indexList.append(tup)
             }
@@ -299,7 +306,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         case 2:
             return 2 // head body 就算是没有图片时，也应该有个默认的图
         case 3:
-            return 2 + tmpMsgList.count + (msgContainer?.msgList.count ?? 0) // head + tail + 临时对话(s) + 对话(s)
+            return 2 + tmpMsgList.list.count + (msgContainer?.msgList.count ?? 0) // head + tail + 临时对话(s) + 对话(s)
         default:
             return 0
         }
@@ -351,12 +358,12 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         print("row: ", row)
         if row == 0 {
             return nil
-        } else if row <= tmpMsgList.count {
-            return tmpMsgList[row - 1]
-        } else if row == (msgContainer?.msgList.count ?? 0) + 1 + tmpMsgList.count {
+        } else if row <= tmpMsgList.list.count {
+            return tmpMsgList.list[row - 1]
+        } else if row == (msgContainer?.msgList.count ?? 0) + 1 + tmpMsgList.list.count {
             return nil
         } else {
-            return msgContainer!.msgList[row - tmpMsgList.count - 1]
+            return msgContainer!.msgList[row - tmpMsgList.list.count - 1]
         }
     }
 
@@ -426,7 +433,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
             switch indexPath.row {
             case 0:
                 return BaseCell.CInfo(id: "MHCId", c: DetailMsgHeadCell.self)
-            case (msgContainer?.msgList.count ?? 0) + 1 + tmpMsgList.count:
+            case (msgContainer?.msgList.count ?? 0) + 1 + tmpMsgList.list.count:
                 return BaseCell.CInfo(id: "MTCId", c: DetailMsgTailCell.self)
             default:
                 return BaseCell.CInfo(id: "MCId", c: DetailMsgCell.self)
@@ -537,7 +544,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
 
         // 创建的cell放入临时显示表
         shiftMsgCellHeightDict(by: 1)
-        tmpMsgList.insert(mS, at: 0)
+        tmpMsgList.list.insert(mS, at: 0)
 
         // 刷新列表，不加without会有奇怪的动画 http://www.cocoachina.com/bbs/read.php?tid-335336-page-2.html
         UIView.performWithoutAnimation {

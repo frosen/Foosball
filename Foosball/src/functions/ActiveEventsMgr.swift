@@ -327,15 +327,15 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     }
 
     // 获取裁切后图片的url
-    func getImgUrl(from str: String, by width: CGFloat? = nil) -> String {
+    func getImgUrl(from str: String, useCut: Bool = false) -> String {
 
         return str // todo
 
-//        if width == nil {
+//        if useCut == false {
 //            return str
 //        }
 //
-//        let cutUrl: String = Network.shareInstance.getCutImgUrl(from: str, by: Int32(width!)) ?? str
+//        let cutUrl: String = Network.shareInstance.getCutImgUrl(from: str, by: 72) ?? str
 //        return cutUrl
     }
 
