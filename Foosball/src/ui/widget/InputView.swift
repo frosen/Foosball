@@ -118,7 +118,6 @@ class InputView: UIView, UITextViewDelegate {
 
         input.text = ""
         textViewDidChange(input)
-        endInput()
 
         delegate?.onSend(text: newMsg!)
     }

@@ -9,10 +9,7 @@
 import UIKit
 
 class MsgContainer {
-    // 每个event对应其对话列表和这个对话是否已经被下载
-    fileprivate(set) var msgIdList: [DataID.IDType] = []
-    fileprivate(set) var msgDict: [DataID.IDType: MsgStruct] = [:]
-    fileprivate(set) var insertPos: [Int] = []
+    fileprivate(set) var msgList: [MsgStruct] = [] // 按照时间从最新到最以前排列，和event中相反
 
     // 需要保持的msg的数量
     fileprivate(set) var msgNeedNum: Int = 20
@@ -47,18 +44,16 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         print("test")
         // 测试代码
         let mc = MsgContainer()
-        mc.msgIdList = [
-            "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8"
-        ]
-        mc.msgDict = [
-            "m1": MsgStruct(id: DataID(ID: "m1"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么1"),
-            "m2": MsgStruct(id: DataID(ID: "m2"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么\n2"),
-            "m3": MsgStruct(id: DataID(ID: "m3"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么3"),
-            "m4": MsgStruct(id: DataID(ID: "m4"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么\n4"),
-            "m5": MsgStruct(id: DataID(ID: "m5"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么5"),
-            "m6": MsgStruct(id: DataID(ID: "m6"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么\n6"),
-            "m7": MsgStruct(id: DataID(ID: "m7"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么7"),
-            "m8": MsgStruct(id: DataID(ID: "m7"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么\n8"),
+
+        mc.msgList = [
+            MsgStruct(id: DataID(ID: "m1"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么1"),
+            MsgStruct(id: DataID(ID: "m2"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么\n21你说什么\n21你说什么\n21你说什么\n21你说什么"),
+            MsgStruct(id: DataID(ID: "m3"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么3"),
+            MsgStruct(id: DataID(ID: "m4"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么\n4\n21你说什么\n21你说什么"),
+            MsgStruct(id: DataID(ID: "m5"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么5"),
+            MsgStruct(id: DataID(ID: "m6"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么\n6\n21你说什么\n21你说什么\n21你说什么"),
+            MsgStruct(id: DataID(ID: "m7"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么7"),
+            MsgStruct(id: DataID(ID: "m8"), user: APP.userMgr.me, time: Time.now, msg: "1你说什么\n8\n21你说什么\n21你说什么\n21你说什么\n21你说什么\n21你说什么\n21你说什么"),
         ]
 
         data[DataID(ID: "50001")] = mc
@@ -66,7 +61,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
 
     // set ob --------------------------------------------------
 
-    let DataObKey = "DataMgr"
+    let DataObKey = "MsgMgr"
 
     override func unregister(key: String) {
         super.unregister(key: key)
@@ -80,12 +75,11 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
 
         // 注册成为 act events的观察者，当其有变化时，检测是否是当前event的msg的变化
         APP.activeEventsMgr.register(observer: self, key: DataObKey)
-
     }
 
     // 从act events获取对应事件的msg id 与数据表中比较，前20个里面没有下载的则开启下载
     override func modifyObserver(_ ob: MsgMgrObserver) {
-        if let msgContainer =  data[curEventID ?? DataID(ID: "")] {
+        if let msgContainer = data[curEventID ?? DataID(ID: "")] {
             ob.onModify(msgs: msgContainer)
         }
     }
@@ -94,7 +88,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
 
     func onInit(actE: ActEvents) {
         if let msgContainer = data[curEventID!] {
-            if msgContainer.msgIdList.count > 0 {
+            if msgContainer.msgList.count > 0 {
                 updateObserver()
             }
         }
@@ -113,13 +107,12 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
     func handleMsgIds(_ ids: [DataID.IDType]) {
         var msgContainer = data[curEventID!]
         var downIDList: [DataID.IDType] = []
-        var insertPos: [Int] = []
 
         if msgContainer == nil {
             msgContainer = MsgContainer()
 
             let numFrom = max(ids.count - msgContainer!.msgNeedNum, 0)
-            for i in numFrom ..< ids.count {
+            for i in (numFrom ..< ids.count).reversed() {
                 let id = ids[i]
                 downIDList.append(id)
             }
@@ -128,37 +121,24 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         } else {
             // 对比
             let checkOriginNumMax = min(ids.count, msgContainer!.msgNeedNum)
-            let checkSaveNumMin = msgContainer!.msgIdList.count - 1 - 4
-            var originIndex = 0
-            var saveIndex = msgContainer!.msgIdList.count - 1
-            while true {
-                if saveIndex <= checkSaveNumMin { // 有n个匹配上，说明不会再找到新增了
-                    break
-                }
-
-                if originIndex >= checkOriginNumMax { // 所有最前面的几个都是新的
-                    break
-                }
-
+            let savedLastMsgId = msgContainer!.msgList.first?.ID.rawValue
+            for originIndex in 0 ..< checkOriginNumMax {
                 let originId = ids[ids.count - 1 - originIndex] // 倒着找
-                if msgContainer!.msgIdList[saveIndex] != originId {
+                if savedLastMsgId != originId {
                     downIDList.append(originId)
-                    insertPos.append(originIndex)
-                    originIndex += 1
                 } else {
-                    saveIndex -= 1
-                    originIndex += 1// 对比下一个记录值
+                    break
                 }
             }
         }
 
         if downIDList.count > 0 {
-            downloadMsgs(downIDList, insertPos, container: msgContainer!)
+            downloadMsgs(downIDList, container: msgContainer!)
         }
     }
 
-    private func downloadMsgs(_ downIDList: [DataID.IDType], _ insertList: [Int], container: MsgContainer) {
-        Network.shareInstance.fetchObjs(from: MsgStruct.classname, ids: downIDList, with: []) { suc, objs in
+    private func downloadMsgs(_ downIDList: [DataID.IDType], container: MsgContainer) {
+        Network.shareInstance.fetchObjs(from: MsgStruct.classname, ids: downIDList, with: [], orderType: 2) { suc, objs in
             if !suc {
                 print("ERROR: downloadMsgs wrong")
                 APP.errorMgr.hasError()
@@ -192,8 +172,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
                 }
 
                 DispatchQueue.main.async {
-                    self.saveMsg(in: container, msgs: msgList)
-                    self.updateData(downIDList, insertList, container: container)
+                    self.updateData(msgList, container: container)
 
                     if needFetchUserList.count > 0 {
                         APP.userMgr.fetchUnfetchUsers(needFetchUserList) { suc in
@@ -223,39 +202,18 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         return ms
     }
 
-    // 下载好的msg放到一个字典里，以后根据list中的id获取
-    func saveMsg(in c: MsgContainer, msgs: [MsgStruct]) {
-        var dict = c.msgDict
-        for msg in msgs {
-            dict[msg.ID.ID] = msg
-        }
-    }
-
     // 完成下载，更新data中的msgList，这样就可以获取了
-    func updateData(_ downIDList: [DataID.IDType], _ insertList: [Int], container: MsgContainer) {
-        if container.msgIdList.count == 0 {
-            container.msgIdList = downIDList
-            container.insertPos = []
+    func updateData(_ downMsgList: [MsgStruct], container: MsgContainer) {
+        if container.msgList.count == 0 {
+            container.msgList = downMsgList
         } else {
-            for i in 0 ..< downIDList.count {
-                container.msgIdList.insert(downIDList[i], at: container.msgIdList.count - insertList[i])
-            }
-            container.insertPos = insertList
+            container.msgList = downMsgList + container.msgList
         }
     }
 
     // 上传 -------------------------------------------------------------------------------
 
     func addNewMsg(_ newMsg: MsgStruct, obKey: String, callback: @escaping ((Bool) -> Void)) {
-        guard let msgContainer = data[curEventID!] else {
-            return
-        }
-
-        msgContainer.msgIdList.append(newMsg.ID.rawValue)
-        msgContainer.msgDict[newMsg.ID.rawValue] = newMsg
-        msgContainer.insertPos = [0]
-        updateObserver()
-
         let attris: [String: Any] = [
             "u": newMsg.user!.ID.rawValue,
             "tm": newMsg.time!.getTimeData(),
@@ -265,26 +223,13 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         Network.shareInstance.createObj(to: MsgStruct.classname, attris: attris) { suc, error, newID in
             print("create Msg on net: \(suc), ", error ?? "no error")
             if suc {
-                // 置换原来的id
-                let oldID = newMsg.ID.rawValue
-                newMsg.ID = DataID(ID: newID!)
-
-                for i in (0 ..< msgContainer.msgIdList.count).reversed() {
-                    if msgContainer.msgIdList[i] == oldID {
-                        msgContainer.msgIdList.remove(at: i)
-                        break
-                    }
-                }
-                msgContainer.msgIdList.append(newID!)
-                msgContainer.msgDict[newMsg.ID.rawValue] = newMsg
-
                 // 更新event
-                APP.activeEventsMgr.addNewMsg(newID!, to: self.curEventID!) { suc in
+                self.addNewMsgToEvent(newID!, eventId: self.curEventID!) { suc in
                     if suc {
-                        self.saveToLocal()
+                        APP.userMgr.fetchMeAtOnce()
                     }
                     if self.hasOb(for: obKey) {
-                        callback(true)
+                        callback(suc)
                     }
                 }
             } else {
@@ -294,4 +239,22 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
             }
         }
     }
+
+    private func addNewMsgToEvent(_ msgId: String, eventId: DataID, callback: @escaping ((Bool) -> Void)) {
+        Network.shareInstance.addData(to: Event.classname, id: eventId.rawValue, attris: [
+            "msg": msgId
+        ]) { suc, error in
+            print("addNewMsgToEvent: \(suc), ", error ?? "no error")
+            callback(suc)
+        }
+    }
 }
+
+
+
+
+
+
+
+
+

@@ -84,11 +84,6 @@ class DetailMsgCell: BaseCell {
         return DetailG.calculateLblHeight(msgStru.msg, w: msgStrWidth, style: lblStyleAttri) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
-    class func getMsgStru(_ c: MsgContainer, row: Int) -> MsgStruct {
-        let id = c.msgIdList[c.msgIdList.count - row] // 这里的减法是为了倒过来显示，时间靠后的放上面
-        return c.msgDict[id]!
-    }
-
     override func initData(_ d: BaseData?, index: IndexPath?) {
         selectionStyle = .none //使选中后没有反应
 

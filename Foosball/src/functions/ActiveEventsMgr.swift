@@ -260,6 +260,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         Network.shareInstance.createObj(to: Event.classname, attris: attris) { suc, error, newID in
             print("create event on net: \(suc), ", error ?? "no error")
             if suc {
+                e.ID = DataID(ID: newID!)
                 ActiveEventsMgr.addNewEventToUser(e) { suc in
                     if suc {
                         APP.userMgr.fetchMeAtOnce()

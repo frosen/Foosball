@@ -60,7 +60,7 @@ class Network: NSObject {
     }
 
     func fetchUsers(_ ids: [String], with lists: [String], callback: @escaping ((Bool, Any?) -> Void)) {
-        fetchObjs(from: User.classname, ids: ids, with: lists, callback: callback)
+        fetchObjs(from: User.classname, ids: ids, with: lists, orderType: 0, callback: callback)
     }
 
     // 把事件添加到user上
@@ -90,13 +90,19 @@ class Network: NSObject {
         }
     }
 
-    // 获取
-    func fetchObjs(from: String, ids: [String], with lists: [String], callback: @escaping ((Bool, Any?) -> Void)) {
+    // 获取 orderType: 0无顺序，1时间从早到晚，2时间从晚到早
+    func fetchObjs(from: String, ids: [String], with lists: [String], orderType: Int, callback: @escaping ((Bool, Any?) -> Void)) {
         let query = AVQuery(className: from)
         query.whereKey("objectId", containedIn: ids)
 
         for list in lists {
             query.includeKey(list)
+        }
+
+        if orderType == 1 {
+            query.order(byAscending: "updatedAt") // 早的在前
+        } else if orderType == 2 {
+            query.order(byDescending: "updatedAt") // 早的在后
         }
 
         query.findObjectsInBackground { objs, error in

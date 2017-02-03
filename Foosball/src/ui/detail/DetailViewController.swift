@@ -10,12 +10,15 @@ import UIKit
 
 class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObserver, UITableViewDelegate, UITableViewDataSource, StaticCellDelegate, InputViewDelegate {
 
+    private let msgSectionIndex = 3
+
     private var sectionNum: Int = 0
 
     private(set) var curEventId: DataID! = nil
     private var curEvent: Event! = nil
 
     private(set) var msgContainer: MsgContainer? = nil
+    private var firstMsg: MsgStruct? = nil
     private var tmpMsgList: [MsgStruct] = [] // 临时对话，用于信息发送时
 
     private var isShowMsgDirectly: Bool = false // 是否是进入场景时直接显示对话
@@ -124,7 +127,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if isShowMsgDirectly {
-            tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .top, animated: true)
+            tableView.scrollToRow(at: IndexPath(row: 0, section: msgSectionIndex), at: .top, animated: true)
         }
     }
 
@@ -221,82 +224,63 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     func onModify(msgs: MsgContainer) {
         msgContainer = msgs
 
-        let section: Int = 3
-        var indexPathList: [IndexPath] = []
-
-        let posList = msgs.insertPos
-
-        if posList.count == 0 && msgs.msgIdList.count > 0 { // 全部
-            for i in 0 ..< msgs.msgIdList.count {
-                let indexPath = IndexPath(row: i + 1, section: section)
-                indexPathList.append(indexPath)
-            }
-
-            // 修改高度，所以先删除原来所有高度
-            var i = 1
-            while true {
-                let index = getCellHeightDictIndex(section: 3, row: i)
-                let rmHeight = cellHeightDict.removeValue(forKey: index)
-                if rmHeight == nil {
-                    break
+        // 获取新添加的msgId
+        var newMsgs: [MsgStruct] = []
+        if firstMsg == nil {
+            newMsgs = msgs.msgList
+        } else {
+            for msgStru in msgs.msgList {
+                if msgStru.ID != firstMsg!.ID {
+                    newMsgs.append(msgStru)
                 } else {
-                    i += 1
+                    break
                 }
             }
-
-            // 插入新cell
-            tableView.insertRows(at: indexPathList, with: .fade)
-            return
         }
 
-        for pos in posList {
-            let indexPath = IndexPath(row: pos + 1, section: section) // +1 为了跳过标题
-            indexPathList.append(indexPath)
-        }
-
-        if indexPathList.count == 0 {
-            return
-        }
-
-        // 计算偏移量
-        var p: Int = 0
-        var offsetList: [Int] = [] //表示当前序号的这个值需要偏移的量
-        for i in 0 ... posList.last! {
-            let pos = posList[p]
-            if pos == i {
-                p += 1
-            } else {
-                offsetList.append(p)
+        // 检查有无可以取代的临时msg，有则取代之
+        var replaceCount: Int = 0
+        for msgStru in newMsgs {
+            if msgStru.user!.ID == APP.userMgr.me.ID {
+                for i in 0 ..< tmpMsgList.count {
+                    if msgStru.time! == tmpMsgList[i].time! {
+                        tmpMsgList.remove(at: i)
+                        replaceCount += 1
+                        break
+                    }
+                }
             }
         }
 
-        // 把cellHeightDict里面的数据往后移
-        var i = 1
+        shiftMsgCellHeightDict(by: newMsgs.count - replaceCount)
+        UIView.performWithoutAnimation { // 刷新列表，不加without会有奇怪的动画 http://www.cocoachina.com/bbs/read.php?tid-335336-page-2.html
+            tableView.reloadSections([msgSectionIndex], with: .none)
+        }
+
+        firstMsg = msgs.msgList.first
+    }
+
+    private func shiftMsgCellHeightDict(by offset: Int) {
+        var i = 1 // =1 为了跳过标题
         var indexList: [(Int, CGFloat)] = []
         while true {
-            let index = getCellHeightDictIndex(section: 3, row: i)
+            let index = getCellHeightDictIndex(section: msgSectionIndex, row: i)
             guard let h = cellHeightDict[index] else {
                 break
             }
 
-            let offset = i > offsetList.count ? indexPathList.count : offsetList[i - 1]
+            if i > tmpMsgList.count { // 临时msg的高度每次都清理掉，重新获取
+                let tup: (Int, CGFloat) = (index + offset, h)
+                indexList.append(tup)
+            }
 
-            let tup: (Int, CGFloat) = (index + offset, h)
-            indexList.append(tup)
             cellHeightDict.removeValue(forKey: index)
-
             i += 1
         }
-        for tup in indexList {
-            cellHeightDict[tup.0] = tup.1
+
+        for i in 0 ..< indexList.count - 1 { // 之所以-1，是为了删除最后一个cell，也就是msg tail cell的高度，以便重新计算
+            cellHeightDict[indexList[i].0] = indexList[i].1
         }
-
-        // 重新计算msg tail cell的高度，所以要删除原来的
-        let tailHIndex = getCellHeightDictIndex(section: section, row: msgs.msgIdList.count + 1)
-        cellHeightDict.removeValue(forKey: tailHIndex)
-
-        // 插入新cell
-        tableView.insertRows(at: indexPathList, with: .fade)
     }
 
     // table view delegate ==========================================================================================
@@ -315,7 +299,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         case 2:
             return 2 // head body 就算是没有图片时，也应该有个默认的图
         case 3:
-            return 2 + tmpMsgList.count + (msgContainer?.msgIdList.count ?? 0) // head + tail + 临时对话(s) + 对话(s)
+            return 2 + tmpMsgList.count + (msgContainer?.msgList.count ?? 0) // head + tail + 临时对话(s) + 对话(s)
         default:
             return 0
         }
@@ -337,7 +321,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         }
 
         var data: BaseData = curEvent
-        if s == 3 { // msg的cell使用不同的数据源
+        if s == msgSectionIndex { // msg的cell使用不同的数据源
             if let msgStru = getMsgCellData(by: r) {
                 data = msgStru
             }
@@ -354,7 +338,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
             return c
         } else {
             var data: BaseData = curEvent
-            if indexPath.section == 3 { // msg的cell使用不同的数据源
+            if indexPath.section == msgSectionIndex { // msg的cell使用不同的数据源
                 if let msgStru = getMsgCellData(by: indexPath.row) {
                     data = msgStru
                 }
@@ -364,21 +348,22 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     }
 
     private func getMsgCellData(by row: Int) -> MsgStruct? {
+        print("row: ", row)
         if row == 0 {
             return nil
         } else if row <= tmpMsgList.count {
             return tmpMsgList[row - 1]
-        } else if row == (msgContainer?.msgIdList.count ?? 0) + 1 + tmpMsgList.count {
+        } else if row == (msgContainer?.msgList.count ?? 0) + 1 + tmpMsgList.count {
             return nil
         } else {
-            return DetailMsgCell.getMsgStru(msgContainer!, row: row - tmpMsgList.count)
+            return msgContainer!.msgList[row - tmpMsgList.count - 1]
         }
     }
 
     // scrollView delegate ---------------------------------------------------------
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let cellRect = tableView.rectForRow(at: IndexPath(row: 0, section: 3))
+        let cellRect = tableView.rectForRow(at: IndexPath(row: 0, section: msgSectionIndex))
         let cellPosForScreen = tableView.convert(cellRect.origin, to: baseView)
 
         // msg head 到达顶部时，显示替身
@@ -441,7 +426,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
             switch indexPath.row {
             case 0:
                 return BaseCell.CInfo(id: "MHCId", c: DetailMsgHeadCell.self)
-            case (msgContainer?.msgIdList.count ?? 0) + 1 + tmpMsgList.count:
+            case (msgContainer?.msgList.count ?? 0) + 1 + tmpMsgList.count:
                 return BaseCell.CInfo(id: "MTCId", c: DetailMsgTailCell.self)
             default:
                 return BaseCell.CInfo(id: "MCId", c: DetailMsgCell.self)
@@ -547,11 +532,19 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     }
 
     func sendMsg(text: String) {
-        // 创建临时cell
-
-        // 更新数据
         let me = APP.userMgr.me
         let mS = MsgStruct(id: DataID(ID: "send"), user: me, time: Time.now, msg: text)
+
+        // 创建的cell放入临时显示表
+        shiftMsgCellHeightDict(by: 1)
+        tmpMsgList.insert(mS, at: 0)
+
+        // 刷新列表，不加without会有奇怪的动画 http://www.cocoachina.com/bbs/read.php?tid-335336-page-2.html
+        UIView.performWithoutAnimation {
+            tableView.reloadSections([msgSectionIndex], with: .none)
+        }
+
+        // 更新数据
         APP.msgMgr.addNewMsg(mS, obKey: DataObKey) { suc in
 
         }
