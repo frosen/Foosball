@@ -59,9 +59,6 @@ class DetailMsgCell: BaseCell {
     private var timeLbl: UILabel! = nil
     private var txtLbl: UILabel! = nil
 
-    private var curEvent: Event! = nil
-    private var curIndex: Int = 1
-
     static var lblStyleAttri: [String : Any] {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 3
@@ -83,7 +80,7 @@ class DetailMsgCell: BaseCell {
             return saveH
         }
 
-        let msgStru: MsgStruct = getMsgStru(vc.msgContainer!, row: row)
+        let msgStru: MsgStruct = d as! MsgStruct
         return DetailG.calculateLblHeight(msgStru.msg, w: msgStrWidth, style: lblStyleAttri) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
@@ -127,12 +124,7 @@ class DetailMsgCell: BaseCell {
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
-        let e = d as! Event
-        curEvent = e
-        curIndex = index!.row
-
-        let vc = ctrlr as! DetailViewController
-        let msgStru: MsgStruct =  DetailMsgCell.getMsgStru(vc.msgContainer!, row: curIndex)
+        let msgStru: MsgStruct = d as! MsgStruct
         let user: User = msgStru.user!
 
         if img == nil {

@@ -49,7 +49,7 @@ class BaseCell: UITableViewCell {
     }
 
     // 利用swift的动态语言机制，根据配置表创建cell
-    class func create(_ index: IndexPath, tableView: UITableView, d: BaseData, ctrlr: UIViewController, delegate: BaseCellDelegate) -> UITableViewCell {
+    class func create(_ index: IndexPath, tableView: UITableView, data: BaseData?, ctrlr: UIViewController, delegate: BaseCellDelegate) -> UITableViewCell {
         let info: CInfo! = delegate.getCInfo(index)
 
         var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: info.id)
@@ -60,12 +60,12 @@ class BaseCell: UITableViewCell {
             let baseCell = cell as! BaseCell
             baseCell.w = UIScreen.main.bounds.width
             baseCell.ctrlr = ctrlr
-            baseCell.initData(d, index: index)
+            baseCell.initData(data, index: index)
         }
 
         let baseCell = cell as! BaseCell
-        baseCell.h = type(of: baseCell).getCellHeight(d, index: index, otherData: ctrlr) //dynamicType可以获取对象的类，然后就能使用类函数了
-        baseCell.setData(d, index: index)
+        baseCell.h = type(of: baseCell).getCellHeight(data, index: index, otherData: ctrlr) //dynamicType可以获取对象的类，然后就能使用类函数了
+        baseCell.setData(data, index: index)
 
         return cell!
     }
@@ -77,11 +77,11 @@ protocol StaticCellDelegate: BaseCellDelegate {
 
 // 静态cell，不会进行重用，如果要重置，要通过reset方法
 class StaticCell: BaseCell {
-    class func create(_ index: IndexPath, tableView: UITableView, d: BaseData, ctrlr: UIViewController, delegate: StaticCellDelegate) -> UITableViewCell {
+    class func create(_ index: IndexPath, tableView: UITableView, data: BaseData?, ctrlr: UIViewController, delegate: StaticCellDelegate) -> UITableViewCell {
         let info: CInfo! = delegate.getCInfo(index)
 
         if !(info.cls is StaticCell.Type) { //如果不是静态cell，还是用basecell的创建
-            return BaseCell.create(index, tableView: tableView, d: d, ctrlr: ctrlr, delegate: delegate)
+            return BaseCell.create(index, tableView: tableView, data: data, ctrlr: ctrlr, delegate: delegate)
         }
 
         var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: info.id)
@@ -91,13 +91,13 @@ class StaticCell: BaseCell {
 
             let staticCell = cell as! StaticCell
             staticCell.w = UIScreen.main.bounds.width
-            staticCell.h = type(of: staticCell).getCellHeight(d, index: index, otherData: ctrlr) //dynamicType可以获取对象的类，然后就能使用类函数了
+            staticCell.h = type(of: staticCell).getCellHeight(data, index: index, otherData: ctrlr) //dynamicType可以获取对象的类，然后就能使用类函数了
             staticCell.ctrlr = ctrlr
-            staticCell.initData(d, index: index)
-            staticCell.setData(d, index: index)
+            staticCell.initData(data, index: index)
+            staticCell.setData(data, index: index)
         } else if delegate.getIfUpdate(index) == true {
             let staticCell = cell as! StaticCell
-            staticCell.setData(d, index: index)
+            staticCell.setData(data, index: index)
         }
         
         return cell!

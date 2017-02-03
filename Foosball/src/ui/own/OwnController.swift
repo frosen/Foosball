@@ -161,7 +161,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
     private let ownNorCellId = "ONorCId"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 || indexPath.section == 1 {
-            return BaseCell.create(indexPath, tableView: tableView, d: curUser, ctrlr: self, delegate: self)
+            return BaseCell.create(indexPath, tableView: tableView, data: curUser, ctrlr: self, delegate: self)
         } else {
             var cell: UITableViewCell?
             cell = tableView.dequeueReusableCell(withIdentifier: ownNorCellId)

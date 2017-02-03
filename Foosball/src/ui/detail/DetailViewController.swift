@@ -16,8 +16,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     private var curEvent: Event! = nil
 
     private(set) var msgContainer: MsgContainer? = nil
+    private var tmpMsgList: [MsgStruct] = [] // 临时对话，用于信息发送时
 
-    private var isShowMsg: Bool = false
+    private var isShowMsgDirectly: Bool = false // 是否是进入场景时直接显示对话
 
     var tableView: UITableView! = nil
     private var toolbar: BaseToolbar! = nil
@@ -34,7 +35,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     init(rootVC: RootViewController, id: DataID, showMsg: Bool) {
         super.init(rootVC: rootVC)
         self.curEventId = id
-        isShowMsg = showMsg
+        isShowMsgDirectly = showMsg
     }
     
     override func viewDidLoad() {
@@ -122,7 +123,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if isShowMsg {
+        if isShowMsgDirectly {
             tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .top, animated: true)
         }
     }
@@ -165,7 +166,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
 
         // 预生成这些static cell，避免第一次滑动造成的卡顿
         for indexPath in staticVarCellIndexList {
-            let c = StaticCell.create(indexPath, tableView: tableView, d: curEvent, ctrlr: self, delegate: self)
+            let c = StaticCell.create(indexPath, tableView: tableView, data: curEvent, ctrlr: self, delegate: self)
             holdCellDict[indexPath] = c
         }
 
@@ -314,8 +315,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         case 2:
             return 2 // head body 就算是没有图片时，也应该有个默认的图
         case 3:
-            print(2 + (msgContainer?.msgIdList.count ?? 0))
-            return 2 + (msgContainer?.msgIdList.count ?? 0) //对话(s) + head
+            return 2 + tmpMsgList.count + (msgContainer?.msgIdList.count ?? 0) // head + tail + 临时对话(s) + 对话(s)
         default:
             return 0
         }
@@ -336,50 +336,14 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
             return h
         }
 
-        var height: CGFloat
-
-        switch s {
-        case 0: //title + detail + wager
-            switch r {
-            case 0:
-                height = DetailTitleCell.getCellHeight()
-            case 1:
-                height = DetailContentCell.getCellHeight(curEvent, index: indexPath)
-            case 2:
-                height = DetailWagerCell.getCellHeight(curEvent, index: indexPath)
-            case 3:
-                height = DetailTimeCell.getCellHeight(curEvent, index: indexPath)
-            case 4:
-                height = DetailLocationCell.getCellHeight(curEvent, index: indexPath)
-            default:
-                height = 0
+        var data: BaseData = curEvent
+        if s == 3 { // msg的cell使用不同的数据源
+            if let msgStru = getMsgCellData(by: r) {
+                data = msgStru
             }
-        case 1: //person(s) + head
-            switch r {
-            case 0:
-                height = DetailTeamHeadCell.getCellHeight()
-            default:
-                height = DetailTeamCell.getCellHeight(curEvent, index: indexPath)
-            }
-        case 2: //比分(s) + head
-            switch r {
-            case 0:
-                height = DetailImageHeadCell.getCellHeight()
-            default:
-                height = DetailImageCell.getCellHeight(curEvent, index: indexPath)
-            }
-        case 3: //对话(s) + head
-            switch r {
-            case 0:
-                height = DetailMsgHeadCell.getCellHeight()
-            case (msgContainer?.msgIdList.count ?? 0) + 1:
-                height = DetailMsgTailCell.getCellHeight(curEvent, index: indexPath, otherData: self)
-            default:
-                height = DetailMsgCell.getCellHeight(curEvent, index: indexPath, otherData: self)
-            }
-        default:
-            height = 0
         }
+        let height: CGFloat = (getCInfo(indexPath).cls as! BaseCell.Type).getCellHeight(data, index: indexPath, otherData: self)
+
         cellHeightDict[getCellHeightDictIndex(section: s, row: r)] = height
         return height
     }
@@ -389,7 +353,25 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
             holdCellDict.removeValue(forKey: indexPath)
             return c
         } else {
-            return StaticCell.create(indexPath, tableView: tableView, d: curEvent, ctrlr: self, delegate: self)
+            var data: BaseData = curEvent
+            if indexPath.section == 3 { // msg的cell使用不同的数据源
+                if let msgStru = getMsgCellData(by: indexPath.row) {
+                    data = msgStru
+                }
+            }
+            return StaticCell.create(indexPath, tableView: tableView, data: data, ctrlr: self, delegate: self)
+        }
+    }
+
+    private func getMsgCellData(by row: Int) -> MsgStruct? {
+        if row == 0 {
+            return nil
+        } else if row <= tmpMsgList.count {
+            return tmpMsgList[row - 1]
+        } else if row == (msgContainer?.msgIdList.count ?? 0) + 1 + tmpMsgList.count {
+            return nil
+        } else {
+            return DetailMsgCell.getMsgStru(msgContainer!, row: row - tmpMsgList.count)
         }
     }
 
@@ -459,7 +441,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
             switch indexPath.row {
             case 0:
                 return BaseCell.CInfo(id: "MHCId", c: DetailMsgHeadCell.self)
-            case (msgContainer?.msgIdList.count ?? 0) + 1:
+            case (msgContainer?.msgIdList.count ?? 0) + 1 + tmpMsgList.count:
                 return BaseCell.CInfo(id: "MTCId", c: DetailMsgTailCell.self)
             default:
                 return BaseCell.CInfo(id: "MCId", c: DetailMsgCell.self)
@@ -565,6 +547,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     }
 
     func sendMsg(text: String) {
+        // 创建临时cell
+
+        // 更新数据
         let me = APP.userMgr.me
         let mS = MsgStruct(id: DataID(ID: "send"), user: me, time: Time.now, msg: text)
         APP.msgMgr.addNewMsg(mS, obKey: DataObKey) { suc in

@@ -105,7 +105,7 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return StaticCell.create(indexPath, tableView: tableView, d: rootCtrlr.createEvent, ctrlr: self, delegate: self)
+        return StaticCell.create(indexPath, tableView: tableView, data: rootCtrlr.createEvent, ctrlr: self, delegate: self)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

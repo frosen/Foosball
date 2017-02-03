@@ -94,7 +94,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let e: Event = getEvent(by: indexPath)
-        return BaseCell.create(indexPath, tableView: tableView, d: e, ctrlr: self, delegate: self)
+        return BaseCell.create(indexPath, tableView: tableView, data: e, ctrlr: self, delegate: self)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
