@@ -21,6 +21,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         navTabType = [.HideTab, .TransparentNav] // 隐藏导航栏和tabbar
         super.viewDidLoad()
 
+        title = "扫一扫"
         UITools.createNavBackBtn(self, action: #selector(ScanViewController.onBack))
 
         baseView.clipsToBounds = true //这个属性必须打开否则返回的时候会出现黑边
@@ -35,7 +36,7 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         NotificationCenter.default.addObserver(self, selector: #selector(ScanViewController.resetScanAnim), name: NSNotification.Name(rawValue: "EnterForeground"), object: nil)
     }
 
-    private let maskMargin: CGFloat = 35.0
+    private let maskMargin: CGFloat = 45.0
     private func initMaskView() {
         mask = UIView()
         baseView.addSubview(mask)
@@ -45,14 +46,16 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         mask.layer.borderColor = UIColor(white: 0.0, alpha: 0.7).cgColor
         mask.layer.borderWidth = borderWidth
 
-        let maskWidth = baseView.frame.width + borderWidth * 2 - maskMargin * 2
+        let scanWidth = baseView.frame.width - maskMargin * 2
+        let maskWidth = scanWidth + borderWidth * 2
+
         mask.bounds = CGRect(x: 0, y: 0, width: maskWidth, height: maskWidth)
-        mask.center = CGPoint(x: baseView.frame.width * 0.5, y: baseView.frame.height * 0.5)
+        mask.center = CGPoint(x: baseView.frame.width * 0.5, y: scanWidth / 2 + 64)
     }
 
     private func initScanWindowView() {
         let scanWidth = baseView.frame.width - maskMargin * 2
-        let scanRect = CGRect(x: mask.center.x - scanWidth / 2, y: mask.center.y - scanWidth / 2, width: scanWidth, height: scanWidth)
+        let scanRect = CGRect(x: mask.center.x - scanWidth / 2, y: 64, width: scanWidth, height: scanWidth)
 
         scanWindow = UIView(frame: scanRect)
         baseView.addSubview(scanWindow)
@@ -83,6 +86,18 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         corner4.sizeToFit()
         corner4.frame.origin = CGPoint(x: 0, y: scanWidth - corner2.frame.height)
         corner4.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI * 1.5))
+
+        // 文字
+        let label = UILabel()
+        baseView.addSubview(label)
+
+        label.text = "将取景框对准二维码，即可自动扫描"
+        label.sizeToFit()
+        label.font = TextFont
+        label.textColor = UIColor.white
+        label.textAlignment = .center
+        label.center = CGPoint(x: mask.center.x, y: 64 + scanWidth + 20)
+
     }
 
     private func initBottomButton() {
@@ -92,9 +107,9 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         btns.append(setBtn(#selector(ScanViewController.onPressFlash(_:)), img: #imageLiteral(resourceName: "scan_btn_flash"), selectedImg: nil))
 
         let btnDis = baseView.bounds.width / CGFloat(btns.count + 1)
-        for i in 0..<btns.count {
+        for i in 0 ..< btns.count {
             let x = btnDis * CGFloat(i + 1)
-            let y = baseView.bounds.height - 50
+            let y = baseView.bounds.height - 30
             btns[i].center = CGPoint(x: x, y: y)
         }
     }
