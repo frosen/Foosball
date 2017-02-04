@@ -21,6 +21,7 @@ struct NorCellData {
 
 class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UITableViewDataSource, BaseCellDelegate, InfoHeadViewDelegate {
     //信息头，比赛成绩，QR，其他项目等group
+    private let headCellNum: Int = 1
     private let group = [
         //section
         [
@@ -89,9 +90,8 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
         APP.userMgr.set(hide: true, key: DataObKey)
     }
 
-    //
     // observer ---------------------------------------------------------------------------------------------------
-    //
+
     func onInit(user: User) {
         curUser = user
 
@@ -102,7 +102,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
             subTitleStr: curUser.sign
         )
 
-        sectionNum = 2 + group.count
+        sectionNum = headCellNum + group.count
         tableView.reloadData()
     }
 
@@ -117,9 +117,8 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
         )
     }
 
-    //
     // table view ---------------------------------------------------------------------------------------------------
-    //
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return sectionNum
     }
@@ -128,10 +127,8 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
         switch section {
         case 0:
             return 2
-        case 1:
-            return 1
         default:
-            return group[section - 2].count
+            return group[section - headCellNum].count
         }
     }
 
@@ -151,8 +148,6 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
             } else {
                 return OwnRankCell.getCellHeight()
             }
-        case 1:
-            return OwnQRCell.getCellHeight()
         default:
             return OwnNormalCell.getCellHeight()
         }
@@ -160,7 +155,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
 
     private let ownNorCellId = "ONorCId"
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 || indexPath.section == 1 {
+        if indexPath.section == 0 {
             return BaseCell.create(indexPath, tableView: tableView, data: curUser, ctrlr: self, delegate: self)
         } else {
             var cell: UITableViewCell?
@@ -168,7 +163,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
             if cell == nil {
                 cell = OwnNormalCell(id: ownNorCellId)
             }
-            let data: NorCellData = group[indexPath.section - 2][indexPath.row]
+            let data: NorCellData = group[indexPath.section - headCellNum][indexPath.row]
             let norCell = cell as! OwnNormalCell
             norCell.setUIData(image: data.img, title: data.title, subTitle: data.subTitle)
             return cell!
@@ -176,21 +171,18 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
     }
 
     // BaseCellDelegate --------------------------------------------------------------
 
     func getCInfo(_ indexPath: IndexPath) -> BaseCell.CInfo {
-        switch indexPath.section {
+        assert(indexPath.section == 0, "wrong section in own ctrl getCInfo")
+        switch indexPath.row {
         case 0:
-            switch indexPath.row {
-            case 0:
-                return BaseCell.CInfo(id: "OScoCId", c: OwnScoreCell.self)
-            default:
-                return BaseCell.CInfo(id: "ORankCId", c: OwnRankCell.self)
-            }
+            return BaseCell.CInfo(id: "OScoCId", c: OwnScoreCell.self)
         default:
-            return BaseCell.CInfo(id: "OQRCId", c: OwnQRCell.self)
+            return BaseCell.CInfo(id: "ORankCId", c: OwnRankCell.self)
         }
     }
 

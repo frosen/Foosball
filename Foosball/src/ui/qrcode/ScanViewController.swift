@@ -21,14 +21,22 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
         navTabType = [.HideTab, .TransparentNav] // 隐藏导航栏和tabbar
         super.viewDidLoad()
 
-        title = "扫一扫"
         UITools.createNavBackBtn(self, action: #selector(ScanViewController.onBack))
+
+        let space = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
+        space.width = 10
+        navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(title: "相册", style: .plain, target: self, action: #selector(ScanViewController.onOpenAlbum)),
+            space,
+            UIBarButtonItem(title: "开灯", style: .plain, target: self, action: #selector(ScanViewController.onPressFlash(_:)))
+        ]
+        navigationController!.navigationBar.tintColor = UIColor.white
 
         baseView.clipsToBounds = true //这个属性必须打开否则返回的时候会出现黑边
 
         initMaskView()
         initScanWindowView()
-        initBottomButton()
+        initQRCode()
 
         initScanning()
 
@@ -100,30 +108,35 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
 
     }
 
-    private func initBottomButton() {
-        var btns: [UIButton] = []
+    private func initQRCode() {
+        //bg
+        let qrbgW: CGFloat = 155
+        let bgView = UIView()
+        baseView.addSubview(bgView)
+        bgView.bounds = CGRect(x: 0, y: 0, width: qrbgW, height: qrbgW)
+        bgView.center = CGPoint(
+            x: baseView.frame.width / 2,
+            y: (baseView.frame.height + scanWindow.frame.origin.y + scanWindow.frame.height) / 2
+        )
+        bgView.backgroundColor = UIColor.white
 
-        btns.append(setBtn(#selector(ScanViewController.onOpenAlbum), img: #imageLiteral(resourceName: "scan_btn_photo"), selectedImg: nil))
-        btns.append(setBtn(#selector(ScanViewController.onPressFlash(_:)), img: #imageLiteral(resourceName: "scan_btn_flash"), selectedImg: nil))
+        let longP = UILongPressGestureRecognizer(target: self, action: #selector(ScanViewController.longPressQRCode(ges:)))
+        bgView.addGestureRecognizer(longP)
 
-        let btnDis = baseView.bounds.width / CGFloat(btns.count + 1)
-        for i in 0 ..< btns.count {
-            let x = btnDis * CGFloat(i + 1)
-            let y = baseView.bounds.height - 30
-            btns[i].center = CGPoint(x: x, y: y)
-        }
-    }
+        // 设置二维码
+        let qrimg = QRCodeTools.createQRCode("http://www.baidu.com")
+        bgView.addSubview(qrimg)
+        qrimg.center = CGPoint(x: qrbgW / 2, y: qrbgW / 2)
 
-    private func setBtn(_ action: Selector, img: UIImage, selectedImg: UIImage?) -> UIButton {
-        let btn = UIButton(type: .custom)
-        baseView.addSubview(btn)
-        btn.setBackgroundImage(img, for: UIControlState())
-        btn.sizeToFit()
-        if selectedImg != nil {
-            btn.setBackgroundImage(selectedImg, for: .selected)
-        }
-        btn.addTarget(self, action: action, for: .touchUpInside)
-        return btn
+        //标题
+        let lbl = UILabel()
+        baseView.addSubview(lbl)
+        lbl.text = "我的二维码"
+        lbl.sizeToFit()
+        lbl.font = UIFont.boldSystemFont(ofSize: 15)
+        lbl.textColor = UIColor.green
+        lbl.textAlignment = .center
+        lbl.center = CGPoint(x: mask.center.x, y: bgView.frame.origin.y + qrbgW + 20)
     }
 
     private func initScanning() {
@@ -275,5 +288,26 @@ class ScanViewController: BaseController, AVCaptureMetadataOutputObjectsDelegate
             UITools.showAlert(self, title: "提示", msg: "并没有闪光灯", type: 1, callback: nil)
         }
     }
-    
+
+    func longPressQRCode(ges: UILongPressGestureRecognizer) {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        let save = UIAlertAction(title: "保存到相册", style: .default) { _ in self.onSaveQRCode() }
+        let share = UIAlertAction(title: "分享", style: .default) { _ in self.onShareQRCode() }
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel)
+
+        alert.addAction(save)
+        alert.addAction(share)
+        alert.addAction(cancelAction)
+
+        present(alert, animated: true, completion: nil)
+    }
+
+    func onSaveQRCode() {
+
+    }
+
+    func onShareQRCode() {
+
+    }
 }

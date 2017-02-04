@@ -294,19 +294,22 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let rowNum: Int
         switch section {
         case 0:
-            return 5 //title + detail + wager + time + location
+            rowNum = 5 //title + detail + wager + time + location
         case 1:
             //head 友 敌 2. 如果是乱斗应该是不分敌友的所以是2行，但暂时不考虑；3. 以后也可能加入观众，暂不考虑
-            return 3 //友一定有自己，敌如果没有也有个标题表示没有的状态
+            rowNum = 3 //友一定有自己，敌如果没有也有个标题表示没有的状态
         case 2:
-            return 2 // head body 就算是没有图片时，也应该有个默认的图
+            rowNum = 2 // head body 就算是没有图片时，也应该有个默认的图
         case 3:
-            return 2 + tmpMsgList.list.count + (msgContainer?.msgList.count ?? 0) // head + tail + 临时对话(s) + 对话(s)
+            rowNum = 2 + tmpMsgList.list.count + (msgContainer?.msgList.count ?? 0) // head + tail + 临时对话(s) + 对话(s)
         default:
-            return 0
+            rowNum = 0
         }
+        print("TTT section\(section) has \(rowNum) rows")
+        return rowNum
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -321,6 +324,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         let s = indexPath.section
         let r = indexPath.row
         if let h = cellHeightDict[getCellHeightDictIndex(section: s, row: r)] {
+            print("TTT indexPath \(indexPath) height is \(h) (old)")
             return h
         }
 
@@ -333,6 +337,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         let height: CGFloat = (getCInfo(indexPath).cls as! BaseCell.Type).getCellHeight(data, index: indexPath, otherData: self)
 
         cellHeightDict[getCellHeightDictIndex(section: s, row: r)] = height
+        print("TTT indexPath \(indexPath) height is \(height)")
         return height
     }
 
