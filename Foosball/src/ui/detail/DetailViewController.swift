@@ -127,6 +127,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if isShowMsgDirectly {
+            tableView.scrollToRow(at: IndexPath(row: 1, section: 0), at: .top, animated: false) // 避免在一瞬间显示出已经向上移动出屏幕的head cell
             tableView.scrollToRow(at: IndexPath(row: 0, section: msgSectionIndex), at: .top, animated: true)
         }
     }

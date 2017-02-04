@@ -120,11 +120,11 @@ class RootViewController: UITabBarController, MyTabBarDelegate, UINavigationCont
 
     // MyTabBarDelegate
     func tabBar(_ tabBar: MyTabBar, didClickItem item: UIButton) {
-        print("item", item.tag)
+        print("press tabBar item", item.tag)
     }
 
     func tabBar(_ tabBar: MyTabBar, didClickMidButton btn: UIButton) {
-        print("mid button")
+        print("press tabBar mid button")
 
         let createCtrlr = CreateController(rootVC: self)
         currentCtrlr.navigationController!.pushViewController(createCtrlr, animated: true) // 没有用模态跳转，是因为模态会在最上而挡住tabbar

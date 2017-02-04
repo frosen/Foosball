@@ -130,24 +130,42 @@ class ActionBtnBoard: UIView {
     // 设置后会在左边出现聊天提示，并有气泡提示有多少条，如果小于等于0则消失
     func setMsgTip(_ num: Int) {
         if msgBtn == nil {
+            let h: CGFloat = 24
             msgBtn = UIButton(type: .custom)
             addSubview(msgBtn!)
-            msgBtn!.frame = CGRect(x: 15, y: 0, width: frame.height, height: frame.height)
+            msgBtn!.frame = CGRect(x: frame.width + 5, y: 0, width: 60, height: h)
+            msgBtn!.backgroundColor = UIColor.white
+
+            msgBtn!.layer.cornerRadius = h / 2
+            msgBtn!.layer.shadowColor = UIColor.gray.cgColor
+            msgBtn!.layer.shadowOpacity = 0.3
+            msgBtn!.layer.shadowRadius = 3
+            msgBtn!.layer.shadowOffset = CGSize(width: -2, height: 1)
+
             msgBtn!.tintColor = BaseColor
             msgBtn!.setImage(#imageLiteral(resourceName: "goto_msg").withRenderingMode(.alwaysTemplate), for: .normal)
+            msgBtn!.setTitleColor(TextColor, for: .normal)
+            msgBtn!.titleLabel?.font = TextFont
+            msgBtn!.imageEdgeInsets = UIEdgeInsets(top: 0, left: -17, bottom: 0, right: 0)
+            msgBtn!.titleEdgeInsets = UIEdgeInsets(top: 0, left: -12, bottom: 0, right: 0)
             msgBtn!.addTarget(self, action: #selector(ActionBtnBoard.onClickGotoMsg), for: .touchUpInside)
         }
 
         if curMsgNum == 0 && num == 0 {
             return
-        } else if curMsgNum > 0 && num > 0 { // 只更新数字
-
-        } else if curMsgNum == 0 && num > 0 { // 进来
-
-        } else { // 出去
-
         }
 
+        if curMsgNum == 0 && num > 0 { // 进来
+            UIView.animate(withDuration: 0.2, animations: {
+                self.msgBtn!.frame.origin.x = self.frame.width - 60 + self.msgBtn!.frame.height / 2
+            })
+        } else if curMsgNum > 0 && num == 0 { // 出去
+            UIView.animate(withDuration: 0.2, animations: {
+                self.msgBtn!.frame.origin.x = self.frame.width + 5
+            })
+        }
+
+        msgBtn!.setTitle(String(num), for: .normal)
         curMsgNum = num
     }
 
