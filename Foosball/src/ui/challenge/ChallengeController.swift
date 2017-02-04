@@ -131,6 +131,8 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         selectedCell = cell
         isShowMsg = showMsg
 
+        cell.setTip(false, 0) // 进入细节页面说明知道了更新，所以清理掉提示状态
+
         let vc = DetailViewController(rootVC: rootVC, id: id, showMsg: isShowMsg)
         navigationController!.pushViewController(vc, animated: true)
     }

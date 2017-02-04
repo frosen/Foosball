@@ -102,7 +102,8 @@ func ==(lhs: Time, rhs: Time) -> Bool {
         print("ERROR: Time is nil in func ==")
         return false
     } else {
-        return lhs.time == rhs.time
+        let itvl = lhs.time!.timeIntervalSince(rhs.time!) // 不能用compare，因为会有float的误差造成判断错误
+        return (itvl < 0.1)
     }
 }
 

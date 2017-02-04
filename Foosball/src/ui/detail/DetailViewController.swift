@@ -216,10 +216,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         }
 
         // 在显示着这个event的细节时更新，显示更新并结束提示
-        if let changeTup: (Bool, Int) = APP.activeEventsMgr.eventChangeMap[e] {
-            print(changeTup)
-            APP.activeEventsMgr.clearEventChange(e)
-        }
+        APP.activeEventsMgr.clearEventChange(e)
     }
 
     // MsgMgrObserver ---------------------------------------------------------------------------------
@@ -473,7 +470,6 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         self.toolbar.isHidden = true
 
         let animations: (() -> Void) = {
-            print(UIScreen.main.bounds.height - self.textInputView.frame.height, UIScreen.main.bounds.height, self.textInputView.frame.height)
             self.baseView.transform = CGAffineTransform(translationX: 0, y: -keyBoardBounds.size.height)
             self.textInputView.frame.origin.y = self.baseView.frame.height - self.textInputView.frame.height
         }

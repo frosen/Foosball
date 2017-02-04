@@ -105,8 +105,7 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
         actionBtnBoard.setState(st)
 
         if let changeTup: (Bool, Int) = APP.activeEventsMgr.eventChangeMap[e] {
-            actionBtnBoard.setStateTip(changeTup.0)
-            actionBtnBoard.setMsgTip(changeTup.1)
+            setTip(changeTup.0, changeTup.1)
         }
     }
 
@@ -151,6 +150,11 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
         for i in index ..< avatarList.count {
             avatarList[i].frame.origin.x = 99999
         }
+    }
+
+    // 提示
+    func setTip(_ stateTip: Bool, _ msgNum: Int) {
+        actionBtnBoard.setMsgTip(msgNum)
     }
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {

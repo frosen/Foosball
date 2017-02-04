@@ -72,8 +72,6 @@ class ActionBtnBoard: UIView {
     private let margin: CGFloat = 15
     private let topMargin: CGFloat = 3
 
-    private var btnWidth: CGFloat = 0
-
     private var lBtn: UIButton! = nil
     private var rBtn: UIButton! = nil
     private var msgBtn: UIButton? = nil
@@ -95,7 +93,7 @@ class ActionBtnBoard: UIView {
         lBtn = UIButton(type: .custom)
         addSubview(lBtn)
 
-        lBtn.frame = CGRect(x: 0, y: 0, width: 0, height: frame.height)
+        lBtn.frame = CGRect(x: 0, y: 0, width: frame.width / 3, height: frame.height)
         lBtn.setTitleColor(UIColor.gray, for: .normal)
         lBtn.setTitleColor(UIColor.lightGray, for: .highlighted)
         lBtn.titleLabel!.font = font
@@ -103,7 +101,7 @@ class ActionBtnBoard: UIView {
         rBtn = UIButton(type: .custom)
         addSubview(rBtn)
 
-        rBtn.frame = CGRect(x: 0, y: 0, width: 0, height: frame.height)
+        rBtn.frame = CGRect(x: 0, y: 0, width: frame.width / 3, height: frame.height)
         rBtn.setTitleColor(UIColor.gray, for: .normal)
         rBtn.setTitleColor(UIColor.lightGray, for: .highlighted)
         rBtn.titleLabel!.font = font
@@ -113,40 +111,23 @@ class ActionBtnBoard: UIView {
     func setState(_ st: EventState) {
         let stateAct: StateAction = ActionBtnBoard.stateActionList[st]!
 
-        // 计算按钮宽度
-        let msgBtnWidth = ((curMsgNum > 0) ? msgBtn!.frame.width : CGFloat(0))
-        btnWidth = frame.width - msgBtnWidth
-        btnWidth = btnWidth / ((stateAct.rbtn != nil) ? 2 : 1)
+        lBtn.setImage(stateAct.lbtn!.img, for: .normal)
+        lBtn.setTitle(stateAct.lbtn!.text, for: .normal)
 
-        if stateAct.lbtn == nil {
-            lBtn.isHidden = true
-        } else {
-            lBtn.isHidden = false
-
-            lBtn.frame.size.width = btnWidth
-            lBtn.frame.origin.x = msgBtnWidth
-            lBtn.setImage(stateAct.lbtn!.img, for: .normal)
-            lBtn.setTitle(stateAct.lbtn!.text, for: .normal)
-        }
-
-        if stateAct.rbtn == nil {
-            rBtn.isHidden = true
-        } else {
+        if stateAct.lbtn != nil {
             rBtn.isHidden = false
-
-            rBtn.frame.size.width = btnWidth
-            rBtn.frame.origin.x = lBtn.frame.width + lBtn.frame.origin.x
-
             rBtn.setImage(stateAct.rbtn!.img, for: .normal)
             rBtn.setTitle(stateAct.rbtn!.text, for: .normal)
+
+            lBtn.center.x = frame.width * 0.3
+            rBtn.center.x = frame.width * 0.7
+        } else {
+            rBtn.isHidden = true
+            lBtn.center.x = frame.width * 0.5
         }
     }
 
-    func setStateTip(_ b: Bool) {
-        
-    }
-
-    // 设置后会在右边出现聊天提示，并有气泡提示有多少条，如果小于等于0则消失
+    // 设置后会在左边出现聊天提示，并有气泡提示有多少条，如果小于等于0则消失
     func setMsgTip(_ num: Int) {
         if msgBtn == nil {
             msgBtn = UIButton(type: .custom)
