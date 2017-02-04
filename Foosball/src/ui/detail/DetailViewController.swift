@@ -355,7 +355,6 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     }
 
     private func getMsgCellData(by row: Int) -> MsgStruct? {
-        print("row: ", row)
         if row == 0 {
             return nil
         } else if row <= tmpMsgList.list.count {

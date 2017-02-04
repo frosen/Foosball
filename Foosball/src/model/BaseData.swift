@@ -64,28 +64,16 @@ class Time {
             return "暂未确定"
         }
 
-        let now = Date()
-        let interval: TimeInterval = now.timeIntervalSince(t)
+        let calendar = Calendar.current
+        let dateCom = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: t)
+        let nowCom = calendar.dateComponents([.year, .month, .day], from: t)
 
         var timeStr: String
-        if interval < 60 {
-            timeStr = "刚刚"
-        } else if interval < 3600 {
-            let min = floor(interval / 60)
-            timeStr = String(Int(min)) + "分钟前"
+        if dateCom.year! * 10000 + dateCom.month! * 100 + dateCom.day! < nowCom.year! * 10000 + nowCom.month! * 100 + nowCom.day! {
+            timeStr = String(dateCom.month!) + "月" + String(dateCom.day!) + "日"
         } else {
-            let calendar = Calendar.current
-            let dateCom = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: t)
-            let nowCom = calendar.dateComponents([.year, .month, .day], from: t)
-
-            if dateCom.year! * 10000 + dateCom.month! * 100 + dateCom.day! < nowCom.year! * 10000 + nowCom.month! * 100 + nowCom.day! {
-                timeStr = String(dateCom.month!) + "月" + String(dateCom.day!) + "日"
-            } else {
-                timeStr = String(dateCom.hour!) + ":" + String(format: "%02d", dateCom.minute!)
-            }
+            timeStr = String(dateCom.hour!) + ":" + String(format: "%02d", dateCom.minute!)
         }
-
-        print(timeStr)
 
         return timeStr
     }

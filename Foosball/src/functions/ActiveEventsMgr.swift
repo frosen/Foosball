@@ -174,7 +174,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         
         e.time = Time(timeIntervalSinceNow: 136000)
 
-        e.msgIDList = ["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8"]
+        e.msgIDList = ["m8", "m7", "m6", "m5", "m4", "m3", "m2", "m1", "589459362f301e00690096db", "589456b8128fe1006ca1ca29", "58944f400ce4630056f1a996"]
         
         data.eList.append(e)
     }

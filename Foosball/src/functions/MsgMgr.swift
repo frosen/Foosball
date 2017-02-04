@@ -121,10 +121,10 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         } else {
             // 对比
             let checkOriginNumMax = min(ids.count, msgContainer!.msgNeedNum)
-            let savedLastMsgId = msgContainer!.msgList.first?.ID.rawValue
+            let savedFirstMsgId = msgContainer!.msgList.first?.ID.rawValue
             for originIndex in 0 ..< checkOriginNumMax {
                 let originId = ids[ids.count - 1 - originIndex] // 倒着找
-                if savedLastMsgId != originId {
+                if savedFirstMsgId != originId {
                     downIDList.append(originId)
                 } else {
                     break
@@ -197,7 +197,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         let ms = MsgStruct(ID: DataID(ID: attris["id"] as! DataID.IDType))
         ms.msg = attris["msg"] as! String
         ms.time = Time(t: attris["tm"] as? Date)
-        ms.user = User(ID: DataID(ID: attris["id"] as! DataID.IDType)) // 先暂时都是用新建的user
+        ms.user = User(ID: DataID(ID: attris["u"] as! DataID.IDType)) // 先暂时都是用新建的user
 
         return ms
     }

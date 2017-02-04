@@ -249,6 +249,8 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         for user in unfetchUserList {
             ids.append(user.ID.rawValue)
         }
+        ids = Array(Set(ids)) // 转换成set，为了去除重复项
+
         Network.shareInstance.fetchUsers(ids, with: []) { suc, objs in
             guard suc else {
                 print("ERROR: no attris in updateMe")
