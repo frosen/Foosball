@@ -297,20 +297,19 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     }
 
     // 添加一张图片到某个event上，回调前会判断obKey是否存在，不存在就不执行了，callback参数 回调类型，进度
-    func addNewImg(_ img: UIImage, selectEvent: ((ActEvents) -> Event?), obKey: String, callback: @escaping ((String, Int) -> Void)) {
+    func addNewImg(_ img: UIImage, eventId: DataID, obKey: String, callback: @escaping ((String, Int) -> Void)) {
         guard let imgData = UIImageJPEGRepresentation(img, 0.5) else { // 使用jpg减少图片尺寸
             print("ERROR: can not change to JPEG")
             callback("fail", 0)
             return
         }
 
-        let eventOrNil = selectEvent(data)
-        guard let event = eventOrNil else {
+        guard let event = data.getCurEvent(curId: eventId) else {
             print("ERROR: no event in addNewImg")
             return
         }
 
-        let filename = event.ID.rawValue + "_" + String(event.imageURLList.count) + ".jpg"
+        let filename = APP.userMgr.data[0].name + "_" + Time.now.toWholeString + ".jpg"
 
         Network.shareInstance.upload(data: imgData, name: filename) { str, progress in
             if str != "p" && str != "fail" {

@@ -237,37 +237,42 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         picker.dismiss(animated: true)
 
         upload(img: img)
-
-
     }
 
     func upload(img: UIImage) {
         //转圈
-        showUploading(true)
+        showUploading(true, img: img)
 
         //上传图片，获取url，如果没有网，则提示是否重复，还是保存本地/取消
         let detailCtrlr = self.ctrlr as! DetailViewController
-        APP.activeEventsMgr.addNewImg(img, selectEvent: { data in
-            let detailCtrlr = self.ctrlr as! DetailViewController
-            return data.getCurEvent(curId: detailCtrlr.curEventId)
-        }, obKey: detailCtrlr.DataObKey) { str, progress in
+        APP.activeEventsMgr.addNewImg(img, eventId: detailCtrlr.curEventId, obKey: detailCtrlr.DataObKey) { str, progress in
             if str == "p" {
                 self.setUploading(progress: progress)
-            } else {
-                if str == "fail" {
-                    UITools.showAlert(detailCtrlr, title: "错误", msg: "上传图片有误，是否重新上传？", type: 2, callback: { _ in
-                        self.upload(img: img)
-                    }) { _ in
-                        self.showUploading(false) //取消转圈
-                    }
+            } else if str == "fail" {
+                UITools.showAlert(detailCtrlr, title: "错误", msg: "上传图片有误，是否重新上传？", type: 2, callback: { _ in
+                    self.upload(img: img)
+                }) { _ in
+                    self.showUploading(false) //取消转圈
                 }
+            } else {
                 // 成功就不做任何处理了，因为反正马上要刷新
             }
         }
     }
 
-    func showUploading(_ b: Bool) {
-        
+    var isLoading: Bool = false
+    func showUploading(_ b: Bool, img: UIImage? = nil) {
+        if b == isLoading {
+            return
+        }
+        isLoading = b
+        imgAddBtn.isUserInteractionEnabled = !b
+
+        if b {
+            let indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: imgAddBtn.frame.width, height:  imgAddBtn.frame.height))
+            imgAddBtn.addSubview(indicator)
+            indicator.startAnimating()
+        }
     }
 
     func setUploading(progress: Int) {
