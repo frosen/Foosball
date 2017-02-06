@@ -382,19 +382,18 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             return
         }
 
-        guard let event = data.getCurEvent(curId: eventId) else {
-            print("ERROR: no event in addNewImg")
-            return
-        }
-
         let filename = APP.userMgr.data[0].name + "_" + Time.now.toWholeString + ".jpg"
 
         Network.shareInstance.upload(data: imgData, name: filename) { str, progress in
             if str != "p" && str != "fail" {
-                self.changeData(changeFunc: { _ in
-                    event.imageURLList.append(str)
-                    return nil
-                }, needUpload: ["img": "add"])
+                self.addNewImgToEvent(str, eventId: eventId) { suc in
+                    if self.hasOb(for: obKey) {
+                        callback(suc ? str : "fail", 0)
+                    }
+                    if suc {
+                        APP.userMgr.fetchMeAtOnce()
+                    }
+                }
             }
 
             if self.hasOb(for: obKey) {
@@ -403,32 +402,23 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         }
     }
 
-    // 获取裁切后图片的url
-    func getImgUrl(from str: String, useCut: Bool = false) -> String {
-
-        return str // todo
-
-//        if useCut == false {
-//            return str
-//        }
-//
-//        let cutUrl: String = Network.shareInstance.getCutImgUrl(from: str, by: 72) ?? str
-//        return cutUrl
+    private func addNewImgToEvent(_ url: String, eventId: DataID, callback: @escaping ((Bool) -> Void)) {
+        Network.shareInstance.addData(to: Event.classname, id: eventId.rawValue, attris: [
+            "img": url
+        ]) { suc, error in
+            print("addNewMsgToEvent: \(suc), ", error ?? "no error")
+            callback(suc)
+        }
     }
 
-    func addNewMsg(_ msgId: DataID.IDType, to eventId: DataID, callback: @escaping ((Bool) -> Void)) {
-        let e = data.getCurEvent(curId: eventId)
-        if e == nil {
-            callback(false)
-            return
+    // 获取裁切后图片的url
+    func getImgUrlStr(from str: String, useCut: Bool = false) -> String {
+        if useCut == false {
+            return str
         }
 
-        e!.msgIDList.append(msgId)
-
-        let attris: [String: Any] = [
-            "msg": e!.msgIDList,
-        ]
-        updateEvent(e!, attris: attris, callback: callback)
+        let cutUrl: String = Network.shareInstance.getCutImgUrl(from: str, by: 72) ?? str
+        return cutUrl
     }
 }
 

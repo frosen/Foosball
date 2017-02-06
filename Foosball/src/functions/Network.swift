@@ -43,7 +43,7 @@ class Network: NSObject {
 
         user.signUpInBackground { suc, error in
             let id = user.objectId
-            callback(suc, error, id!)
+            callback(suc, error, id ?? "")
         }
     }
 

@@ -116,20 +116,17 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     override func initData() {
         APP.activeEventsMgr.register(observer: self, key: DataObKey)
         APP.msgMgr.register(observer: self, key: DataObKey)
+
+        if isShowMsgDirectly {
+            tableView.scrollToRow(at: IndexPath(row: 1, section: 0), at: .top, animated: false) // 避免在一瞬间显示出已经向上移动出屏幕的head cell
+            tableView.scrollToRow(at: IndexPath(row: 0, section: msgSectionIndex), at: .top, animated: true)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         APP.activeEventsMgr.set(hide: false, key: DataObKey)
         APP.msgMgr.set(hide: false, key: DataObKey)
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if isShowMsgDirectly {
-            tableView.scrollToRow(at: IndexPath(row: 1, section: 0), at: .top, animated: false) // 避免在一瞬间显示出已经向上移动出屏幕的head cell
-            tableView.scrollToRow(at: IndexPath(row: 0, section: msgSectionIndex), at: .top, animated: true)
-        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {

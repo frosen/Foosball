@@ -226,11 +226,11 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
             if suc {
                 // 更新event
                 self.addNewMsgToEvent(newID!, eventId: self.curEventID!) { suc in
-                    if suc {
-                        APP.userMgr.fetchMeAtOnce()
-                    }
                     if self.hasOb(for: obKey) {
                         callback(suc)
+                    }
+                    if suc {
+                        APP.userMgr.fetchMeAtOnce()
                     }
                 }
             } else {

@@ -8,6 +8,7 @@
 
 import UIKit
 import SKPhotoBrowser
+import SDWebImage
 
 class DetailImageHeadCell: DetailHeadCell {
     override func initData(_ d: BaseData?, index: IndexPath?) {
@@ -69,8 +70,11 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
             index += 1
         }
 
-        imgAddBtn = createNewBtn()
-        imgListView!.addSubview(imgAddBtn)
+        if imgAddBtn == nil {
+            imgAddBtn = createNewBtn()
+            imgListView!.addSubview(imgAddBtn)
+        }
+
         imgAddBtn.frame.origin = CGPoint(
             x: CGFloat(pos) * DetailImageCell.imageViewWidth,
             y: CGFloat(line) * DetailImageCell.imageViewWidth
@@ -96,8 +100,8 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         ))
         v.addSubview(img)
 
-        let imgUrl = APP.activeEventsMgr.getImgUrl(from: url, useCut: true)
-        img.sd_setImage(with: URL(string: imgUrl), placeholderImage: #imageLiteral(resourceName: "img_default"))
+        let imgUrlStr = APP.activeEventsMgr.getImgUrlStr(from: url, useCut: true)
+        img.sd_setImage(with: URL(string: imgUrlStr), placeholderImage: #imageLiteral(resourceName: "img_default"))
         img.tag = index
 
         v.tag = index
@@ -143,8 +147,8 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         for imgV in imgViewArray {
             if let img = imgV.image {
                 let tag = imgV.tag
-                let bigImgUrl = APP.activeEventsMgr.getImgUrl(from: curEvent.imageURLList[tag])
-                let photo = SKPhoto.photoWithImageURL(bigImgUrl, holder: img)
+                let bigImgUrlStr = APP.activeEventsMgr.getImgUrlStr(from: curEvent.imageURLList[tag])
+                let photo = SKPhoto.photoWithImageURL(bigImgUrlStr, holder: img)
                 photo.shouldCachePhotoURLImage = true
                 skImgArray.append(photo)
             }
@@ -218,12 +222,13 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
 
     func startImagePicker(_ t: UIImagePickerControllerSourceType, str: String) {
         if UIImagePickerController.isSourceTypeAvailable(t) {
-            let ctrller = UIImagePickerController()
-            ctrller.delegate = self
-            ctrller.sourceType = t
-            ctrller.allowsEditing = true
-            ctrller.modalTransitionStyle = .coverVertical
-            ctrlr.present(ctrller, animated: true, completion: nil)
+            let pickerCtrller = UIImagePickerController()
+            pickerCtrller.delegate = self
+            pickerCtrller.sourceType = t
+            pickerCtrller.allowsEditing = true
+            pickerCtrller.modalTransitionStyle = .coverVertical
+            pickerCtrller.view.tintColor = UIColor.white
+            ctrlr.present(pickerCtrller, animated: true, completion: nil)
         } else {
             UITools.showAlert(ctrlr, title: "提示", msg: "设备不支持访问" + str + "，请在设置->隐私中进行设置！", type: 1, callback: nil)
         }
@@ -255,13 +260,17 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
                     self.showUploading(false) //取消转圈
                 }
             } else {
-                // 成功就不做任何处理了，因为反正马上要刷新
+                // 成功后，先暂存图片
+                let cutUrlStr = APP.activeEventsMgr.getImgUrlStr(from: str, useCut: true)
+                SDWebImageManager.shared().saveImage(toCache: img, for: URL(string: cutUrlStr)!)
+                SDWebImageManager.shared().saveImage(toCache: img, for: URL(string: str)!)
+                self.showUploading(false, img: nil)
             }
         }
     }
 
-    var isLoading: Bool = false
-    func showUploading(_ b: Bool, img: UIImage? = nil) {
+    private var isLoading: Bool = false
+    private func showUploading(_ b: Bool, img: UIImage? = nil) {
         if b == isLoading {
             return
         }
@@ -269,14 +278,28 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         imgAddBtn.isUserInteractionEnabled = !b
 
         if b {
-            let indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: imgAddBtn.frame.width, height:  imgAddBtn.frame.height))
-            imgAddBtn.addSubview(indicator)
-            indicator.startAnimating()
+            let imgV = UIImageView(image: img)
+            imgAddBtn.addSubview(imgV)
+            imgV.frame = CGRect(origin: CGPoint.zero, size: imgAddBtn.frame.size)
+            imgV.tag = 1
+
+            let progress = UIView()
+            imgAddBtn.addSubview(progress)
+            progress.frame = CGRect(origin: CGPoint.zero, size: imgAddBtn.frame.size)
+            progress.backgroundColor = UIColor(white: 0, alpha: 0.7)
+            progress.tag = 2
+        } else {
+            imgAddBtn.viewWithTag(2)?.removeFromSuperview()
+            imgAddBtn.viewWithTag(1)?.removeFromSuperview()
         }
     }
 
-    func setUploading(progress: Int) {
+    private func setUploading(progress: Int) {
+        guard let progressView = imgAddBtn.viewWithTag(2) else {
+            return
+        }
 
+        progressView.frame.size.height = imgAddBtn.frame.height * CGFloat(100 - progress) * 0.01
     }
 }
 
