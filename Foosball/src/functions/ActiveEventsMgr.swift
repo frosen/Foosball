@@ -58,6 +58,8 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         data = ActEvents()
 
         // 读取本地数据
+        loadFromLocal()
+        loadEventsChangeFromLocal()
 
         test()
     }
@@ -189,18 +191,6 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         ob.onModify(actE: data)
     }
 
-    // 继承本地更新函数 -----------------------------------------------------
-
-    // 记录每个事件更新时，状态和对话数的变化
-    private(set) var eventChangeMap: [Event: (Bool, Int)] = [:]
-    func clearEventChange(_ e: Event) {
-        eventChangeMap.removeValue(forKey: e)
-    }
-
-    override func handleChangeResult(_ res: Any?) {
-        eventChangeMap = res as! [Event: (Bool, Int)]
-    }
-
     // 刷新数据时调用 ---------------------------------------------------------
 
     class func createNewEvent(_ attris: [String: Any]) -> Event {
@@ -233,6 +223,94 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     func updateData(_ newEList: [Event]) {
         // todo 以后要改成根据new list进行新增，按顺序添加到data上，并remove以前同id的
         data.eList = newEList
+    }
+
+    // 检查变化 ------------------------------------------------------------
+
+    // 记录每个事件更新时，状态和对话数的变化
+    class EventChange: NSObject {
+        fileprivate(set) var curState: EventState
+        fileprivate(set) var isStateChange: Bool
+
+        fileprivate(set) var curMsgNum: Int
+        fileprivate(set) var oldMsgNum: Int
+
+        fileprivate init(curState: EventState, stateChange: Bool, curMsgN: Int, oldMsgN: Int) {
+            self.curState = curState
+            self.isStateChange = stateChange
+
+            self.curMsgNum = curMsgN
+            self.oldMsgNum = oldMsgN
+
+            super.init()
+        }
+
+        func getMsgNumChange() -> Int {
+            return curMsgNum - oldMsgNum
+        }
+    }
+    
+    private(set) var eventChangeMap: [DataID: EventChange]? = nil
+
+    class func checkNewEventChangeMap(newEvents: [Event], oldChangeMap: [DataID: EventChange]?) -> [DataID: EventChange] {
+        var newChangeMap: [DataID: EventChange] = [:]
+
+        if oldChangeMap == nil {
+            for new in newEvents {
+                let newState = UserMgr.getState(from: new, by: APP.userMgr.me.ID)
+                let msgNum = new.msgIDList.count
+                newChangeMap[new.ID] = EventChange(curState: newState, stateChange: false, curMsgN: msgNum, oldMsgN: msgNum)
+            }
+        } else {
+            // 新的events中所有旧events没有，或者有但是状态不一致和对话数量不一致的记录下来
+            for new in newEvents {
+                let newState = UserMgr.getState(from: new, by: APP.userMgr.me.ID)
+                let msgNum = new.msgIDList.count
+
+                if newState == .finish || newState == .keepImpeach_win || newState == .keepImpeach_lose {
+                    newChangeMap[new.ID] = EventChange(curState: newState, stateChange: false, curMsgN: msgNum, oldMsgN: msgNum)
+                    continue
+                }
+
+                let oldChange = oldChangeMap![new.ID]
+                if oldChange == nil {
+                    newChangeMap[new.ID] = EventChange(curState: newState, stateChange: true, curMsgN: msgNum, oldMsgN: 0)
+                } else {
+                    let stateChange = (oldChange!.curState != newState)
+                    newChangeMap[new.ID] = EventChange(curState: newState, stateChange: stateChange, curMsgN: msgNum, oldMsgN: oldChange!.oldMsgNum)
+                }
+            }
+        }
+
+        return newChangeMap
+    }
+
+    func saveChange(_ newChangeMap: [DataID: EventChange]) {
+        if eventChangeMap == nil {
+            return
+        }
+
+        for change in newChangeMap {
+            eventChangeMap![change.key] = change.value
+        }
+
+        saveEventsChangeToLocal()
+    }
+
+    func clearEventChange(_ id: DataID) {
+        if let oldChange = eventChangeMap?[id] {
+            oldChange.isStateChange = true
+            oldChange.oldMsgNum = oldChange.curMsgNum
+        }
+        saveEventsChangeToLocal()
+    }
+
+    private func saveEventsChangeToLocal() {
+
+    }
+
+    private func loadEventsChangeFromLocal() {
+
     }
 
     // 本地便捷函数 ------------------------------------------------------------

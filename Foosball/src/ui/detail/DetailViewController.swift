@@ -184,11 +184,10 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         tableView.reloadData()
 
         // toolbar
-        let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
+        let st = UserMgr.getState(from: e, by: APP.userMgr.me.ID)
         actBtnBoard.setState(st)
 
-        // 刚进来时，让更新提示消失
-        APP.activeEventsMgr.clearEventChange(e)
+        handleEventChange()
     }
 
     func onModify(actE: ActEvents) {
@@ -210,14 +209,20 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         tableView.endUpdates()
 
         // 状态
-        let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
+        let st = UserMgr.getState(from: e, by: APP.userMgr.me.ID)
         actBtnBoard.setState(st)
         if let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? DetailTitleCell {
             titleCell.set(state: st)
         }
 
+        handleEventChange()
+    }
+
+    private func handleEventChange() {
+        // 动画显示状态变化
+
         // 在显示着这个event的细节时更新，显示更新并结束提示
-        APP.activeEventsMgr.clearEventChange(e)
+        APP.activeEventsMgr.clearEventChange(curEventId)
     }
 
     // MsgMgrObserver ---------------------------------------------------------------------------------

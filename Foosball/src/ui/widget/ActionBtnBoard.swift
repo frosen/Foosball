@@ -165,7 +165,8 @@ class ActionBtnBoard: UIView {
             })
         }
 
-        msgBtn!.setTitle(String(num), for: .normal)
+        let numString = num <= 99 ? String(num) : ".."
+        msgBtn!.setTitle(numString, for: .normal)
         curMsgNum = num
     }
 

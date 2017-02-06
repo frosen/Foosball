@@ -56,7 +56,7 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
         let urlStr: String? = e.imageURLList.count > 0 ? e.imageURLList[0] : nil
         eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList, urlStr: urlStr)
 
-        let st = APP.userMgr.getState(from: e, by: APP.userMgr.me.ID)
+        let st = UserMgr.getState(from: e, by: APP.userMgr.me.ID)
         eventBoard.set(state: st)
 
         // 加载team数据
@@ -103,9 +103,10 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
 
         // 按钮
         actionBtnBoard.setState(st)
+        actionBtnBoard.setMsgTip(1)
 
-        if let changeTup: (Bool, Int) = APP.activeEventsMgr.eventChangeMap[e] {
-            setTip(changeTup.0, changeTup.1)
+        if let change = APP.activeEventsMgr.eventChangeMap?[e.ID] {
+            setTip(change.isStateChange, change.getMsgNumChange())
         }
     }
 

@@ -36,6 +36,7 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         print("初始化 MsgMgr")
 
         data = [:]
+        loadFromLocal()
 
         test()
     }

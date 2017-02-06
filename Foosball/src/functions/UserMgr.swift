@@ -59,6 +59,8 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 
         data = []
 
+        loadFromLocal()
+
         // 读取本地登录数据
         if getLoginState() == .no {
             registerDeviceLogin()
@@ -154,7 +156,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     }
 
     func fetchMeAtOnce() {
-        fetchMe()
+//        fetchMe()
         scanSecond = UserMgr.scanSecondMax
     }
 
@@ -181,6 +183,8 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
                 var needFetchUserList: [User] = []
                 UserMgr.checkUnfetchUsers(from: newEventList, by: self.data!, needFetchUserList: &needFetchUserList)
 
+                let newChange = ActiveEventsMgr.checkNewEventChangeMap(newEvents: newEventList, oldChangeMap: APP.activeEventsMgr.eventChangeMap)
+
                 DispatchQueue.main.async {
                     self.resetMe(keeper)
                     self.saveToLocal()
@@ -188,6 +192,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
                     self.updateObserver()
 
                     APP.activeEventsMgr.updateData(newEventList)
+                    APP.activeEventsMgr.saveChange(newChange)
                     APP.activeEventsMgr.saveToLocal()
 
                     if needFetchUserList.count > 0 {
@@ -302,7 +307,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         return data[0]
     }
     
-    func getState(from event: Event, by id: DataID) -> EventState {
+    class func getState(from event: Event, by id: DataID) -> EventState {
         var s = searchSelfState(from: event, by: id)
 
         // todo 如果是胜利和失败，根据其他人的状态，自己显示不同的状态
@@ -313,7 +318,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         return s
     }
 
-    private func searchSelfState(from event: Event, by id: DataID) -> EventState {
+    private class func searchSelfState(from event: Event, by id: DataID) -> EventState {
         let us = event.eachUserState { us in
             return us.user.ID == id
         }
