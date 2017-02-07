@@ -406,8 +406,22 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         Network.shareInstance.addData(to: Event.classname, id: eventId.rawValue, attris: [
             "img": url
         ]) { suc, error in
-            print("addNewMsgToEvent: \(suc), ", error ?? "no error")
+            print("addNew img ToEvent: \(suc), ", error ?? "no error")
             callback(suc)
+        }
+    }
+
+    func removeImg(urlStr: String, eventId: DataID, obKey: String, callback: @escaping ((Bool) -> Void)) {
+        Network.shareInstance.removeData(to: Event.classname, id: eventId.rawValue, attris: [
+            "img": urlStr
+        ]) { suc, error in
+            print("remove img: \(suc), ", error ?? "no error")
+            if self.hasOb(for: obKey) {
+                callback(suc)
+            }
+            if suc {
+                APP.userMgr.fetchMeAtOnce()
+            }
         }
     }
 

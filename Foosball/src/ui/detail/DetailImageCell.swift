@@ -72,11 +72,11 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
 
         if imgAddBtn == nil {
             imgAddBtn = createNewBtn()
-            imgListView!.addSubview(imgAddBtn)
+            contentView.addSubview(imgAddBtn)
         }
 
         imgAddBtn.frame.origin = CGPoint(
-            x: CGFloat(pos) * DetailImageCell.imageViewWidth,
+            x: CGFloat(pos) * DetailImageCell.imageViewWidth + margin,
             y: CGFloat(line) * DetailImageCell.imageViewWidth
         )
 
@@ -171,24 +171,12 @@ class DetailImageCell: StaticCell, SKPhotoBrowserDelegate, UIImagePickerControll
         UITools.showAlert(ctrlr, title: "删除图片", msg: "您确定要删除这张图片吗？", type: 2, callback: { _ in
             print("confirm to delete")
             let detailCtrlr = self.ctrlr as! DetailViewController
-            APP.activeEventsMgr.changeData(changeFunc: { data in
-
-                guard let e = data.getCurEvent(curId: detailCtrlr.curEventId) else {
-                    print("ERROR: no event in removePhoto changeData")
-                    return nil
+            let removeUrl: String = self.imgUrlList[index]!
+            APP.activeEventsMgr.removeImg(urlStr: removeUrl, eventId: detailCtrlr.curEventId, obKey: detailCtrlr.DataObKey) { suc in
+                if !suc {
+                    UITools.showAlert(self.ctrlr, title: "错误", msg: "图片并没有删除成功", type: 1, callback: { _ in })
                 }
-
-                // 之所以要重新搜索一遍，是因为过程中有可能更新了
-                let removeUrl: String = self.imgUrlList[index]!
-                for i in 0 ..< e.imageURLList.count {
-                    if removeUrl == e.imageURLList[i] {
-                        e.imageURLList.remove(at: i)
-                        break
-                    }
-                }
-
-                return nil
-            }, needUpload: ["img": "rm"])
+            }
         })
     }
 

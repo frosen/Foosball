@@ -130,6 +130,21 @@ class Network: NSObject {
         }
     }
 
+    func removeData(to classname: String, id: String, attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
+        let todo = AVObject(className: classname, objectId: id)
+
+        for attri in attris {
+        let value = checkValue(attri.value)
+            todo.remove(value, forKey: attri.key)
+        }
+
+        let opt = AVSaveOption()
+        opt.fetchWhenSave = true
+        todo.saveInBackground(with: opt) { suc, error in
+            callback(suc, error)
+        }
+    }
+
     // 更新服务器
     func updateObj(from: String, id: String, attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
         let todo = AVObject(className: from, objectId: id)
