@@ -156,7 +156,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     }
 
     func fetchMeAtOnce() {
-//        fetchMe()
+        fetchMe()
         scanSecond = UserMgr.scanSecondMax
     }
 

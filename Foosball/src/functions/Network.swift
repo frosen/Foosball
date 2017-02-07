@@ -18,7 +18,7 @@ class Network: NSObject {
     //单例
     static let shareInstance = Network()
     private override init() {
-//        AVOSCloud.setAllLogsEnabled(false)
+        AVOSCloud.setAllLogsEnabled(false)
         AVOSCloud.setApplicationId("o5nq2XE8H5XUlo9S94F9tioJ-gzGzoHsz", clientKey: "vJrjiBn25QQ4FmvIKhVx8bQ2")
     }
 

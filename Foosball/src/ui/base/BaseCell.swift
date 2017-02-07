@@ -73,6 +73,9 @@ class BaseCell: UITableViewCell {
 
 protocol StaticCellDelegate: BaseCellDelegate {
     func getIfUpdate(_ indexPath: IndexPath) -> Bool
+
+    func saveStaticCell(_ cell: StaticCell, by identifier: String)
+    func getStaticCell(by identifier: String) -> StaticCell?
 }
 
 // 静态cell，不会进行重用，如果要重置，要通过reset方法
@@ -84,20 +87,21 @@ class StaticCell: BaseCell {
             return BaseCell.create(index, tableView: tableView, data: data, ctrlr: ctrlr, delegate: delegate)
         }
 
-        var cell: UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: info.id)
+        var cell: StaticCell? = delegate.getStaticCell(by: info.id)
         if cell == nil {
             let cls = info.cls as! StaticCell.Type
-            cell = cls.new(cls: cls, id: info.id)
+            cell = cls.new(cls: cls, id: info.id) as? StaticCell
 
-            let staticCell = cell as! StaticCell
-            staticCell.w = UIScreen.main.bounds.width
-            staticCell.h = type(of: staticCell).getCellHeight(data, index: index, otherData: ctrlr) //dynamicType可以获取对象的类，然后就能使用类函数了
-            staticCell.ctrlr = ctrlr
-            staticCell.initData(data, index: index)
-            staticCell.setData(data, index: index)
+            cell!.w = UIScreen.main.bounds.width
+            cell!.h = type(of: cell!).getCellHeight(data, index: index, otherData: ctrlr) //dynamicType可以获取对象的类，然后就能使用类函数了
+            cell!.ctrlr = ctrlr
+            cell!.initData(data, index: index)
+            cell!.setData(data, index: index)
+
+            delegate.saveStaticCell(cell!, by: info.id)
+
         } else if delegate.getIfUpdate(index) == true {
-            let staticCell = cell as! StaticCell
-            staticCell.setData(data, index: index)
+            cell!.setData(data, index: index)
         }
         
         return cell!

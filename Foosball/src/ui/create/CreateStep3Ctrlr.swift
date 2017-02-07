@@ -146,6 +146,15 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         return false
     }
 
+    var staticCellDict: [String: StaticCell] = [:]
+    func saveStaticCell(_ cell: StaticCell, by identifier: String) {
+        staticCellDict[identifier] = cell
+    }
+
+    func getStaticCell(by identifier: String) -> StaticCell? {
+        return staticCellDict[identifier]
+    }
+
     // CreateStep3ToolbarDelegate ================================================================================================
 
     func onPublish() {

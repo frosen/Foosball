@@ -151,9 +151,6 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
     // 优化cell的获取，配合StaticCell的needUpdate属性，只有需要更新的时候再调用，可以大幅度优化性能
     private var cellNeedUpdate: [IndexPath: Bool] = [:]
 
-    // 在初始化的时候直接生成的cell，先放到这里
-    private var holdCellDict: [IndexPath: UITableViewCell] = [:]
-
     // ActiveEventsMgrObserver ==============================================================================
 
     func onInit(actE: ActEvents) {
@@ -167,8 +164,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
 
         // 预生成这些static cell，避免第一次滑动造成的卡顿
         for indexPath in staticVarCellIndexList {
-            let c = StaticCell.create(indexPath, tableView: tableView, data: curEvent, ctrlr: self, delegate: self)
-            holdCellDict[indexPath] = c
+            let _ = StaticCell.create(indexPath, tableView: tableView, data: curEvent, ctrlr: self, delegate: self)
         }
 
         // 加载未发送成功的临时msgCell
@@ -311,7 +307,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         default:
             rowNum = 0
         }
-        print("TTT section\(section) has \(rowNum) rows")
+//        print("TTT section\(section) has \(rowNum) rows")
         return rowNum
     }
 
@@ -327,7 +323,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         let s = indexPath.section
         let r = indexPath.row
         if let h = cellHeightDict[getCellHeightDictIndex(section: s, row: r)] {
-            print("TTT indexPath \(indexPath) height is \(h) (old)")
+//            print("TTT indexPath \(indexPath) height is \(h) (old)")
             return h
         }
 
@@ -340,23 +336,18 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         let height: CGFloat = (getCInfo(indexPath).cls as! BaseCell.Type).getCellHeight(data, index: indexPath, otherData: self)
 
         cellHeightDict[getCellHeightDictIndex(section: s, row: r)] = height
-        print("TTT indexPath \(indexPath) height is \(height)")
+//        print("TTT indexPath \(indexPath) height is \(height)")
         return height
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let c = holdCellDict[indexPath] {
-            holdCellDict.removeValue(forKey: indexPath)
-            return c
-        } else {
-            var data: BaseData = curEvent
-            if indexPath.section == msgSectionIndex { // msg的cell使用不同的数据源
-                if let msgStru = getMsgCellData(by: indexPath.row) {
-                    data = msgStru
-                }
+        var data: BaseData = curEvent
+        if indexPath.section == msgSectionIndex { // msg的cell使用不同的数据源
+            if let msgStru = getMsgCellData(by: indexPath.row) {
+                data = msgStru
             }
-            return StaticCell.create(indexPath, tableView: tableView, data: data, ctrlr: self, delegate: self)
         }
+        return StaticCell.create(indexPath, tableView: tableView, data: data, ctrlr: self, delegate: self)
     }
 
     private func getMsgCellData(by row: Int) -> MsgStruct? {
@@ -453,6 +444,15 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
             }
         }
         return false
+    }
+
+    var staticCellDict: [String: StaticCell] = [:]
+    func saveStaticCell(_ cell: StaticCell, by identifier: String) {
+        staticCellDict[identifier] = cell
+    }
+
+    func getStaticCell(by identifier: String) -> StaticCell? {
+        return staticCellDict[identifier]
     }
 
     // 回调 ==================================================================================================================
