@@ -51,7 +51,7 @@ class DetailMsgHeadCell: DetailHeadCell {
 
 class DetailMsgCell: BaseCell {
     private static let msgAvatarWidth: CGFloat = 40
-    private static let msgStrWidth: CGFloat = DetailG.widthWithoutMargin - msgAvatarWidth - DetailG.headMargin //这里的headMargin表示头像右边的空
+    private static let msgStrWidth: CGFloat = DetailG.widthWithoutMargin - msgAvatarWidth - DetailG.headMargin - 25 //这里的headMargin表示头像右边的空
     private static let msgStrPosX: CGFloat = DetailG.headMargin * 2 + msgAvatarWidth
 
     private var img: Avatar? = nil

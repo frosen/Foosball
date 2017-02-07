@@ -66,11 +66,15 @@ class Time {
 
         let calendar = Calendar.current
         let dateCom = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: t)
-        let nowCom = calendar.dateComponents([.year, .month, .day], from: t)
+
+        let yesterday = Date(timeIntervalSinceNow: -3600 * 24)
+        let yesterdayCom = calendar.dateComponents([.year, .month, .day], from: yesterday)
 
         var timeStr: String
-        if dateCom.year! * 10000 + dateCom.month! * 100 + dateCom.day! < nowCom.year! * 10000 + nowCom.month! * 100 + nowCom.day! {
-            timeStr = String(dateCom.month!) + "月" + String(dateCom.day!) + "日"
+        let dateNum = dateCom.year! * 10000 + dateCom.month! * 100 + dateCom.day!
+        let yesterdayNum = yesterdayCom.year! * 10000 + yesterdayCom.month! * 100 + yesterdayCom.day!
+        if dateNum < yesterdayNum {
+            timeStr = String(dateCom.month!) + "-" + String(dateCom.day!)
         } else {
             timeStr = String(dateCom.hour!) + ":" + String(format: "%02d", dateCom.minute!)
         }
