@@ -144,6 +144,8 @@ class DetailMsgCell: BaseCell {
 
         let attriStr = NSAttributedString(string: msgStru.msg, attributes: DetailMsgCell.lblStyleAttri)
         txtLbl.attributedText = attriStr
+
+        showActivityIndicator(msgStru.ID.rawValue == "tmp")
     }
 
     func longPressCell(ges: UILongPressGestureRecognizer) {
@@ -158,6 +160,24 @@ class DetailMsgCell: BaseCell {
 
     func tapAvatar(ges: UITapGestureRecognizer) {
         // todo
+    }
+
+    // 活动指示，用于上传数据的临时状态 --------------------------
+
+    var indicator: UIActivityIndicatorView? = nil
+    private func showActivityIndicator(_ b: Bool) {
+        if b && indicator == nil {
+            indicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+            contentView.addSubview(indicator!)
+            indicator!.frame = CGRect(x: w - DetailG.headMargin - 25, y: 30, width: 25, height: 25)
+            indicator!.alpha = 0.7
+        }
+
+        if b {
+            indicator!.startAnimating()
+        } else {
+            indicator?.stopAnimating()
+        }
     }
 }
 
