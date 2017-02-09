@@ -43,9 +43,13 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
         VS.center.y = teamView.frame.height / 2
 
         // 底部按钮
-        actionBtnBoard = ActionBtnBoard(frame: CGRect(x: 0, y: 72, width: UIScreen.main.bounds.width, height: 36))
+        actionBtnBoard = ActionBtnBoard(
+            frame: CGRect(x: 0, y: 72, width: UIScreen.main.bounds.width, height: 36),
+            vc: ctrlr,
+            key: (ctrlr as! ChallengeController).DataObKey,
+            delegate: self
+        )
         contentView.addSubview(actionBtnBoard)
-        actionBtnBoard.delegate = self
     }
 
     private let maxMemberCount: Int = 6
@@ -102,8 +106,8 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
         handleUnusedAvatar(index + c)
 
         // 按钮
-        actionBtnBoard.setState(st)
-        actionBtnBoard.setMsgTip(1)
+        actionBtnBoard.set(event: e)
+        actionBtnBoard.set(state: st)
 
         if let change = APP.activeEventsMgr.eventChangeMap?[e.ID] {
             setTip(change.isStateChange, change.getMsgNumChange())
@@ -173,4 +177,6 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
         let vc = ctrlr as! ChallengeController
         vc.enterDetail(cell: self, id: curEvent.ID, showMsg: true)
     }
+
+    func onExitEvent() {}
 }

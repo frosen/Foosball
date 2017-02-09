@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObserver, UITableViewDelegate, UITableViewDataSource, StaticCellDelegate, InputViewDelegate {
+class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObserver, UITableViewDelegate, UITableViewDataSource, StaticCellDelegate, InputViewDelegate, ActionBtnBoardDelegate {
 
     private let msgSectionIndex = 3
 
@@ -73,7 +73,11 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
 
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: toolbar.frame.height, right: 0)
 
-        actBtnBoard = ActionBtnBoard(frame: CGRect(x: 0, y: 0, width: toolbar.frame.width, height: toolbar.frame.height))
+        actBtnBoard = ActionBtnBoard(
+            frame: CGRect(x: 0, y: 0, width: toolbar.frame.width, height: toolbar.frame.height),
+            vc: self,
+            key: DataObKey,
+            delegate: self)
         toolbar.addSubview(actBtnBoard)
 
         //隐藏在最下面的输入栏
@@ -177,8 +181,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         tableView.reloadData()
 
         // toolbar
+        actBtnBoard.set(event: e)
         let st = UserMgr.getState(from: e, by: APP.userMgr.me.ID)
-        actBtnBoard.setState(st)
+        actBtnBoard.set(state: st)
 
         handleEventChange()
     }
@@ -203,7 +208,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
 
         // 状态
         let st = UserMgr.getState(from: e, by: APP.userMgr.me.ID)
-        actBtnBoard.setState(st)
+        actBtnBoard.set(state: st)
         if let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? DetailTitleCell {
             titleCell.set(state: st)
         }
@@ -558,5 +563,13 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         APP.msgMgr.addNewMsg(mS, obKey: DataObKey) { suc in
 
         }
+    }
+
+    // ActionBtnBoardDelegate --------------------------------------------------------------
+
+    func onPressMsg() {}
+
+    func onExitEvent() {
+        onBack()
     }
 }

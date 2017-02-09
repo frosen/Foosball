@@ -64,11 +64,18 @@ class Network: NSObject {
     }
 
     // 把事件添加到user上
-    func addDataToUser(_ attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
+    func addDataToMe(_ attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
         guard let user = AVUser.current() else {
             return
         }
         addData(to: User.classname, id: user.objectId!, attris: attris, callback: callback)
+    }
+
+    func removeDataFromMe(_ attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
+        guard let user = AVUser.current() else {
+            return
+        }
+        removeData(to: User.classname, id: user.objectId!, attris: attris, callback: callback)
     }
 
     func updateUser(_ attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
@@ -84,7 +91,7 @@ class Network: NSObject {
             let value = checkValue(attri.value)
             todo.setObject(value, forKey: attri.0)
         }
-        
+
         todo.saveInBackground { suc, error in
             callback(suc, error, todo.objectId)
         }

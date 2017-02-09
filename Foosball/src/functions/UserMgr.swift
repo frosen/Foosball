@@ -156,7 +156,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     }
 
     func fetchMeAtOnce() {
-        fetchMe()
+//        fetchMe()
         scanSecond = UserMgr.scanSecondMax
     }
 
@@ -180,6 +180,10 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
                     }
                 }
 
+                // 排序
+                ActiveEventsMgr.sort(newEventList, meId: keeper["id"] as! DataID.IDType)
+
+                // 查询未fetch的user数据
                 var needFetchUserList: [User] = []
                 UserMgr.checkUnfetchUsers(from: newEventList, by: self.data!, needFetchUserList: &needFetchUserList)
 

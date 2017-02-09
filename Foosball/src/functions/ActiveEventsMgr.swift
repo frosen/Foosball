@@ -199,7 +199,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         return e
     }
 
-    class private func setAttris(_ attris: [String: Any], e: Event) {
+    private class func setAttris(_ attris: [String: Any], e: Event) {
         e.type = EventType(rawValue: attris["tp"] as! Int)!
         e.item = ItemType.list[attris["i"] as! Int]
         e.memberCount = attris["mc1"] as! Int
@@ -223,6 +223,28 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     func updateData(_ newEList: [Event]) {
         // todo 以后要改成根据new list进行新增，按顺序添加到data上，并remove以前同id的
         data.eList = newEList
+    }
+
+    class func sort(_ eList: [Event], meId: DataID.IDType) {
+        for e in eList {
+            let suc = moveToHead(userid: meId, stateList: &e.ourSideStateList)
+            if !suc {
+                let _ = moveToHead(userid: meId, stateList: &e.opponentStateList)
+            }
+            let _ = moveToHead(userid: e.createUserID.rawValue, stateList: &e.ourSideStateList)
+        }
+    }
+
+    private class func moveToHead(userid: DataID.IDType, stateList: inout [UserState]) -> Bool {
+        for i in 0 ..< stateList.count {
+            if stateList[i].user.ID.rawValue == userid {
+                let curState = stateList[i]
+                stateList.remove(at: i)
+                stateList.insert(curState, at: 0)
+                return true
+            }
+        }
+        return false
     }
 
     // 检查变化 ------------------------------------------------------------
@@ -353,7 +375,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
     // 同时给活动事件和所有事件
     private class func addNewEventToUser(_ e: Event, callback: @escaping ((Bool) -> Void)) {
-        Network.shareInstance.addDataToUser([
+        Network.shareInstance.addDataToMe([
             "active": e,
             "events": e.ID.rawValue
         ]) { suc, error in
@@ -364,8 +386,8 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
     // --------------------------------------------------------------------------------
 
-    func updateEvent(_ e: Event, attris: [String: Any], callback: @escaping ((Bool) -> Void)) {
-        Network.shareInstance.updateObj(from: Event.classname, id: e.ID.rawValue, attris: attris) { suc, error in
+    func updateEvent(_ id: DataID, attris: [String: Any], callback: @escaping ((Bool) -> Void)) {
+        Network.shareInstance.updateObj(from: Event.classname, id: id.rawValue, attris: attris) { suc, error in
             print("updateEvent event on net: \(suc), ", error ?? "no error")
             if suc {
                 self.saveToLocal()
@@ -433,6 +455,24 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         let cutUrl: String = Network.shareInstance.getCutImgUrl(from: str, by: 72) ?? str
         return cutUrl
+    }
+
+    func changeState(to st: EventState, eventId: DataID, callback: @escaping ((Bool) -> Void)) {
+
+    }
+
+    func exitEvent(event: Event, obKey: String, callback: @escaping ((Bool) -> Void)) {
+        Network.shareInstance.removeDataFromMe([
+            "active": event,
+            "events": event.ID.rawValue
+        ]) { suc, error in
+            if self.hasOb(for: obKey) {
+                callback(suc)
+            }
+            if suc {
+                APP.userMgr.fetchMeAtOnce()
+            }
+        }
     }
 }
 

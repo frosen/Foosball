@@ -39,7 +39,7 @@ class ChallengeController: BaseTabController, ActiveEventsMgrObserver, UITableVi
         tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -3) //否则滚动条和屏幕边会有一段间隔
     }
 
-    private let DataObKey = "ChallengeController"
+    let DataObKey = "ChallengeController"
     override func initData() {
         APP.activeEventsMgr.register(observer: self, key: DataObKey)
     }

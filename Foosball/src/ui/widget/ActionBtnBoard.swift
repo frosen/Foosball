@@ -28,6 +28,7 @@ class StateAction {
 
 protocol ActionBtnBoardDelegate {
     func onPressMsg()
+    func onExitEvent()
 }
 
 class ActionBtnBoard: UIView {
@@ -38,7 +39,7 @@ class ActionBtnBoard: UIView {
             r: AcBtn(t: "谢绝邀请")
         ),
         .ready: StateAction(
-            l: AcBtn(t: "邀请参加"),
+            l: AcBtn(t: "邀请朋友"),
             r: AcBtn(t: "退出活动")
         ),
         .ongoing: StateAction(
@@ -76,17 +77,24 @@ class ActionBtnBoard: UIView {
     private var rBtn: UIButton! = nil
     private var msgBtn: UIButton? = nil
 
+    private var curState: EventState = .ready
     private var curMsgNum: Int = 0
 
-    // 代理
-    var delegate: ActionBtnBoardDelegate? = nil
+    private var vc: UIViewController! = nil
+    private var key: String = ""
+    private var delegate: ActionBtnBoardDelegate! = nil
+    private var event: Event? = nil
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override init(frame: CGRect) {
+    init(frame: CGRect, vc: UIViewController, key: String, delegate: ActionBtnBoardDelegate) {
         super.init(frame: frame)
+
+        self.vc = vc
+        self.key = key
+        self.delegate = delegate
 
         let font = UIFont.systemFont(ofSize: 12)
 
@@ -97,6 +105,7 @@ class ActionBtnBoard: UIView {
         lBtn.setTitleColor(UIColor.gray, for: .normal)
         lBtn.setTitleColor(UIColor.lightGray, for: .highlighted)
         lBtn.titleLabel!.font = font
+        lBtn.addTarget(self, action: #selector(ActionBtnBoard.onClickLeftBtn), for: .touchUpInside)
 
         rBtn = UIButton(type: .custom)
         addSubview(rBtn)
@@ -105,11 +114,18 @@ class ActionBtnBoard: UIView {
         rBtn.setTitleColor(UIColor.gray, for: .normal)
         rBtn.setTitleColor(UIColor.lightGray, for: .highlighted)
         rBtn.titleLabel!.font = font
+        rBtn.addTarget(self, action: #selector(ActionBtnBoard.onClickRightBtn), for: .touchUpInside)
+    }
+
+    func set(event: Event) {
+        self.event = event
     }
 
     // 根据不同的状态产生不同的按钮
-    func setState(_ st: EventState) {
-        let stateAct: StateAction = ActionBtnBoard.stateActionList[st]!
+    func set(state: EventState) {
+        curState = state
+
+        let stateAct: StateAction = ActionBtnBoard.stateActionList[state]!
 
         lBtn.setImage(stateAct.lbtn!.img, for: .normal)
         lBtn.setTitle(stateAct.lbtn!.text, for: .normal)
@@ -170,8 +186,86 @@ class ActionBtnBoard: UIView {
         curMsgNum = num
     }
 
+    func onClickLeftBtn() {
+        handleStateChange(curState, 1)
+    }
+
+    func onClickRightBtn() {
+        handleStateChange(curState, 2)
+    }
+
     func onClickGotoMsg() {
-        delegate?.onPressMsg()
+        delegate.onPressMsg()
+    }
+
+    // 改变状态 --------------------------------------------------
+
+    private func handleStateChange(_ st: EventState, _ i: Int) {
+        switch st {
+        case .invite:
+            if i == 1 { confirmInvite() } else { refuseInvite() }
+        case .ready:
+            if i == 1 { invite() } else { exitEvent() }
+        case .ongoing:
+            if i == 1 { invite() } else { exitEvent() }
+        case .win:
+            if i == 1 { invite() } else { exitEvent() }
+        case .lose:
+            if i == 1 { invite() } else { exitEvent() }
+        case .waiting:
+            if i == 1 { invite() } else { exitEvent() }
+        case .honoured:
+            if i == 1 { invite() } else { exitEvent() }
+        case .finish:
+            if i == 1 { invite() } else { exitEvent() }
+        case .impeach:
+            if i == 1 { invite() } else { exitEvent() }
+        case .keepImpeach_win:
+            if i == 1 { invite() } else { exitEvent() }
+        case .keepImpeach_lose:
+            if i == 1 { invite() } else { exitEvent() }
+        }
+    }
+
+    private func confirmInvite() {
+        guard let e = event else {
+            return
+        }
+        APP.activeEventsMgr.changeState(to: .ready, eventId: e.ID) { suc in
+            
+        }
+    }
+
+    private func refuseInvite() {
+        guard let e = event else {
+            return
+        }
+        UITools.showAlert(vc, title: "退出", msg: "您不打算参加这次活动吗？", type: 2, callback: { _ in
+            print("refuseInvite")
+            APP.activeEventsMgr.exitEvent(event: e, obKey: self.key) { suc in
+                if suc {
+                    self.delegate.onExitEvent()
+                }
+            }
+        })
+    }
+
+    private func invite() {
+
+    }
+
+    private func exitEvent() {
+        guard let e = event else {
+            return
+        }
+        UITools.showAlert(vc, title: "退出", msg: "您确定退出这次活动吗？", type: 2, callback: { _ in
+            print("confirm to exit event")
+            APP.activeEventsMgr.exitEvent(event: e, obKey: self.key) { suc in
+                if suc {
+                    self.delegate.onExitEvent()
+                }
+            }
+        })
     }
 }
 
