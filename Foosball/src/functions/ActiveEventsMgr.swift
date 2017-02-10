@@ -56,14 +56,16 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         // 初始化数据结构
         data = ActEvents()
-    }
 
-    func run() {
         // 读取本地数据
         loadFromLocal()
         loadEventsChangeFromLocal()
 
         test()
+    }
+
+    func run() {
+
     }
 
     func test() {

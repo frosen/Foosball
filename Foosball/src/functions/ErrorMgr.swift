@@ -18,10 +18,6 @@ class ErrorMgr: NSObject {
         print("初始化 ErrorMgr")
     }
 
-    func run() {
-        
-    }
-
     private(set) var obDict: [String: ErrorMgrObserver] = [:]
 
     func register(observer ob: ErrorMgrObserver, key: String) {

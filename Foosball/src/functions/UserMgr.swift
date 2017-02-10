@@ -58,17 +58,15 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         print("初始化 UserMgr")
 
         data = []
+        loadFromLocal()
     }
 
     func run() {
-        loadFromLocal()
-
         // 读取本地登录数据
         if getLoginState() == .no {
             registerDeviceLogin()
 
         } else {
-            readLocalUserData()
             perform(#selector(UserMgr.fetchMeAtOnce), with: nil, afterDelay: 1.0) // 1秒后立即更新
             gotoScanServerData()
         }
@@ -127,17 +125,6 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
             self.updateObserver()
             self.saveToLocal()
             self.gotoScanServerData()
-        }
-    }
-
-    func readLocalUserData() {
-        // 个人信息的数据用Network储存到本地，所以从这里取
-        let res: Any? = Network.shareInstance.getUserAttris()
-        if res == nil {
-            print("ERROR: wrong getUserAttris in readLocalUserData")
-        } else {
-            Network.shareInstance.parse(obj: res!, by: &UserMgr.attrisKeeper, callback: { _, _ in })
-            resetMe(UserMgr.attrisKeeper)
         }
     }
 
@@ -305,6 +292,17 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
 
     override func saveToLocal() {
         // 用户数据不需要自己进行本地保存，会保存到leancloud中
+    }
+
+    override func loadFromLocal() {
+        // 个人信息的数据用Network储存到本地，所以从这里取
+        let res: Any? = Network.shareInstance.getUserAttris()
+        if res == nil {
+            print("ERROR: wrong getUserAttris in readLocalUserData")
+        } else {
+            Network.shareInstance.parse(obj: res!, by: &UserMgr.attrisKeeper, callback: { _, _ in })
+            resetMe(UserMgr.attrisKeeper)
+        }
     }
 
     // 便捷函数 ----------------------------------------------------------------------------------
