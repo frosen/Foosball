@@ -36,6 +36,9 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
         print("初始化 MsgMgr")
 
         data = [:]
+    }
+
+    func run() {
         loadFromLocal()
 
         test()
@@ -221,32 +224,20 @@ class MsgMgr: DataMgr<[DataID: MsgContainer], MsgMgrObserver>, ActiveEventsMgrOb
             "msg": newMsg.msg,
         ]
 
-        Network.shareInstance.createObj(to: MsgStruct.classname, attris: attris) { suc, error, newID in
-            print("create Msg on net: \(suc), ", error ?? "no error")
-            if suc {
-                // 更新event
-                self.addNewMsgToEvent(newID!, eventId: self.curEventID!) { suc in
-                    if self.hasOb(for: obKey) {
-                        callback(suc)
-                    }
-                    if suc {
-                        APP.userMgr.fetchMeAtOnce()
-                    }
-                }
-            } else {
-                if self.hasOb(for: obKey) {
-                    callback(false)
-                }
+        Network.shareInstance.create(
+            className: MsgStruct.classname,
+            attris: attris,
+            AndAddTo: Event.classname,
+            id: curEventID!.rawValue,
+            keyDict: ["msg": 1]
+        ) { suc, error in
+            print("addNewMsg \(suc): ", error ?? "no error")
+            if self.hasOb(for: obKey) {
+                callback(suc)
             }
-        }
-    }
-
-    private func addNewMsgToEvent(_ msgId: String, eventId: DataID, callback: @escaping ((Bool) -> Void)) {
-        Network.shareInstance.addData(to: Event.classname, id: eventId.rawValue, attris: [
-            "msg": msgId
-        ]) { suc, error in
-            print("addNewMsgToEvent: \(suc), ", error ?? "no error")
-            callback(suc)
+            if suc {
+                APP.userMgr.fetchMeAtOnce()
+            }
         }
     }
 

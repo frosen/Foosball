@@ -56,7 +56,9 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         // 初始化数据结构
         data = ActEvents()
+    }
 
+    func run() {
         // 读取本地数据
         loadFromLocal()
         loadEventsChangeFromLocal()
@@ -337,7 +339,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
     // 本地便捷函数 ------------------------------------------------------------
 
-    func addNewEvent(_ e: Event, callback: @escaping ((Bool) -> Void)) {
+    func addNewEvent(_ e: Event, obKey: String, callback: @escaping ((Bool) -> Void)) {
         let attris: [String: Any] = [
             "tp": e.type.rawValue,
             "i": e.item.tag,
@@ -357,30 +359,20 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             "cid": e.createUserID.rawValue
         ]
 
-        Network.shareInstance.createObj(to: Event.classname, attris: attris) { suc, error, newID in
-            print("create event on net: \(suc), ", error ?? "no error")
-            if suc {
-                e.ID = DataID(ID: newID!)
-                ActiveEventsMgr.addNewEventToUser(e) { suc in
-                    if suc {
-                        APP.userMgr.fetchMeAtOnce()
-                    }
-                    callback(suc)
-                }
-            } else {
+        Network.shareInstance.create(
+            className: Event.classname,
+            attris: attris,
+            AndAddTo: User.classname,
+            id: APP.userMgr.me.ID.rawValue,
+            keyDict: ["active": 2, "events": 1]
+        ) { suc, error in
+            print("addNewEvent \(suc): ", error ?? "no error")
+            if self.hasOb(for: obKey) {
                 callback(suc)
             }
-        }
-    }
-
-    // 同时给活动事件和所有事件
-    private class func addNewEventToUser(_ e: Event, callback: @escaping ((Bool) -> Void)) {
-        Network.shareInstance.addDataToMe([
-            "active": e,
-            "events": e.ID.rawValue
-        ]) { suc, error in
-            print("addNewEvent to User", suc, error ?? "no_error")
-            callback(suc)
+            if suc {
+                APP.userMgr.fetchMeAtOnce()
+            }
         }
     }
 

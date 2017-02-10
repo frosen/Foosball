@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateController: BaseController, UIScrollViewDelegate {
+class CreateController: BaseController, ActiveEventsMgrObserver, UIScrollViewDelegate {
 
     var createEvent: Event! = nil
 
@@ -40,7 +40,10 @@ class CreateController: BaseController, UIScrollViewDelegate {
         changeCreateEventWager(isAdd: true)
     }
 
+    let DataObKey = "CreateController"
     func initUIData() {
+        APP.activeEventsMgr.register(observer: self, key: DataObKey)
+
         // 位置初始化 自定义的转景，系统不会重置view的位置，所以自己来
         view.frame.origin.y += 64
         baseView.backgroundColor = UIColor(red: 0.12, green: 0.12, blue: 0.24, alpha: 1)
@@ -86,7 +89,10 @@ class CreateController: BaseController, UIScrollViewDelegate {
         stepLabel.title! = stepStr
     }
 
+    
+
     private func goBackToHome() {
+        APP.activeEventsMgr.unregister(key: DataObKey)
         let _ = navigationController?.popViewController(animated: true)
     }
 
@@ -107,7 +113,7 @@ class CreateController: BaseController, UIScrollViewDelegate {
         createEvent.createTime = Time.now
         createEvent.createUserID = APP.userMgr.me.ID
 
-        APP.activeEventsMgr.addNewEvent(createEvent) { suc in
+        APP.activeEventsMgr.addNewEvent(createEvent, obKey: DataObKey) { suc in
             if suc {
                 // 返回
                 self.goBackToHome()
@@ -135,6 +141,11 @@ class CreateController: BaseController, UIScrollViewDelegate {
             createEvent.wagerList.remove(at: createEvent.wagerList.count - 1)
         }
     }
+
+    // ActiveEventsMgrObserver =============================================================================================
+
+    func onInit(actE: ActEvents) {}
+    func onModify(actE: ActEvents) {}
 }
 
 

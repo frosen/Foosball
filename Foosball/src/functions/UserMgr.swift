@@ -58,7 +58,9 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         print("初始化 UserMgr")
 
         data = []
+    }
 
+    func run() {
         loadFromLocal()
 
         // 读取本地登录数据

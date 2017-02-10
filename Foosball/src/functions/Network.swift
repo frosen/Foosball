@@ -165,7 +165,31 @@ class Network: NSObject {
         }
     }
 
-    // 解析：参数必须是AVObject，为了不对外开放，所以对外为NSObject
+    // 云函数 -------------------------------------------------------------------
+
+    func create(className: String, attris: [String: Any], AndAddTo classForAdd: String, id: String, keyDict: [String: Int],  callback: @escaping ((Bool, Error?) -> Void)) {
+
+        var handledAttris: [String: Any] = [:]
+        for attri in attris {
+            let value = checkValue(attri.value)
+            handledAttris[attri.key] = value
+        }
+
+        var params: [String: Any] = [:]
+        params["cls"] = className
+        params["params"] = handledAttris
+        params["clsadd"] = classForAdd
+        params["idadd"] = id
+        params["keys"] = keyDict
+
+        AVCloud.callFunction(inBackground: "createObjAndAddToList", withParameters: params) { obj, error in
+            callback(error == nil, error)
+        }
+    }
+
+    // 解析 -------------------------------------------------------------------
+
+    // 参数必须是AVObject，为了不对外开放，所以对外为NSObject
     // inout: 参考 http://blog.csdn.net/chenyufeng1991/article/details/48495367
     func parse(obj: Any, by attris: inout [String: Any], callback: ((String?, [String: Any]) -> Void)) {
         if let avobjList = obj as? [AVObject] {
