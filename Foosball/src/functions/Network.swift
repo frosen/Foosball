@@ -152,6 +152,19 @@ class Network: NSObject {
         }
     }
 
+    func changeData(to classname: String, id: String, key: String, from: Any, to: Any, callback: @escaping ((Bool, Error?) -> Void)) {
+        let todo = AVObject(className: classname, objectId: id)
+
+        todo.remove(from, forKey: key)
+        todo.add(to, forKey: key)
+
+        let opt = AVSaveOption()
+        opt.fetchWhenSave = true
+        todo.saveInBackground(with: opt) { suc, error in
+            callback(suc, error)
+        }
+    }
+
     // 更新服务器
     func updateObj(from: String, id: String, attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
         let todo = AVObject(className: from, objectId: id)

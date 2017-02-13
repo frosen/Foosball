@@ -38,7 +38,14 @@ class ActionBtnBoard: UIView {
             l: AcBtn(t: "加入活动"),
             r: AcBtn(t: "谢绝邀请")
         ),
-        .ready: StateAction(
+        .overtime: StateAction(
+            l: AcBtn(t: "关注比赛"),
+            r: AcBtn(t: "退出活动")
+        ),
+        .watch: StateAction(
+            r: AcBtn(t: "退出活动")
+        ),
+        .start: StateAction(
             l: AcBtn(t: "邀请朋友"),
             r: AcBtn(t: "退出活动")
         ),
@@ -46,28 +53,50 @@ class ActionBtnBoard: UIView {
             l: AcBtn(t: "确认哈哈"),
             r: AcBtn(t: "确认呵呵")
         ),
-        .waiting: StateAction(
-            l: AcBtn(t: ""),
-            r: AcBtn(t: "")
-        ),
         .win: StateAction(
             l: AcBtn(t: ""),
             r: AcBtn(t: "")
         ),
         .lose: StateAction(
             l: AcBtn(t: ""),
-            r: AcBtn(t: "")),
-        .honoured: StateAction(
+            r: AcBtn(t: "")
+        ),
+        .waitConfirm: StateAction(
             l: AcBtn(t: ""),
             r: AcBtn(t: "")
         ),
-        .finish: StateAction(),
         .impeach: StateAction(
             l: AcBtn(t: ""),
             r: AcBtn(t: "")
         ),
-        .keepImpeach_win: StateAction(),
-        .keepImpeach_lose: StateAction(),
+        .waitPromise: StateAction(
+            l: AcBtn(t: ""),
+            r: AcBtn(t: "")
+        ),
+        .to_fulfill: StateAction(
+            l: AcBtn(t: ""),
+            r: AcBtn(t: "")
+        ),
+        .finish_win: StateAction(
+            l: AcBtn(t: ""),
+            r: AcBtn(t: "")
+        ),
+        .finish_lose: StateAction(
+            l: AcBtn(t: ""),
+            r: AcBtn(t: "")
+        ),
+        .keepImpeach_win: StateAction(
+            l: AcBtn(t: ""),
+            r: AcBtn(t: "")
+        ),
+        .keepImpeach_lose: StateAction(
+            l: AcBtn(t: ""),
+            r: AcBtn(t: "")
+        ),
+        .impeachEnd: StateAction(
+            l: AcBtn(t: ""),
+            r: AcBtn(t: "")
+        )
     ]
 
     private let margin: CGFloat = 15
@@ -77,7 +106,7 @@ class ActionBtnBoard: UIView {
     private var rBtn: UIButton! = nil
     private var msgBtn: UIButton? = nil
 
-    private var curState: EventState = .ready
+    private var curState: EventState = .start
     private var curMsgNum: Int = 0
 
     private var vc: UIViewController! = nil
@@ -204,7 +233,11 @@ class ActionBtnBoard: UIView {
         switch st {
         case .invite:
             if i == 1 { confirmInvite() } else { refuseInvite() }
-        case .ready:
+        case .overtime:
+            if i == 1 { confirmInvite() } else { refuseInvite() }
+        case .watch:
+            if i == 1 { confirmInvite() } else { refuseInvite() }
+        case .start:
             if i == 1 { invite() } else { exitEvent() }
         case .ongoing:
             if i == 1 { invite() } else { exitEvent() }
@@ -212,17 +245,23 @@ class ActionBtnBoard: UIView {
             if i == 1 { invite() } else { exitEvent() }
         case .lose:
             if i == 1 { invite() } else { exitEvent() }
-        case .waiting:
-            if i == 1 { invite() } else { exitEvent() }
-        case .honoured:
-            if i == 1 { invite() } else { exitEvent() }
-        case .finish:
+        case .waitConfirm:
             if i == 1 { invite() } else { exitEvent() }
         case .impeach:
+            if i == 1 { invite() } else { exitEvent() }
+        case .waitPromise:
+            if i == 1 { invite() } else { exitEvent() }
+        case .to_fulfill:
+            if i == 1 { invite() } else { exitEvent() }
+        case .finish_win:
+            if i == 1 { invite() } else { exitEvent() }
+        case .finish_lose:
             if i == 1 { invite() } else { exitEvent() }
         case .keepImpeach_win:
             if i == 1 { invite() } else { exitEvent() }
         case .keepImpeach_lose:
+            if i == 1 { invite() } else { exitEvent() }
+        case .impeachEnd:
             if i == 1 { invite() } else { exitEvent() }
         }
     }
@@ -231,7 +270,7 @@ class ActionBtnBoard: UIView {
         guard let e = event else {
             return
         }
-        APP.activeEventsMgr.changeState(to: .ready, eventId: e.ID) { suc in
+        APP.activeEventsMgr.changeState(to: .start, event: e, obKey: self.key) { suc in
             
         }
     }

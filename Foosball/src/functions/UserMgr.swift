@@ -169,7 +169,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
                     }
                 }
 
-                // 排序
+                // 在本地进行数据处理
                 ActiveEventsMgr.sort(newEventList, meId: keeper["id"] as! DataID.IDType)
 
                 // 查询未fetch的user数据
@@ -310,7 +310,8 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     var me: User {
         return data[0]
     }
-    
+
+    // 根据整个事件获取某个id的状态
     class func getState(from event: Event, by id: DataID) -> EventState {
         var s = searchSelfState(from: event, by: id)
 
@@ -323,15 +324,15 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     }
 
     private class func searchSelfState(from event: Event, by id: DataID) -> EventState {
-        let us = event.eachUserState { us in
+        let usTup = event.eachUserState { us in
             return us.user.ID == id
         }
 
-        if us == nil {
+        if usTup == nil {
             print("ERROR: wrong in searchState")
-            return .ready
+            return .watch
         } else {
-            return us!.state
+            return usTup!.0.state
         }
     }
 }

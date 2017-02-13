@@ -44,7 +44,7 @@ class CreateStep3LocationCell: DetailLocationCell {
     }
 }
 
-class CreateStep3WagerHeadCell: DetailHeadCell {
+class CreateStep3PromiseHeadCell: DetailHeadCell {
     var curCount: Double = 1.0
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
@@ -57,13 +57,13 @@ class CreateStep3WagerHeadCell: DetailHeadCell {
         stepper.tintColor = BaseColor
 
         let e = d as! Event
-        stepper.value = Double(e.wagerList.count)
-        curCount = Double(e.wagerList.count)
+        stepper.value = Double(e.promiseList.count)
+        curCount = Double(e.promiseList.count)
 
 
         stepper.isContinuous = false
         stepper.autorepeat = false
-        stepper.addTarget(self, action: #selector(CreateStep3WagerHeadCell.onPressStepper(_:)), for: .touchUpInside)
+        stepper.addTarget(self, action: #selector(CreateStep3PromiseHeadCell.onPressStepper(_:)), for: .touchUpInside)
 
         stepper.minimumValue = 1.0
         stepper.maximumValue = 9.0
@@ -80,12 +80,12 @@ class CreateStep3WagerHeadCell: DetailHeadCell {
         }
 
         let createCtrlr = ctrlr as! CreateStep3Ctrlr
-        createCtrlr.modifyWagerCount(add: st.value > curCount)
+        createCtrlr.modifyPromiseCount(add: st.value > curCount)
         curCount = st.value
     }
 }
 
-class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSource {
+class CreateStep3PromiseCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSource {
     private static let pickerHeight: CGFloat = 130
     private static let textHeight: CGFloat = 30
 
@@ -97,14 +97,14 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        picker = UIPickerView(frame: CGRect(x: 30, y: 0, width: w - 60, height: CreateStep3WagerCell.pickerHeight))
+        picker = UIPickerView(frame: CGRect(x: 30, y: 0, width: w - 60, height: CreateStep3PromiseCell.pickerHeight))
         contentView.addSubview(picker)
 
         picker.delegate = self
         picker.dataSource = self
 
         // 描述文字或者自定义输入框
-        let lbl = UILabel(frame: CGRect(x: 30, y: CreateStep3WagerCell.pickerHeight, width: w - 60, height: CreateStep3WagerCell.textHeight))
+        let lbl = UILabel(frame: CGRect(x: 30, y: CreateStep3PromiseCell.pickerHeight, width: w - 60, height: CreateStep3PromiseCell.textHeight))
         contentView.addSubview(lbl)
         lbl.text = "哈哈哈哈哈"
         lbl.font = UIFont.systemFont(ofSize: 14)
@@ -119,9 +119,9 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
-        curIndex = e.wagerList.count - index!.row
+        curIndex = e.promiseList.count - index!.row
 
-        let select = e.wagerList[curIndex]
+        let select = e.promiseList[curIndex]
         picker.selectRow(select.data.0, inComponent: 0, animated: false)
         picker.selectRow(select.data.1, inComponent: 1, animated: false)
         picker.selectRow(select.data.2, inComponent: 2, animated: false)
@@ -136,20 +136,20 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
 
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if component == 0 {
-            return Wager.NameList.count
+            return Promise.NameList.count
         } else if component == 1 {
             let r0 = pickerView.selectedRow(inComponent: 0)
-            if Wager.NameList.count <= r0 { // 滑动时，其他组的联动有滞后，不加判断会去获取超过界限的数据而崩溃
+            if Promise.NameList.count <= r0 { // 滑动时，其他组的联动有滞后，不加判断会去获取超过界限的数据而崩溃
                 return 0
             }
-            return Wager.NameList[r0].1.count
+            return Promise.NameList[r0].1.count
         } else {
             let r0 = pickerView.selectedRow(inComponent: 0)
             let r1 = pickerView.selectedRow(inComponent: 1)
-            if Wager.NameList.count <= r0 { // 滑动时，其他组的联动有滞后，不加判断会去获取超过界限的数据而崩溃
+            if Promise.NameList.count <= r0 { // 滑动时，其他组的联动有滞后，不加判断会去获取超过界限的数据而崩溃
                 return 0
             }
-            let wl1 = Wager.NameList[r0].1
+            let wl1 = Promise.NameList[r0].1
             if wl1.count <= r1 {
                 return 0
             }
@@ -166,13 +166,13 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
 
         switch component {
         case 0:
-            label.text = Wager.NameList[row].0
+            label.text = Promise.NameList[row].0
         case 1:
             let r0 = pickerView.selectedRow(inComponent: 0)
-            if Wager.NameList.count <= r0 { // 滑动时，其他组的联动有滞后，不加判断会去获取超过界限的数据而崩溃
+            if Promise.NameList.count <= r0 { // 滑动时，其他组的联动有滞后，不加判断会去获取超过界限的数据而崩溃
                 break
             }
-            let wl = Wager.NameList[r0].1
+            let wl = Promise.NameList[r0].1
             if wl.count <= row {
                 break
             }
@@ -181,10 +181,10 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
             let r0 = pickerView.selectedRow(inComponent: 0)
             let r1 = pickerView.selectedRow(inComponent: 1)
 
-            if Wager.NameList.count <= r0 { // 滑动时，其他组的联动有滞后，不加判断会去获取超过界限的数据而崩溃
+            if Promise.NameList.count <= r0 { // 滑动时，其他组的联动有滞后，不加判断会去获取超过界限的数据而崩溃
                 break
             }
-            let wl1 = Wager.NameList[r0].1
+            let wl1 = Promise.NameList[r0].1
             if wl1.count <= r1 {
                 break
             }
@@ -212,8 +212,8 @@ class CreateStep3WagerCell: BaseCell, UIPickerViewDelegate, UIPickerViewDataSour
         let c1 = pickerView.selectedRow(inComponent: 1)
         let c2 = pickerView.selectedRow(inComponent: 2)
         let createCtrlr = ctrlr as! CreateStep3Ctrlr
-        createCtrlr.rootCtrlr.createEvent.wagerList[curIndex].data = (c0, c1, c2)
-        print("change wager", curIndex, (c0, c1, c2))
+        createCtrlr.rootCtrlr.createEvent.promiseList[curIndex].data = (c0, c1, c2)
+        print("change promise", curIndex, (c0, c1, c2))
     }
 }
 

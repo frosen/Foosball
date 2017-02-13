@@ -79,7 +79,7 @@ class DetailTitleCell: StaticCell {
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
         let urlStr: String? = e.imageURLList.count > 0 ? e.imageURLList[0] : nil
-        eventBoard.setData(et: e.type, it: e.item, wager: e.wagerList, urlStr: urlStr)
+        eventBoard.setData(et: e.type, it: e.item, promise: e.promiseList, urlStr: urlStr)
 
         let st = UserMgr.getState(from: e, by: APP.userMgr.me.ID)
         set(state: st)
@@ -144,10 +144,10 @@ class DetailContentCell: DetailStringCell {
     }
 }
 
-class DetailWagerCell: DetailStringCell {
-    class func createText(from wager: [Wager]) -> String {
+class DetailPromiseCell: DetailStringCell {
+    class func createText(from promise: [Promise]) -> String {
         var t = ""
-        for i in 0 ..< wager.count {
+        for i in 0 ..< promise.count {
             t += "~ "
             t += "啦啦啦----你问我从哪里来。"
             t += "\n"
@@ -158,8 +158,8 @@ class DetailWagerCell: DetailStringCell {
 
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
         let e = d as! Event
-        let wagerText: String = createText(from: e.wagerList)
-        return DetailG.calculateLblHeight(wagerText, w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight
+        let promiseText: String = createText(from: e.promiseList)
+        return DetailG.calculateLblHeight(promiseText, w: DetailG.widthWithoutMargin) + DetailG.subTitleHeight + DetailG.contentBottomHeight
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
@@ -169,7 +169,7 @@ class DetailWagerCell: DetailStringCell {
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
-        setLblData(str: DetailWagerCell.createText(from: e.wagerList))
+        setLblData(str: DetailPromiseCell.createText(from: e.promiseList))
     }
 }
 

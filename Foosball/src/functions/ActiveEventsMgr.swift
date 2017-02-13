@@ -40,7 +40,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         "tm": "Date",
         "loc": "Location",
         "p2m": false,
-        "wg": ["wg"],
+        "pms": ["pms"],
         "dtl": "detail",
         "our": [["k": "v"]],
         "opp": [["k": "v"]],
@@ -75,27 +75,27 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         let bb2 = User(ID: DataID(ID: "123"), name: "佐助", url: "")
         bb2.name = "小明2"
-        let p2 = UserState(user: bb2, state: .ongoing)
+        let p2 = UserState(user: bb2, state: .start)
 
         let bb3 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb3.name = "小明3"
-        let p3 = UserState(user: bb3, state: .waiting)
+        let p3 = UserState(user: bb3, state: .start)
 
         let bb12 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb12.name = "明a"
-        let p12 = UserState(user: bb12, state: .win)
+        let p12 = UserState(user: bb12, state: .start)
 
         let bb22 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb22.name = "明b"
-        let p22 = UserState(user: bb22, state: .lose)
+        let p22 = UserState(user: bb22, state: .start)
 
         let bb32 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb32.name = "明3"
-        let p32 = UserState(user: bb32, state: .finish)
+        let p32 = UserState(user: bb32, state: .start)
 
         let bb321 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
         bb321.name = "明4"
-        let p321 = UserState(user: bb321, state: .finish)
+        let p321 = UserState(user: bb321, state: .start)
 
 
 
@@ -169,7 +169,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         
         e.detail = "~ 这是一首简单的小情歌；\n~ 这是一首简单的小情歌；\n~ 这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；\n~ 这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；"
         
-        e.wagerList = [Wager(str: "红牛")]
+        e.promiseList = [Promise(str: "红牛")]
         
         
         
@@ -211,7 +211,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         e.time = Time(t: attris["tm"] as? Date)
         e.location.set(loc: attris["loc"] as! CLLocation)
         e.isPublishToMap = attris["p2m"] as! Bool
-        e.wagerList = DataTools.Wagers.unserialize(attris["wg"] as! [String])
+        e.promiseList = DataTools.Promises.unserialize(attris["pms"] as! [String])
         e.detail = attris["dtl"] as! String
 
         e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [[String: Any]])
@@ -293,7 +293,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
                 let newState = UserMgr.getState(from: new, by: APP.userMgr.me.ID)
                 let msgNum = new.msgIDList.count
 
-                if newState == .finish || newState == .keepImpeach_win || newState == .keepImpeach_lose {
+                if EventState.noTipState.contains(newState) {
                     newChangeMap[new.ID] = EventChange(curState: newState, stateChange: false, curMsgN: msgNum, oldMsgN: msgNum)
                     continue
                 }
@@ -351,7 +351,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             "tm": e.time.getTimeData(),
             "loc": e.location.loc,
             "p2m": e.isPublishToMap,
-            "wg": DataTools.Wagers.serialize(e.wagerList),
+            "pms": DataTools.Promises.serialize(e.promiseList),
             "dtl": e.detail,
             "our": DataTools.UserStates.serialize(e.ourSideStateList),
             "opp": DataTools.UserStates.serialize(e.opponentStateList),
@@ -410,10 +410,10 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
                         APP.userMgr.fetchMeAtOnce()
                     }
                 }
-            }
-
-            if self.hasOb(for: obKey) {
-                callback(str, progress)
+            } else {
+                if self.hasOb(for: obKey) {
+                    callback(str, progress)
+                }
             }
         }
     }
@@ -451,21 +451,82 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         return cutUrl
     }
 
-    func changeState(to st: EventState, eventId: DataID, callback: @escaping ((Bool) -> Void)) {
+    func changeState(to st: EventState, event: Event, obKey: String, callback: @escaping ((Bool) -> Void)) {
+        guard let usTup = event.eachUserState({ us -> Bool in
+            return us.user.ID == APP.userMgr.me.ID
+        }) else {
+            return
+        }
 
-    }
+        let key = (usTup.1 == 1) ? "our" : "opp"
+        let old = DataTools.UserStates.serializeOne(usTup.0)
 
-    func exitEvent(event: Event, obKey: String, callback: @escaping ((Bool) -> Void)) {
-        Network.shareInstance.removeDataFromMe([
-            "active": event,
-            "events": event.ID.rawValue
-        ]) { suc, error in
+        let newState = UserState(user: APP.userMgr.me, state: st)
+        let new = DataTools.UserStates.serializeOne(newState)
+
+        Network.shareInstance.changeData(
+            to: Event.classname,
+            id: event.ID.rawValue,
+            key: key,
+            from: old,
+            to: new
+        ) { suc, error in
             if self.hasOb(for: obKey) {
-                callback(suc)
+                callback(true)
             }
             if suc {
                 APP.userMgr.fetchMeAtOnce()
             }
+        }
+    }
+
+    func exitEvent(event: Event, obKey: String, callback: @escaping ((Bool) -> Void)) {
+        guard let usTup = event.eachUserState({ us -> Bool in
+            return us.user.ID == APP.userMgr.me.ID
+        }) else { // 本人已经不再event之中，直接从user中删除即可
+            self.exitEventFromUser(event: event) { suc in
+                if self.hasOb(for: obKey) {
+                    callback(true)
+                }
+                if suc {
+                    APP.userMgr.fetchMeAtOnce()
+                }
+            }
+            return
+        }
+
+        let key = (usTup.1 == 1) ? "our" : "opp"
+        Network.shareInstance.removeData(
+            to: Event.classname,
+            id: event.ID.rawValue,
+            attris: [key: DataTools.UserStates.serializeOne(usTup.0)]
+        ) { suc, error in
+            print("exitEvent: \(suc), ", error ?? "no error")
+
+            if suc {
+                self.exitEventFromUser(event: event) { suc in
+                    if self.hasOb(for: obKey) {
+                        callback(true)
+                    }
+                    if suc {
+                        APP.userMgr.fetchMeAtOnce()
+                    }
+                }
+            } else {
+                if self.hasOb(for: obKey) {
+                    callback(false)
+                }
+            }
+        }
+    }
+
+    private func exitEventFromUser(event: Event, callback: @escaping ((Bool) -> Void)) {
+        Network.shareInstance.removeDataFromMe([
+            "active": event,
+            "events": event.ID.rawValue
+        ]) { suc, error in
+            print("exitEventFromUser: \(suc), ", error ?? "no error")
+            callback(suc)
         }
     }
 }

@@ -42,33 +42,50 @@ class StateView: UIView {
         case .invite:
             string = "邀请"
             bgColor = UIColor(red: 0, green: 0.9, blue: 0.5, alpha: 1)
-        case .ready:
-            string = "预备"
+        case .overtime:
+            string = "超时"
+            bgColor = UIColor(red: 0, green: 0.9, blue: 0.5, alpha: 1)
+        case .watch:
+            string = "观战"
+            bgColor = UIColor(red: 0, green: 0.9, blue: 0.5, alpha: 1)
+        case .start:
+            string = "开始"
             bgColor = UIColor.purple
         case .ongoing:
             string = "进行"
             bgColor = UIColor.red
-        case .waiting:
-            string = "等待"
-            bgColor = UIColor.blue
         case .win:
             string = "胜利"
             bgColor = UIColor.orange
         case .lose:
             string = "失败"
             bgColor = UIColor.brown
-        case .honoured:
-            string = "兑现"
-            bgColor = UIColor.orange
-        case .finish:
-            string = "完成"
-            bgColor = UIColor.brown
+        case .waitConfirm:
+            string = "等待"
+            bgColor = UIColor.blue
         case .impeach:
             string = "质疑"
             bgColor = UIColor.purple
-        case .keepImpeach_win: fallthrough
+        case .waitPromise:
+            string = "等待兑现"
+            bgColor = UIColor.purple
+        case .to_fulfill:
+            string = "兑现"
+            bgColor = UIColor.orange
+        case .finish_win:
+            string = "完成胜利"
+            bgColor = UIColor.orange
+        case .finish_lose:
+            string = "完成失败"
+            bgColor = UIColor.brown
+        case .keepImpeach_win:
+            string = "存疑胜利"
+            bgColor = UIColor.purple
         case .keepImpeach_lose:
-            string = "存疑"
+            string = "存疑失败"
+            bgColor = UIColor.purple
+        case .impeachEnd:
+            string = "不再存疑"
             bgColor = UIColor.purple
         }
 

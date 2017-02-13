@@ -20,19 +20,31 @@ enum EventType: Int {
 
 enum EventState: Int {
     case invite //接收到邀请，可以同意，或拒绝（会让发送拒绝消息）
-    case ready //生成后在到达比赛时间前的状态，可邀请，或取消
-    case ongoing //比赛开始后，可确认胜利还是失败
+    case overtime // 邀请超时，观战 ***only local状态***
+    case watch // 观战，作为观战者时的状态，可以退出，或不再提示 ***only local状态*** 发生错误时，也是观战
+
+    case start //生成后在到达比赛时间前的状态，可邀请，或取消
+    case ongoing //比赛开始后，可确认胜利还是失败 ***only local状态***
 
     case win //胜利，确认对方是否兑现
     case lose //失败，确认是否自己已经完成了承诺的兑现
-    case waiting //你确认成败后，别人没确认前，要等待，最多24小时，到时没确认的自动根据你的确认而确认，1小时后可催对方，此时你的数值还是保持win，lose
 
-    case honoured //已兑现，选择评价，或直接完成
-    case finish //确认后完成，不再提示
+    case waitConfirm //你确认成败后，别人没确认前，要等待，最多24小时，到时没确认的自动根据你的确认而确认，可发消息催对方，此时你的数值还是保持win，lose ***only local状态***
+    case impeach //当确认成败时，如果有人已经确定并与你不符时，会提示，如果你确认则进入存疑状态，保持或重选，此时你的数值还是保持win，lose ***only local状态***
 
-    case impeach //当确认成败时，如果有人已经确定并与你不符时，会提示，如果你确认则进入存疑状态，保持或重选，此时你的数值还是保持win，lose
-    case keepImpeach_win //保持存疑状态，不再提示
-    case keepImpeach_lose //保持存疑状态，不再提示
+    case waitPromise // 所有人的确认后，如果你胜利，则等待对方兑现，然后确认 ***only local状态***
+    case to_fulfill // 所有人的确认后，如果你失败，则去兑现，然后确认 ***only local状态***
+
+    case finish_win //确认胜利并且获得兑现，追加聊天，不再提示
+    case finish_lose // 确认失败并且兑现，追加聊天，不再提示
+
+    case keepImpeach_win //保持存疑状态，重选，不再提示
+    case keepImpeach_lose //保持存疑状态，重选，不再提示
+
+    case impeachEnd //保持存疑时，发现对方修改了，没有疑问了，可完成 ***only local状态*** ，不再提示
+
+    static let onlyLocalState: [EventState] = [.overtime, .watch, .ongoing, .waitConfirm, .impeach, .waitPromise, .to_fulfill, .impeachEnd]
+    static let noTipState: [EventState] = [.finish_win, .finish_lose, .keepImpeach_win, .keepImpeach_lose, .impeachEnd]
 }
 
 class UserState {
@@ -44,7 +56,7 @@ class UserState {
     }
 }
 
-class Wager {
+class Promise {
     var str: String
     var data: (Int, Int, Int) = (1, 0, 0)
 
@@ -132,8 +144,8 @@ class Event: BaseData {
     //是否发布到了地图上，也就是别人任意人可以加入
     var isPublishToMap: Bool = false
 
-    //奖杯（兑现物）, 根据序号，在WagerList查询
-    var wagerList: [Wager] = []
+    //奖杯（兑现物）, 根据序号，在PromiseList查询
+    var promiseList: [Promise] = []
 
     //详情
     var detail: String = ""
@@ -157,16 +169,16 @@ class Event: BaseData {
 
     //便捷函数 -------------------------------------------------
 
-    func eachUserState(_ callback: ((UserState) -> Bool)) -> UserState? {
+    func eachUserState(_ callback: ((UserState) -> Bool)) -> (UserState, Int)? {
         for us in ourSideStateList {
             if callback(us) {
-                return us
+                return (us, 1)
             }
         }
 
         for us in opponentStateList {
             if callback(us) {
-                return us
+                return (us, 2)
             }
         }
 

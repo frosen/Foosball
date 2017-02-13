@@ -301,7 +301,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         let rowNum: Int
         switch section {
         case 0:
-            rowNum = 5 //title + detail + wager + time + location
+            rowNum = 5 //title + detail + promise + time + location
         case 1:
             //head 友 敌 2. 如果是乱斗应该是不分敌友的所以是2行，但暂时不考虑；3. 以后也可能加入观众，暂不考虑
             rowNum = 3 //友一定有自己，敌如果没有也有个标题表示没有的状态
@@ -405,7 +405,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
             case 1:
                 return BaseCell.CInfo(id: "ConCId", c: DetailContentCell.self)
             case 2:
-                return BaseCell.CInfo(id: "HonCId", c: DetailWagerCell.self)
+                return BaseCell.CInfo(id: "HonCId", c: DetailPromiseCell.self)
             case 3:
                 return BaseCell.CInfo(id: "TimCId", c: DetailTimeCell.self)
             default:

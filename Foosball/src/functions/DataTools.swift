@@ -9,18 +9,18 @@
 import Foundation
 
 class DataTools: NSObject {
-    class Wagers {
-        class func serialize(_ wagers: [Wager]) -> [String] {
+    class Promises {
+        class func serialize(_ promises: [Promise]) -> [String] {
             var list: [String] = []
-            for wager in wagers {
-                list.append(wager.toString)
-                list.append(wager.toString)
-                list.append(wager.toString)
+            for promise in promises {
+                list.append(promise.toString)
+                list.append(promise.toString)
+                list.append(promise.toString)
             }
             return list
         }
 
-        class func unserialize(_ list: [String]) -> [Wager] {
+        class func unserialize(_ list: [String]) -> [Promise] {
             return []
         }
     }
@@ -31,13 +31,17 @@ class DataTools: NSObject {
         class func serialize(_ userStates: [UserState]) -> [[String: Any]] {
             var list: [[String: Any]] = []
             for userState in userStates {
-                list.append([
-                    "id": userState.user.ID.rawValue,
-                    "st": userState.state.rawValue
-                ])
+                list.append(serializeOne(userState))
             }
 
             return list
+        }
+
+        class func serializeOne(_ userState: UserState) -> [String: Any] {
+            return [
+                "id": userState.user.ID.rawValue,
+                "st": userState.state.rawValue
+            ]
         }
 
         class func unserialize(_ list: [[String: Any]]) -> [UserState] {

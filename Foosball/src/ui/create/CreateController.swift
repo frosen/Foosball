@@ -37,7 +37,7 @@ class CreateController: BaseController, ActiveEventsMgrObserver, UIScrollViewDel
 
         createEvent.location.fetchCurLoc{_,_,_ in }
 
-        changeCreateEventWager(isAdd: true)
+        changeCreateEventPromise(isAdd: true)
     }
 
     let DataObKey = "CreateController"
@@ -108,7 +108,7 @@ class CreateController: BaseController, ActiveEventsMgrObserver, UIScrollViewDel
     func finish() {
         // 整理并上传event数据
         let me = APP.userMgr.me
-        let userState = UserState(user: me, state: .ready)
+        let userState = UserState(user: me, state: .start)
         createEvent.ourSideStateList.append(userState)
         createEvent.createTime = Time.now
         createEvent.createUserID = APP.userMgr.me.ID
@@ -133,12 +133,12 @@ class CreateController: BaseController, ActiveEventsMgrObserver, UIScrollViewDel
         subviews[page].gotoAppear()
     }
 
-    // 增减wager
-    func changeCreateEventWager(isAdd: Bool) {
+    // 增减promise
+    func changeCreateEventPromise(isAdd: Bool) {
         if isAdd == true {
-            createEvent.wagerList.append(Wager())
+            createEvent.promiseList.append(Promise())
         } else {
-            createEvent.wagerList.remove(at: createEvent.wagerList.count - 1)
+            createEvent.promiseList.remove(at: createEvent.promiseList.count - 1)
         }
     }
 

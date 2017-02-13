@@ -62,7 +62,7 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         case 0:
             return 3 // head + 时间 + 地点
         case 1:
-            return 1 + rootCtrlr.createEvent.wagerList.count // 标题 + 默认的一个
+            return 1 + rootCtrlr.createEvent.promiseList.count // 标题 + 默认的一个
         default:
             return 1 + (isEnableInputDetail ? 1 : 0) // 标题 + 内容
         }
@@ -90,9 +90,9 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         case 1:
             switch indexPath.row {
             case 0:
-                return CreateStep3WagerHeadCell.getCellHeight()
+                return CreateStep3PromiseHeadCell.getCellHeight()
             default:
-                return CreateStep3WagerCell.getCellHeight()
+                return CreateStep3PromiseCell.getCellHeight()
             }
         default:
             switch indexPath.row {
@@ -128,9 +128,9 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         case 1:
             switch indexPath.row {
             case 0:
-                return BaseCell.CInfo(id: "CS3WagerHCId", c: CreateStep3WagerHeadCell.self)
+                return BaseCell.CInfo(id: "CS3PromiseHCId", c: CreateStep3PromiseHeadCell.self)
             default:
-                return BaseCell.CInfo(id: "CS3WagerCId", c: CreateStep3WagerCell.self)
+                return BaseCell.CInfo(id: "CS3PromiseCId", c: CreateStep3PromiseCell.self)
             }
         default:
             switch indexPath.row {
@@ -223,14 +223,14 @@ class CreateStep3Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     // 开放的方法 ==========================================================================================================================
 
     // 调整奖杯数量，然后重新刷新cell
-    func modifyWagerCount(add: Bool) {
+    func modifyPromiseCount(add: Bool) {
         tableView.beginUpdates()
 
         if add == true {
-            rootCtrlr.changeCreateEventWager(isAdd: true)
+            rootCtrlr.changeCreateEventPromise(isAdd: true)
             tableView.insertRows(at: [IndexPath(row: 1, section: 1)], with: .fade)
         } else {
-            rootCtrlr.changeCreateEventWager(isAdd: false)
+            rootCtrlr.changeCreateEventPromise(isAdd: false)
             tableView.deleteRows(at: [IndexPath(row: 1, section: 1)], with: .fade)
         }
 
