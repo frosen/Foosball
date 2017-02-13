@@ -43,7 +43,7 @@ class ActionBtnBoard: UIView {
             r: AcBtn(t: "退出活动")
         ),
         .watch: StateAction(
-            r: AcBtn(t: "退出活动")
+            l: AcBtn(t: "退出活动")
         ),
         .start: StateAction(
             l: AcBtn(t: "邀请朋友"),
@@ -159,7 +159,7 @@ class ActionBtnBoard: UIView {
         lBtn.setImage(stateAct.lbtn!.img, for: .normal)
         lBtn.setTitle(stateAct.lbtn!.text, for: .normal)
 
-        if stateAct.lbtn != nil {
+        if stateAct.rbtn != nil {
             rBtn.isHidden = false
             rBtn.setImage(stateAct.rbtn!.img, for: .normal)
             rBtn.setTitle(stateAct.rbtn!.text, for: .normal)

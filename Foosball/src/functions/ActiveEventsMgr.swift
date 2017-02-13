@@ -229,26 +229,30 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         data.eList = newEList
     }
 
-    class func sort(_ eList: [Event], meId: DataID.IDType) {
+    class func sort(_ eList: [Event]) {
         for e in eList {
-            let suc = moveToHead(userid: meId, stateList: &e.ourSideStateList)
-            if !suc {
-                let _ = moveToHead(userid: meId, stateList: &e.opponentStateList)
+            // 按照一定顺序排序
+            e.ourSideStateList.sort { us1, us2 in
+                return us1.user.ID > us2.user.ID
             }
-            let _ = moveToHead(userid: e.createUserID.rawValue, stateList: &e.ourSideStateList)
+            e.opponentStateList.sort { us1, us2 in
+                return us1.user.ID > us2.user.ID
+            }
+
+            // 创建者在最开始
+            moveToHead(userid: e.createUserID.rawValue, stateList: &e.ourSideStateList)
         }
     }
 
-    private class func moveToHead(userid: DataID.IDType, stateList: inout [UserState]) -> Bool {
+    private class func moveToHead(userid: DataID.IDType, stateList: inout [UserState]) {
         for i in 0 ..< stateList.count {
             if stateList[i].user.ID.rawValue == userid {
                 let curState = stateList[i]
                 stateList.remove(at: i)
                 stateList.insert(curState, at: 0)
-                return true
+                break
             }
         }
-        return false
     }
 
     // 检查变化 ------------------------------------------------------------

@@ -30,6 +30,10 @@ func ==(lhs: DataID, rhs: DataID) -> Bool {
     return lhs.ID == rhs.ID
 }
 
+func >(lhs: DataID, rhs: DataID) -> Bool {
+    return lhs.ID > rhs.ID
+}
+
 //对时间表示的封装 ----------------------------------------------------------------------------
 
 class Time {
