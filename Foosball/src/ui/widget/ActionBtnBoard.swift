@@ -266,20 +266,24 @@ class ActionBtnBoard: UIView {
         }
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     private func confirmInvite() {
         guard let e = event else {
             return
         }
-        APP.activeEventsMgr.changeState(to: .start, event: e, obKey: self.key) { suc in
-            
-        }
+        UITools.showAlert(vc, title: nil, msg: "您确定参加这次活动吗？", type: 2, callback: { _ in
+            APP.activeEventsMgr.changeState(to: .start, event: e, obKey: self.key) { suc in
+
+            }
+        })
     }
 
     private func refuseInvite() {
         guard let e = event else {
             return
         }
-        UITools.showAlert(vc, title: "退出", msg: "您不打算参加这次活动吗？", type: 2, callback: { _ in
+        UITools.showAlert(vc, title: nil, msg: "您不打算参加这次活动吗？", type: 2, callback: { _ in
             print("refuseInvite")
             APP.activeEventsMgr.exitEvent(event: e, obKey: self.key) { suc in
                 if suc {

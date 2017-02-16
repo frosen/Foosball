@@ -70,7 +70,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
     func test() {
         //自己方
-        let bb1 = User(ID: DataID(ID: "1232"), name: "佐助", url: "")
+        let bb1 = User(ID: DataID(ID: "58a1811c570c3500577c81cf"), name: "佐助", url: "")
         let p1 = UserState(user: bb1, state: .invite)
 
         let bb2 = User(ID: DataID(ID: "123"), name: "佐助", url: "")
@@ -160,7 +160,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         //        data.add(e: e)
 
         // -----------------
-        e = Event(ID: DataID(ID: "50001"))
+        e = Event(ID: DataID(ID: "58a18683128fe1005826940b"))
 
         e.ourSideStateList = [p1, p2, p3, p12, p22, p32, p321]
         e.opponentStateList = [pk1, pk2, pk3]
@@ -214,8 +214,8 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         e.promiseList = DataTools.Promises.unserialize(attris["pms"] as! [String])
         e.detail = attris["dtl"] as! String
 
-        e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [[String: Any]])
-        e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [[String: Any]])
+        e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [String])
+        e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [String])
 
         e.imageURLList = attris["img"] as! [String]
         e.msgIDList = attris["msg"] as! [String]
@@ -475,8 +475,9 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             from: old,
             to: new
         ) { suc, error in
+            print("changeState: \(suc), ", error ?? "no error")
             if self.hasOb(for: obKey) {
-                callback(true)
+                callback(suc)
             }
             if suc {
                 APP.userMgr.fetchMeAtOnce()
@@ -485,52 +486,42 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     }
 
     func exitEvent(event: Event, obKey: String, callback: @escaping ((Bool) -> Void)) {
-        guard let usTup = event.eachUserState({ us -> Bool in
-            return us.user.ID == APP.userMgr.me.ID
-        }) else { // 本人已经不再event之中，直接从user中删除即可
-            self.exitEventFromUser(event: event) { suc in
-                if self.hasOb(for: obKey) {
-                    callback(true)
-                }
-                if suc {
-                    APP.userMgr.fetchMeAtOnce()
-                }
-            }
-            return
-        }
+        var clss: [String] = []
+        var ids: [String] = []
+        var rms: [[String: Any]] = []
 
-        let key = (usTup.1 == 1) ? "our" : "opp"
-        Network.shareInstance.removeData(
-            to: Event.classname,
-            id: event.ID.rawValue,
-            attris: [key: DataTools.UserStates.serializeOne(usTup.0)]
-        ) { suc, error in
-            print("exitEvent: \(suc), ", error ?? "no error")
-
-            if suc {
-                self.exitEventFromUser(event: event) { suc in
-                    if self.hasOb(for: obKey) {
-                        callback(true)
-                    }
-                    if suc {
-                        APP.userMgr.fetchMeAtOnce()
-                    }
-                }
-            } else {
-                if self.hasOb(for: obKey) {
-                    callback(false)
-                }
-            }
-        }
-    }
-
-    private func exitEventFromUser(event: Event, callback: @escaping ((Bool) -> Void)) {
-        Network.shareInstance.removeDataFromMe([
+        clss.append(User.classname)
+        ids.append(APP.userMgr.me.ID.rawValue)
+        rms.append([
             "active": event,
             "events": event.ID.rawValue
-        ]) { suc, error in
-            print("exitEventFromUser: \(suc), ", error ?? "no error")
-            callback(suc)
+        ])
+
+        let usTupOrNil = event.eachUserState({ us -> Bool in
+            return us.user.ID == APP.userMgr.me.ID
+        })
+
+        if usTupOrNil != nil { // 本人在event之中，需要删除
+            let usTup = usTupOrNil!
+
+            clss.append(Event.classname)
+            ids.append(event.ID.rawValue)
+
+            let key = (usTup.1 == 1) ? "our" : "opp"
+            let value = DataTools.UserStates.serializeOne(usTup.0)
+            rms.append([
+                key: value,
+            ])
+        }
+
+        Network.shareInstance.removeMultipleData(classNames: clss, ids: ids, rms: rms) { suc, error in
+            print("exitEvent: \(suc), ", error ?? "no error")
+            if self.hasOb(for: obKey) {
+                callback(suc)
+            }
+            if suc {
+                APP.userMgr.fetchMeAtOnce()
+            }
         }
     }
 }

@@ -155,8 +155,8 @@ class Network: NSObject {
     func changeData(to classname: String, id: String, key: String, from: Any, to: Any, callback: @escaping ((Bool, Error?) -> Void)) {
         let todo = AVObject(className: classname, objectId: id)
 
-        todo.remove(from, forKey: key)
         todo.add(to, forKey: key)
+        todo.remove(from, forKey: key)
 
         let opt = AVSaveOption()
         opt.fetchWhenSave = true
@@ -196,6 +196,27 @@ class Network: NSObject {
         params["keys"] = keyDict
 
         AVCloud.callFunction(inBackground: "createObjAndAddToList", withParameters: params) { obj, error in
+            callback(error == nil, error)
+        }
+    }
+
+    func removeMultipleData(classNames: [String], ids: [String], rms: [[String: Any]], callback: @escaping ((Bool, Error?) -> Void)) {
+        var params: [String: Any] = [:]
+        params["clss"] = classNames
+        params["ids"] = ids
+
+        var handledRms: [[String: Any]] = []
+        for rm in rms {
+            var handledRm: [String: Any] = [:]
+            for tup in rm {
+                let value = checkValue(tup.value)
+                handledRm[tup.key] = value
+            }
+            handledRms.append(handledRm)
+        }
+        params["rms"] = handledRms
+
+        AVCloud.callFunction(inBackground: "removeMultipleData", withParameters: params) { obj, error in
             callback(error == nil, error)
         }
     }

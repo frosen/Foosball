@@ -28,27 +28,28 @@ class DataTools: NSObject {
     // -------------------------------------------------------
 
     class UserStates {
-        class func serialize(_ userStates: [UserState]) -> [[String: Any]] {
-            var list: [[String: Any]] = []
+
+        static let separater = "_"
+
+        class func serialize(_ userStates: [UserState]) -> [String] {
+            var list: [String] = []
             for userState in userStates {
                 list.append(serializeOne(userState))
             }
-
             return list
         }
 
-        class func serializeOne(_ userState: UserState) -> [String: Any] {
-            return [
-                "id": userState.user.ID.rawValue,
-                "st": userState.state.rawValue
-            ]
+        class func serializeOne(_ userState: UserState) -> String {
+            let str = String(userState.user.ID.rawValue) + separater + String(userState.state.rawValue)
+            return str
         }
 
-        class func unserialize(_ list: [[String: Any]]) -> [UserState] {
+        class func unserialize(_ list: [String]) -> [UserState] {
             var users: [UserState] = []
-            for map in list {
-                let user = User(ID: DataID(ID: map["id"] as! DataID.IDType)) // 先暂时都是用新建的user
-                let st = EventState(rawValue: map["st"] as! Int)!
+            for str in list {
+                let strs = str.components(separatedBy: separater)
+                let user = User(ID: DataID(ID: strs[0])) // 先暂时都是用新建的user
+                let st = EventState(rawValue: Int(strs[1]) ?? -1) ?? .watch
                 let ust = UserState(user: user, state: st)
                 users.append(ust)
             }
