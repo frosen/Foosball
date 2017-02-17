@@ -222,6 +222,9 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         e.createTime = Time(t: attris["ctm"] as? Date)
         e.createUserID = DataID(ID: attris["cid"] as! DataID.IDType)
+
+        e.firstConfirmTime = (attris["ftm"] != nil) ? Time(t: (attris["ftm"] as! Date)) : nil
+        e.firstConfirmUserID = (attris["fid"] != nil) ? DataID(ID: (attris["fid"] as! DataID.IDType)) : nil
     }
 
     func updateData(_ newEList: [Event]) {
@@ -385,7 +388,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     // --------------------------------------------------------------------------------
 
     func updateEvent(_ id: DataID, attris: [String: Any], callback: @escaping ((Bool) -> Void)) {
-        Network.shareInstance.updateObj(from: Event.classname, id: id.rawValue, attris: attris) { suc, error in
+        Network.shareInstance.updateObj(to: Event.classname, id: id.rawValue, changeAttris: attris, addAttris: [:], removeAttris: [:]) { suc, error in
             print("updateEvent event on net: \(suc), ", error ?? "no error")
             if suc {
                 self.saveToLocal()
@@ -423,16 +426,16 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     }
 
     private func addNewImgToEvent(_ url: String, eventId: DataID, callback: @escaping ((Bool) -> Void)) {
-        Network.shareInstance.addData(to: Event.classname, id: eventId.rawValue, attris: [
+        Network.shareInstance.updateObj(to: Event.classname, id: eventId.rawValue, changeAttris: [:], addAttris: [
             "img": url
-        ]) { suc, error in
+        ], removeAttris: [:]) { suc, error in
             print("addNew img ToEvent: \(suc), ", error ?? "no error")
             callback(suc)
         }
     }
 
     func removeImg(urlStr: String, eventId: DataID, obKey: String, callback: @escaping ((Bool) -> Void)) {
-        Network.shareInstance.removeData(to: Event.classname, id: eventId.rawValue, attris: [
+        Network.shareInstance.updateObj(to: Event.classname, id: eventId.rawValue, changeAttris: [:], addAttris: [:], removeAttris: [
             "img": urlStr
         ]) { suc, error in
             print("remove img: \(suc), ", error ?? "no error")
@@ -455,26 +458,32 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         return cutUrl
     }
 
-    func changeState(to st: EventState, event: Event, obKey: String, callback: @escaping ((Bool) -> Void)) {
+    func changeState(to st: EventState, event: Event, obKey: String, withChange: [String: Any]?, callback: @escaping ((Bool) -> Void)) {
         guard let usTup = event.eachUserState({ us -> Bool in
             return us.user.ID == APP.userMgr.me.ID
         }) else {
             return
         }
 
+        var changeAttris: [String: Any] = [:]
+        var addAttris: [String: Any] = [:]
+        var rmAttris: [String: Any] = [:]
+
         let key = (usTup.1 == 1) ? "our" : "opp"
         let old = DataTools.UserStates.serializeOne(usTup.0)
+        rmAttris[key] = old
 
         let newState = UserState(user: APP.userMgr.me, state: st)
         let new = DataTools.UserStates.serializeOne(newState)
+        addAttris[key] = new
 
-        Network.shareInstance.changeData(
-            to: Event.classname,
-            id: event.ID.rawValue,
-            key: key,
-            from: old,
-            to: new
-        ) { suc, error in
+        if withChange != nil {
+            for attri in withChange! {
+                changeAttris[attri.key] = attri.value
+            }
+        }
+
+        Network.shareInstance.updateObj(to: Event.classname, id: event.ID.rawValue, changeAttris: [:], addAttris: addAttris, removeAttris: rmAttris) { suc, error in
             print("changeState: \(suc), ", error ?? "no error")
             if self.hasOb(for: obKey) {
                 callback(suc)

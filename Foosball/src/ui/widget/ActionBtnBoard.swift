@@ -27,7 +27,7 @@ class StateAction {
 }
 
 protocol ActionBtnBoardDelegate {
-    func onPressMsg()
+    func onSendMsg()
     func onExitEvent()
 }
 
@@ -50,40 +50,31 @@ class ActionBtnBoard: UIView {
             r: AcBtn(t: "退出活动")
         ),
         .ongoing: StateAction(
-            l: AcBtn(t: "确认哈哈"),
-            r: AcBtn(t: "确认呵呵")
+            l: AcBtn(t: "确认胜利"),
+            r: AcBtn(t: "确认失败")
         ),
         .win: StateAction(
-            l: AcBtn(t: ""),
-            r: AcBtn(t: "")
+            l: AcBtn(t: "确认已兑现")
         ),
         .lose: StateAction(
-            l: AcBtn(t: ""),
-            r: AcBtn(t: "")
+            l: AcBtn(t: "完成兑现")
         ),
         .waitConfirm: StateAction(
-            l: AcBtn(t: ""),
-            r: AcBtn(t: "")
+            l: AcBtn(t: "等待其他人确认")
         ),
         .impeach: StateAction(
-            l: AcBtn(t: ""),
-            r: AcBtn(t: "")
+            l: AcBtn(t: "重新选择"),
+            r: AcBtn(t: "保持质疑")
         ),
-        .waitPromise: StateAction(
-            l: AcBtn(t: ""),
-            r: AcBtn(t: "")
-        ),
-        .to_fulfill: StateAction(
-            l: AcBtn(t: ""),
-            r: AcBtn(t: "")
+        .rechoose: StateAction(
+            l: AcBtn(t: "确认胜利"),
+            r: AcBtn(t: "确认失败")
         ),
         .finish_win: StateAction(
-            l: AcBtn(t: ""),
-            r: AcBtn(t: "")
+            l: AcBtn(t: "")
         ),
         .finish_lose: StateAction(
-            l: AcBtn(t: ""),
-            r: AcBtn(t: "")
+            l: AcBtn(t: "")
         ),
         .keepImpeach_win: StateAction(
             l: AcBtn(t: ""),
@@ -94,8 +85,7 @@ class ActionBtnBoard: UIView {
             r: AcBtn(t: "")
         ),
         .impeachEnd: StateAction(
-            l: AcBtn(t: ""),
-            r: AcBtn(t: "")
+            l: AcBtn(t: "完成")
         )
     ]
 
@@ -224,65 +214,58 @@ class ActionBtnBoard: UIView {
     }
 
     func onClickGotoMsg() {
-        delegate.onPressMsg()
+        delegate.onSendMsg()
     }
 
     // 改变状态 --------------------------------------------------
 
     private func handleStateChange(_ st: EventState, _ i: Int) {
+        guard let e = event else {
+            return
+        }
         switch st {
         case .invite:
-            if i == 1 { confirmInvite() } else { refuseInvite() }
+            if i == 1 { confirmInvite(e) } else { refuseInvite(e) }
         case .overtime:
-            if i == 1 { confirmInvite() } else { refuseInvite() }
+            if i == 1 { watch(e) } else { exitEvent(e) }
         case .watch:
-            if i == 1 { confirmInvite() } else { refuseInvite() }
+            if i == 1 { finishWin(e) } else { exitEvent(e) }
         case .start:
-            if i == 1 { invite() } else { exitEvent() }
+            if i == 1 { invite(e) } else { exitEvent(e) }
         case .ongoing:
-            if i == 1 { invite() } else { exitEvent() }
+            if i == 1 { win(e) } else { lose(e) }
         case .win:
-            if i == 1 { invite() } else { exitEvent() }
+            if i == 1 { finishWin(e) }
         case .lose:
-            if i == 1 { invite() } else { exitEvent() }
+            if i == 1 { finishLose(e) }
         case .waitConfirm:
-            if i == 1 { invite() } else { exitEvent() }
+            if i == 1 { sendMsg(e) }
         case .impeach:
-            if i == 1 { invite() } else { exitEvent() }
-        case .waitPromise:
-            if i == 1 { invite() } else { exitEvent() }
-        case .to_fulfill:
-            if i == 1 { invite() } else { exitEvent() }
+            if i == 1 { keep(e) } else { rechoose(e) }
+        case .rechoose:
+            if i == 1 { win(e) } else { lose(e) }
         case .finish_win:
-            if i == 1 { invite() } else { exitEvent() }
+            if i == 1 { sendMsg(e) }
         case .finish_lose:
-            if i == 1 { invite() } else { exitEvent() }
+            if i == 1 { sendMsg(e) }
         case .keepImpeach_win:
-            if i == 1 { invite() } else { exitEvent() }
+            if i == 1 { sendMsg(e) } else { rechoose(e) }
         case .keepImpeach_lose:
-            if i == 1 { invite() } else { exitEvent() }
+            if i == 1 { sendMsg(e) } else { rechoose(e) }
         case .impeachEnd:
-            if i == 1 { invite() } else { exitEvent() }
+            if i == 1 { finishFromImpeach(e) }
         }
     }
 
     // ---------------------------------------------------------------------------------------------
 
-    private func confirmInvite() {
-        guard let e = event else {
-            return
-        }
+    private func confirmInvite(_ e: Event) {
         UITools.showAlert(vc, title: nil, msg: "您确定参加这次活动吗？", type: 2, callback: { _ in
-            APP.activeEventsMgr.changeState(to: .start, event: e, obKey: self.key) { suc in
-
-            }
+            APP.activeEventsMgr.changeState(to: .start, event: e, obKey: self.key, withChange: nil) { _ in }
         })
     }
 
-    private func refuseInvite() {
-        guard let e = event else {
-            return
-        }
+    private func refuseInvite(_ e: Event) {
         UITools.showAlert(vc, title: nil, msg: "您不打算参加这次活动吗？", type: 2, callback: { _ in
             print("refuseInvite")
             APP.activeEventsMgr.exitEvent(event: e, obKey: self.key) { suc in
@@ -293,14 +276,13 @@ class ActionBtnBoard: UIView {
         })
     }
 
-    private func invite() {
+    // ---------------------------------------------------------------------------------------------
+
+    private func watch(_ e: Event) {
 
     }
 
-    private func exitEvent() {
-        guard let e = event else {
-            return
-        }
+    private func exitEvent(_ e: Event) {
         UITools.showAlert(vc, title: "退出", msg: "您确定退出这次活动吗？", type: 2, callback: { _ in
             print("confirm to exit event")
             APP.activeEventsMgr.exitEvent(event: e, obKey: self.key) { suc in
@@ -309,6 +291,120 @@ class ActionBtnBoard: UIView {
                 }
             }
         })
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    private func invite(_ e: Event) {
+
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    private func win(_ e: Event) {
+        UITools.showAlert(vc, title: nil, msg: "您确定取得比赛胜利？", type: 2, callback: { _ in
+            APP.activeEventsMgr.changeState(to: .win, event: e, obKey: self.key, withChange: nil) { suc in
+                
+            }
+        })
+    }
+
+    private func lose(_ e: Event) {
+        UITools.showAlert(vc, title: nil, msg: "您确定失利于这次比赛吗？", type: 2, callback: { _ in
+            APP.activeEventsMgr.changeState(to: .lose, event: e, obKey: self.key, withChange: nil) { suc in
+
+            }
+        })
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    private func finishWin(_ e: Event) {
+        UITools.showAlert(vc, title: nil, msg: "您确定已经获得奖杯，并完成这次比赛吗？（确认后不再有消息提示）", type: 2, callback: { _ in
+            APP.activeEventsMgr.changeState(to: .finish_win, event: e, obKey: self.key, withChange: nil) { suc in
+                if suc {
+                    // todo 进入评价页面
+                }
+            }
+        })
+    }
+
+    private func finishLose(_ e: Event) {
+        UITools.showAlert(vc, title: nil, msg: "您确定已经兑现了约定，并完成这次比赛吗？（确认后不再有消息提示）", type: 2, callback: { _ in
+            APP.activeEventsMgr.changeState(to: .finish_lose, event: e, obKey: self.key, withChange: nil) { suc in
+                if suc {
+                    // todo 进入评价页面
+                }
+            }
+        })
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    private func sendMsg(_ e: Event) {
+        self.delegate.onSendMsg()
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    private func keep(_ e: Event) {
+        UITools.showAlert(vc, title: nil, msg: "您确定一直保持质疑的状态吗？（确认后不再有消息提示）", type: 2, callback: { _ in
+            guard let usTup = e.eachUserState({ us -> Bool in
+                return us.user.ID == APP.userMgr.me.ID
+            }) else {
+                return
+            }
+
+            let changeTo = self.getKeepState(usTup.0.state)
+            APP.activeEventsMgr.changeState(to: changeTo, event: e, obKey: self.key, withChange: nil) { suc in
+                if suc {
+                    self.delegate.onExitEvent()
+                }
+            }
+        })
+    }
+
+    private func getKeepState(_ st: EventState) -> EventState {
+        switch st {
+        case .win:
+            return .keepImpeach_win
+        case .lose:
+            return .keepImpeach_lose
+        default:
+            print("ERROR: wrong state when to keep: ", st.rawValue)
+            return .keepImpeach_win
+        }
+    }
+
+    private func rechoose(_ e: Event) {
+        UITools.showAlert(vc, title: nil, msg: "您确定参加这次活动吗？", type: 2, callback: { _ in
+            APP.activeEventsMgr.changeState(to: .rechoose, event: e, obKey: self.key, withChange: nil) { _ in }
+        })
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    private func finishFromImpeach(_ e: Event) {
+        guard let usTup = e.eachUserState({ us -> Bool in
+            return us.user.ID == APP.userMgr.me.ID
+        }) else {
+            return
+        }
+
+        let changeTo = getFinishState(usTup.0.state)
+        APP.activeEventsMgr.changeState(to: changeTo, event: e, obKey: self.key, withChange: nil) { _ in }
+    }
+
+    private func getFinishState(_ st: EventState) -> EventState {
+        switch st {
+        case .keepImpeach_win:
+            return .finish_win
+        case .keepImpeach_lose:
+            return .finish_lose
+        default:
+            print("ERROR: wrong state when to finish: ", st.rawValue)
+            return .finish_win
+        }
     }
 }
 

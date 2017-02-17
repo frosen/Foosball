@@ -145,12 +145,12 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
     }
 
     func fetchMeAtOnce() {
-        fetchMe()
+//        fetchMe()
         scanSecond = UserMgr.scanSecondMax
     }
 
     private func fetchMe() {
-        Network.shareInstance.fetchMe(with: ["active"]) { suc, objs in
+        Network.shareInstance.fetchObjs(from: User.classname, ids: [data[0].ID.rawValue], with: ["active"], orderType: 0) { suc, objs in
             if !suc {
                 print("ERROR: no attris in fetchMe")
                 APP.errorMgr.hasError()
@@ -249,7 +249,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         }
         ids = Array(Set(ids)) // 转换成set，为了去除重复项
 
-        Network.shareInstance.fetchUsers(ids, with: []) { suc, objs in
+        Network.shareInstance.fetchObjs(from: User.classname, ids: ids, with: [], orderType: 0) { suc, objs in
             guard suc else {
                 print("ERROR: no attris in updateMe")
                 callback(false)

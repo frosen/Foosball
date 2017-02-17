@@ -173,7 +173,7 @@ class ChallengeCell: BaseCell, ActionBtnBoardDelegate {
 
     // ActionBtnBoardDelegate --------------------------------------------------------------
 
-    func onPressMsg() {
+    func onSendMsg() {
         let vc = ctrlr as! ChallengeController
         vc.enterDetail(cell: self, id: curEvent.ID, showMsg: true)
     }

@@ -66,12 +66,9 @@ class StateView: UIView {
         case .impeach:
             string = "质疑"
             bgColor = UIColor.purple
-        case .waitPromise:
-            string = "等待兑现"
+        case .rechoose:
+            string = "重选"
             bgColor = UIColor.purple
-        case .to_fulfill:
-            string = "兑现"
-            bgColor = UIColor.orange
         case .finish_win:
             string = "完成胜利"
             bgColor = UIColor.orange

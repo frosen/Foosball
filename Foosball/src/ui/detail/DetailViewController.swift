@@ -567,7 +567,9 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
 
     // ActionBtnBoardDelegate --------------------------------------------------------------
 
-    func onPressMsg() {}
+    func onSendMsg() {
+        beginInput()
+    }
 
     func onExitEvent() {
         onBack()

@@ -51,33 +51,6 @@ class Network: NSObject {
         return AVUser.current()
     }
 
-    func fetchMe(with lists: [String], callback: @escaping ((Bool, Any?) -> Void)) {
-        print("fetch me")
-        guard let user = AVUser.current() else {
-            return
-        }
-        fetchUsers([user.objectId!], with: lists, callback: callback)
-    }
-
-    func fetchUsers(_ ids: [String], with lists: [String], callback: @escaping ((Bool, Any?) -> Void)) {
-        fetchObjs(from: User.classname, ids: ids, with: lists, orderType: 0, callback: callback)
-    }
-
-    // 把事件添加到user上
-    func addDataToMe(_ attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
-        guard let user = AVUser.current() else {
-            return
-        }
-        addData(to: User.classname, id: user.objectId!, attris: attris, callback: callback)
-    }
-
-    func removeDataFromMe(_ attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
-        guard let user = AVUser.current() else {
-            return
-        }
-        removeData(to: User.classname, id: user.objectId!, attris: attris, callback: callback)
-    }
-
     func updateUser(_ attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
 
     }
@@ -121,42 +94,24 @@ class Network: NSObject {
         }
     }
 
-    // 给某个列表的属性添加值
-    func addData(to classname: String, id: String, attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
+    // 给某个列表的属性添加或者删除值
+    func updateObj(to classname: String, id: String, changeAttris: [String: Any], addAttris: [String: Any], removeAttris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
         let todo = AVObject(className: classname, objectId: id)
 
-        for attri in attris {
+        for attri in changeAttris {
+            let value = checkValue(attri.value)
+            todo.setObject(value, forKey: attri.0)
+        }
+
+        for attri in addAttris {
             let value = checkValue(attri.value)
             todo.add(value, forKey: attri.key)
         }
 
-        let opt = AVSaveOption()
-        opt.fetchWhenSave = true
-        todo.saveInBackground(with: opt) { suc, error in
-            callback(suc, error)
-        }
-    }
-
-    func removeData(to classname: String, id: String, attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
-        let todo = AVObject(className: classname, objectId: id)
-
-        for attri in attris {
-        let value = checkValue(attri.value)
+        for attri in removeAttris {
+            let value = checkValue(attri.value)
             todo.remove(value, forKey: attri.key)
         }
-
-        let opt = AVSaveOption()
-        opt.fetchWhenSave = true
-        todo.saveInBackground(with: opt) { suc, error in
-            callback(suc, error)
-        }
-    }
-
-    func changeData(to classname: String, id: String, key: String, from: Any, to: Any, callback: @escaping ((Bool, Error?) -> Void)) {
-        let todo = AVObject(className: classname, objectId: id)
-
-        todo.add(to, forKey: key)
-        todo.remove(from, forKey: key)
 
         let opt = AVSaveOption()
         opt.fetchWhenSave = true

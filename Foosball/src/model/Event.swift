@@ -30,10 +30,8 @@ enum EventState: Int {
     case lose //失败，确认是否自己已经完成了承诺的兑现
 
     case waitConfirm //你确认成败后，别人没确认前，要等待，最多24小时，到时没确认的自动根据你的确认而确认，可发消息催对方，此时你的数值还是保持win，lose ***only local状态***
-    case impeach //当确认成败时，如果有人已经确定并与你不符时，会提示，如果你确认则进入存疑状态，保持或重选，此时你的数值还是保持win，lose ***only local状态***
-
-    case waitPromise // 所有人的确认后，如果你胜利，则等待对方兑现，然后确认 ***only local状态***
-    case to_fulfill // 所有人的确认后，如果你失败，则去兑现，然后确认 ***only local状态***
+    case impeach //当确认成败时，如果有人已经确定并与你不符时，会提示，如果你确认则进入存疑状态，保持或重选 ***only local状态***
+    case rechoose //重选，确认胜利失败
 
     case finish_win //确认胜利并且获得兑现，追加聊天，不再提示
     case finish_lose // 确认失败并且兑现，追加聊天，不再提示
@@ -43,7 +41,7 @@ enum EventState: Int {
 
     case impeachEnd //保持存疑时，发现对方修改了，没有疑问了，可完成 ***only local状态*** ，不再提示
 
-    static let onlyLocalState: [EventState] = [.overtime, .watch, .ongoing, .waitConfirm, .impeach, .waitPromise, .to_fulfill, .impeachEnd]
+    static let onlyLocalState: [EventState] = [.overtime, .watch, .ongoing, .waitConfirm, .impeach, .impeachEnd]
     static let noTipState: [EventState] = [.finish_win, .finish_lose, .keepImpeach_win, .keepImpeach_lose, .impeachEnd]
 }
 
@@ -166,6 +164,9 @@ class Event: BaseData {
     //被动生成的数据 -------------------------------------------
     var createTime: Time! = nil
     var createUserID: DataID! = nil
+
+    var firstConfirmTime: Time? = nil // 用于第一个人确定胜败后倒计时
+    var firstConfirmUserID: DataID? = nil
 
     //便捷函数 -------------------------------------------------
 
