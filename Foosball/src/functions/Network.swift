@@ -51,10 +51,6 @@ class Network: NSObject {
         return AVUser.current()
     }
 
-    func updateUser(_ attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
-
-    }
-
     // 对象 --------------------------------------------------------------------
 
     // 创建对象
@@ -116,19 +112,6 @@ class Network: NSObject {
         let opt = AVSaveOption()
         opt.fetchWhenSave = true
         todo.saveInBackground(with: opt) { suc, error in
-            callback(suc, error)
-        }
-    }
-
-    // 更新服务器
-    func updateObj(from: String, id: String, attris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
-        let todo = AVObject(className: from, objectId: id)
-        for attri in attris {
-            let value = checkValue(attri.value)
-            todo.setObject(value, forKey: attri.0)
-        }
-
-        todo.saveInBackground { suc, error in
             callback(suc, error)
         }
     }
