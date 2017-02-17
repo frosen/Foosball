@@ -18,7 +18,7 @@ class Network: NSObject {
     //单例
     static let shareInstance = Network()
     private override init() {
-        AVOSCloud.setAllLogsEnabled(false)
+//        AVOSCloud.setAllLogsEnabled(false)
         AVOSCloud.setApplicationId("o5nq2XE8H5XUlo9S94F9tioJ-gzGzoHsz", clientKey: "vJrjiBn25QQ4FmvIKhVx8bQ2")
     }
 
@@ -94,11 +94,6 @@ class Network: NSObject {
     func updateObj(to classname: String, id: String, changeAttris: [String: Any], addAttris: [String: Any], removeAttris: [String: Any], callback: @escaping ((Bool, Error?) -> Void)) {
         let todo = AVObject(className: classname, objectId: id)
 
-        for attri in changeAttris {
-            let value = checkValue(attri.value)
-            todo.setObject(value, forKey: attri.0)
-        }
-
         for attri in addAttris {
             let value = checkValue(attri.value)
             todo.add(value, forKey: attri.key)
@@ -107,6 +102,11 @@ class Network: NSObject {
         for attri in removeAttris {
             let value = checkValue(attri.value)
             todo.remove(value, forKey: attri.key)
+        }
+
+        for attri in changeAttris {
+            let value = checkValue(attri.value)
+            todo.setObject(value, forKey: attri.0)
         }
 
         let opt = AVSaveOption()

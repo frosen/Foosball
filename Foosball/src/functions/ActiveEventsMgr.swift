@@ -483,7 +483,10 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             }
         }
 
-        Network.shareInstance.updateObj(to: Event.classname, id: event.ID.rawValue, changeAttris: [:], addAttris: addAttris, removeAttris: rmAttris) { suc, error in
+        Network.shareInstance.updateObj(
+            to: Event.classname, id: event.ID.rawValue,
+            changeAttris: changeAttris, addAttris: addAttris, removeAttris: rmAttris
+        ) { suc, error in
             print("changeState: \(suc), ", error ?? "no error")
             if self.hasOb(for: obKey) {
                 callback(suc)

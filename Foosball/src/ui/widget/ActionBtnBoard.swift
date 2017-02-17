@@ -303,7 +303,8 @@ class ActionBtnBoard: UIView {
 
     private func win(_ e: Event) {
         UITools.showAlert(vc, title: nil, msg: "您确定取得比赛胜利？", type: 2, callback: { _ in
-            APP.activeEventsMgr.changeState(to: .win, event: e, obKey: self.key, withChange: nil) { suc in
+            let changes = self.getChangeAttris(e)
+            APP.activeEventsMgr.changeState(to: .win, event: e, obKey: self.key, withChange: changes) { suc in
                 
             }
         })
@@ -311,10 +312,22 @@ class ActionBtnBoard: UIView {
 
     private func lose(_ e: Event) {
         UITools.showAlert(vc, title: nil, msg: "您确定失利于这次比赛吗？", type: 2, callback: { _ in
-            APP.activeEventsMgr.changeState(to: .lose, event: e, obKey: self.key, withChange: nil) { suc in
+            let changes = self.getChangeAttris(e)
+            APP.activeEventsMgr.changeState(to: .lose, event: e, obKey: self.key, withChange: changes) { suc in
 
             }
         })
+    }
+
+    private func getChangeAttris(_ e: Event) -> [String: Any]? {
+        if e.firstConfirmTime == nil {
+            return [
+                "ftm": Time.now.getTimeData(),
+                "fid": APP.userMgr.me.ID.rawValue
+            ]
+        } else {
+            return nil
+        }
     }
 
     // ---------------------------------------------------------------------------------------------
