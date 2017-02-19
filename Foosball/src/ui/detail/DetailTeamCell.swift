@@ -73,10 +73,10 @@ class DetailTeamCell: StaticCell {
         switch curIndex {
         case 1:
             memberList = e.ourSideStateList
-            titleStr = "友方人员"
+            titleStr = "战队一"
         case 2:
             memberList = e.opponentStateList
-            titleStr = "对方人员"
+            titleStr = "战队二"
         default:
             memberList = e.obStateList
             titleStr = "粉丝"

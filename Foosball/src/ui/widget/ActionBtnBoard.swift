@@ -43,7 +43,8 @@ class ActionBtnBoard: UIView {
             r: AcBtn(t: "退出活动")
         ),
         .watch: StateAction(
-            l: AcBtn(t: "退出活动")
+            l: AcBtn(t: "不再提示"),
+            r: AcBtn(t: "退出活动")
         ),
         .start: StateAction(
             l: AcBtn(t: "邀请朋友"),
@@ -229,7 +230,7 @@ class ActionBtnBoard: UIView {
         case .overtime:
             if i == 1 { watch(e) } else { exitEvent(e) }
         case .watch:
-            if i == 1 { finishWin(e) } else { exitEvent(e) }
+            if i == 1 { hide(e) } else { exitEvent(e) }
         case .start:
             if i == 1 { invite(e) } else { exitEvent(e) }
         case .ongoing:
@@ -290,6 +291,14 @@ class ActionBtnBoard: UIView {
                     self.delegate.onExitEvent()
                 }
             }
+        })
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    private func hide(_ e: Event) {
+        UITools.showAlert(vc, title: nil, msg: "您确定不再提示比赛的消息了吗？（您依然可以在全部比赛中找到）", type: 2, callback: { _ in
+            APP.activeEventsMgr.changeState(to: .finish_win, event: e, obKey: self.key, withChange: nil) { _ in }
         })
     }
 
