@@ -285,19 +285,19 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     
     private(set) var eventChangeMap: [DataID: EventChange]? = nil
 
-    class func checkNewEventChangeMap(newEvents: [Event], oldChangeMap: [DataID: EventChange]?) -> [DataID: EventChange] {
+    class func checkNewEventChangeMap(newEvents: [Event], oldChangeMap: [DataID: EventChange]?, user: User) -> [DataID: EventChange] {
         var newChangeMap: [DataID: EventChange] = [:]
 
         if oldChangeMap == nil {
             for new in newEvents {
-                let newState = UserMgr.getState(from: new, by: APP.userMgr.me.ID)
+                let newState = UserMgr.getState(from: new, by: user.ID)
                 let msgNum = new.msgIDList.count
                 newChangeMap[new.ID] = EventChange(curState: newState, stateChange: false, curMsgN: msgNum, oldMsgN: msgNum)
             }
         } else {
             // 新的events中所有旧events没有，或者有但是状态不一致和对话数量不一致的记录下来
             for new in newEvents {
-                let newState = UserMgr.getState(from: new, by: APP.userMgr.me.ID)
+                let newState = UserMgr.getState(from: new, by: user.ID)
                 let msgNum = new.msgIDList.count
 
                 if EventState.noTipState.contains(newState) {
@@ -320,7 +320,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
     func saveChange(_ newChangeMap: [DataID: EventChange]) {
         if eventChangeMap == nil {
-            return
+            eventChangeMap = [:]
         }
 
         for change in newChangeMap {

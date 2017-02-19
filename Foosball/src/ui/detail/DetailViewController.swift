@@ -182,7 +182,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
 
         // toolbar
         actBtnBoard.set(event: e)
-        let st = UserMgr.getState(from: e, by: APP.userMgr.me.ID)
+        let st = APP.userMgr.getMeState(e)
         actBtnBoard.set(state: st)
 
         handleEventChange()
@@ -207,7 +207,7 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         tableView.endUpdates()
 
         // 状态
-        let st = UserMgr.getState(from: e, by: APP.userMgr.me.ID)
+        let st = APP.userMgr.getMeState(e)
         actBtnBoard.set(state: st)
         if let titleCell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? DetailTitleCell {
             titleCell.set(state: st)

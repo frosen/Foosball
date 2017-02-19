@@ -176,7 +176,11 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
                 var needFetchUserList: [User] = []
                 UserMgr.checkUnfetchUsers(from: newEventList, by: self.data!, needFetchUserList: &needFetchUserList)
 
-                let newChange = ActiveEventsMgr.checkNewEventChangeMap(newEvents: newEventList, oldChangeMap: APP.activeEventsMgr.eventChangeMap)
+                let newChange = ActiveEventsMgr.checkNewEventChangeMap(
+                    newEvents: newEventList,
+                    oldChangeMap: APP.activeEventsMgr.eventChangeMap,
+                    user: self.me
+                )
 
                 DispatchQueue.main.async {
                     self.resetMe(keeper)
@@ -311,19 +315,12 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         return data[0]
     }
 
-    // 根据整个事件获取某个id的状态
-    class func getState(from event: Event, by id: DataID) -> EventState {
-        var s = searchSelfState(from: event, by: id)
-
-        // todo 如果是胜利和失败，根据其他人的状态，自己显示不同的状态
-        if s == .win || s == .lose {
-            
-        }
-
-        return s
+    func getMeState(_ e: Event) -> EventState {
+        return UserMgr.getState(from: e, by: me.ID)
     }
 
-    private class func searchSelfState(from event: Event, by id: DataID) -> EventState {
+    // 根据整个事件获取某个id的状态
+    class func getState(from event: Event, by id: DataID) -> EventState {
         let usTup = event.eachUserState { us in
             return us.user.ID == id
         }
@@ -331,9 +328,16 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         if usTup == nil {
             print("ERROR: wrong in searchState")
             return .watch
-        } else {
-            return usTup!.0.state
         }
+
+        var s = usTup!.0.state
+
+        // todo 如果是胜利和失败，根据其他人的状态，自己显示不同的状态
+        if s == .win || s == .lose {
+            
+        }
+
+        return s
     }
 }
 

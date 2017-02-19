@@ -81,7 +81,7 @@ class DetailTitleCell: StaticCell {
         let urlStr: String? = e.imageURLList.count > 0 ? e.imageURLList[0] : nil
         eventBoard.setData(et: e.type, it: e.item, promise: e.promiseList, urlStr: urlStr)
 
-        let st = UserMgr.getState(from: e, by: APP.userMgr.me.ID)
+        let st = APP.userMgr.getMeState(e)
         set(state: st)
         
         createTime.text = "发布时间：" + e.createTime.toString
