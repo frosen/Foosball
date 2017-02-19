@@ -155,6 +155,9 @@ class Event: BaseData {
     //对方以及状态
     var opponentStateList: [UserState] = []
 
+    //观战者以及状态（只有start和finish_win)
+    var obStateList: [UserState] = []
+
     //图片列表
     var imageURLList: [String] = []
 
@@ -180,6 +183,12 @@ class Event: BaseData {
         for us in opponentStateList {
             if callback(us) {
                 return (us, 2)
+            }
+        }
+
+        for us in obStateList {
+            if callback(us) {
+                return (us, 3)
             }
         }
 

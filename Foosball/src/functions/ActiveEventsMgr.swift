@@ -42,8 +42,9 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         "p2m": false,
         "pms": ["pms"],
         "dtl": "detail",
-        "our": [["k": "v"]],
-        "opp": [["k": "v"]],
+        "our": ["user_st"],
+        "opp": ["user_st"],
+        "ob": ["user_st"],
         "img": ["url"],
         "msg": ["id"],
         "ctm": "Date",
@@ -216,6 +217,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
         e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [String])
         e.opponentStateList = DataTools.UserStates.unserialize(attris["opp"] as! [String])
+        e.obStateList = DataTools.UserStates.unserialize(attris["ob"] as! [String])
 
         e.imageURLList = attris["img"] as! [String]
         e.msgIDList = attris["msg"] as! [String]
@@ -239,6 +241,9 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
                 return us1.user.ID > us2.user.ID
             }
             e.opponentStateList.sort { us1, us2 in
+                return us1.user.ID > us2.user.ID
+            }
+            e.obStateList.sort { us1, us2 in
                 return us1.user.ID > us2.user.ID
             }
 
@@ -362,6 +367,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             "dtl": e.detail,
             "our": DataTools.UserStates.serialize(e.ourSideStateList),
             "opp": DataTools.UserStates.serialize(e.opponentStateList),
+            "ob": [],
             "img": e.imageURLList,
             "msg": [], // 新事件并没有对话
             "ctm": e.createTime.getTimeData(),
@@ -469,7 +475,13 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         var addAttris: [String: Any] = [:]
         var rmAttris: [String: Any] = [:]
 
-        let key = (usTup.1 == 1) ? "our" : "opp"
+        var key: String
+        switch usTup.1 {
+        case 1: key = "our"
+        case 2: key = "opp"
+        default: key = "ob"
+        }
+
         let old = DataTools.UserStates.serializeOne(usTup.0)
         rmAttris[key] = old
 
@@ -519,7 +531,13 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             clss.append(Event.classname)
             ids.append(event.ID.rawValue)
 
-            let key = (usTup.1 == 1) ? "our" : "opp"
+            var key: String
+            switch usTup.1 {
+            case 1: key = "our"
+            case 2: key = "opp"
+            default: key = "ob"
+            }
+            
             let value = DataTools.UserStates.serializeOne(usTup.0)
             rms.append([
                 key: value,

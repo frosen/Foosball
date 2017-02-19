@@ -8,20 +8,6 @@
 
 import UIKit
 
-//class UserBrief: BaseData {
-//    //名字
-//    var name: String
-//
-//    //头像url
-//    var avatarURL: String
-//
-//    init(ID: DataID, name: String, url: String) {
-//        self.name = name
-//        self.avatarURL = url
-//        super.init(ID: ID)
-//    }
-//}
-
 class User: BaseData {
     static let classname = "_User"
 

@@ -303,8 +303,8 @@ class DetailViewController: BaseController, ActiveEventsMgrObserver, MsgMgrObser
         case 0:
             rowNum = 5 //title + detail + promise + time + location
         case 1:
-            //head 友 敌 2. 如果是乱斗应该是不分敌友的所以是2行，但暂时不考虑；3. 以后也可能加入观众，暂不考虑
-            rowNum = 3 //友一定有自己，敌如果没有也有个标题表示没有的状态
+            //head 友 敌 ob. 如果是乱斗应该是不分敌友的所以是2行，但暂时不考虑；
+            rowNum = 4 //友一定有自己，敌和ob如果没有也有个标题表示没有的状态
         case 2:
             rowNum = 2 // head body 就算是没有图片时，也应该有个默认的图
         case 3:

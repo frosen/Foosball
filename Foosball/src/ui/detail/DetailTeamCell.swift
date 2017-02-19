@@ -40,10 +40,13 @@ class DetailTeamCell: StaticCell {
             avatarRowCount_float = CGFloat(e!.ourSideStateList.count + 1) / memberCountIn1Line // +1 是添加按钮
         case 2:
             avatarRowCount_float = CGFloat(e!.opponentStateList.count + 1) / memberCountIn1Line
+        case 3:
+            avatarRowCount_float = CGFloat(e!.obStateList.count + 1) / memberCountIn1Line
         default:
             avatarRowCount_float = 0
         }
         let avatarRowCount = ceil(avatarRowCount_float)
+        print(index!.row, avatarRowCount * memberViewHeight + DetailG.subTitleHeight + teamBottomMargin)
         return avatarRowCount * memberViewHeight + DetailG.subTitleHeight + teamBottomMargin
     }
 
@@ -75,8 +78,8 @@ class DetailTeamCell: StaticCell {
             memberList = e.opponentStateList
             titleStr = "对方人员"
         default:
-            memberList = []
-            titleStr = "观战者"
+            memberList = e.obStateList
+            titleStr = "粉丝"
         }
 
         // 标题会显示人数
