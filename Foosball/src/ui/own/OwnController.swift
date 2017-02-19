@@ -126,7 +126,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 2
+            return 1
         default:
             return group[section - headCellNum].count
         }
@@ -143,11 +143,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch (indexPath as NSIndexPath).section {
         case 0:
-            if (indexPath as NSIndexPath).row == 0 {
-                return OwnScoreCell.getCellHeight()
-            } else {
-                return OwnRankCell.getCellHeight()
-            }
+            return OwnScoreCell.getCellHeight()
         default:
             return OwnNormalCell.getCellHeight()
         }
@@ -178,12 +174,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
 
     func getCInfo(_ indexPath: IndexPath) -> BaseCell.CInfo {
         assert(indexPath.section == 0, "wrong section in own ctrl getCInfo")
-        switch indexPath.row {
-        case 0:
-            return BaseCell.CInfo(id: "OScoCId", c: OwnScoreCell.self)
-        default:
-            return BaseCell.CInfo(id: "ORankCId", c: OwnRankCell.self)
-        }
+        return BaseCell.CInfo(id: "OScoCId", c: OwnScoreCell.self)
     }
 
     // InfoHeadViewDelegate --------------------------------------------------------------

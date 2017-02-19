@@ -10,21 +10,29 @@ import UIKit
 
 class OwnScoreCell: BaseCell {
     override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
-        return 44
+        return 120
     }
 
     override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.accessoryType = .disclosureIndicator
-    }
-}
+        accessoryType = .none
+        selectionStyle = .none
 
-class OwnRankCell: BaseCell {
-    override class func getCellHeight(_ d: BaseData? = nil, index: IndexPath? = nil, otherData: Any? = nil) -> CGFloat {
-        return 44
+        let linesFrame = [
+            CGRect(x: 30, y: 60, width: w - 60, height: 0.5),
+            CGRect(x: w / 3, y: 15, width: 0.5, height: 30),
+            CGRect(x: w / 3 * 2, y: 15, width: 0.5, height: 30),
+            CGRect(x: w / 2, y: 75, width: 0.5, height: 30),
+        ]
+
+        for lineFrame in linesFrame {
+            let line = UIView(frame: lineFrame)
+            contentView.addSubview(line)
+            line.backgroundColor = UIColor.lightGray
+        }
     }
 
-    override func initData(_ d: BaseData?, index: IndexPath?) {
-        self.accessoryType = .disclosureIndicator
+    override func setData(_ d: BaseData?, index: IndexPath?) {
+
     }
 }
 
