@@ -18,6 +18,6 @@ class PersonalInfoController: BaseController {
     }
 
     func onBack() {
-
+        let _ = navigationController!.popViewController(animated: true)
     }
 }

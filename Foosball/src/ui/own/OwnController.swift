@@ -19,7 +19,7 @@ struct NorCellData {
     }
 }
 
-class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UITableViewDataSource, BaseCellDelegate, InfoHeadViewDelegate {
+class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UITableViewDataSource, BaseCellDelegate {
     //信息头，比赛成绩，QR，其他项目等group
     private let headCellNum: Int = 1
     private let group = [
@@ -63,7 +63,7 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
         baseView.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 49, right: 0) //下面空出一些像素
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 98, right: 0) //下面空出一些像素
 
         //设置tableview的基本属性，分割线等
 //        tableView.separatorInset = UIEdgeInsets.zero
@@ -71,8 +71,10 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
 
         //添加信息头
         infoHead = InfoHeadView(scrollView: tableView, extraHeight: 20)
-        infoHead.delegate = self
         baseView.insertSubview(infoHead, aboveSubview: tableView)
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(OwnController.onClickInfoHeadViewAvatar))
+        infoHead.addGestureRecognizer(tap)
     }
 
     private let DataObKey = "OwnController"
@@ -99,7 +101,8 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
             bgImg: #imageLiteral(resourceName: "selfbg"),
             avatarURL: curUser.avatarURL,
             titleStr: curUser.name,
-            subTitleStr: curUser.sign
+            subTitleStr: curUser.sign,
+            sex: curUser.sex
         )
 
         sectionNum = headCellNum + group.count
@@ -113,7 +116,8 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
             bgImg: #imageLiteral(resourceName: "selfbg"),
             avatarURL: curUser.avatarURL,
             titleStr: curUser.name,
-            subTitleStr: curUser.sign
+            subTitleStr: curUser.sign,
+            sex: curUser.sex
         )
     }
 

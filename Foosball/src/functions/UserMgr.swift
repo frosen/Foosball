@@ -26,6 +26,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         "nick": "name",
         "sign": "sign",
         "url": "url",
+        "sex": 0,
         "isR": false,
     ]
 
@@ -109,6 +110,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
             "nick": me.name,
             "sign": me.sign,
             "url": me.avatarURL,
+            "sex": me.sex,
             "isR": me.isRegistered,
         ]
         data.append(me)
@@ -220,6 +222,7 @@ class UserMgr: DataMgr<[User], UserMgrObserver> {
         user.name = attris["nick"] as! String
         user.sign = attris["sign"] as! String
         user.avatarURL = attris["url"] as! String
+        user.sex = attris["sex"] as! Int
         user.isRegistered = attris["isR"] as! Bool
     }
 

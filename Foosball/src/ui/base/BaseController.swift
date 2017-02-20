@@ -29,6 +29,8 @@ class BaseController: UIViewController {
     private var hasInitData: Bool = false
     var baseView: UIView! = nil
 
+    static var isLastTabbarHide = false // 上个页面是否显示了tabbar，用于判断是否开启动画
+
     var callbackOnFinishInit: ((Bool) -> Swift.Void)? = nil
 
     required init?(coder aDecoder: NSCoder) {
@@ -73,6 +75,7 @@ class BaseController: UIViewController {
         super.viewWillAppear(animated)
         rootVC.currentCtrlr = self
         handleNavTabState()
+        BaseController.isLastTabbarHide = navTabType.contains(.HideTab)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -107,7 +110,7 @@ class BaseController: UIViewController {
         // 透明导航栏
         let bar = navigationController!.navigationBar
         let barAlpha: CGFloat = transparentNav ? 0.0 : 1.0
-        if transparentNav && hideTab || (!transparentNav && !hideTab) { //如果同时隐藏／显示tabbar，则用动效，否则瞬间移动过去
+        if hideTab || BaseController.isLastTabbarHide { //如果不是前后都有tabbar，则用动效，否则瞬间移动过去
             UIView.animate(withDuration: 0.2, delay: transparentNav ? 0.2 : 0.0, options: .curveLinear, animations: {
                 bar.subviews[0].alpha = barAlpha
             }, completion: nil)
@@ -121,7 +124,7 @@ class BaseController: UIViewController {
         let hideTabOpt: UIViewAnimationOptions = hideTab ? .curveEaseIn : .curveEaseOut
         UIView.animate(withDuration: 0.2, delay: delayTime, options: hideTabOpt, animations: {
             self.rootVC.myTabBar.transform = CGAffineTransform(translationX: 0, y: TabY)
-            }, completion: nil)
+        }, completion: nil)
 
         rootVC.myTabBar.isUserInteractionEnabled = !hideTab //隐藏时不可用
     }

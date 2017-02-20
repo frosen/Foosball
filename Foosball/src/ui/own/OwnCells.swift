@@ -24,24 +24,26 @@ class ScoreView: UIButton {
         addSubview(img)
         img.frame = CGRect(x: 5, y: 5, width: 30, height: 30)
 
+        let font = UIFont.systemFont(ofSize: 11)
+
         let title = UILabel()
         addSubview(title)
         title.text = titleStr
         title.sizeToFit()
         title.textColor = TextColor
         title.textAlignment = .center
-        title.font = TextFont
-        title.frame.origin = CGPoint(x: 35, y: 5)
+        title.font = font
+        title.frame.origin = CGPoint(x: 35, y: 3)
 
         score = UILabel()
         addSubview(score)
         score.bounds = title.bounds
-        score.frame.origin.y = 25
+        score.frame.origin.y = 18
         score.center.x = title.center.x
         score.text = "0"
         score.textColor = TextColor
         score.textAlignment = .center
-        score.font = TextFont
+        score.font = font
 
         bounds = CGRect(x: 0, y: 0, width: img.frame.width + title.frame.width, height: h)
         self.center = center
@@ -111,7 +113,11 @@ class OwnScoreCell: BaseCell {
     }
 
     override func setData(_ d: BaseData?, index: IndexPath?) {
-
+        totalView.setScore(153)
+        winView.setScore(76)
+        controversyView.setScore(3)
+        CEView.setScore(15300)
+        credibilityView.setScore(877)
     }
 
     func onEnterEventList() {
