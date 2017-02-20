@@ -73,6 +73,24 @@ class InfoHeadView: UIView {
         bg.frame = CGRect(x: 0, y: extraHeight - topMargin + bottomMargin, width: w, height: h + topMargin + bottomMargin + extraHeight)
         bg.contentMode = .scaleAspectFill
 
+        //头像
+        avatar = Avatar.create(rect: CGRect(
+                x: 0.5 * w - 0.5 * avatarW,
+                y: 0.42 * h - 0.5 * avatarW + extraHeight + bottomMargin,
+                width: avatarW,
+                height: avatarW
+            ),
+            name: "", url: ""
+        )
+        viewMask.addSubview(avatar)
+
+        avatar.layer.borderColor = UIColor.white.cgColor
+        avatar.layer.borderWidth = 2
+        avatar.layer.cornerRadius = avatarW / 2
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(InfoHeadView.tapAvatar(ges:)))
+        avatar.addGestureRecognizer(tap)
+
         //名字
         title = UILabel()
         viewMask.addSubview(title)
@@ -106,33 +124,7 @@ class InfoHeadView: UIView {
     }
 
     func resetData(bgImg bgimg: UIImage, avatarURL: String, titleStr: String, subTitleStr: String) {
-        let w: CGFloat = frame.size.width
-        let h: CGFloat = frame.size.height
-
-        //头像
-        if avatar != nil {
-            avatar.removeFromSuperview()
-        }
-
-        avatar = Avatar.create(rect: CGRect(
-            x: 0.5 * w - 0.5 * avatarW,
-            y: 0.42 * h - 0.5 * avatarW + extraHeight + bottomMargin,
-            width: avatarW,
-            height: avatarW
-            ),
-            name: titleStr,
-            url: avatarURL
-        )
-        viewMask.addSubview(avatar)
-
-        avatar.layer.borderColor = UIColor.white.cgColor
-        avatar.layer.borderWidth = 2
-        avatar.layer.cornerRadius = avatarW / 2
-
-        let tap = UITapGestureRecognizer(target: self, action: #selector(InfoHeadView.tapAvatar(ges:)))
-        avatar.addGestureRecognizer(tap)
-
-        //其他属性
+        avatar.set(name: titleStr, url: avatarURL)
         bg.image = bgimg
         title.text = titleStr
         subTitle.text = subTitleStr

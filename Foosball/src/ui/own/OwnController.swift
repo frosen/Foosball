@@ -180,7 +180,8 @@ class OwnController: BaseTabController, UserMgrObserver, UITableViewDelegate, UI
     // InfoHeadViewDelegate --------------------------------------------------------------
 
     func onClickInfoHeadViewAvatar() {
-        
+        let vc = PersonalInfoController(rootVC: rootVC)
+        navigationController!.pushViewController(vc, animated: true)
     }
 }
 

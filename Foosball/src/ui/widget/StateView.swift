@@ -63,8 +63,8 @@ class StateView: UIView {
         case .waitConfirm:
             string = "等待"
             bgColor = UIColor.blue
-        case .impeach:
-            string = "质疑"
+        case .controversy:
+            string = "争议"
             bgColor = UIColor.purple
         case .rechoose:
             string = "重选"
@@ -75,14 +75,14 @@ class StateView: UIView {
         case .finish_lose:
             string = "完成失败"
             bgColor = UIColor.brown
-        case .keepImpeach_win:
-            string = "存疑胜利"
+        case .keepControversy_win:
+            string = "争议胜利"
             bgColor = UIColor.purple
-        case .keepImpeach_lose:
-            string = "存疑失败"
+        case .keepControversy_lose:
+            string = "争议失败"
             bgColor = UIColor.purple
         case .impeachEnd:
-            string = "不再存疑"
+            string = "争议结束"
             bgColor = UIColor.purple
         }
 

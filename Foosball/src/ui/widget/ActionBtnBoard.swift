@@ -63,9 +63,9 @@ class ActionBtnBoard: UIView {
         .waitConfirm: StateAction(
             l: AcBtn(t: "等待其他人确认")
         ),
-        .impeach: StateAction(
+        .controversy: StateAction(
             l: AcBtn(t: "重新选择"),
-            r: AcBtn(t: "保持质疑")
+            r: AcBtn(t: "保持争议")
         ),
         .rechoose: StateAction(
             l: AcBtn(t: "确认胜利"),
@@ -77,11 +77,11 @@ class ActionBtnBoard: UIView {
         .finish_lose: StateAction(
             l: AcBtn(t: "")
         ),
-        .keepImpeach_win: StateAction(
+        .keepControversy_win: StateAction(
             l: AcBtn(t: ""),
             r: AcBtn(t: "")
         ),
-        .keepImpeach_lose: StateAction(
+        .keepControversy_lose: StateAction(
             l: AcBtn(t: ""),
             r: AcBtn(t: "")
         ),
@@ -241,7 +241,7 @@ class ActionBtnBoard: UIView {
             if i == 1 { finishLose(e) }
         case .waitConfirm:
             if i == 1 { sendMsg(e) }
-        case .impeach:
+        case .controversy:
             if i == 1 { keep(e) } else { rechoose(e) }
         case .rechoose:
             if i == 1 { win(e) } else { lose(e) }
@@ -249,9 +249,9 @@ class ActionBtnBoard: UIView {
             if i == 1 { sendMsg(e) }
         case .finish_lose:
             if i == 1 { sendMsg(e) }
-        case .keepImpeach_win:
+        case .keepControversy_win:
             if i == 1 { sendMsg(e) } else { rechoose(e) }
-        case .keepImpeach_lose:
+        case .keepControversy_lose:
             if i == 1 { sendMsg(e) } else { rechoose(e) }
         case .impeachEnd:
             if i == 1 { finishFromImpeach(e) }
@@ -370,7 +370,7 @@ class ActionBtnBoard: UIView {
     // ---------------------------------------------------------------------------------------------
 
     private func keep(_ e: Event) {
-        UITools.showAlert(vc, title: nil, msg: "您确定一直保持质疑的状态吗？（确认后不再有消息提示）", type: 2, callback: { _ in
+        UITools.showAlert(vc, title: nil, msg: "您确定一直保持争议的状态吗？（确认后不再有消息提示）", type: 2, callback: { _ in
             guard let usTup = e.eachUserState({ us -> Bool in
                 return us.user.ID == APP.userMgr.me.ID
             }) else {
@@ -389,12 +389,12 @@ class ActionBtnBoard: UIView {
     private func getKeepState(_ st: EventState) -> EventState {
         switch st {
         case .win:
-            return .keepImpeach_win
+            return .keepControversy_win
         case .lose:
-            return .keepImpeach_lose
+            return .keepControversy_lose
         default:
             print("ERROR: wrong state when to keep: ", st.rawValue)
-            return .keepImpeach_win
+            return .keepControversy_win
         }
     }
 
@@ -419,9 +419,9 @@ class ActionBtnBoard: UIView {
 
     private func getFinishState(_ st: EventState) -> EventState {
         switch st {
-        case .keepImpeach_win:
+        case .keepControversy_win:
             return .finish_win
-        case .keepImpeach_lose:
+        case .keepControversy_lose:
             return .finish_lose
         default:
             print("ERROR: wrong state when to finish: ", st.rawValue)

@@ -30,19 +30,19 @@ enum EventState: Int {
     case lose //失败，确认是否自己已经完成了承诺的兑现
 
     case waitConfirm //你确认成败后，别人没确认前，要等待，最多24小时，到时没确认的自动根据你的确认而确认，可发消息催对方，此时你的数值还是保持win，lose ***only local状态***
-    case impeach //当确认成败时，如果有人已经确定并与你不符时，会提示，如果你确认则进入存疑状态，保持或重选 ***only local状态***
+    case controversy //当确认成败时，如果有人已经确定并与你不符时，会提示，如果你确认则进入争议状态，保持或重选 ***only local状态***
     case rechoose //重选，确认胜利失败
 
     case finish_win //确认胜利并且获得兑现，追加聊天，不再提示
     case finish_lose // 确认失败并且兑现，追加聊天，不再提示
 
-    case keepImpeach_win //保持存疑状态，重选，不再提示
-    case keepImpeach_lose //保持存疑状态，重选，不再提示
+    case keepControversy_win //保持争议状态，重选，不再提示
+    case keepControversy_lose //保持争议状态，重选，不再提示
 
-    case impeachEnd //保持存疑时，发现对方修改了，没有疑问了，可完成 ***only local状态*** ，不再提示
+    case impeachEnd //保持争议时，发现对方修改了，没有争议了，可完成 ***only local状态*** ，不再提示
 
-    static let onlyLocalState: [EventState] = [.overtime, .watch, .ongoing, .waitConfirm, .impeach, .impeachEnd]
-    static let noTipState: [EventState] = [.finish_win, .finish_lose, .keepImpeach_win, .keepImpeach_lose, .impeachEnd]
+    static let onlyLocalState: [EventState] = [.overtime, .watch, .ongoing, .waitConfirm, .controversy, .impeachEnd]
+    static let noTipState: [EventState] = [.finish_win, .finish_lose, .keepControversy_win, .keepControversy_lose, .impeachEnd]
 }
 
 class UserState {

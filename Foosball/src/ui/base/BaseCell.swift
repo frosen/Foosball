@@ -59,13 +59,15 @@ class BaseCell: UITableViewCell {
 
             let baseCell = cell as! BaseCell
             baseCell.w = UIScreen.main.bounds.width
+            baseCell.h = type(of: baseCell).getCellHeight(data, index: index, otherData: ctrlr)
             baseCell.ctrlr = ctrlr
             baseCell.initData(data, index: index)
+            baseCell.setData(data, index: index)
+        } else {
+            let baseCell = cell as! BaseCell
+            baseCell.h = type(of: baseCell).getCellHeight(data, index: index, otherData: ctrlr) //dynamicType可以获取对象的类，然后就能使用类函数了
+            baseCell.setData(data, index: index)
         }
-
-        let baseCell = cell as! BaseCell
-        baseCell.h = type(of: baseCell).getCellHeight(data, index: index, otherData: ctrlr) //dynamicType可以获取对象的类，然后就能使用类函数了
-        baseCell.setData(data, index: index)
 
         return cell!
     }
@@ -101,6 +103,7 @@ class StaticCell: BaseCell {
             delegate.saveStaticCell(cell!, by: info.id)
 
         } else if delegate.getIfUpdate(index) == true {
+            cell!.h = type(of: cell!).getCellHeight(data, index: index, otherData: ctrlr)
             cell!.setData(data, index: index)
         }
         

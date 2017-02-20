@@ -11,7 +11,9 @@ import UIKit
 class Avatar: UIImageView {
     class func create(rect: CGRect, name: String, url: String) -> Avatar {
         let avatar = Avatar(frame: rect)
-        avatar.set(name: name, url: url)
+        if name != "" {
+            avatar.set(name: name, url: url)
+        }
         return avatar
     }
 
