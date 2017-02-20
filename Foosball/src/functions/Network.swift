@@ -116,6 +116,22 @@ class Network: NSObject {
         }
     }
 
+    // 查询数量
+    func queryCount(to list: String, attris: [(String, String)], callback: @escaping ((Int, Error?) -> Void)) {
+        var querys: [AVQuery] = []
+        print(attris)
+        for attri in attris {
+            let q = AVQuery(className: list)
+            q.whereKey(attri.0, contains: attri.1)
+            querys.append(q)
+        }
+
+        let query = AVQuery.orQuery(withSubqueries: querys)
+        query.countObjectsInBackground { num, error in
+            callback(num, error)
+        }
+    }
+
     // 云函数 -------------------------------------------------------------------
 
     func create(className: String, attris: [String: Any], AndAddTo classForAdd: String, id: String, keyDict: [String: Int],  callback: @escaping ((Bool, Error?) -> Void)) {

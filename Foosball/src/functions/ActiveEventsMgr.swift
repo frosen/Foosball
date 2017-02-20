@@ -554,6 +554,26 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             }
         }
     }
+
+    func queryEventCount(_ sts: [EventState], obKey: String, callback: @escaping ((Int) -> Void)) {
+        let me = APP.userMgr.me
+        let keys = ["our", "opp"]
+        var attirs: [(String, String)] = []
+
+        for st in sts {
+            let value = DataTools.UserStates.serializeOne(UserState(user: me, state: st))
+            for key in keys {
+                attirs.append((key, value))
+            }
+        }
+
+        Network.shareInstance.queryCount(to: Event.classname, attris: attirs) { num, error in
+            print("获取数量", sts, num, error ?? "no error")
+            if error == nil && self.hasOb(for: obKey) {
+                callback(num)
+            }
+        }
+    }
 }
 
 
