@@ -88,14 +88,14 @@ class EventBoard: UIView {
         contentView.center.y = h * 0.7
     }
 
-    func setData(et: EventType, it: String, promise: [Promise], urlStr: String?) {
+    func setData(et: EventType, it: String, promises: [String], urlStr: String?) {
         // 图片
         let imgUrl = (urlStr != nil) ?
             URL(string: APP.activeEventsMgr.getImgUrlStr(from: urlStr!, useCut: true))! : getURLFromItemType(it)
         icon.sd_setImage(with: imgUrl, placeholderImage: EventIcon.spaceHolder)
 
         // 根据类型和奖杯组织一个题目
-        title.text = createTitle(et: et, it: it, promise: promise)
+        title.text = createTitle(et: et, it: it, promises: promises)
     }
 
     func set(state: EventState) {
@@ -107,7 +107,7 @@ class EventBoard: UIView {
         return URL(string: s)!
     }
 
-    private func createTitle(et: EventType, it: String, promise: [Promise]) -> String {
+    private func createTitle(et: EventType, it: String, promises: [String]) -> String {
         return "这是一个很有意思的测试"
     }
 }

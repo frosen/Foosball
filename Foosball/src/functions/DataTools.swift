@@ -9,21 +9,6 @@
 import Foundation
 
 class DataTools: NSObject {
-    class Promises {
-        class func serialize(_ promises: [Promise]) -> [String] {
-            var list: [String] = []
-            for promise in promises {
-                list.append(promise.toString)
-                list.append(promise.toString)
-                list.append(promise.toString)
-            }
-            return list
-        }
-
-        class func unserialize(_ list: [String]) -> [Promise] {
-            return []
-        }
-    }
 
     // -------------------------------------------------------
 

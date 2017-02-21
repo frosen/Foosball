@@ -170,7 +170,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         
         e.detail = "~ 这是一首简单的小情歌；\n~ 这是一首简单的小情歌；\n~ 这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；\n~ 这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；这是一首简单的小情歌；"
         
-        e.promiseList = [Promise(str: "红牛")]
+        e.promiseList = ["红牛"]
         
         
         
@@ -212,7 +212,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
         e.time = Time(t: attris["tm"] as? Date)
         e.location.set(loc: attris["loc"] as! CLLocation)
         e.isPublishToMap = attris["p2m"] as! Bool
-        e.promiseList = DataTools.Promises.unserialize(attris["pms"] as! [String])
+        e.promiseList = attris["pms"] as! [String]
         e.detail = attris["dtl"] as! String
 
         e.ourSideStateList = DataTools.UserStates.unserialize(attris["our"] as! [String])
@@ -363,7 +363,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
             "tm": e.time.getTimeData(),
             "loc": e.location.loc,
             "p2m": e.isPublishToMap,
-            "pms": DataTools.Promises.serialize(e.promiseList),
+            "pms": e.promiseList,
             "dtl": e.detail,
             "our": DataTools.UserStates.serialize(e.ourSideStateList),
             "opp": DataTools.UserStates.serialize(e.opponentStateList),

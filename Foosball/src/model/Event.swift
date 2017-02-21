@@ -54,50 +54,6 @@ class UserState {
     }
 }
 
-class Promise {
-    var str: String
-    var data: (Int, Int, Int) = (1, 0, 0)
-
-    init(str: String? = nil) {
-        if str == nil {
-            self.str = ""
-        } else {
-            self.str = str!
-        }
-    }
-
-    var toString: String {
-        return str
-    }
-
-    static let NameList: [(String, [(String, [String])])] = [
-        ("饭", [
-            ("早餐", [
-                "中餐", "洋快餐", "烤串", "大盘鸡",
-                ]),
-            ("午餐", [
-                "中餐", "洋快餐", "烤串", "大盘鸡",
-                ]),
-            ("晚餐", [
-                "中餐", "洋快餐", "烤串", "大盘鸡",
-                ])
-            ]),
-        ("饮料", [
-            ("红牛", [
-                "一瓶", "两瓶", "三瓶", "四瓶", "五瓶",
-                ]),
-            ("红茶", [
-                "一瓶", "两瓶", "三瓶", "四瓶", "五瓶",
-                ]),
-            ("绿茶", [
-                "一瓶", "两瓶", "三瓶", "四瓶", "五瓶",
-                ]),
-            ]),
-        ("其他", [("", [""])]),
-        
-        ]
-}
-
 class MsgStruct: BaseData {
     static let classname = "msg"
 
@@ -123,7 +79,7 @@ class Event: BaseData {
     //类型 对决 乱斗 挑战 求教 会友
     var type: EventType = .confrontation
 
-    //项目
+    //项目, 标签
     var item: String = ""
 
     //人数 不同类型下表示的不一样 -1代表不限
@@ -142,8 +98,8 @@ class Event: BaseData {
     //是否发布到了地图上，也就是别人任意人可以加入
     var isPublishToMap: Bool = false
 
-    //奖杯（兑现物）, 根据序号，在PromiseList查询
-    var promiseList: [Promise] = []
+    //奖杯（兑现物）, 标签
+    var promiseList: [String] = []
 
     //详情
     var detail: String = ""

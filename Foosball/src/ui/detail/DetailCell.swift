@@ -79,7 +79,7 @@ class DetailTitleCell: StaticCell {
     override func setData(_ d: BaseData?, index: IndexPath?) {
         let e = d as! Event
         let urlStr: String? = e.imageURLList.count > 0 ? e.imageURLList[0] : nil
-        eventBoard.setData(et: e.type, it: e.item, promise: e.promiseList, urlStr: urlStr)
+        eventBoard.setData(et: e.type, it: e.item, promises: e.promiseList, urlStr: urlStr)
 
         let st = APP.userMgr.getMeState(e)
         set(state: st)
@@ -145,7 +145,7 @@ class DetailContentCell: DetailStringCell {
 }
 
 class DetailPromiseCell: DetailStringCell {
-    class func createText(from promise: [Promise]) -> String {
+    class func createText(from promise: [String]) -> String {
         var t = ""
         for i in 0 ..< promise.count {
             t += "~ "
