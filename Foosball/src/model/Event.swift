@@ -124,7 +124,7 @@ class Event: BaseData {
     var type: EventType = .confrontation
 
     //项目
-    var item: ItemType = ItemType.list[0]
+    var item: String = ""
 
     //人数 不同类型下表示的不一样 -1代表不限
     var memberCount: Int = -1

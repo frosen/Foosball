@@ -14,6 +14,7 @@ class AppManager: NSObject {
     private(set) var userMgr: UserMgr! = nil
     private(set) var activeEventsMgr: ActiveEventsMgr! = nil
     private(set) var msgMgr: MsgMgr! = nil
+    private(set) var labelMgr: LabelMgr! = nil
     private(set) var errorMgr: ErrorMgr! = nil
 
     //单例
@@ -26,14 +27,13 @@ class AppManager: NSObject {
     func setGlobal() {
         print("全局设置")
 
-        ItemType.initAllItem()
-
         AMapServices.shared().apiKey = "04ec496139134f937690624ac77f2363"
         AMapServices.shared().enableHTTPS = true
 
         userMgr = UserMgr()
         activeEventsMgr = ActiveEventsMgr()
         msgMgr = MsgMgr()
+        labelMgr = LabelMgr()
         errorMgr = ErrorMgr()
 
         userMgr.run()

@@ -206,7 +206,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
 
     private class func setAttris(_ attris: [String: Any], e: Event) {
         e.type = EventType(rawValue: attris["tp"] as! Int)!
-        e.item = ItemType.list[attris["i"] as! Int]
+        e.item = attris["i"] as! String
         e.memberCount = attris["mc1"] as! Int
         e.memberCount2 = attris["mc2"] as! Int
         e.time = Time(t: attris["tm"] as? Date)
@@ -356,7 +356,7 @@ class ActiveEventsMgr: DataMgr<ActEvents, ActiveEventsMgrObserver> {
     func addNewEvent(_ e: Event, obKey: String, callback: @escaping ((Bool) -> Void)) {
         let attris: [String: Any] = [
             "tp": e.type.rawValue,
-            "i": e.item.tag,
+            "i": e.item,
             "mc1": e.memberCount,
             "mc2": e.memberCount2,
             "ivt": e.canInvite,

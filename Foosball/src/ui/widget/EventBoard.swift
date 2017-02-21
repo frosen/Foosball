@@ -88,7 +88,7 @@ class EventBoard: UIView {
         contentView.center.y = h * 0.7
     }
 
-    func setData(et: EventType, it: ItemType, promise: [Promise], urlStr: String?) {
+    func setData(et: EventType, it: String, promise: [Promise], urlStr: String?) {
         // 图片
         let imgUrl = (urlStr != nil) ?
             URL(string: APP.activeEventsMgr.getImgUrlStr(from: urlStr!, useCut: true))! : getURLFromItemType(it)
@@ -102,12 +102,12 @@ class EventBoard: UIView {
         stateView.setState(state)
     }
 
-    private func getURLFromItemType(_ t: ItemType) -> URL {
+    private func getURLFromItemType(_ t: String) -> URL {
         let s = "http://img02.tooopen.com/images/20131214/sy_51922633352.jpg"
         return URL(string: s)!
     }
 
-    private func createTitle(et: EventType, it: ItemType, promise: [Promise]) -> String {
+    private func createTitle(et: EventType, it: String, promise: [Promise]) -> String {
         return "这是一个很有意思的测试"
     }
 }

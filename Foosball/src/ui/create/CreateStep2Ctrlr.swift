@@ -25,7 +25,7 @@ class CreateStep2Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ItemType.count
+        return APP.labelMgr.data.items.count
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -47,9 +47,9 @@ class CreateStep2Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
         if cell == nil {
             cell = UITableViewCell(style: .value1, reuseIdentifier: step2CellId)
         }
-        print(ItemType.list[indexPath.row].name)
-        cell!.imageView!.image = #imageLiteral(resourceName: "setting")
-        cell!.textLabel!.text = ItemType.list[indexPath.row].name
+        let label = APP.labelMgr.data.items[indexPath.row]
+        cell!.imageView!.sd_setImage(with: URL(string: label.imgUrl), placeholderImage: #imageLiteral(resourceName: "setting"))
+        cell!.textLabel!.text = label.txt
 
         return cell!
     }
@@ -57,7 +57,7 @@ class CreateStep2Ctrlr: CreatePageBaseCtrlr, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        rootCtrlr.createEvent.item = ItemType.list[indexPath.row]
+        rootCtrlr.createEvent.item = APP.labelMgr.data.items[indexPath.row].txt
         rootCtrlr.movePage(gotoRight: true)
     }
 }
