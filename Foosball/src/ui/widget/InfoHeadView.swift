@@ -127,7 +127,7 @@ class InfoHeadView: UIView {
         subTitle.center = CGPoint(x: 0.5 * w, y: 0.42 * h + extraHeight + bottomMargin + 80)
 
         var img: UIImage? = nil
-        switch 2 {
+        switch sex {
         case 1: img = #imageLiteral(resourceName: "male")
         case 2: img = #imageLiteral(resourceName: "female")
         default: break
